@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>LPTV MASTER</title>
 
 <style>
@@ -64,6 +65,7 @@ button {
     background: #edf3fb;
     color: #172033;
     text-align: left;
+    line-height: 1.4;
 }
 
 .correct {
@@ -85,12 +87,14 @@ button {
     padding: 14px;
     border-radius: 12px;
     margin-top: 14px;
+    line-height: 1.5;
 }
 
 .feedback {
     padding: 14px;
     border-radius: 12px;
     margin-top: 14px;
+    line-height: 1.5;
 }
 
 .ok {
@@ -103,6 +107,15 @@ button {
     color: #991b1b;
 }
 
+.solution {
+    background: #eef6ff;
+    border-left: 6px solid #0b4ea2;
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 16px;
+    line-height: 1.5;
+}
+
 .row {
     display: flex;
     gap: 10px;
@@ -110,6 +123,26 @@ button {
 
 .row button {
     flex: 1;
+}
+
+.small-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #0b4ea2;
+}
+
+.option-translation {
+    display: block;
+    margin-top: 7px;
+    font-size: 15px;
+    color: #5b6473;
+    font-weight: normal;
+}
+
+.counter {
+    font-size: 17px;
+    color: #5b6473;
 }
 </style>
 </head>
@@ -125,50 +158,105 @@ button {
 
 <section id="home" class="card">
     <h2>Benvenuto Dennis 👋</h2>
-    <p>Allenati con domande in inglese, traduzione italiana e spiegazione.</p>
+
+    <p>
+        Allenati con domande in inglese, traduzione italiana,
+        opzioni tradotte e spiegazioni complete.
+    </p>
 
     <button onclick="startQuiz()">📝 Practice Quiz</button>
-    <button class="secondary" onclick="showProgress()">📊 My Progress</button>
+
+    <button class="secondary" onclick="showProgress()">
+        📊 My Progress
+    </button>
 </section>
 
 <section id="quiz" class="card hidden">
 
-    <p id="counter"></p>
+    <p id="counter" class="counter"></p>
 
     <h2 id="question"></h2>
 
-    <div id="translation" class="translation hidden"></div>
+    <div id="questionTranslation" class="translation hidden"></div>
 
     <div class="row">
-        <button class="secondary" onclick="toggleTranslation()">🇮🇹 Traduzione</button>
-        <button class="secondary" onclick="speakQuestion()">🔊 Ascolta</button>
+        <button class="secondary" onclick="toggleQuestionTranslation()">
+            🇮🇹 Domanda
+        </button>
+
+        <button class="secondary" onclick="speakQuestion()">
+            🔊 Ascolta
+        </button>
     </div>
+
+    <button class="secondary" onclick="toggleOptionsTranslation()">
+        🇮🇹 Traduci le opzioni
+    </button>
 
     <div id="answers"></div>
 
     <div id="feedback" class="hidden"></div>
 
+    <div id="solutionBox" class="solution hidden">
+
+        <div class="small-title">
+            SOLUTION AND EXPLANATION
+        </div>
+
+        <div id="correctAnswerEnglish"></div>
+
+        <br>
+
+        <div id="explanationEnglish"></div>
+
+        <button class="secondary" onclick="toggleItalianExplanation()">
+            🇮🇹 Traduci soluzione e spiegazione
+        </button>
+
+        <div id="italianExplanation" class="translation hidden"></div>
+
+    </div>
+
     <button id="nextButton" class="hidden" onclick="nextQuestion()">
         Prossima domanda
     </button>
 
-    <button class="secondary" onclick="goHome()">Esci</button>
+    <button class="secondary" onclick="goHome()">
+        Esci
+    </button>
 
 </section>
 
 <section id="result" class="card hidden">
+
     <h2>Risultato finale</h2>
+
     <p id="resultText"></p>
-    <button onclick="goHome()">Torna alla Home</button>
+
+    <button onclick="goHome()">
+        Torna alla Home
+    </button>
+
 </section>
 
 <section id="progress" class="card hidden">
+
     <h2>I tuoi progressi</h2>
 
-    <p>✅ Risposte corrette: <b id="correctStat">0</b></p>
-    <p>❌ Risposte errate: <b id="wrongStat">0</b></p>
+    <p>
+        ✅ Risposte corrette:
+        <b id="correctStat">0</b>
+    </p>
 
-    <button onclick="goHome()">Torna alla Home</button>
+    <p>
+        ❌ Risposte errate:
+        <b id="wrongStat">0</b>
+    </p>
+
+    <button onclick="goHome()">
+        Torna alla Home
+    </button>
+
 </section>
 
 </main>
@@ -176,70 +264,160 @@ button {
 <script>
 const questions = [
     {
-        question: "Your vehicle breaks down in a tunnel. What should you do?",
-        translation: "Il tuo veicolo si guasta in un tunnel. Cosa devi fare?",
-        answers: [
+        question:
+            "Your vehicle breaks down in a tunnel. What should you do?",
+
+        questionItalian:
+            "Il tuo veicolo si guasta in un tunnel. Cosa devi fare?",
+
+        answersEnglish: [
             "Stay in your vehicle and wait for the police",
             "Stand in the lane behind your vehicle",
             "Stand in front of your vehicle",
             "Switch on hazard lights, leave safely and call for help"
         ],
+
+        answersItalian: [
+            "Rimani nel veicolo e aspetta la polizia",
+            "Rimani nella corsia dietro al veicolo",
+            "Mettiti davanti al veicolo",
+            "Accendi le luci di emergenza, esci in sicurezza e chiama aiuto"
+        ],
+
         correct: 3,
-        explanation: "Accendi le luci di emergenza, mettiti al sicuro e chiama aiuto."
+
+        explanationEnglish:
+            "Switch on the hazard lights, leave the vehicle safely and call for help. Never remain standing in the traffic lane.",
+
+        explanationItalian:
+            "Accendi le luci di emergenza, esci dal veicolo in sicurezza e chiama aiuto. Non devi mai restare fermo nella corsia di traffico."
     },
+
     {
-        question: "You notice a bicycle wheel sticking out between parked cars. What should you do?",
-        translation: "Noti la ruota di una bicicletta sporgere tra le auto parcheggiate. Cosa devi fare?",
-        answers: [
+        question:
+            "You notice a bicycle wheel sticking out between parked cars. What should you do?",
+
+        questionItalian:
+            "Noti la ruota di una bicicletta sporgere tra le auto parcheggiate. Cosa devi fare?",
+
+        answersEnglish: [
             "Accelerate quickly",
             "Slow down and wave the cyclist across",
             "Brake sharply",
             "Slow down and be prepared to stop"
         ],
+
+        answersItalian: [
+            "Accelera rapidamente",
+            "Rallenta e fai cenno al ciclista di attraversare",
+            "Frena bruscamente",
+            "Rallenta e preparati a fermarti"
+        ],
+
         correct: 3,
-        explanation: "Rallenta e preparati a fermarti perché il ciclista potrebbe uscire."
+
+        explanationEnglish:
+            "The cyclist may suddenly emerge from between the parked vehicles. Slow down and be ready to stop.",
+
+        explanationItalian:
+            "Il ciclista potrebbe uscire improvvisamente tra le auto parcheggiate. Devi rallentare ed essere pronto a fermarti."
     },
+
     {
-        question: "What should you do before moving off?",
-        translation: "Cosa devi fare prima di partire?",
-        answers: [
+        question:
+            "What should you do before moving off?",
+
+        questionItalian:
+            "Cosa devi fare prima di partire?",
+
+        answersEnglish: [
             "Check mirrors and blind spots",
             "Sound the horn",
             "Switch on hazard lights",
             "Move immediately"
         ],
+
+        answersItalian: [
+            "Controlla gli specchi e gli angoli ciechi",
+            "Suona il clacson",
+            "Accendi le luci di emergenza",
+            "Parti immediatamente"
+        ],
+
         correct: 0,
-        explanation: "Devi controllare gli specchi e gli angoli ciechi prima di partire."
+
+        explanationEnglish:
+            "Before moving off, check the mirrors and blind spots to make sure that it is safe.",
+
+        explanationItalian:
+            "Prima di partire devi controllare gli specchi e gli angoli ciechi per assicurarti che sia sicuro."
     },
+
     {
-        question: "Why should you keep a safe distance?",
-        translation: "Perché devi mantenere la distanza di sicurezza?",
-        answers: [
+        question:
+            "Why should you keep a safe distance?",
+
+        questionItalian:
+            "Perché devi mantenere la distanza di sicurezza?",
+
+        answersEnglish: [
             "To save fuel only",
             "To have enough time and space to stop",
             "To prevent overtaking",
             "To drive faster"
         ],
+
+        answersItalian: [
+            "Solo per risparmiare carburante",
+            "Per avere abbastanza tempo e spazio per fermarti",
+            "Per impedire agli altri di sorpassare",
+            "Per guidare più velocemente"
+        ],
+
         correct: 1,
-        explanation: "La distanza di sicurezza ti dà tempo e spazio per fermarti."
+
+        explanationEnglish:
+            "A safe distance gives you enough time and space to react and stop safely.",
+
+        explanationItalian:
+            "La distanza di sicurezza ti dà abbastanza tempo e spazio per reagire e fermarti in sicurezza."
     },
+
     {
-        question: "What should you do when carrying a vulnerable passenger?",
-        translation: "Cosa devi fare quando trasporti un passeggero vulnerabile?",
-        answers: [
+        question:
+            "What should you do when carrying a vulnerable passenger?",
+
+        questionItalian:
+            "Cosa devi fare quando trasporti un passeggero vulnerabile?",
+
+        answersEnglish: [
             "Drive smoothly and offer assistance",
             "Drive faster",
             "Avoid speaking",
             "Ask the passenger to stand"
         ],
+
+        answersItalian: [
+            "Guida dolcemente e offri assistenza",
+            "Guida più velocemente",
+            "Evita di parlare",
+            "Chiedi al passeggero di stare in piedi"
+        ],
+
         correct: 0,
-        explanation: "Devi guidare dolcemente e offrire l'assistenza necessaria."
+
+        explanationEnglish:
+            "Drive smoothly and provide appropriate assistance while respecting the passenger's safety and dignity.",
+
+        explanationItalian:
+            "Devi guidare dolcemente e offrire l'assistenza adeguata, rispettando la sicurezza e la dignità del passeggero."
     }
 ];
 
 let currentQuestion = 0;
 let score = 0;
 let order = [];
+let optionsTranslated = false;
 
 function showSection(sectionId) {
     document.getElementById("home").classList.add("hidden");
@@ -252,6 +430,7 @@ function showSection(sectionId) {
 
 function startQuiz() {
     order = [0, 1, 2, 3, 4].sort(() => Math.random() - 0.5);
+
     currentQuestion = 0;
     score = 0;
 
@@ -262,37 +441,89 @@ function startQuiz() {
 function showQuestion() {
     const questionData = questions[order[currentQuestion]];
 
+    optionsTranslated = false;
+
     document.getElementById("counter").textContent =
-        "Domanda " + (currentQuestion + 1) + " di " + order.length;
+        "Domanda " +
+        (currentQuestion + 1) +
+        " di " +
+        order.length;
 
     document.getElementById("question").textContent =
         questionData.question;
 
-    document.getElementById("translation").textContent =
-        questionData.translation;
+    document.getElementById("questionTranslation").textContent =
+        questionData.questionItalian;
 
-    document.getElementById("translation").classList.add("hidden");
-    document.getElementById("feedback").className = "hidden";
-    document.getElementById("nextButton").classList.add("hidden");
+    document
+        .getElementById("questionTranslation")
+        .classList.add("hidden");
 
+    document.getElementById("feedback").className =
+        "hidden";
+
+    document
+        .getElementById("solutionBox")
+        .classList.add("hidden");
+
+    document
+        .getElementById("italianExplanation")
+        .classList.add("hidden");
+
+    document
+        .getElementById("nextButton")
+        .classList.add("hidden");
+
+    createAnswerButtons();
+}
+
+function createAnswerButtons() {
+    const questionData = questions[order[currentQuestion]];
     const answersBox = document.getElementById("answers");
+
     answersBox.innerHTML = "";
 
-    questionData.answers.forEach((answer, index) => {
+    questionData.answersEnglish.forEach((answer, index) => {
         const button = document.createElement("button");
 
         button.className = "answer";
-        button.textContent = answer;
-        button.onclick = () => checkAnswer(index, button);
+
+        let buttonText = answer;
+
+        if (optionsTranslated) {
+            buttonText +=
+                '<span class="option-translation">' +
+                questionData.answersItalian[index] +
+                "</span>";
+        }
+
+        button.innerHTML = buttonText;
+
+        button.onclick = () =>
+            checkAnswer(index, button);
 
         answersBox.appendChild(button);
     });
 }
 
+function toggleQuestionTranslation() {
+    document
+        .getElementById("questionTranslation")
+        .classList.toggle("hidden");
+}
+
+function toggleOptionsTranslation() {
+    optionsTranslated = !optionsTranslated;
+    createAnswerButtons();
+}
+
 function checkAnswer(selectedAnswer, selectedButton) {
     const questionData = questions[order[currentQuestion]];
-    const answerButtons = document.querySelectorAll(".answer");
-    const feedback = document.getElementById("feedback");
+    const answerButtons =
+        document.querySelectorAll(".answer");
+
+    const feedback =
+        document.getElementById("feedback");
 
     answerButtons.forEach((button, index) => {
         button.disabled = true;
@@ -312,15 +543,17 @@ function checkAnswer(selectedAnswer, selectedButton) {
         statistics.correct++;
 
         feedback.className = "feedback ok";
+
         feedback.innerHTML =
-            "<b>✅ Corretto!</b><br>" + questionData.explanation;
+            "<b>✅ Correct answer!</b>";
     } else {
         statistics.wrong++;
         selectedButton.classList.add("wrong");
 
         feedback.className = "feedback bad";
+
         feedback.innerHTML =
-            "<b>❌ Risposta errata.</b><br>" + questionData.explanation;
+            "<b>❌ Wrong answer.</b>";
     }
 
     localStorage.setItem(
@@ -328,7 +561,44 @@ function checkAnswer(selectedAnswer, selectedButton) {
         JSON.stringify(statistics)
     );
 
-    document.getElementById("nextButton").classList.remove("hidden");
+    showSolution(questionData);
+
+    document
+        .getElementById("nextButton")
+        .classList.remove("hidden");
+}
+
+function showSolution(questionData) {
+    const correctAnswer =
+        questionData.answersEnglish[questionData.correct];
+
+    const correctAnswerItalian =
+        questionData.answersItalian[questionData.correct];
+
+    document.getElementById("correctAnswerEnglish").innerHTML =
+        "<b>Correct answer:</b><br>" +
+        correctAnswer;
+
+    document.getElementById("explanationEnglish").innerHTML =
+        "<b>Explanation:</b><br>" +
+        questionData.explanationEnglish;
+
+    document.getElementById("italianExplanation").innerHTML =
+        "<b>Risposta corretta:</b><br>" +
+        correctAnswerItalian +
+        "<br><br>" +
+        "<b>Spiegazione:</b><br>" +
+        questionData.explanationItalian;
+
+    document
+        .getElementById("solutionBox")
+        .classList.remove("hidden");
+}
+
+function toggleItalianExplanation() {
+    document
+        .getElementById("italianExplanation")
+        .classList.toggle("hidden");
 }
 
 function nextQuestion() {
@@ -348,14 +618,13 @@ function nextQuestion() {
     }
 }
 
-function toggleTranslation() {
-    document.getElementById("translation").classList.toggle("hidden");
-}
-
 function speakQuestion() {
-    const text = document.getElementById("question").textContent;
+    const text =
+        document.getElementById("question").textContent;
 
-    const speech = new SpeechSynthesisUtterance(text);
+    const speech =
+        new SpeechSynthesisUtterance(text);
+
     speech.lang = "en-GB";
 
     speechSynthesis.cancel();

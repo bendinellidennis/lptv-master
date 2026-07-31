@@ -6,120 +6,381 @@
 <title>LPTV MASTER</title>
 
 <style>
-
-body{
-margin:0;
-background:#edf3fb;
-font-family:Arial,Helvetica,sans-serif;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #edf3fb;
+    color: #172033;
 }
 
-header{
-background:#0B4EA2;
-color:white;
-padding:30px;
-text-align:center;
+header {
+    background: #0b4ea2;
+    color: white;
+    text-align: center;
+    padding: 28px 18px;
 }
 
-header h1{
-margin:0;
-font-size:34px;
+header h1 {
+    margin: 0;
+    font-size: 32px;
 }
 
-header p{
-margin-top:10px;
-font-size:18px;
+header p {
+    margin-top: 10px;
+    font-size: 18px;
 }
 
-.container{
-padding:20px;
-max-width:700px;
-margin:auto;
+main {
+    max-width: 700px;
+    margin: auto;
+    padding: 18px;
 }
 
-.card{
-background:white;
-padding:20px;
-border-radius:15px;
-box-shadow:0 5px 15px rgba(0,0,0,.15);
-margin-bottom:20px;
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
-button{
-width:100%;
-padding:18px;
-margin-top:15px;
-font-size:18px;
-border:none;
-border-radius:10px;
-background:#0B4EA2;
-color:white;
+button {
+    width: 100%;
+    padding: 16px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    background: #0b4ea2;
+    color: white;
 }
 
-button:hover{
-background:#1565C0;
+.secondary {
+    background: #e6eef9;
+    color: #073777;
 }
 
+.answer {
+    background: #edf3fb;
+    color: #172033;
+    text-align: left;
+}
+
+.correct {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+}
+
+.wrong {
+    background: #fee2e2 !important;
+    color: #991b1b !important;
+}
+
+.hidden {
+    display: none;
+}
+
+.translation {
+    background: #fff7d6;
+    padding: 14px;
+    border-radius: 12px;
+    margin-top: 14px;
+}
+
+.feedback {
+    padding: 14px;
+    border-radius: 12px;
+    margin-top: 14px;
+}
+
+.ok {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.bad {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+}
+
+.row button {
+    flex: 1;
+}
 </style>
-
 </head>
 
 <body>
 
 <header>
-
-<h1>🚖 LPTV MASTER</h1>
-
-<p>Official LPTV Training System</p>
-
+    <h1>🚖 LPTV MASTER</h1>
+    <p>English • Italiano • Quiz • Pronuncia</p>
 </header>
 
-<div class="container">
+<main>
 
-<div class="card">
+<section id="home" class="card">
+    <h2>Benvenuto Dennis 👋</h2>
+    <p>Allenati con domande in inglese, traduzione italiana e spiegazione.</p>
 
-<h2>Benvenuto Dennis 👋</h2>
+    <button onclick="startQuiz()">📝 Practice Quiz</button>
+    <button class="secondary" onclick="showProgress()">📊 My Progress</button>
+</section>
 
-<p>
+<section id="quiz" class="card hidden">
 
-Questa sarà la migliore applicazione per preparare
-l'esame LPTV di Malta.
+    <p id="counter"></p>
 
-</p>
+    <h2 id="question"></h2>
 
-<button>
+    <div id="translation" class="translation hidden"></div>
 
-📚 Learn English
+    <div class="row">
+        <button class="secondary" onclick="toggleTranslation()">🇮🇹 Traduzione</button>
+        <button class="secondary" onclick="speakQuestion()">🔊 Ascolta</button>
+    </div>
 
-</button>
+    <div id="answers"></div>
 
-<button>
+    <div id="feedback" class="hidden"></div>
 
-📝 Practice Quiz
+    <button id="nextButton" class="hidden" onclick="nextQuestion()">
+        Prossima domanda
+    </button>
 
-</button>
+    <button class="secondary" onclick="goHome()">Esci</button>
 
-<button>
+</section>
 
-🎯 Official Mock Exam
+<section id="result" class="card hidden">
+    <h2>Risultato finale</h2>
+    <p id="resultText"></p>
+    <button onclick="goHome()">Torna alla Home</button>
+</section>
 
-</button>
+<section id="progress" class="card hidden">
+    <h2>I tuoi progressi</h2>
 
-<button>
+    <p>✅ Risposte corrette: <b id="correctStat">0</b></p>
+    <p>❌ Risposte errate: <b id="wrongStat">0</b></p>
 
-📖 Vocabulary
+    <button onclick="goHome()">Torna alla Home</button>
+</section>
 
-</button>
+</main>
 
-<button>
+<script>
+const questions = [
+    {
+        question: "Your vehicle breaks down in a tunnel. What should you do?",
+        translation: "Il tuo veicolo si guasta in un tunnel. Cosa devi fare?",
+        answers: [
+            "Stay in your vehicle and wait for the police",
+            "Stand in the lane behind your vehicle",
+            "Stand in front of your vehicle",
+            "Switch on hazard lights, leave safely and call for help"
+        ],
+        correct: 3,
+        explanation: "Accendi le luci di emergenza, mettiti al sicuro e chiama aiuto."
+    },
+    {
+        question: "You notice a bicycle wheel sticking out between parked cars. What should you do?",
+        translation: "Noti la ruota di una bicicletta sporgere tra le auto parcheggiate. Cosa devi fare?",
+        answers: [
+            "Accelerate quickly",
+            "Slow down and wave the cyclist across",
+            "Brake sharply",
+            "Slow down and be prepared to stop"
+        ],
+        correct: 3,
+        explanation: "Rallenta e preparati a fermarti perché il ciclista potrebbe uscire."
+    },
+    {
+        question: "What should you do before moving off?",
+        translation: "Cosa devi fare prima di partire?",
+        answers: [
+            "Check mirrors and blind spots",
+            "Sound the horn",
+            "Switch on hazard lights",
+            "Move immediately"
+        ],
+        correct: 0,
+        explanation: "Devi controllare gli specchi e gli angoli ciechi prima di partire."
+    },
+    {
+        question: "Why should you keep a safe distance?",
+        translation: "Perché devi mantenere la distanza di sicurezza?",
+        answers: [
+            "To save fuel only",
+            "To have enough time and space to stop",
+            "To prevent overtaking",
+            "To drive faster"
+        ],
+        correct: 1,
+        explanation: "La distanza di sicurezza ti dà tempo e spazio per fermarti."
+    },
+    {
+        question: "What should you do when carrying a vulnerable passenger?",
+        translation: "Cosa devi fare quando trasporti un passeggero vulnerabile?",
+        answers: [
+            "Drive smoothly and offer assistance",
+            "Drive faster",
+            "Avoid speaking",
+            "Ask the passenger to stand"
+        ],
+        correct: 0,
+        explanation: "Devi guidare dolcemente e offrire l'assistenza necessaria."
+    }
+];
 
-📊 My Progress
+let currentQuestion = 0;
+let score = 0;
+let order = [];
 
-</button>
+function showSection(sectionId) {
+    document.getElementById("home").classList.add("hidden");
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("result").classList.add("hidden");
+    document.getElementById("progress").classList.add("hidden");
 
-</div>
+    document.getElementById(sectionId).classList.remove("hidden");
+}
 
-</div>
+function startQuiz() {
+    order = [0, 1, 2, 3, 4].sort(() => Math.random() - 0.5);
+    currentQuestion = 0;
+    score = 0;
+
+    showSection("quiz");
+    showQuestion();
+}
+
+function showQuestion() {
+    const questionData = questions[order[currentQuestion]];
+
+    document.getElementById("counter").textContent =
+        "Domanda " + (currentQuestion + 1) + " di " + order.length;
+
+    document.getElementById("question").textContent =
+        questionData.question;
+
+    document.getElementById("translation").textContent =
+        questionData.translation;
+
+    document.getElementById("translation").classList.add("hidden");
+    document.getElementById("feedback").className = "hidden";
+    document.getElementById("nextButton").classList.add("hidden");
+
+    const answersBox = document.getElementById("answers");
+    answersBox.innerHTML = "";
+
+    questionData.answers.forEach((answer, index) => {
+        const button = document.createElement("button");
+
+        button.className = "answer";
+        button.textContent = answer;
+        button.onclick = () => checkAnswer(index, button);
+
+        answersBox.appendChild(button);
+    });
+}
+
+function checkAnswer(selectedAnswer, selectedButton) {
+    const questionData = questions[order[currentQuestion]];
+    const answerButtons = document.querySelectorAll(".answer");
+    const feedback = document.getElementById("feedback");
+
+    answerButtons.forEach((button, index) => {
+        button.disabled = true;
+
+        if (index === questionData.correct) {
+            button.classList.add("correct");
+        }
+    });
+
+    let statistics = JSON.parse(
+        localStorage.getItem("lptvStatistics") ||
+        '{"correct":0,"wrong":0}'
+    );
+
+    if (selectedAnswer === questionData.correct) {
+        score++;
+        statistics.correct++;
+
+        feedback.className = "feedback ok";
+        feedback.innerHTML =
+            "<b>✅ Corretto!</b><br>" + questionData.explanation;
+    } else {
+        statistics.wrong++;
+        selectedButton.classList.add("wrong");
+
+        feedback.className = "feedback bad";
+        feedback.innerHTML =
+            "<b>❌ Risposta errata.</b><br>" + questionData.explanation;
+    }
+
+    localStorage.setItem(
+        "lptvStatistics",
+        JSON.stringify(statistics)
+    );
+
+    document.getElementById("nextButton").classList.remove("hidden");
+}
+
+function nextQuestion() {
+    currentQuestion++;
+
+    if (currentQuestion >= order.length) {
+        document.getElementById("resultText").innerHTML =
+            "Hai risposto correttamente a <b>" +
+            score +
+            " domande su " +
+            order.length +
+            "</b>.";
+
+        showSection("result");
+    } else {
+        showQuestion();
+    }
+}
+
+function toggleTranslation() {
+    document.getElementById("translation").classList.toggle("hidden");
+}
+
+function speakQuestion() {
+    const text = document.getElementById("question").textContent;
+
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "en-GB";
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(speech);
+}
+
+function showProgress() {
+    const statistics = JSON.parse(
+        localStorage.getItem("lptvStatistics") ||
+        '{"correct":0,"wrong":0}'
+    );
+
+    document.getElementById("correctStat").textContent =
+        statistics.correct;
+
+    document.getElementById("wrongStat").textContent =
+        statistics.wrong;
+
+    showSection("progress");
+}
+
+function goHome() {
+    showSection("home");
+}
+</script>
 
 </body>
-
 </html>

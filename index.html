@@ -27,7 +27,7 @@ header h1 {
 }
 
 header p {
-    margin-top: 10px;
+    margin: 10px 0 0;
     font-size: 18px;
 }
 
@@ -52,6 +52,7 @@ button {
     border: none;
     border-radius: 12px;
     font-size: 18px;
+    font-weight: bold;
     background: #0b4ea2;
     color: white;
 }
@@ -66,16 +67,28 @@ button {
     color: #172033;
     text-align: left;
     line-height: 1.4;
+    border: 3px solid transparent;
 }
 
-.correct {
+.answer.selected {
+    background: #dbeafe;
+    border-color: #0b4ea2;
+}
+
+.answer.correct {
     background: #dcfce7 !important;
     color: #166534 !important;
+    border-color: #15803d !important;
 }
 
-.wrong {
+.answer.wrong {
     background: #fee2e2 !important;
     color: #991b1b !important;
+    border-color: #b91c1c !important;
+}
+
+.answer:disabled {
+    opacity: 1;
 }
 
 .hidden {
@@ -125,11 +138,18 @@ button {
     flex: 1;
 }
 
-.small-title {
-    font-size: 15px;
+.counter {
+    color: #5b6473;
+    font-size: 17px;
+}
+
+.instruction {
+    background: #fff3cd;
+    color: #664d03;
+    padding: 13px;
+    border-radius: 12px;
     font-weight: bold;
-    margin-bottom: 8px;
-    color: #0b4ea2;
+    margin: 14px 0;
 }
 
 .option-translation {
@@ -140,9 +160,11 @@ button {
     font-weight: normal;
 }
 
-.counter {
-    font-size: 17px;
-    color: #5b6473;
+.small-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #0b4ea2;
 }
 </style>
 </head>
@@ -157,29 +179,36 @@ button {
 <main>
 
 <section id="home" class="card">
+
     <h2>Benvenuto Dennis 👋</h2>
 
     <p>
-        Allenati con domande in inglese, traduzione italiana,
-        opzioni tradotte e spiegazioni complete.
+        Allenati con domande a risposta singola e multipla,
+        traduzioni e spiegazioni complete.
     </p>
 
-    <button onclick="startQuiz()">📝 Practice Quiz</button>
+    <button onclick="startQuiz()">
+        📝 Practice Quiz
+    </button>
 
     <button class="secondary" onclick="showProgress()">
         📊 My Progress
     </button>
+
 </section>
 
 <section id="quiz" class="card hidden">
 
     <p id="counter" class="counter"></p>
 
+    <div id="selectionInstruction" class="instruction"></div>
+
     <h2 id="question"></h2>
 
     <div id="questionTranslation" class="translation hidden"></div>
 
     <div class="row">
+
         <button class="secondary" onclick="toggleQuestionTranslation()">
             🇮🇹 Domanda
         </button>
@@ -187,6 +216,7 @@ button {
         <button class="secondary" onclick="speakQuestion()">
             🔊 Ascolta
         </button>
+
     </div>
 
     <button class="secondary" onclick="toggleOptionsTranslation()">
@@ -194,6 +224,10 @@ button {
     </button>
 
     <div id="answers"></div>
+
+    <button id="confirmButton" onclick="confirmAnswer()">
+        Conferma risposta
+    </button>
 
     <div id="feedback" class="hidden"></div>
 
@@ -263,6 +297,7 @@ button {
 
 <script>
 const questions = [
+
     {
         question:
             "Your vehicle breaks down in a tunnel. What should you do?",
@@ -284,13 +319,13 @@ const questions = [
             "Accendi le luci di emergenza, esci in sicurezza e chiama aiuto"
         ],
 
-        correct: 3,
+        correctAnswers: [3],
 
         explanationEnglish:
-            "Switch on the hazard lights, leave the vehicle safely and call for help. Never remain standing in the traffic lane.",
+            "Switch on the hazard lights, leave the vehicle safely and call for help. Never stand in the traffic lane.",
 
         explanationItalian:
-            "Accendi le luci di emergenza, esci dal veicolo in sicurezza e chiama aiuto. Non devi mai restare fermo nella corsia di traffico."
+            "Accendi le luci di emergenza, esci dal veicolo in sicurezza e chiama aiuto. Non restare mai fermo nella corsia."
     },
 
     {
@@ -314,7 +349,7 @@ const questions = [
             "Rallenta e preparati a fermarti"
         ],
 
-        correct: 3,
+        correctAnswers: [3],
 
         explanationEnglish:
             "The cyclist may suddenly emerge from between the parked vehicles. Slow down and be ready to stop.",
@@ -344,7 +379,7 @@ const questions = [
             "Parti immediatamente"
         ],
 
-        correct: 0,
+        correctAnswers: [0],
 
         explanationEnglish:
             "Before moving off, check the mirrors and blind spots to make sure that it is safe.",
@@ -374,7 +409,7 @@ const questions = [
             "Per guidare più velocemente"
         ],
 
-        correct: 1,
+        correctAnswers: [1],
 
         explanationEnglish:
             "A safe distance gives you enough time and space to react and stop safely.",
@@ -404,22 +439,55 @@ const questions = [
             "Chiedi al passeggero di stare in piedi"
         ],
 
-        correct: 0,
+        correctAnswers: [0],
 
         explanationEnglish:
             "Drive smoothly and provide appropriate assistance while respecting the passenger's safety and dignity.",
 
         explanationItalian:
             "Devi guidare dolcemente e offrire l'assistenza adeguata, rispettando la sicurezza e la dignità del passeggero."
+    },
+
+    {
+        question:
+            "When overtaking a horse and rider, what should you do? Select 2 answers.",
+
+        questionItalian:
+            "Quando sorpassi un cavallo con il suo cavaliere, cosa devi fare? Seleziona 2 risposte.",
+
+        answersEnglish: [
+            "Pass slowly",
+            "Leave plenty of room",
+            "Sound your horn continuously",
+            "Accelerate hard past the horse"
+        ],
+
+        answersItalian: [
+            "Passa lentamente",
+            "Lascia molto spazio",
+            "Suona continuamente il clacson",
+            "Accelera con forza mentre sorpassi il cavallo"
+        ],
+
+        correctAnswers: [0, 1],
+
+        explanationEnglish:
+            "Pass slowly and leave plenty of room. Horses can be frightened by noise and sudden movements.",
+
+        explanationItalian:
+            "Passa lentamente e lascia molto spazio. I cavalli possono spaventarsi per rumori e movimenti improvvisi."
     }
 ];
 
 let currentQuestion = 0;
 let score = 0;
 let order = [];
+let selectedAnswers = [];
 let optionsTranslated = false;
+let answerConfirmed = false;
 
 function showSection(sectionId) {
+
     document.getElementById("home").classList.add("hidden");
     document.getElementById("quiz").classList.add("hidden");
     document.getElementById("result").classList.add("hidden");
@@ -428,8 +496,27 @@ function showSection(sectionId) {
     document.getElementById(sectionId).classList.remove("hidden");
 }
 
+function createUniqueRandomOrder() {
+
+    const indexes = questions.map((question, index) => index);
+
+    for (let i = indexes.length - 1; i > 0; i--) {
+
+        const randomIndex =
+            Math.floor(Math.random() * (i + 1));
+
+        const temporaryValue = indexes[i];
+
+        indexes[i] = indexes[randomIndex];
+        indexes[randomIndex] = temporaryValue;
+    }
+
+    return indexes;
+}
+
 function startQuiz() {
-    order = [0, 1, 2, 3, 4].sort(() => Math.random() - 0.5);
+
+    order = createUniqueRandomOrder();
 
     currentQuestion = 0;
     score = 0;
@@ -439,9 +526,13 @@ function startQuiz() {
 }
 
 function showQuestion() {
-    const questionData = questions[order[currentQuestion]];
 
+    const questionData =
+        questions[order[currentQuestion]];
+
+    selectedAnswers = [];
     optionsTranslated = false;
+    answerConfirmed = false;
 
     document.getElementById("counter").textContent =
         "Domanda " +
@@ -449,96 +540,206 @@ function showQuestion() {
         " di " +
         order.length;
 
+    const requiredAnswers =
+        questionData.correctAnswers.length;
+
+    if (requiredAnswers === 1) {
+
+        document.getElementById(
+            "selectionInstruction"
+        ).textContent =
+            "Select 1 answer • Seleziona 1 risposta";
+
+    } else {
+
+        document.getElementById(
+            "selectionInstruction"
+        ).textContent =
+            "Select " +
+            requiredAnswers +
+            " answers • Seleziona " +
+            requiredAnswers +
+            " risposte";
+    }
+
     document.getElementById("question").textContent =
         questionData.question;
 
-    document.getElementById("questionTranslation").textContent =
+    document.getElementById(
+        "questionTranslation"
+    ).textContent =
         questionData.questionItalian;
 
-    document
-        .getElementById("questionTranslation")
-        .classList.add("hidden");
+    document.getElementById(
+        "questionTranslation"
+    ).classList.add("hidden");
 
     document.getElementById("feedback").className =
         "hidden";
 
-    document
-        .getElementById("solutionBox")
-        .classList.add("hidden");
+    document.getElementById(
+        "solutionBox"
+    ).classList.add("hidden");
 
-    document
-        .getElementById("italianExplanation")
-        .classList.add("hidden");
+    document.getElementById(
+        "italianExplanation"
+    ).classList.add("hidden");
 
-    document
-        .getElementById("nextButton")
-        .classList.add("hidden");
+    document.getElementById(
+        "nextButton"
+    ).classList.add("hidden");
+
+    document.getElementById(
+        "confirmButton"
+    ).classList.remove("hidden");
 
     createAnswerButtons();
 }
 
 function createAnswerButtons() {
-    const questionData = questions[order[currentQuestion]];
-    const answersBox = document.getElementById("answers");
+
+    const questionData =
+        questions[order[currentQuestion]];
+
+    const answersBox =
+        document.getElementById("answers");
 
     answersBox.innerHTML = "";
 
-    questionData.answersEnglish.forEach((answer, index) => {
-        const button = document.createElement("button");
+    questionData.answersEnglish.forEach(
+        (answer, index) => {
 
-        button.className = "answer";
+            const button =
+                document.createElement("button");
 
-        let buttonText = answer;
+            button.className = "answer";
 
-        if (optionsTranslated) {
-            buttonText +=
-                '<span class="option-translation">' +
-                questionData.answersItalian[index] +
-                "</span>";
+            if (selectedAnswers.includes(index)) {
+                button.classList.add("selected");
+            }
+
+            let buttonText = answer;
+
+            if (optionsTranslated) {
+
+                buttonText +=
+                    '<span class="option-translation">' +
+                    questionData.answersItalian[index] +
+                    "</span>";
+            }
+
+            button.innerHTML = buttonText;
+
+            button.disabled = answerConfirmed;
+
+            button.onclick = () =>
+                selectAnswer(index);
+
+            answersBox.appendChild(button);
+        }
+    );
+}
+
+function selectAnswer(answerIndex) {
+
+    if (answerConfirmed) {
+        return;
+    }
+
+    const questionData =
+        questions[order[currentQuestion]];
+
+    const maximumSelections =
+        questionData.correctAnswers.length;
+
+    if (selectedAnswers.includes(answerIndex)) {
+
+        selectedAnswers =
+            selectedAnswers.filter(
+                index => index !== answerIndex
+            );
+
+    } else {
+
+        if (
+            selectedAnswers.length >=
+            maximumSelections
+        ) {
+
+            alert(
+                "Puoi selezionare solamente " +
+                maximumSelections +
+                (
+                    maximumSelections === 1
+                    ? " risposta."
+                    : " risposte."
+                )
+            );
+
+            return;
         }
 
-        button.innerHTML = buttonText;
+        selectedAnswers.push(answerIndex);
+    }
 
-        button.onclick = () =>
-            checkAnswer(index, button);
-
-        answersBox.appendChild(button);
-    });
-}
-
-function toggleQuestionTranslation() {
-    document
-        .getElementById("questionTranslation")
-        .classList.toggle("hidden");
-}
-
-function toggleOptionsTranslation() {
-    optionsTranslated = !optionsTranslated;
     createAnswerButtons();
 }
 
-function checkAnswer(selectedAnswer, selectedButton) {
-    const questionData = questions[order[currentQuestion]];
-    const answerButtons =
-        document.querySelectorAll(".answer");
+function confirmAnswer() {
+
+    const questionData =
+        questions[order[currentQuestion]];
+
+    const requiredAnswers =
+        questionData.correctAnswers.length;
+
+    if (selectedAnswers.length !== requiredAnswers) {
+
+        alert(
+            "Devi selezionare " +
+            requiredAnswers +
+            (
+                requiredAnswers === 1
+                ? " risposta."
+                : " risposte."
+            )
+        );
+
+        return;
+    }
+
+    answerConfirmed = true;
+
+    const selectedSorted =
+        [...selectedAnswers].sort(
+            (a, b) => a - b
+        );
+
+    const correctSorted =
+        [...questionData.correctAnswers].sort(
+            (a, b) => a - b
+        );
+
+    const isCorrect =
+        selectedSorted.length ===
+        correctSorted.length &&
+        selectedSorted.every(
+            (value, index) =>
+                value === correctSorted[index]
+        );
+
+    let statistics = JSON.parse(
+        localStorage.getItem(
+            "lptvStatistics"
+        ) ||
+        '{"correct":0,"wrong":0}'
+    );
 
     const feedback =
         document.getElementById("feedback");
 
-    answerButtons.forEach((button, index) => {
-        button.disabled = true;
+    if (isCorrect) {
 
-        if (index === questionData.correct) {
-            button.classList.add("correct");
-        }
-    });
-
-    let statistics = JSON.parse(
-        localStorage.getItem("lptvStatistics") ||
-        '{"correct":0,"wrong":0}'
-    );
-
-    if (selectedAnswer === questionData.correct) {
         score++;
         statistics.correct++;
 
@@ -546,9 +747,10 @@ function checkAnswer(selectedAnswer, selectedButton) {
 
         feedback.innerHTML =
             "<b>✅ Correct answer!</b>";
+
     } else {
+
         statistics.wrong++;
-        selectedButton.classList.add("wrong");
 
         feedback.className = "feedback bad";
 
@@ -561,66 +763,172 @@ function checkAnswer(selectedAnswer, selectedButton) {
         JSON.stringify(statistics)
     );
 
+    showAnswerColours(questionData);
+
     showSolution(questionData);
 
-    document
-        .getElementById("nextButton")
-        .classList.remove("hidden");
+    document.getElementById(
+        "confirmButton"
+    ).classList.add("hidden");
+
+    document.getElementById(
+        "nextButton"
+    ).classList.remove("hidden");
+}
+
+function showAnswerColours(questionData) {
+
+    const answerButtons =
+        document.querySelectorAll(".answer");
+
+    answerButtons.forEach(
+        (button, index) => {
+
+            button.disabled = true;
+
+            button.classList.remove("selected");
+
+            if (
+                questionData.correctAnswers.includes(
+                    index
+                )
+            ) {
+
+                button.classList.add("correct");
+
+            } else if (
+                selectedAnswers.includes(index)
+            ) {
+
+                button.classList.add("wrong");
+            }
+        }
+    );
+}
+
+function toggleQuestionTranslation() {
+
+    document.getElementById(
+        "questionTranslation"
+    ).classList.toggle("hidden");
+}
+
+function toggleOptionsTranslation() {
+
+    optionsTranslated = !optionsTranslated;
+
+    createAnswerButtons();
+
+    if (answerConfirmed) {
+
+        showAnswerColours(
+            questions[order[currentQuestion]]
+        );
+    }
 }
 
 function showSolution(questionData) {
-    const correctAnswer =
-        questionData.answersEnglish[questionData.correct];
 
-    const correctAnswerItalian =
-        questionData.answersItalian[questionData.correct];
+    const correctEnglish =
+        questionData.correctAnswers
+            .map(
+                index =>
+                    "• " +
+                    questionData.answersEnglish[index]
+            )
+            .join("<br>");
 
-    document.getElementById("correctAnswerEnglish").innerHTML =
-        "<b>Correct answer:</b><br>" +
-        correctAnswer;
+    const correctItalian =
+        questionData.correctAnswers
+            .map(
+                index =>
+                    "• " +
+                    questionData.answersItalian[index]
+            )
+            .join("<br>");
 
-    document.getElementById("explanationEnglish").innerHTML =
+    document.getElementById(
+        "correctAnswerEnglish"
+    ).innerHTML =
+        "<b>Correct answer" +
+        (
+            questionData.correctAnswers.length > 1
+            ? "s"
+            : ""
+        ) +
+        ":</b><br>" +
+        correctEnglish;
+
+    document.getElementById(
+        "explanationEnglish"
+    ).innerHTML =
         "<b>Explanation:</b><br>" +
         questionData.explanationEnglish;
 
-    document.getElementById("italianExplanation").innerHTML =
-        "<b>Risposta corretta:</b><br>" +
-        correctAnswerItalian +
+    document.getElementById(
+        "italianExplanation"
+    ).innerHTML =
+        "<b>Risposta" +
+        (
+            questionData.correctAnswers.length > 1
+            ? "e corrette"
+            : " corretta"
+        ) +
+        ":</b><br>" +
+        correctItalian +
         "<br><br>" +
         "<b>Spiegazione:</b><br>" +
         questionData.explanationItalian;
 
-    document
-        .getElementById("solutionBox")
-        .classList.remove("hidden");
+    document.getElementById(
+        "solutionBox"
+    ).classList.remove("hidden");
 }
 
 function toggleItalianExplanation() {
-    document
-        .getElementById("italianExplanation")
-        .classList.toggle("hidden");
+
+    document.getElementById(
+        "italianExplanation"
+    ).classList.toggle("hidden");
 }
 
 function nextQuestion() {
+
     currentQuestion++;
 
     if (currentQuestion >= order.length) {
-        document.getElementById("resultText").innerHTML =
+
+        const percentage =
+            Math.round(
+                score / order.length * 100
+            );
+
+        document.getElementById(
+            "resultText"
+        ).innerHTML =
             "Hai risposto correttamente a <b>" +
             score +
             " domande su " +
             order.length +
-            "</b>.";
+            "</b>.<br><br>" +
+            "Percentuale: <b>" +
+            percentage +
+            "%</b>";
 
         showSection("result");
+
     } else {
+
         showQuestion();
     }
 }
 
 function speakQuestion() {
+
     const text =
-        document.getElementById("question").textContent;
+        document.getElementById(
+            "question"
+        ).textContent;
 
     const speech =
         new SpeechSynthesisUtterance(text);
@@ -632,21 +940,30 @@ function speakQuestion() {
 }
 
 function showProgress() {
+
     const statistics = JSON.parse(
-        localStorage.getItem("lptvStatistics") ||
+        localStorage.getItem(
+            "lptvStatistics"
+        ) ||
         '{"correct":0,"wrong":0}'
     );
 
-    document.getElementById("correctStat").textContent =
+    document.getElementById(
+        "correctStat"
+    ).textContent =
         statistics.correct;
 
-    document.getElementById("wrongStat").textContent =
+    document.getElementById(
+        "wrongStat"
+    ).textContent =
         statistics.wrong;
 
     showSection("progress");
 }
 
 function goHome() {
+
+    speechSynthesis.cancel();
     showSection("home");
 }
 </script>

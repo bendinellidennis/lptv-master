@@ -29,7 +29,7 @@ main{max-width:900px;margin:auto;padding:18px 14px calc(34px + env(safe-area-ins
 select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:13px;background:#fff;font-size:17px;margin:6px 0 12px}
 .small{font-size:14px}.center{text-align:center}.review-strip{display:flex;gap:7px;overflow-x:auto;padding:7px 0 3px;margin:8px 0}
 .review-dot{min-width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#f7f9fc;font-weight:750}.review-dot.current{border:2px solid var(--blue)}.review-dot.answered{background:#dff2e5}.review-dot.flagged{background:#fff1b8}
-.list-item{padding:13px 0;border-bottom:1px solid var(--line)}.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#eef3fa;font-size:12px;font-weight:700;color:#3c4e68}
+.list-item{padding:13px 0;border-bottom:1px solid var(--line)}.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#eef3fa;font-size:12px;font-weight:700;color:#3c4e68}.meta-row{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 4px}.meta-official{background:#e7f7ed;color:#126b36}.meta-verified{background:#e8f0fb;color:#123d7a}.meta-variant{background:#fff3d6;color:#805500}.difficulty{letter-spacing:1px}
 .pause-screen{position:fixed;inset:0;background:#07162de8;color:white;display:flex;align-items:center;justify-content:center;z-index:99;padding:24px}.pause-box{max-width:430px;text-align:center}
 .hero-score{font-size:48px;font-weight:900;color:var(--blue);line-height:1}.subgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.mini{background:#f5f8fc;border-radius:16px;padding:14px;text-align:center}.mini strong{display:block;font-size:22px}.category-row{margin:13px 0}.category-head{display:flex;justify-content:space-between;margin-bottom:6px}.history-item{padding:12px;border:1px solid var(--line);border-radius:14px;margin:8px 0}.trend-wrap{display:flex;align-items:flex-end;gap:8px;height:180px;padding:18px 6px 28px;border-bottom:1px solid var(--line)}.trend-bar{flex:1;min-width:18px;background:linear-gradient(180deg,var(--blue),var(--blue2));border-radius:8px 8px 2px 2px;position:relative}.trend-bar span{position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted)}.trend-bar b{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:11px}.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.day-box{background:#f4f7fb;border-radius:13px;padding:10px 4px;text-align:center}.day-box.active{background:#dff2e5}.day-box strong{display:block;font-size:18px}
 .daily{border:2px solid #d9e6f7;background:linear-gradient(180deg,#fff,#f8fbff)}.daily ul{padding-left:20px}.countdown-big{font-size:42px;font-weight:900;color:var(--blue)}.plan-chip{display:inline-block;padding:7px 10px;border-radius:999px;background:#eef4fb;margin:4px 5px 4px 0;font-weight:700}.badge-item{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);border-radius:14px;margin:9px 0}.badge-item.locked{opacity:.42;filter:grayscale(1)}.badge-icon{font-size:30px}
@@ -42,7 +42,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <section id="home">
   <div class="card">
     <h2>Benvenuto Dennis 👋</h2>
-    <p class="muted">Versione 2.9 • Database: <strong id="count"></strong> domande</p>
+    <p class="muted">Versione 3.0 • Database: <strong id="count"></strong> domande</p>
     <div id="resumeBox" class="hidden" style="margin-bottom:14px">
       <button class="btn pause big" onclick="resumeSavedSession()">▶️ Riprendi sessione interrotta</button>
     </div>
@@ -105,6 +105,8 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <button class="btn secondary big" onclick="startDueReview()">⏰ Ripasso programmato</button>
 <button class="btn secondary big" onclick="showRecentQuestions()">🕘 Domande recenti</button>
 <button class="btn secondary big" onclick="startCategoryChallenge()">🏁 Sfida categoria</button>
+<button class="btn secondary big" onclick="startHardExam()">🔥 Esame difficile</button>
+<button class="btn secondary big" onclick="startLast30()">⏱️ Ultimi 30 minuti</button>
     </div>
   </div>
 
@@ -135,7 +137,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <div class="topline"><span class="badge" id="qnum"></span><span class="timer" id="timer"></span></div>
 <div class="progress"><span id="quizProgress" style="width:0%"></span></div><p id="examNotice" class="small muted hidden">Modalità esame: le soluzioni appariranno solo alla fine.</p>
 <div class="review-strip" id="reviewStrip"></div>
-<div class="small muted" id="categoryLabel"></div><div class="small muted" id="languageLabel"></div>
+<div class="small muted" id="categoryLabel"></div><div class="small muted" id="languageLabel"></div><div class="meta-row" id="questionMeta"></div>
 <div class="question" id="question"></div>
 <div class="actions">
 <button class="btn secondary" onclick="toggleTranslation()">🇮🇹 Traduzione</button>
@@ -253,6 +255,18 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <div id="recentQuestionsBody"></div>
 </div></section>
 
+
+<section id="examIntro" class="hidden"><div class="card">
+<div class="topline"><h2 id="examIntroTitle">Esame realistico</h2><button class="btn light" onclick="goHome()">Esci</button></div>
+<div class="center" style="font-size:56px">🎯</div>
+<div class="stat"><span>Domande</span><strong id="introQuestions">35</strong></div>
+<div class="stat"><span>Tempo</span><strong id="introTime">45 minuti</strong></div>
+<div class="stat"><span>Promozione</span><strong id="introPass">30/35</strong></div>
+<div class="stat"><span>Soluzioni durante il test</span><strong>No</strong></div>
+<p class="muted" id="examIntroText">Le risposte verranno corrette soltanto alla fine.</p>
+<button class="btn big" id="beginExamBtn" onclick="beginPreparedExam()">Inizia ora</button>
+</div></section>
+
 </main>
 
 <div id="pauseScreen" class="pause-screen hidden">
@@ -266,10 +280,11 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <script src="database.js"></script>
 <script>
 const Q=window.LPTV_QUESTIONS||[], $=id=>document.getElementById(id);
-const sections=['home','studySetup','search','quiz','result','dashboard','history','profile','examDate','flashcards','languageSettings','recentQuestions'];
+const sections=['home','studySetup','search','quiz','result','dashboard','history','profile','examDate','flashcards','languageSettings','recentQuestions','examIntro'];
 const STORAGE='lptvProgressV20', SESSION='lptvActiveSessionV20';
 const state={list:[],i:0,selected:new Set(),answered:false,mode:'study',remaining:2700,interval:null,details:[],answers:{},flags:new Set(),questionStartedAt:0,paused:false};
 const flash={list:[],i:0,revealed:false};
+let preparedExam={list:[],mode:'exam',time:2700,title:'Esame realistico'};
 
 function show(id){sections.forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo(0,0)}
 function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
@@ -421,24 +436,40 @@ function startStudy(){
   let pool=Q.filter(q=>(cat==='ALL'||q.category===cat)&&statusAllowed(q,f));
   begin(shuffle(pool).slice(0,Math.min(n,pool.length)),'study')
 }
-function startExam(){
-  let pool=Q.filter(q=>statusAllowed(q,'verified'));if(pool.length<35)pool=Q;
+function buildBalancedExam(pool,total=35){
   const groups=[
     {match:q=>/customer|passenger|vulnerable/i.test(q.category),n:8},
     {match:q=>/health|first aid|safety|loading/i.test(q.category),n:9},
     {match:q=>/road|sign|traffic|vehicle|motor|pedestrian|cyclist|alcohol|document|insurance|parking/i.test(q.category),n:9},
     {match:q=>/LPTV|operator|driver requirements|garaging|platform|penalt|special occasion|driving and rest/i.test(q.category),n:9}
   ];
-  const selected=[], used=new Set();
+  const selected=[],used=new Set();
   for(const g of groups){
     const candidates=shuffle(pool.filter(q=>g.match(q)&&!used.has(q.id)));
     for(const q of candidates.slice(0,g.n)){selected.push(q);used.add(q.id)}
   }
   for(const q of shuffle(pool)){
-    if(selected.length>=35)break;
+    if(selected.length>=total)break;
     if(!used.has(q.id)){selected.push(q);used.add(q.id)}
   }
-  begin(shuffle(selected).slice(0,35),'exam')
+  return shuffle(selected).slice(0,total);
+}
+function prepareExam(list,mode,time,title,textLine){
+  preparedExam={list,mode,time,title};
+  $('examIntroTitle').textContent=title;
+  $('introQuestions').textContent=list.length;
+  $('introTime').textContent=Math.round(time/60)+' minuti';
+  $('introPass').textContent=mode==='exam'?'30/35':'Allenamento';
+  $('examIntroText').textContent=textLine;
+  show('examIntro');
+}
+function beginPreparedExam(){
+  state.remaining=preparedExam.time;
+  begin(preparedExam.list,preparedExam.mode,preparedExam.time);
+}
+function startExam(){
+  let pool=Q.filter(q=>statusAllowed(q,'verified'));if(pool.length<35)pool=Q;
+  prepareExam(buildBalancedExam(pool,35),'exam',2700,'Esame realistico','Le risposte verranno corrette soltanto alla fine.')
 }
 function adaptivePool(p){
   return [...Q].sort((a,b)=>{
@@ -462,6 +493,26 @@ function startHighProbability(){
   });
   begin(pool.slice(0,35),'highprob')
 }
+function startHardExam(){
+  const p=getProgress();
+  let pool=Q.filter(q=>statusAllowed(q,'verified'));
+  pool=pool.sort((a,b)=>{
+    const aw=(p.wrong[a.id]||0)*5-(p.correct[a.id]||0)+(p.difficult||[]).includes(a.id)*4;
+    const bw=(p.wrong[b.id]||0)*5-(p.correct[b.id]||0)+(p.difficult||[]).includes(b.id)*4;
+    return bw-aw;
+  });
+  prepareExam(buildBalancedExam(pool,35),'exam',2400,'Esame difficile','35 domande più impegnative, 40 minuti, correzione soltanto alla fine.')
+}
+function startLast30(){
+  const p=getProgress();
+  const priority=[...Q].sort((a,b)=>{
+    const aw=(p.wrong[a.id]||0)*6+(p.difficult||[]).includes(a.id)*5+(p.seen[a.id]?0:3);
+    const bw=(p.wrong[b.id]||0)*6+(p.difficult||[]).includes(b.id)*5+(p.seen[b.id]?0:3);
+    return bw-aw;
+  });
+  const list=priority.slice(0,30);
+  prepareExam(list,'last30',1800,'Ultimi 30 minuti','Ripasso intensivo delle domande più importanti prima dell’esame.')
+}
 function startWeak(){
   const p=getProgress();let pool=Q.filter(q=>(p.wrong[q.id]||0)>0);
   if(!pool.length)return alert('Non ci sono ancora domande sbagliate salvate.');
@@ -477,10 +528,10 @@ function startDifficult(){
   if(!pool.length)return alert('Non hai ancora segnato domande difficili.');
   begin(shuffle(pool).slice(0,50),'difficult')
 }
-function begin(list,mode){
+function begin(list,mode,timeLimit=2700){
   clearInterval(state.interval);
-  state.list=list;state.i=0;state.mode=mode;state.details=[];state.remaining=2700;state.answers={};state.flags=new Set();state.paused=false;
-  show('quiz');if(mode==='exam')state.interval=setInterval(tick,1000);render();saveSession()
+  state.list=list;state.i=0;state.mode=mode;state.details=[];state.remaining=timeLimit;state.answers={};state.flags=new Set();state.paused=false;
+  show('quiz');if(mode==='exam'||mode==='last30')state.interval=setInterval(tick,1000);render();saveSession()
 }
 function tick(){if(state.paused)return;state.remaining--;$('timer').textContent=formatTime(state.remaining);$('timer').classList.toggle('warn',state.remaining<=300);saveSession();if(state.remaining<=0){clearInterval(state.interval);finish()}}
 function formatTime(sec){const m=Math.floor(sec/60),s=sec%60;return `${m}:${String(s).padStart(2,'0')}`}
@@ -489,9 +540,15 @@ function render(){
   const q=state.list[state.i],saved=state.answers[q.id];
   state.selected=new Set(saved?.selected||[]);state.answered=!!saved;
   $('qnum').textContent=`Domanda ${state.i+1} di ${state.list.length}`;
-  $('timer').textContent=state.mode==='exam'?formatTime(state.remaining):'';
+  $('timer').textContent=(state.mode==='exam'||state.mode==='last30')?formatTime(state.remaining):'';
   $('quizProgress').style.width=`${Math.round((state.i+1)/state.list.length*100)}%`;
-  $('categoryLabel').textContent=q.category+' • '+(q.status||'verificata');
+  $('categoryLabel').textContent=q.category;
+  const s=(q.status||'verified').toLowerCase();
+  const label=s.includes('official')?'Ufficiale':s.includes('variant')?'Variante':'Verificata';
+  const cls=s.includes('official')?'meta-official':s.includes('variant')?'meta-variant':'meta-verified';
+  const p=getProgress(),attempts=(p.seen[q.id]||0),wrong=(p.wrong[q.id]||0);
+  const level=Math.max(1,Math.min(5,1+wrong+(attempts===0?1:0)));
+  $('questionMeta').innerHTML=`<span class="pill ${cls}">${label}</span><span class="pill">${q.id}</span><span class="pill difficulty">${'★'.repeat(level)}${'☆'.repeat(5-level)}</span>`;
   const langMode=getLanguageMode();
   $('languageLabel').textContent=languageModeLabel(langMode);
   $('question').textContent=langMode==='italian'?q.question_it:q.question;
@@ -510,7 +567,7 @@ function render(){
     b.innerHTML=`<strong>${String.fromCharCode(65+idx)}.</strong> <span>${mainText}</span>${second}`;
     b.onclick=()=>choose(b,idx,q.correct.length);$('options').appendChild(b)
   });
-  if(saved&&state.mode!=='exam')applyReview(q,saved);renderStrip();$('examNotice').classList.toggle('hidden',state.mode!=='exam');saveSession()
+  if(saved&&state.mode!=='exam')applyReview(q,saved);renderStrip();$('examNotice').classList.toggle('hidden',!(state.mode==='exam'||state.mode==='last30'));saveSession()
 }
 function choose(btn,idx,max){
   if(state.answered)return;
@@ -562,7 +619,7 @@ function confirmAnswer(){
   p.review=p.review||{};p.review[q.id]=reviewDueDate(q.id,ok);
   pushRecent(p,q.id);
   saveProgress(p);
-  if(state.mode==='exam'){
+  if(state.mode==='exam'||state.mode==='last30'){
     $('confirmBtn').classList.add('hidden');$('nextBtn').classList.remove('hidden');
   }else{
     applyReview(q,state.answers[q.id]);$('confirmBtn').classList.add('hidden');$('nextBtn').classList.remove('hidden');
@@ -597,7 +654,7 @@ function nextQuestion(){
 function prevQuestion(){if(state.i>0){state.i--;render()}}
 function jumpTo(i){state.i=i;render()}
 function pauseQuiz(){state.paused=true;clearInterval(state.interval);$('pauseScreen').classList.remove('hidden');saveSession()}
-function resumeQuiz(){$('pauseScreen').classList.add('hidden');state.paused=false;if(state.mode==='exam')state.interval=setInterval(tick,1000);saveSession()}
+function resumeQuiz(){$('pauseScreen').classList.add('hidden');state.paused=false;if(state.mode==='exam'||state.mode==='last30')state.interval=setInterval(tick,1000);saveSession()}
 function exitQuiz(){if(confirm('Vuoi uscire dal test? La sessione resterà salvata.')){clearInterval(state.interval);show('home');refreshHome()}}
 function saveSession(){if(!state.list.length)return;const payload={ids:state.list.map(q=>q.id),i:state.i,mode:state.mode,remaining:state.remaining,answers:state.answers,flags:[...state.flags]};localStorage.setItem(SESSION,JSON.stringify(payload))}
 function resumeSavedSession(){
@@ -605,13 +662,13 @@ function resumeSavedSession(){
     const s=JSON.parse(localStorage.getItem(SESSION)),list=s.ids.map(id=>Q.find(q=>q.id===id)).filter(Boolean);
     if(!list.length)throw new Error();
     state.list=list;state.i=s.i||0;state.mode=s.mode||'study';state.remaining=s.remaining||2700;state.answers=s.answers||{};state.flags=new Set(s.flags||[]);state.details=Object.entries(state.answers).map(([id,a])=>{const q=Q.find(x=>x.id===id);return{id,category:q?.category||'General',ok:a.ok,time:a.time||0}});state.paused=false;
-    show('quiz');if(state.mode==='exam')state.interval=setInterval(tick,1000);render()
+    show('quiz');if(state.mode==='exam'||state.mode==='last30')state.interval=setInterval(tick,1000);render()
   }catch{localStorage.removeItem(SESSION);refreshHome();alert('La sessione salvata non è più disponibile.')}
 }
 function finish(){
   clearInterval(state.interval);localStorage.removeItem(SESSION);show('result');
   const total=state.list.length,answered=Object.keys(state.answers).length,correct=Object.values(state.answers).filter(a=>a.ok).length,pass=state.mode==='exam'&&correct>=30,avg=answered?Math.round(Object.values(state.answers).reduce((s,a)=>s+(a.time||0),0)/answered):0;
-  $('resultTitle').textContent=state.mode==='exam'?(pass?'✅ PROMOSSO':'❌ NON SUPERATO'):'Sessione completata';
+  $('resultTitle').textContent=state.mode==='exam'?(pass?'✅ PROMOSSO':'❌ NON SUPERATO'):state.mode==='last30'?'⏱️ Ripasso completato':'Sessione completata';
   $('score').textContent=`${correct}/${total}`;$('resultText').textContent=`Risposte date: ${answered}/${total} • Corrette: ${Math.round(correct/total*100)}% • Tempo medio: ${avg}s`;
   const by={};state.details.forEach(d=>{by[d.category]??={ok:0,n:0};by[d.category].n++;if(d.ok)by[d.category].ok++});
   $('categoryResults').innerHTML=Object.entries(by).map(([c,v])=>`<div class="stat"><span>${c}</span><strong>${v.ok}/${v.n}</strong></div>`).join('');
@@ -622,7 +679,7 @@ function finish(){
     const correctText=q.correct.map(x=>q.answers[x]).join(' • ');
     return `<div class="history-item"><strong>${i+1}. ${ok?'✅':'❌'} ${q.question}</strong><p><b>La tua risposta:</b> ${chosenText}</p><p><b>Corretta:</b> ${correctText}</p><p class="muted">${q.explanation_it||q.explanation||''}</p></div>`
   }).join('');
-  if(state.mode==='exam'){const p=getProgress();p.exams.push({date:new Date().toISOString(),score:correct,total,avg});p.exams=p.exams.slice(-30);saveProgress(p)}
+  if(state.mode==='exam'||state.mode==='last30'){const p=getProgress();p.exams.push({date:new Date().toISOString(),score:correct,total,avg});p.exams=p.exams.slice(-30);saveProgress(p)}
   refreshHome()
 }
 function categoryStats(p){

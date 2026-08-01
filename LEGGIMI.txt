@@ -1,11 +1,15 @@
-LPTV MASTER V2.9
+LPTV MASTER V3.0
 
 Database incluso: 255 domande.
 
 NOVITÀ:
-- Sfida casuale da 10 domande su una categoria
-- Grafico dell’andamento degli ultimi 10 esami
-- Calendario attività degli ultimi 7 giorni
-- Dashboard più completa
-- Nuovo badge per 100 domande completate
-- Mantiene ripasso programmato, obiettivi giornalieri, recenti, multilingua, flashcard, backup e profilo
+- Schermata preparazione prima dell’esame
+- Esame realistico bilanciato per argomento
+- Esame difficile: 35 domande in 40 minuti
+- Modalità Ultimi 30 minuti
+- Etichetta Ufficiale / Verificata / Variante
+- ID domanda visibile
+- Difficoltà dinamica da 1 a 5 stelle
+- Timer attivo anche nel ripasso intensivo
+- Correzione completa soltanto alla fine nelle modalità esame
+- Mantiene tutte le funzioni precedenti

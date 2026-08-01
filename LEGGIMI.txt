@@ -1,13 +1,14 @@
-LPTV MASTER V2.7
+LPTV MASTER V2.8
 
 Database incluso: 255 domande.
 
 NOVITÀ:
-- Scelta lingua quiz: solo inglese, bilingue o solo italiano
-- Impostazione salvata automaticamente
-- Domande e risposte adattate alla lingua scelta
-- Flashcard adattate alla lingua scelta
-- Spiegazione più completa della risposta
-- Evidenza della risposta scelta e di quella corretta
-- Lingua mostrata nel profilo
-- Mantiene flashcard, categoria debole, data esame, backup, audio, XP e badge
+- Ripasso programmato con intervalli crescenti
+- Modalità “Ripasso programmato”
+- Obiettivo giornaliero personalizzabile: 10, 20 o 35 domande
+- Barra di completamento obiettivo giornaliero
+- Elenco delle ultime 30 domande viste
+- Contatore domande da ripassare
+- Ripassi integrati nel piano giornaliero
+- Nuovo badge per i ripassi programmati
+- Mantiene multilingua, flashcard, data esame, backup, profilo e dashboard

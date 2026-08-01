@@ -42,7 +42,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <section id="home">
   <div class="card">
     <h2>Benvenuto Dennis 👋</h2>
-    <p class="muted">Versione 2.7 • Database: <strong id="count"></strong> domande</p>
+    <p class="muted">Versione 2.8 • Database: <strong id="count"></strong> domande</p>
     <div id="resumeBox" class="hidden" style="margin-bottom:14px">
       <button class="btn pause big" onclick="resumeSavedSession()">▶️ Riprendi sessione interrotta</button>
     </div>
@@ -51,6 +51,18 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
   <div id="homeExamCountdown" class="card hidden">
     <div class="topline" style="position:static"><h2>⏳ Conto alla rovescia</h2><span class="badge" id="countdownBadge"></span></div>
     <div id="countdownText"></div>
+  </div>
+
+
+  <div class="card">
+    <div class="topline" style="position:static"><h2>🎯 Obiettivo giornaliero</h2><span class="badge" id="dailyGoalBadge">0/20</span></div>
+    <div class="progress"><span id="dailyGoalBar" style="width:0%"></span></div>
+    <p class="muted" id="dailyGoalText">Inizia a studiare per completare l'obiettivo di oggi.</p>
+    <div class="actions">
+      <button class="btn secondary" onclick="setDailyGoal(10)">10 domande</button>
+      <button class="btn secondary" onclick="setDailyGoal(20)">20 domande</button>
+      <button class="btn secondary" onclick="setDailyGoal(35)">35 domande</button>
+    </div>
   </div>
 
   <div class="card daily">
@@ -69,6 +81,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
       <div class="mini"><span>Media esami</span><strong id="examAvgMini">—</strong></div>
       <div class="mini"><span>Da recuperare</span><strong id="weakMini">0</strong></div>
 <div class="mini"><span>Difficili</span><strong id="hardMini">0</strong></div>
+<div class="mini"><span>Da ripassare</span><strong id="dueMini">0</strong></div>
     </div>
   </div>
 
@@ -89,6 +102,8 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <button class="btn secondary big" onclick="startFlashcards()">🗂️ Flashcard</button>
 <button class="btn secondary big" onclick="startWeakestCategory()">🎯 Categoria più debole</button>
 <button class="btn secondary big" onclick="showLanguageSettings()">🌍 Lingua del quiz</button>
+<button class="btn secondary big" onclick="startDueReview()">⏰ Ripasso programmato</button>
+<button class="btn secondary big" onclick="showRecentQuestions()">🕘 Domande recenti</button>
     </div>
   </div>
 
@@ -173,6 +188,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
   <div class="mini"><span>Errori aperti</span><strong id="profileWeak">0</strong></div>
 <div class="mini"><span>Difficili</span><strong id="profileDifficult">0</strong></div>
 <div class="mini"><span>Lingua quiz</span><strong id="profileLanguage">EN</strong></div>
+<div class="mini"><span>Ripasso dovuto</span><strong id="profileDue">0</strong></div>
 </div>
 </div>
 <div class="card">
@@ -228,6 +244,12 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <p class="muted">Questa scelta verrà mantenuta anche dopo la chiusura dell’app.</p>
 </div></section>
 
+
+<section id="recentQuestions" class="hidden"><div class="card">
+<div class="topline"><h2>Domande recenti</h2><button class="btn light" onclick="goHome()">Esci</button></div>
+<div id="recentQuestionsBody"></div>
+</div></section>
+
 </main>
 
 <div id="pauseScreen" class="pause-screen hidden">
@@ -241,14 +263,14 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <script src="database.js"></script>
 <script>
 const Q=window.LPTV_QUESTIONS||[], $=id=>document.getElementById(id);
-const sections=['home','studySetup','search','quiz','result','dashboard','history','profile','examDate','flashcards','languageSettings'];
+const sections=['home','studySetup','search','quiz','result','dashboard','history','profile','examDate','flashcards','languageSettings','recentQuestions'];
 const STORAGE='lptvProgressV20', SESSION='lptvActiveSessionV20';
 const state={list:[],i:0,selected:new Set(),answered:false,mode:'study',remaining:2700,interval:null,details:[],answers:{},flags:new Set(),questionStartedAt:0,paused:false};
 const flash={list:[],i:0,revealed:false};
 
 function show(id){sections.forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo(0,0)}
 function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
-function getProgress(){try{return JSON.parse(localStorage.getItem(STORAGE))||{seen:{},wrong:{},correct:{},exams:[],favorites:[],difficult:[],times:{},days:{}}}catch{return{seen:{},wrong:{},correct:{},exams:[],favorites:[],difficult:[],times:{},days:{}}}}
+function getProgress(){try{return JSON.parse(localStorage.getItem(STORAGE))||{seen:{},wrong:{},correct:{},exams:[],favorites:[],difficult:[],times:{},days:{},review:{},recent:[],dailyGoal:20}}catch{return{seen:{},wrong:{},correct:{},exams:[],favorites:[],difficult:[],times:{},days:{},review:{},recent:[],dailyGoal:20}}}
 function saveProgress(p){localStorage.setItem(STORAGE,JSON.stringify(p))}
 function statusAllowed(q,f){const s=(q.status||'').toLowerCase();if(f==='ALL')return true;if(f==='official')return s.includes('official');return s.includes('official')||s.includes('verified')||s.includes('confirmed')}
 function goHome(){clearInterval(state.interval);show('home');refreshHome()}
@@ -271,6 +293,66 @@ function languageModeLabel(mode){
   return 'Solo inglese';
 }
 
+
+function todayKey(){
+  return new Date().toISOString().slice(0,10);
+}
+function getDailyGoal(p){
+  return Number(p.dailyGoal||20);
+}
+function setDailyGoal(value){
+  const p=getProgress();
+  p.dailyGoal=Number(value);
+  saveProgress(p);
+  refreshHome();
+}
+function todayAnswered(p){
+  return Number((p.days||{})[todayKey()]||0);
+}
+function refreshDailyGoal(p){
+  const goal=getDailyGoal(p),done=todayAnswered(p);
+  const pct=Math.min(100,Math.round(done/goal*100));
+  $('dailyGoalBadge').textContent=`${Math.min(done,goal)}/${goal}`;
+  $('dailyGoalBar').style.width=pct+'%';
+  $('dailyGoalText').textContent=done>=goal?'✅ Obiettivo di oggi completato.':`Ti mancano ${Math.max(0,goal-done)} domande per completare l’obiettivo.`;
+}
+function reviewDueDate(id,known){
+  const now=new Date();
+  const p=getProgress();
+  const prev=p.review?.[id];
+  let level=prev?.level||0;
+  level=known?Math.min(5,level+1):0;
+  const intervals=[1,2,4,7,14,30];
+  now.setDate(now.getDate()+intervals[level]);
+  return {level,due:now.toISOString()};
+}
+function dueQuestions(p){
+  const now=Date.now();
+  return Q.filter(q=>{
+    const r=(p.review||{})[q.id];
+    return r && new Date(r.due).getTime()<=now;
+  });
+}
+function startDueReview(){
+  const p=getProgress();
+  let pool=dueQuestions(p);
+  if(!pool.length){
+    pool=Q.filter(q=>(p.wrong[q.id]||0)>0);
+  }
+  if(!pool.length)return alert('Non ci sono ancora domande programmate per il ripasso.');
+  begin(shuffle(pool).slice(0,Math.min(30,pool.length)),'due');
+}
+function pushRecent(p,id){
+  p.recent=p.recent||[];
+  p.recent=[id,...p.recent.filter(x=>x!==id)].slice(0,30);
+}
+function showRecentQuestions(){
+  show('recentQuestions');
+  const p=getProgress();
+  const list=(p.recent||[]).map(id=>Q.find(q=>q.id===id)).filter(Boolean);
+  $('recentQuestionsBody').innerHTML=list.length?list.map(q=>`<div class="list-item"><span class="pill">${q.category}</span><p><strong>${q.question}</strong></p><p class="muted">${q.question_it}</p><button class="btn secondary" onclick="startSingle('${q.id}')">Apri</button></div>`).join(''):'<p class="muted">Non hai ancora domande recenti.</p>';
+}
+
 function init(){
   $('count').textContent=Q.length;
   const cats=[...new Set(Q.map(q=>q.category))].sort();
@@ -288,9 +370,10 @@ function refreshHome(){
   $('readinessText').textContent=mastery>=85?'Sei vicino al livello obiettivo per l’esame.':mastery>=70?'Buona base, ma ci sono ancora argomenti da rinforzare.':'Serve ancora allenamento regolare.';
   $('seenMini').textContent=seen+'/'+Q.length;
   $('examAvgMini').textContent=examAvg===null?'—':examAvg+'%';
-  $('weakMini').textContent=weak;$('hardMini').textContent=(p.difficult||[]).length;
+  $('weakMini').textContent=weak;$('hardMini').textContent=(p.difficult||[]).length;$('dueMini').textContent=dueQuestions(p).length;
   $('todayDate').textContent=new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});
   renderDailyPlan(p);
+  refreshDailyGoal(p);
   renderExamCountdown();
 }
 function computeReadiness(p){
@@ -305,8 +388,10 @@ function computeReadiness(p){
 }
 function renderDailyPlan(p){
   const weak=Q.filter(q=>(p.wrong[q.id]||0)>0).length;
+  const due=dueQuestions(p).length;
   const seen=Object.keys(p.seen).length;
   const items=[];
+  if(due)items.push(`${Math.min(10,due)} domande programmate da ripassare`);
   if(weak)items.push(`${Math.min(10,weak)} domande sbagliate da recuperare`);
   if(seen<Q.length)items.push(`${Math.min(15,Q.length-seen)} domande nuove`);
   const weakCat=weakestCategoryName(p);if(weakCat)items.push(`Ripasso mirato: ${weakCat}`);
@@ -470,7 +555,9 @@ function confirmAnswer(){
   state.answers[q.id]={selected:chosen,ok,time:elapsed};state.answered=true;state.details.push({id:q.id,category:q.category,ok,time:elapsed});
   const p=getProgress();p.seen[q.id]=(p.seen[q.id]||0)+1;p.times[q.id]=[...(p.times[q.id]||[]),elapsed].slice(-10);
   if(ok)p.correct[q.id]=(p.correct[q.id]||0)+1;else p.wrong[q.id]=(p.wrong[q.id]||0)+1;
-  const day=new Date().toISOString().slice(0,10);p.days[day]=(p.days[day]||0)+1;
+  const day=todayKey();p.days[day]=(p.days[day]||0)+1;
+  p.review=p.review||{};p.review[q.id]=reviewDueDate(q.id,ok);
+  pushRecent(p,q.id);
   saveProgress(p);
   if(state.mode==='exam'){
     $('confirmBtn').classList.add('hidden');$('nextBtn').classList.remove('hidden');
@@ -613,7 +700,7 @@ function showProfile(){
   $('studyStreak').textContent=streak+' '+(streak===1?'giorno':'giorni');
   $('totalStudyTime').textContent=formatDuration(totalTimeSeconds(p));
   $('profileSeen').textContent=Object.keys(p.seen||{}).length+'/'+Q.length;
-  $('profileWeak').textContent=weak;$('profileDifficult').textContent=(p.difficult||[]).length;$('profileLanguage').textContent=getLanguageMode()==='english'?'EN':getLanguageMode()==='italian'?'IT':'EN+IT';
+  $('profileWeak').textContent=weak;$('profileDifficult').textContent=(p.difficult||[]).length;$('profileLanguage').textContent=getLanguageMode()==='english'?'EN':getLanguageMode()==='italian'?'IT':'EN+IT';$('profileDue').textContent=dueQuestions(p).length;
   $('xpText').textContent=xp+' / '+lvl.max+' XP';
   const pct=Math.max(0,Math.min(100,Math.round((xp-lvl.min)/(lvl.max-lvl.min)*100)));
   $('xpBar').style.width=pct+'%';
@@ -626,6 +713,7 @@ function showProfile(){
     {icon:'🔥',name:'7 giorni consecutivi',ok:streak>=7},
     {icon:'📚',name:'250 domande studiate',ok:Object.keys(p.seen||{}).length>=250},
     {icon:'🧩',name:'20 domande difficili affrontate',ok:(p.difficult||[]).length>=20},
+    {icon:'⏰',name:'50 ripassi programmati',ok:Object.keys(p.review||{}).length>=50},
     {icon:'🚖',name:'Pronto per Transport Malta',ok:ready>=85}
   ];
   $('badgeList').innerHTML=badges.map(b=>`<div class="badge-item ${b.ok?'':'locked'}"><div class="badge-icon">${b.icon}</div><div><strong>${b.name}</strong><br><span class="muted">${b.ok?'Sbloccato':'Non ancora sbloccato'}</span></div></div>`).join('');
@@ -776,7 +864,9 @@ function rateFlash(known){
   p.seen[q.id]=(p.seen[q.id]||0)+1;
   if(known)p.correct[q.id]=(p.correct[q.id]||0)+1;
   else p.wrong[q.id]=(p.wrong[q.id]||0)+1;
-  const day=new Date().toISOString().slice(0,10);p.days[day]=(p.days[day]||0)+1;
+  const day=todayKey();p.days[day]=(p.days[day]||0)+1;
+  p.review=p.review||{};p.review[q.id]=reviewDueDate(q.id,known);
+  pushRecent(p,q.id);
   saveProgress(p);
   if(flash.i<flash.list.length-1){flash.i++;renderFlashcard()}
   else{alert('Sessione flashcard completata.');goHome()}

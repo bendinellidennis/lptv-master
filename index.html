@@ -31,7 +31,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 .review-dot{min-width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#f7f9fc;font-weight:750}.review-dot.current{border:2px solid var(--blue)}.review-dot.answered{background:#dff2e5}.review-dot.flagged{background:#fff1b8}
 .list-item{padding:13px 0;border-bottom:1px solid var(--line)}.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#eef3fa;font-size:12px;font-weight:700;color:#3c4e68}
 .pause-screen{position:fixed;inset:0;background:#07162de8;color:white;display:flex;align-items:center;justify-content:center;z-index:99;padding:24px}.pause-box{max-width:430px;text-align:center}
-.hero-score{font-size:48px;font-weight:900;color:var(--blue);line-height:1}.subgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.mini{background:#f5f8fc;border-radius:16px;padding:14px;text-align:center}.mini strong{display:block;font-size:22px}.category-row{margin:13px 0}.category-head{display:flex;justify-content:space-between;margin-bottom:6px}.history-item{padding:12px;border:1px solid var(--line);border-radius:14px;margin:8px 0}
+.hero-score{font-size:48px;font-weight:900;color:var(--blue);line-height:1}.subgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.mini{background:#f5f8fc;border-radius:16px;padding:14px;text-align:center}.mini strong{display:block;font-size:22px}.category-row{margin:13px 0}.category-head{display:flex;justify-content:space-between;margin-bottom:6px}.history-item{padding:12px;border:1px solid var(--line);border-radius:14px;margin:8px 0}.trend-wrap{display:flex;align-items:flex-end;gap:8px;height:180px;padding:18px 6px 28px;border-bottom:1px solid var(--line)}.trend-bar{flex:1;min-width:18px;background:linear-gradient(180deg,var(--blue),var(--blue2));border-radius:8px 8px 2px 2px;position:relative}.trend-bar span{position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted)}.trend-bar b{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:11px}.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.day-box{background:#f4f7fb;border-radius:13px;padding:10px 4px;text-align:center}.day-box.active{background:#dff2e5}.day-box strong{display:block;font-size:18px}
 .daily{border:2px solid #d9e6f7;background:linear-gradient(180deg,#fff,#f8fbff)}.daily ul{padding-left:20px}.countdown-big{font-size:42px;font-weight:900;color:var(--blue)}.plan-chip{display:inline-block;padding:7px 10px;border-radius:999px;background:#eef4fb;margin:4px 5px 4px 0;font-weight:700}.badge-item{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);border-radius:14px;margin:9px 0}.badge-item.locked{opacity:.42;filter:grayscale(1)}.badge-icon{font-size:30px}
 @media(max-width:640px){.grid{grid-template-columns:1fr}.subgrid{grid-template-columns:1fr 1fr}.question{font-size:22px}.card{padding:17px}}
 </style>
@@ -42,7 +42,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <section id="home">
   <div class="card">
     <h2>Benvenuto Dennis 👋</h2>
-    <p class="muted">Versione 2.8 • Database: <strong id="count"></strong> domande</p>
+    <p class="muted">Versione 2.9 • Database: <strong id="count"></strong> domande</p>
     <div id="resumeBox" class="hidden" style="margin-bottom:14px">
       <button class="btn pause big" onclick="resumeSavedSession()">▶️ Riprendi sessione interrotta</button>
     </div>
@@ -104,6 +104,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <button class="btn secondary big" onclick="showLanguageSettings()">🌍 Lingua del quiz</button>
 <button class="btn secondary big" onclick="startDueReview()">⏰ Ripasso programmato</button>
 <button class="btn secondary big" onclick="showRecentQuestions()">🕘 Domande recenti</button>
+<button class="btn secondary big" onclick="startCategoryChallenge()">🏁 Sfida categoria</button>
     </div>
   </div>
 
@@ -164,6 +165,8 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <section id="dashboard" class="hidden"><div class="card">
 <div class="topline"><h2>Dashboard</h2><button class="btn light" onclick="goHome()">Esci</button></div>
 <div id="dashboardBody"></div>
+<div class="card" style="box-shadow:none;padding:0;margin-top:18px"><h3>📈 Andamento ultimi esami</h3><div id="examTrend"></div></div>
+<div class="card" style="box-shadow:none;padding:0;margin-top:18px"><h3>🗓️ Attività ultimi 7 giorni</h3><div id="weekActivity"></div></div>
 </div></section>
 
 <section id="history" class="hidden"><div class="card">
@@ -640,6 +643,39 @@ function startWeakestCategory(){
   const pool=Q.filter(q=>q.category===cat);
   begin(shuffle(pool).slice(0,Math.min(20,pool.length)),'weakcategory');
 }
+function startCategoryChallenge(){
+  const categories=[...new Set(Q.map(q=>q.category))].filter(c=>Q.filter(q=>q.category===c).length>=10);
+  if(!categories.length)return alert('Non ci sono categorie sufficientemente grandi.');
+  const cat=categories[Math.floor(Math.random()*categories.length)];
+  alert(`Sfida: 10 domande su ${cat}`);
+  const pool=shuffle(Q.filter(q=>q.category===cat)).slice(0,10);
+  begin(pool,'challenge');
+}
+
+
+function renderExamTrend(p){
+  const exams=(p.exams||[]).slice(-10);
+  if(!exams.length){
+    $('examTrend').innerHTML='<p class="muted">Completa almeno un esame per vedere il grafico.</p>';
+    return;
+  }
+  $('examTrend').innerHTML='<div class="trend-wrap">'+exams.map((e,i)=>{
+    const pct=Math.round(e.score/e.total*100);
+    return `<div class="trend-bar" style="height:${Math.max(8,pct)}%"><b>${e.score}</b><span>${i+1}</span></div>`;
+  }).join('')+'</div>';
+}
+function renderWeekActivity(p){
+  const days=[];
+  const labels=['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
+  for(let i=6;i>=0;i--){
+    const d=new Date();
+    d.setDate(d.getDate()-i);
+    const key=d.toISOString().slice(0,10);
+    const value=(p.days||{})[key]||0;
+    days.push({label:labels[d.getDay()],value});
+  }
+  $('weekActivity').innerHTML='<div class="week-grid">'+days.map(d=>`<div class="day-box ${d.value>0?'active':''}"><span>${d.label}</span><strong>${d.value}</strong><small>quiz</small></div>`).join('')+'</div>';
+}
 
 function showDashboard(){
   show('dashboard');const p=getProgress(),map=categoryStats(p),mastery=computeReadiness(p);
@@ -714,6 +750,7 @@ function showProfile(){
     {icon:'📚',name:'250 domande studiate',ok:Object.keys(p.seen||{}).length>=250},
     {icon:'🧩',name:'20 domande difficili affrontate',ok:(p.difficult||[]).length>=20},
     {icon:'⏰',name:'50 ripassi programmati',ok:Object.keys(p.review||{}).length>=50},
+    {icon:'🏁',name:'100 domande completate',ok:totalAnswered(p)>=100},
     {icon:'🚖',name:'Pronto per Transport Malta',ok:ready>=85}
   ];
   $('badgeList').innerHTML=badges.map(b=>`<div class="badge-item ${b.ok?'':'locked'}"><div class="badge-icon">${b.icon}</div><div><strong>${b.name}</strong><br><span class="muted">${b.ok?'Sbloccato':'Non ancora sbloccato'}</span></div></div>`).join('');

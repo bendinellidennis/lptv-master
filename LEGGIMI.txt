@@ -1,14 +1,11 @@
-LPTV MASTER V2.8
+LPTV MASTER V2.9
 
 Database incluso: 255 domande.
 
 NOVITÀ:
-- Ripasso programmato con intervalli crescenti
-- Modalità “Ripasso programmato”
-- Obiettivo giornaliero personalizzabile: 10, 20 o 35 domande
-- Barra di completamento obiettivo giornaliero
-- Elenco delle ultime 30 domande viste
-- Contatore domande da ripassare
-- Ripassi integrati nel piano giornaliero
-- Nuovo badge per i ripassi programmati
-- Mantiene multilingua, flashcard, data esame, backup, profilo e dashboard
+- Sfida casuale da 10 domande su una categoria
+- Grafico dell’andamento degli ultimi 10 esami
+- Calendario attività degli ultimi 7 giorni
+- Dashboard più completa
+- Nuovo badge per 100 domande completate
+- Mantiene ripasso programmato, obiettivi giornalieri, recenti, multilingua, flashcard, backup e profilo

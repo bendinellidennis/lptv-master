@@ -1,13 +1,22 @@
-LPTV MASTER V3.1
+LPTV MASTER REBUILD STABLE
 
-Database incluso: 283 domande.
+Database reale incluso: 283 domande.
 
-NOVITÀ:
-- 29 nuove domande ufficiali Transport Malta
-- Uso del clacson e divieto 23:00–06:00 nei centri abitati
-- Clacson vicino agli ospedali
-- Distanza di parcheggio da angoli e incroci
-- Distanza da fermate autobus
-- Tunnel, fatica, box junction, sorpasso, segnalazioni e carico
-- Nuova modalità “Nuove ufficiali”
-- Mantiene tutte le funzioni della v3.0
+FUNZIONI MANTENUTE:
+- Esame 35 domande / 45 minuti
+- Promozione 30/35
+- Nessun duplicato nello stesso test
+- Studio per categoria
+- Solo errori
+- Traduzione domanda e risposte
+- Pronuncia inglese
+- Spiegazioni EN/IT
+- Statistiche essenziali
+- Funzionamento offline
+
+CONTROLLO TECNICO:
+- Record database validati
+- ID duplicati eliminati
+- Indici delle risposte verificati
+- Controllo sintassi JavaScript con Node: SUPERATO
+

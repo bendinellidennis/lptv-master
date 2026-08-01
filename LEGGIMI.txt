@@ -1,18 +1,18 @@
-LPTV MASTER PWA READY
+LPTV MASTER UPDATE 1.1
 
-Contenuto reale incluso:
-- 229 domande valide e senza ID duplicati
-- Esame: 35 domande, 45 minuti, promozione 30/35
-- Studio per categoria
-- Domande singole e multiple
-- Traduzioni EN/IT
-- Pronuncia inglese
-- Spiegazioni EN/IT
-- Progressi e ripasso errori
-- Funzionamento offline dopo il primo caricamento
+Contenuto incluso: 229 domande reali.
 
-Caricare TUTTI questi file nella radice del repository GitHub Pages:
-index.html
-database.js
-manifest.webmanifest
-sw.js
+NOVITÀ:
+- Corretto il problema del titolo che copriva “Benvenuto Dennis”
+- Preferiti
+- Ricerca per parola
+- Segna domanda per revisione
+- Barra numerata per tornare alle domande
+- Pulsante Indietro
+- Filtro “solo ufficiali”
+- Icona vera per schermata Home
+- Cache offline aggiornata
+- Statistiche migliorate
+
+CARICAMENTO:
+Carica e sostituisci tutti i file nella radice del repository GitHub Pages.

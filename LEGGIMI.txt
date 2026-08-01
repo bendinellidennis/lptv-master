@@ -1,33 +1,28 @@
-MALTA DRIVING MASTER — BUILD 07
+MALTA DRIVING MASTER — BUILD 08.2
 
-NUOVE FUNZIONI
+CORREZIONE INVIO REGISTRAZIONE
 
-1. BANCA DOMANDE COMPLETA
-- Consultazione delle 250 domande pertinenti.
-- Ricerca in inglese, italiano, categoria e codice domanda.
-- Filtri per:
-  • tutte le domande / nucleo LPTV / sicurezza stradale;
-  • uno dei quattro capitoli;
-  • mai studiate, errate, salvate, da ripassare o imparate.
-- Ogni scheda mostra tentativi, precisione, traduzione italiana,
-  ascolto, salvataggio e accesso immediato allo Studio guidato.
-- Caricamento progressivo per non appesantire l’iPhone.
+Il precedente collegamento Mail poteva essere bloccato dall’anteprima di Koder.
+La Build 08.2 offre quattro metodi separati:
 
-2. RIPASSO PROGRAMMATO
-- Dopo ogni risposta l’app programma automaticamente il ripasso.
-- Risposta corretta: la domanda ritorna dopo 1, 3, 7, 14, 30 e 60 giorni.
-- Risposta errata: la domanda ritorna subito.
-- Schermata dedicata con domande in scadenza, domande programmate
-  e domande considerate imparate.
-- Il sistema funziona anche con le risposte date nel Centro Esame.
+1. CONDIVIDI REGISTRAZIONE
+- Apre il menu di condivisione dell’iPhone quando disponibile.
+- L’utilizzatore può scegliere Gmail, Mail o un’altra app.
 
-3. PROFILO E BACKUP
-- Il Profilo mostra domande da ripassare e domande imparate.
-- Esportazione e importazione comprendono anche il calendario dei ripassi.
-- Compatibilità mantenuta con i backup precedenti.
+2. APRI GMAIL
+- Apre la composizione Gmail tramite collegamento web.
+- Destinatario: maltadrivingmaster@gmail.com
 
-La banca domande resta quella della Build 06.2:
-- 250 domande pertinenti;
-- 68 nel nucleo LPTV;
-- 182 di sicurezza stradale;
-- contenuti per operatori e gestione aziendale esclusi.
+3. APRI MAIL
+- Usa direttamente il collegamento e-mail del dispositivo.
+- Non viene più utilizzato il ritardo che poteva bloccarne l’apertura.
+
+4. COPIA DATI REGISTRAZIONE
+- Copia destinatario, oggetto e contenuto.
+- I dati possono essere incollati manualmente dentro Gmail.
+
+IMPORTANTE
+- Nessun messaggio viene inviato automaticamente.
+- L’utilizzatore deve controllare il destinatario e premere Invia.
+- Il sistema continua a conservare i dati sul dispositivo.
+- La banca delle 250 domande non è stata modificata.

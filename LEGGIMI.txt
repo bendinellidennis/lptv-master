@@ -1,16 +1,19 @@
-LPTV MASTER UPDATE 1.2
+LPTV MASTER V2.0
 
 Database incluso: 229 domande reali.
 
-NOVITÀ:
-- Salvataggio automatico della sessione
-- Pulsante Riprendi sessione interrotta
-- Pausa vera del timer
-- Barra di avanzamento
-- Tempo impiegato per ogni risposta
-- Tempo medio nelle statistiche
-- Migliorata la gestione offline
-- Mantiene ricerca, preferiti, segnalibri e navigazione fra domande
+NOVITÀ REALI:
+- Dashboard preparazione stimata
+- Statistiche per categoria
+- Piano di studio giornaliero
+- Allenamento intelligente
+- Storico degli ultimi 30 esami
+- Media esami
+- Copertura del database
+- Sessione salvata e riprendibile
+- Pausa vera
+- Preferiti, ricerca, errori, traduzioni e pronuncia
+- Funzionamento offline aggiornato
 
-CARICAMENTO:
-Sostituisci tutti i file nella radice del repository GitHub Pages.
+NOTA:
+La percentuale di preparazione è una stima basata su copertura, accuratezza e ultimi esami.

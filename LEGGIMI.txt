@@ -1,20 +1,30 @@
-MALTA DRIVING MASTER — BUILD 05.2
+MALTA DRIVING MASTER — BUILD 06.2
 
-CORREZIONI
+CORREZIONE DELLA BANCA DOMANDE
 
-1. ENGLISH COACH
-- Mostra tutte le 53 parole appena si apre.
-- Ricerca corretta anche con plurali come Roads.
-- Aggiunti pulsanti rapidi Road, Brake, Passenger, Hazard e Tutte.
-- Ricerca immediata mentre si scrive.
+Transport Malta non pubblica il numero totale della banca ufficiale LPTV.
+Per questo la Build 06.2 non presenta più 68 come numero totale ufficiale.
 
-2. PROFILO E BACKUP
-- Esporta copia usa il menu Condividi nativo dell’iPhone quando disponibile.
-- Il file creato è un JSON con risultati, storico, domande salvate e parole imparate.
-- Se Condividi non è disponibile, viene usato il normale download.
+BANCA DI PREPARAZIONE ESTESA: 250 DOMANDE
+- 68 domande del nucleo LPTV:
+  materiale di preparazione, customer care, sicurezza e obblighi del conducente.
+- 182 domande di sicurezza stradale pertinenti:
+  pericoli, pedoni, ciclisti, motociclisti, incroci, segnali, incidenti,
+  alcol, medicinali, condizioni atmosferiche, veicolo ed eco-driving.
 
-3. CACHE
-- I file hanno una nuova versione 5.2.
-- Koder e Safari sono obbligati a caricare la versione aggiornata.
+ESCLUSE DAI TEST TAG
+- 31 domande per operatori, SOV, garaging aziendale,
+  sanzioni dell’operatore e gestione della flotta.
+- 2 domande amministrative specifiche della patente B.
 
-Studio guidato resta visibile e funzionante.
+STUDIO GUIDATO
+Permette di scegliere:
+- tutte le 250 domande pertinenti;
+- solo il nucleo LPTV da 68;
+- solo le 182 domande di sicurezza stradale.
+
+CENTRO ESAME
+- 35 domande dalla banca estesa;
+- distribuzione bilanciata sui quattro capitoli;
+- non viene presentato come copia della banca ufficiale completa,
+  perché tale banca non è pubblicata da Transport Malta.

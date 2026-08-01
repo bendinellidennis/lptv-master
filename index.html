@@ -15,20 +15,22 @@ header h1{margin:0;font-size:29px}header p{margin:4px 0 0;opacity:.92}
 main{max-width:840px;margin:auto;padding:18px 14px calc(34px + env(safe-area-inset-bottom))}
 .card{background:var(--card);border-radius:22px;padding:20px;box-shadow:0 8px 24px #15325c18;margin-bottom:16px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btn{border:0;border-radius:16px;padding:15px 13px;background:var(--blue);color:#fff;font-size:17px;font-weight:750;cursor:pointer}
-.btn.secondary{background:#e8f0fb;color:#123d7a}.btn.light{background:#f3f6fa;color:#24334b}.btn.danger{background:var(--bad)}.btn.star{background:#fff5cc;color:#7a5700}.btn:disabled{opacity:.45}
+.btn.secondary{background:#e8f0fb;color:#123d7a}.btn.light{background:#f3f6fa;color:#24334b}.btn.danger{background:var(--bad)}.btn.star{background:#fff5cc;color:#7a5700}.btn.pause{background:#fff3d8;color:#805500}.btn:disabled{opacity:.45}
 .big{font-size:20px}.muted{color:var(--muted)}.hidden{display:none!important}
 .topline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;position:sticky;top:0;background:var(--card);padding:8px 0;z-index:3}
 .badge{padding:8px 11px;border-radius:999px;background:#e8f0fb;color:#123d7a;font-weight:700}.timer{font-variant-numeric:tabular-nums;font-weight:850;font-size:20px}.timer.warn{color:var(--bad)}
 .question{font-size:25px;line-height:1.26;font-weight:850;margin:16px 0}.translation{font-size:19px;line-height:1.35;background:#f3f6fa;border-radius:14px;padding:13px;margin:10px 0 16px}
 .option{display:block;width:100%;text-align:left;border:2px solid var(--line);background:#f8fafc;border-radius:15px;padding:15px;margin:10px 0;font-size:18px;color:var(--text)}
 .option.selected{border-color:var(--blue);background:#e8f0fb}.option.correct{border-color:var(--ok);background:#eaf8ef}.option.wrong{border-color:var(--bad);background:#fff0f0}
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.actions .btn{flex:1;min-width:120px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.actions .btn{flex:1;min-width:115px}
 .explain{border-left:5px solid var(--blue);background:#f4f8fe;padding:14px;border-radius:12px;margin-top:16px;line-height:1.45}
 .stat{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line)}.stat:last-child{border-bottom:0}
-.progress{height:12px;background:#e3eaf3;border-radius:999px;overflow:hidden}.progress span{display:block;height:100%;background:var(--blue)}
+.progress{height:12px;background:#e3eaf3;border-radius:999px;overflow:hidden}.progress span{display:block;height:100%;background:var(--blue);transition:width .25s}
 select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:13px;background:#fff;font-size:17px;margin:6px 0 12px}
-.small{font-size:14px}.center{text-align:center}.review-strip{display:flex;gap:7px;overflow-x:auto;padding:7px 0 3px;margin:8px 0}.review-dot{min-width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#f7f9fc;font-weight:750}.review-dot.current{border:2px solid var(--blue)}.review-dot.answered{background:#dff2e5}.review-dot.flagged{background:#fff1b8}
+.small{font-size:14px}.center{text-align:center}.review-strip{display:flex;gap:7px;overflow-x:auto;padding:7px 0 3px;margin:8px 0}
+.review-dot{min-width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#f7f9fc;font-weight:750}.review-dot.current{border:2px solid var(--blue)}.review-dot.answered{background:#dff2e5}.review-dot.flagged{background:#fff1b8}
 .list-item{padding:13px 0;border-bottom:1px solid var(--line)}.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#eef3fa;font-size:12px;font-weight:700;color:#3c4e68}
+.pause-screen{position:fixed;inset:0;background:#07162de8;color:white;display:flex;align-items:center;justify-content:center;z-index:99;padding:24px}.pause-box{max-width:430px;text-align:center}
 @media(max-width:540px){.grid{grid-template-columns:1fr}.question{font-size:22px}.card{padding:17px}}
 </style>
 </head>
@@ -38,7 +40,10 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <section id="home">
   <div class="card">
     <h2>Benvenuto Dennis 👋</h2>
-    <p class="muted">Versione 1.1 • Database: <strong id="count"></strong> domande</p>
+    <p class="muted">Versione 1.2 • Database: <strong id="count"></strong> domande</p>
+    <div id="resumeBox" class="hidden" style="margin-bottom:14px">
+      <button class="btn pause big" onclick="resumeSavedSession()">▶️ Riprendi sessione interrotta</button>
+    </div>
     <div class="grid">
       <button class="btn big" onclick="startExam()">🎯 Esame 35 / 45 min</button>
       <button class="btn big" onclick="showStudySetup()">📚 Studio per argomento</button>
@@ -73,6 +78,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 
 <section id="quiz" class="hidden"><div class="card">
 <div class="topline"><span class="badge" id="qnum"></span><span class="timer" id="timer"></span></div>
+<div class="progress"><span id="quizProgress" style="width:0%"></span></div>
 <div class="review-strip" id="reviewStrip"></div>
 <div class="small muted" id="categoryLabel"></div>
 <div class="question" id="question"></div>
@@ -81,6 +87,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <button class="btn secondary" onclick="speakQuestion()">🔊 Ascolta</button>
 <button class="btn star" id="favBtn" onclick="toggleFavorite()">☆ Preferita</button>
 <button class="btn light" id="flagBtn" onclick="toggleFlag()">🚩 Segna</button>
+<button class="btn pause" onclick="pauseQuiz()">⏸️ Pausa</button>
 </div>
 <div id="questionIt" class="translation hidden"></div>
 <div id="selectHint" class="badge"></div>
@@ -104,50 +111,68 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <div id="statsBody"></div><button class="btn danger" onclick="resetProgress()">Azzera progressi</button>
 </div></section>
 </main>
+
+<div id="pauseScreen" class="pause-screen hidden">
+  <div class="pause-box">
+    <h1>⏸️ Esame in pausa</h1>
+    <p>Il timer è fermo. Premi il pulsante quando vuoi continuare.</p>
+    <button class="btn big" onclick="resumeQuiz()">▶️ Continua</button>
+  </div>
+</div>
+
 <script src="database.js"></script>
 <script>
 const Q=window.LPTV_QUESTIONS||[], $=id=>document.getElementById(id);
 const sections=['home','studySetup','search','quiz','result','stats'];
-const state={list:[],i:0,selected:new Set(),answered:false,correct:0,mode:'study',remaining:2700,interval:null,details:[],answers:{},flags:new Set()};
+const STORAGE='lptvProgressV12', SESSION='lptvActiveSessionV12';
+const state={list:[],i:0,selected:new Set(),answered:false,mode:'study',remaining:2700,interval:null,details:[],answers:{},flags:new Set(),startedAt:0,questionStartedAt:0,paused:false};
 function show(id){sections.forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo(0,0)}
 function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
-function getProgress(){try{return JSON.parse(localStorage.getItem('lptvProgressV11'))||{seen:{},wrong:{},exams:[],favorites:[]}}catch{return{seen:{},wrong:{},exams:[],favorites:[]}}}
-function saveProgress(p){localStorage.setItem('lptvProgressV11',JSON.stringify(p))}
+function getProgress(){try{return JSON.parse(localStorage.getItem(STORAGE))||{seen:{},wrong:{},exams:[],favorites:[],times:{}}}catch{return{seen:{},wrong:{},exams:[],favorites:[],times:{}}}}
+function saveProgress(p){localStorage.setItem(STORAGE,JSON.stringify(p))}
 function statusAllowed(q,f){const s=(q.status||'').toLowerCase();if(f==='ALL')return true;if(f==='official')return s.includes('official');return s.includes('official')||s.includes('verified')||s.includes('confirmed')}
-function goHome(){clearInterval(state.interval);show('home')}
-function init(){ $('count').textContent=Q.length;const cats=[...new Set(Q.map(q=>q.category))].sort();$('category').innerHTML='<option value="ALL">Tutte le categorie</option>'+cats.map(c=>`<option>${c}</option>`).join('');if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});}
+function goHome(){clearInterval(state.interval);show('home');refreshResume()}
+function init(){ $('count').textContent=Q.length;const cats=[...new Set(Q.map(q=>q.category))].sort();$('category').innerHTML='<option value="ALL">Tutte le categorie</option>'+cats.map(c=>`<option>${c}</option>`).join('');refreshResume();if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});}
+function refreshResume(){$('resumeBox').classList.toggle('hidden',!localStorage.getItem(SESSION))}
 function showStudySetup(){show('studySetup')}
 function showSearch(){show('search');$('searchInput').value='';renderSearch()}
 function renderSearch(){const s=$('searchInput').value.trim().toLowerCase();const list=(s?Q.filter(q=>(q.question+' '+q.question_it+' '+q.category).toLowerCase().includes(s)):Q.slice(0,20)).slice(0,50);$('searchResults').innerHTML=list.map(q=>`<div class="list-item"><span class="pill">${q.category}</span><p><strong>${q.question}</strong></p><p class="muted">${q.question_it}</p><button class="btn secondary" onclick="startSingle('${q.id}')">Apri</button></div>`).join('')}
 function startSingle(id){const q=Q.find(x=>x.id===id);if(q)begin([q],'study')}
 function startStudy(){const cat=$('category').value,n=+$('studyCount').value,f=$('statusFilter').value;let pool=Q.filter(q=>(cat==='ALL'||q.category===cat)&&statusAllowed(q,f));begin(shuffle(pool).slice(0,Math.min(n,pool.length)),'study')}
-function startExam(){let official=Q.filter(q=>statusAllowed(q,'verified'));if(official.length<35)official=Q;begin(shuffle(official).slice(0,35),'exam')}
+function startExam(){let pool=Q.filter(q=>statusAllowed(q,'verified'));if(pool.length<35)pool=Q;begin(shuffle(pool).slice(0,35),'exam')}
 function startWeak(){const p=getProgress();let pool=Q.filter(q=>(p.wrong[q.id]||0)>0);if(!pool.length)return alert('Non ci sono ancora domande sbagliate salvate.');begin(shuffle(pool).slice(0,35),'weak')}
 function startFavorites(){const p=getProgress();let pool=Q.filter(q=>p.favorites.includes(q.id));if(!pool.length)return alert('Non hai ancora salvato domande preferite.');begin(shuffle(pool).slice(0,50),'favorites')}
-function begin(list,mode){state.list=list;state.i=0;state.correct=0;state.mode=mode;state.details=[];state.remaining=2700;state.answers={};state.flags=new Set();show('quiz');if(mode==='exam')state.interval=setInterval(tick,1000);render()}
-function tick(){state.remaining--;const m=Math.floor(state.remaining/60),s=state.remaining%60;$('timer').textContent=`${m}:${String(s).padStart(2,'0')}`;$('timer').classList.toggle('warn',state.remaining<=300);if(state.remaining<=0){clearInterval(state.interval);finish()}}
-function renderStrip(){ $('reviewStrip').innerHTML=state.list.map((q,i)=>`<button class="review-dot ${i===state.i?'current':''} ${state.answers[q.id]?'answered':''} ${state.flags.has(q.id)?'flagged':''}" onclick="jumpTo(${i})">${i+1}</button>`).join('')}
-function render(){const q=state.list[state.i],saved=state.answers[q.id];state.selected=new Set(saved?.selected||[]);state.answered=!!saved;$('qnum').textContent=`Domanda ${state.i+1} di ${state.list.length}`;$('timer').textContent=state.mode==='exam'?`${Math.floor(state.remaining/60)}:${String(state.remaining%60).padStart(2,'0')}`:'';$('categoryLabel').textContent=q.category+' • '+(q.status||'verificata');$('question').textContent=q.question;$('questionIt').textContent=q.question_it;$('questionIt').classList.add('hidden');$('selectHint').textContent=q.correct.length===1?'Seleziona 1 risposta':`Seleziona ${q.correct.length} risposte`;$('explanation').classList.add('hidden');$('confirmBtn').classList.toggle('hidden',!!saved);$('nextBtn').classList.toggle('hidden',!saved);$('prevBtn').disabled=state.i===0;
+function begin(list,mode){clearInterval(state.interval);state.list=list;state.i=0;state.mode=mode;state.details=[];state.remaining=2700;state.answers={};state.flags=new Set();state.startedAt=Date.now();state.questionStartedAt=Date.now();state.paused=false;show('quiz');if(mode==='exam')state.interval=setInterval(tick,1000);render();saveSession()}
+function tick(){if(state.paused)return;state.remaining--;$('timer').textContent=formatTime(state.remaining);$('timer').classList.toggle('warn',state.remaining<=300);saveSession();if(state.remaining<=0){clearInterval(state.interval);finish()}}
+function formatTime(sec){const m=Math.floor(sec/60),s=sec%60;return `${m}:${String(s).padStart(2,'0')}`}
+function renderStrip(){$('reviewStrip').innerHTML=state.list.map((q,i)=>`<button class="review-dot ${i===state.i?'current':''} ${state.answers[q.id]?'answered':''} ${state.flags.has(q.id)?'flagged':''}" onclick="jumpTo(${i})">${i+1}</button>`).join('')}
+function render(){const q=state.list[state.i],saved=state.answers[q.id];state.selected=new Set(saved?.selected||[]);state.answered=!!saved;$('qnum').textContent=`Domanda ${state.i+1} di ${state.list.length}`;$('timer').textContent=state.mode==='exam'?formatTime(state.remaining):'';$('quizProgress').style.width=`${Math.round((state.i+1)/state.list.length*100)}%`;$('categoryLabel').textContent=q.category+' • '+(q.status||'verificata');$('question').textContent=q.question;$('questionIt').textContent=q.question_it;$('questionIt').classList.add('hidden');$('selectHint').textContent=q.correct.length===1?'Seleziona 1 risposta':`Seleziona ${q.correct.length} risposte`;$('explanation').classList.add('hidden');$('confirmBtn').classList.toggle('hidden',!!saved);$('nextBtn').classList.toggle('hidden',!saved);$('prevBtn').disabled=state.i===0;state.questionStartedAt=Date.now();
  const p=getProgress();$('favBtn').textContent=p.favorites.includes(q.id)?'★ Preferita':'☆ Preferita';$('flagBtn').textContent=state.flags.has(q.id)?'🚩 Segnata':'🚩 Segna';
  const order=q._order||(q._order=shuffle(q.answers.map((_,i)=>i)));$('options').innerHTML='';order.forEach(idx=>{const b=document.createElement('button');b.className='option'+(state.selected.has(idx)?' selected':'');b.dataset.idx=idx;b.innerHTML=`<strong>${String.fromCharCode(65+idx)}.</strong> <span>${q.answers[idx]}</span><span class="it hidden"><br><small>${q.answers_it[idx]||''}</small></span>`;b.onclick=()=>choose(b,idx,q.correct.length);$('options').appendChild(b)});
- if(saved)applyReview(q,saved);renderStrip()}
-function choose(btn,idx,max){if(state.answered)return;if(state.selected.has(idx)){state.selected.delete(idx);btn.classList.remove('selected')}else{if(state.selected.size>=max)return;state.selected.add(idx);btn.classList.add('selected')}}
+ if(saved)applyReview(q,saved);renderStrip();saveSession()}
+function choose(btn,idx,max){if(state.answered)return;if(state.selected.has(idx)){state.selected.delete(idx);btn.classList.remove('selected')}else{if(state.selected.size>=max)return;state.selected.add(idx);btn.classList.add('selected')}saveSession()}
 function toggleTranslation(){$('questionIt').classList.toggle('hidden');document.querySelectorAll('.option .it').forEach(x=>x.classList.toggle('hidden'))}
 function speakQuestion(){const q=state.list[state.i];speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(q.question);u.lang='en-GB';speechSynthesis.speak(u)}
 function toggleFavorite(){const q=state.list[state.i],p=getProgress(),i=p.favorites.indexOf(q.id);if(i>=0)p.favorites.splice(i,1);else p.favorites.push(q.id);saveProgress(p);render()}
 function toggleFlag(){const id=state.list[state.i].id;state.flags.has(id)?state.flags.delete(id):state.flags.add(id);render()}
-function confirmAnswer(){const q=state.list[state.i];if(state.selected.size!==q.correct.length)return alert(`Seleziona esattamente ${q.correct.length} ${q.correct.length===1?'risposta':'risposte'}.`);const chosen=[...state.selected].sort((a,b)=>a-b),correct=[...q.correct].sort((a,b)=>a-b),ok=JSON.stringify(chosen)===JSON.stringify(correct);state.answers[q.id]={selected:chosen,ok};state.answered=true;if(ok)state.correct++;state.details.push({id:q.id,category:q.category,ok});
- const p=getProgress();p.seen[q.id]=(p.seen[q.id]||0)+1;if(!ok)p.wrong[q.id]=(p.wrong[q.id]||0)+1;else if(p.wrong[q.id])p.wrong[q.id]=Math.max(0,p.wrong[q.id]-1);saveProgress(p);applyReview(q,state.answers[q.id]);$('confirmBtn').classList.add('hidden');$('nextBtn').classList.remove('hidden');renderStrip()}
-function applyReview(q,saved){document.querySelectorAll('.option').forEach(b=>{const i=+b.dataset.idx;if(q.correct.includes(i))b.classList.add('correct');else if(saved.selected.includes(i))b.classList.add('wrong')});$('explanation').innerHTML=`<strong>${saved.ok?'✅ Risposta corretta':'❌ Risposta errata'}</strong><p>${q.explanation||''}</p><p><strong>Italiano:</strong> ${q.explanation_it||''}</p>`;$('explanation').classList.remove('hidden')}
+function confirmAnswer(){const q=state.list[state.i];if(state.selected.size!==q.correct.length)return alert(`Seleziona esattamente ${q.correct.length} ${q.correct.length===1?'risposta':'risposte'}.`);const chosen=[...state.selected].sort((a,b)=>a-b),correct=[...q.correct].sort((a,b)=>a-b),ok=JSON.stringify(chosen)===JSON.stringify(correct);const elapsed=Math.max(1,Math.round((Date.now()-state.questionStartedAt)/1000));state.answers[q.id]={selected:chosen,ok,time:elapsed};state.answered=true;state.details.push({id:q.id,category:q.category,ok,time:elapsed});
+ const p=getProgress();p.seen[q.id]=(p.seen[q.id]||0)+1;p.times[q.id]=[...(p.times[q.id]||[]),elapsed].slice(-10);if(!ok)p.wrong[q.id]=(p.wrong[q.id]||0)+1;else if(p.wrong[q.id])p.wrong[q.id]=Math.max(0,p.wrong[q.id]-1);saveProgress(p);applyReview(q,state.answers[q.id]);$('confirmBtn').classList.add('hidden');$('nextBtn').classList.remove('hidden');renderStrip();saveSession()}
+function applyReview(q,saved){document.querySelectorAll('.option').forEach(b=>{const i=+b.dataset.idx;if(q.correct.includes(i))b.classList.add('correct');else if(saved.selected.includes(i))b.classList.add('wrong')});$('explanation').innerHTML=`<strong>${saved.ok?'✅ Risposta corretta':'❌ Risposta errata'}</strong><p>${q.explanation||''}</p><p><strong>Italiano:</strong> ${q.explanation_it||''}</p><p class="small muted">Tempo risposta: ${saved.time||0} secondi</p>`;$('explanation').classList.remove('hidden')}
 function nextQuestion(){if(state.i<state.list.length-1){state.i++;render()}else finish()}
 function prevQuestion(){if(state.i>0){state.i--;render()}}
 function jumpTo(i){state.i=i;render()}
-function exitQuiz(){if(confirm('Vuoi uscire dal test?'))goHome()}
-function finish(){clearInterval(state.interval);show('result');const total=state.list.length,answered=Object.keys(state.answers).length,correct=Object.values(state.answers).filter(a=>a.ok).length,pass=state.mode==='exam'&&correct>=30;$('resultTitle').textContent=state.mode==='exam'?(pass?'✅ PROMOSSO':'❌ NON SUPERATO'):'Sessione completata';$('score').textContent=`${correct}/${total}`;$('resultText').textContent=`Risposte date: ${answered}/${total} • Corrette: ${Math.round(correct/total*100)}%`;
+function pauseQuiz(){state.paused=true;clearInterval(state.interval);$('pauseScreen').classList.remove('hidden');saveSession()}
+function resumeQuiz(){$('pauseScreen').classList.add('hidden');state.paused=false;if(state.mode==='exam')state.interval=setInterval(tick,1000);saveSession()}
+function exitQuiz(){if(confirm('Vuoi uscire dal test? La sessione resterà salvata.')){clearInterval(state.interval);show('home');refreshResume()}}
+function saveSession(){if(!state.list.length)return;const payload={ids:state.list.map(q=>q.id),i:state.i,mode:state.mode,remaining:state.remaining,answers:state.answers,flags:[...state.flags],startedAt:state.startedAt};localStorage.setItem(SESSION,JSON.stringify(payload))}
+function resumeSavedSession(){try{const s=JSON.parse(localStorage.getItem(SESSION));const list=s.ids.map(id=>Q.find(q=>q.id===id)).filter(Boolean);if(!list.length)throw new Error();state.list=list;state.i=s.i||0;state.mode=s.mode||'study';state.remaining=s.remaining||2700;state.answers=s.answers||{};state.flags=new Set(s.flags||[]);state.details=Object.entries(state.answers).map(([id,a])=>{const q=Q.find(x=>x.id===id);return{id,category:q?.category||'General',ok:a.ok,time:a.time||0}});state.startedAt=s.startedAt||Date.now();state.paused=false;show('quiz');if(state.mode==='exam')state.interval=setInterval(tick,1000);render()}catch{localStorage.removeItem(SESSION);refreshResume();alert('La sessione salvata non è più disponibile.')}}
+function finish(){clearInterval(state.interval);localStorage.removeItem(SESSION);show('result');const total=state.list.length,answered=Object.keys(state.answers).length,correct=Object.values(state.answers).filter(a=>a.ok).length,pass=state.mode==='exam'&&correct>=30,avg=answered?Math.round(Object.values(state.answers).reduce((s,a)=>s+(a.time||0),0)/answered):0;$('resultTitle').textContent=state.mode==='exam'?(pass?'✅ PROMOSSO':'❌ NON SUPERATO'):'Sessione completata';$('score').textContent=`${correct}/${total}`;$('resultText').textContent=`Risposte date: ${answered}/${total} • Corrette: ${Math.round(correct/total*100)}% • Tempo medio: ${avg}s`;
  const by={};state.details.forEach(d=>{by[d.category]??={ok:0,n:0};by[d.category].n++;if(d.ok)by[d.category].ok++});$('categoryResults').innerHTML=Object.entries(by).map(([c,v])=>`<div class="stat"><span>${c}</span><strong>${v.ok}/${v.n}</strong></div>`).join('');
- if(state.mode==='exam'){const p=getProgress();p.exams.push({date:new Date().toISOString(),score:correct,total});p.exams=p.exams.slice(-20);saveProgress(p)}}
-function showStats(){show('stats');const p=getProgress(),seen=Object.keys(p.seen).length,wrong=Object.values(p.wrong).filter(x=>x>0).length,last=p.exams.at(-1);$('statsBody').innerHTML=`<div class="stat"><span>Domande viste</span><strong>${seen}/${Q.length}</strong></div><div class="stat"><span>Da recuperare</span><strong>${wrong}</strong></div><div class="stat"><span>Preferite</span><strong>${p.favorites.length}</strong></div><div class="stat"><span>Esami completati</span><strong>${p.exams.length}</strong></div><div class="stat"><span>Ultimo esame</span><strong>${last?last.score+'/'+last.total:'—'}</strong></div><br><div class="progress"><span style="width:${Math.round(seen/Q.length*100)}%"></span></div><p class="center muted">${Math.round(seen/Q.length*100)}% del database visto</p>`}
-function resetProgress(){if(confirm('Vuoi cancellare tutti i progressi?')){localStorage.removeItem('lptvProgressV11');showStats()}}
+ if(state.mode==='exam'){const p=getProgress();p.exams.push({date:new Date().toISOString(),score:correct,total,avg});p.exams=p.exams.slice(-20);saveProgress(p)}refreshResume()}
+function showStats(){show('stats');const p=getProgress(),seen=Object.keys(p.seen).length,wrong=Object.values(p.wrong).filter(x=>x>0).length,last=p.exams.at(-1),allTimes=Object.values(p.times).flat(),avg=allTimes.length?Math.round(allTimes.reduce((a,b)=>a+b,0)/allTimes.length):0;$('statsBody').innerHTML=`<div class="stat"><span>Domande viste</span><strong>${seen}/${Q.length}</strong></div><div class="stat"><span>Da recuperare</span><strong>${wrong}</strong></div><div class="stat"><span>Preferite</span><strong>${p.favorites.length}</strong></div><div class="stat"><span>Esami completati</span><strong>${p.exams.length}</strong></div><div class="stat"><span>Ultimo esame</span><strong>${last?last.score+'/'+last.total:'—'}</strong></div><div class="stat"><span>Tempo medio per domanda</span><strong>${avg?avg+'s':'—'}</strong></div><br><div class="progress"><span style="width:${Math.round(seen/Q.length*100)}%"></span></div><p class="center muted">${Math.round(seen/Q.length*100)}% del database visto</p>`}
+function resetProgress(){if(confirm('Vuoi cancellare tutti i progressi?')){localStorage.removeItem(STORAGE);localStorage.removeItem(SESSION);showStats();refreshResume()}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.list.length)saveSession()});
+window.addEventListener('beforeunload',saveSession);
 init();
 </script>
 </body></html>

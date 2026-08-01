@@ -1,18 +1,16 @@
-LPTV MASTER UPDATE 1.1
+LPTV MASTER UPDATE 1.2
 
-Contenuto incluso: 229 domande reali.
+Database incluso: 229 domande reali.
 
 NOVITÀ:
-- Corretto il problema del titolo che copriva “Benvenuto Dennis”
-- Preferiti
-- Ricerca per parola
-- Segna domanda per revisione
-- Barra numerata per tornare alle domande
-- Pulsante Indietro
-- Filtro “solo ufficiali”
-- Icona vera per schermata Home
-- Cache offline aggiornata
-- Statistiche migliorate
+- Salvataggio automatico della sessione
+- Pulsante Riprendi sessione interrotta
+- Pausa vera del timer
+- Barra di avanzamento
+- Tempo impiegato per ogni risposta
+- Tempo medio nelle statistiche
+- Migliorata la gestione offline
+- Mantiene ricerca, preferiti, segnalibri e navigazione fra domande
 
 CARICAMENTO:
-Carica e sostituisci tutti i file nella radice del repository GitHub Pages.
+Sostituisci tutti i file nella radice del repository GitHub Pages.

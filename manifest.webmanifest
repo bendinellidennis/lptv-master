@@ -1,9 +1,22 @@
 {
-  "name": "LPTV MASTER",
-  "short_name": "LPTV MASTER",
-  "start_url": "./",
+  "name": "Malta Driving Master",
+  "short_name": "Drive Malta",
+  "description": "Drive Smarter. Drive Malta.",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#edf3fb",
-  "theme_color": "#0b4ea2",
-  "description": "Simulatore bilingue LPTV Malta"
+  "background_color": "#f3f6f8",
+  "theme_color": "#092f4f",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }

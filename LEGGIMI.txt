@@ -1,22 +1,11 @@
-LPTV MASTER REBUILD STABLE
+MALTA DRIVING MASTER — BUILD 03
 
-Database reale incluso: 283 domande.
+MODIFICA:
+- Rimossa dalle domande ogni indicazione sulla provenienza del materiale
+  (ad esempio WhatsApp, PDF, raccolte personali o altri riferimenti).
+- Rimossa la provenienza anche dalle risposte dell'assistente sulle domande.
+- Restano disponibili soltanto i collegamenti ufficiali nelle sezioni
+  Road Code e Normative, perché servono per verificare le leggi aggiornate.
 
-FUNZIONI MANTENUTE:
-- Esame 35 domande / 45 minuti
-- Promozione 30/35
-- Nessun duplicato nello stesso test
-- Studio per categoria
-- Solo errori
-- Traduzione domanda e risposte
-- Pronuncia inglese
-- Spiegazioni EN/IT
-- Statistiche essenziali
-- Funzionamento offline
-
-CONTROLLO TECNICO:
-- Record database validati
-- ID duplicati eliminati
-- Indici delle risposte verificati
-- Controllo sintassi JavaScript con Node: SUPERATO
-
+Le tre modalità LPTV della Build 02 restano invariate.
+Database: 283 domande.

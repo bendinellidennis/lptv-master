@@ -1,11 +1,20 @@
-MALTA DRIVING MASTER — BUILD 03
+MALTA DRIVING MASTER — BUILD 05.2
 
-MODIFICA:
-- Rimossa dalle domande ogni indicazione sulla provenienza del materiale
-  (ad esempio WhatsApp, PDF, raccolte personali o altri riferimenti).
-- Rimossa la provenienza anche dalle risposte dell'assistente sulle domande.
-- Restano disponibili soltanto i collegamenti ufficiali nelle sezioni
-  Road Code e Normative, perché servono per verificare le leggi aggiornate.
+CORREZIONI
 
-Le tre modalità LPTV della Build 02 restano invariate.
-Database: 283 domande.
+1. ENGLISH COACH
+- Mostra tutte le 53 parole appena si apre.
+- Ricerca corretta anche con plurali come Roads.
+- Aggiunti pulsanti rapidi Road, Brake, Passenger, Hazard e Tutte.
+- Ricerca immediata mentre si scrive.
+
+2. PROFILO E BACKUP
+- Esporta copia usa il menu Condividi nativo dell’iPhone quando disponibile.
+- Il file creato è un JSON con risultati, storico, domande salvate e parole imparate.
+- Se Condividi non è disponibile, viene usato il normale download.
+
+3. CACHE
+- I file hanno una nuova versione 5.2.
+- Koder e Safari sono obbligati a caricare la versione aggiornata.
+
+Studio guidato resta visibile e funzionante.

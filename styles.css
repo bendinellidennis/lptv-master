@@ -35,3 +35,116 @@ select,textarea{width:100%;border:2px solid var(--line);border-radius:15px;backg
  .learning-tools{display:grid;grid-template-columns:1fr 1fr}
  .learning-tools .btn{min-width:0}
 }
+
+
+/* BUILD 04 — percorso completo e allenamento adattivo */
+.big-action.chapter-action{background:linear-gradient(135deg,#2f5da8,#173c78);color:#fff}
+.big-action.weak-action{background:linear-gradient(135deg,#7b3fc1,#4d2387);color:#fff}
+.readiness-mini{display:inline-flex;align-items:center;justify-content:center;min-width:58px;height:42px;padding:0 11px;border-radius:999px;background:#e5f2f5;color:#0d4e68;font-weight:950}
+.topic-grid{display:grid;gap:13px}
+.topic-card{width:100%;display:flex;align-items:center;gap:14px;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:21px;padding:17px;box-shadow:var(--shadow)}
+.topic-icon{width:52px;height:52px;border-radius:17px;display:grid;place-items:center;background:#eaf2f6;font-size:27px;flex:0 0 auto}
+.topic-content{min-width:0;flex:1}
+.topic-content h3{margin:0 0 5px;font-size:19px}
+.topic-content p{margin:0 0 11px;color:var(--muted);font-size:14px;line-height:1.4}
+.topic-numbers{display:flex;justify-content:space-between;gap:12px;margin-bottom:7px;font-size:13px;color:var(--muted)}
+.topic-numbers strong{color:var(--text)}
+.mode-pill.chapter{background:#e7eefb;color:#244f91}
+.mode-pill.weak{background:#f0e6fb;color:#632aa4}
+.chapter-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:17px 0}
+.chapter-summary div{background:#edf4f7;border-radius:15px;padding:12px;min-width:0}
+.chapter-summary span{display:block;color:var(--muted);font-size:12px;line-height:1.2}
+.chapter-summary strong{display:block;margin-top:5px;font-size:22px}
+.readiness-card{display:grid;grid-template-columns:150px 1fr;align-items:center;gap:18px;background:var(--card);border:1px solid var(--line);border-radius:23px;padding:18px;box-shadow:var(--shadow)}
+.readiness-circle{--score:0;width:132px;height:132px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--sea) calc(var(--score)*1%),#dce7ec 0)}
+.readiness-circle:before{content:"";position:absolute}
+.readiness-circle>div{width:100px;height:100px;border-radius:50%;background:var(--card);display:grid;place-content:center;text-align:center}
+.readiness-circle strong{font-size:29px}
+.readiness-circle span{font-size:11px;color:var(--muted);font-weight:800}
+.readiness-copy h3{margin:0 0 7px;font-size:23px}
+.readiness-copy p{margin:0 0 13px;color:var(--muted);line-height:1.45}
+.metric-bars{background:var(--card);border:1px solid var(--line);border-radius:19px;padding:15px;margin:14px 0}
+.metric-bars>div+div{margin-top:13px}
+.progress-topic{width:100%;display:grid;grid-template-columns:1fr auto;gap:8px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--text);padding:13px 0;text-align:left}
+.progress-topic:last-child{border-bottom:0}
+.progress-topic .mini-bar{grid-column:1/-1}
+.exam-history{display:grid;gap:9px}
+.exam-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.exam-row:last-child{border-bottom:0}
+.exam-row em{font-style:normal;font-size:12px;font-weight:900;padding:6px 8px;border-radius:999px}
+.exam-row em.pass{background:#e3f4e9;color:#11673a}
+.exam-row em.fail{background:#fde8ec;color:#9a1830}
+
+@media(max-width:620px){
+ .readiness-card{grid-template-columns:112px 1fr;gap:13px;padding:15px}
+ .readiness-circle{width:105px;height:105px}
+ .readiness-circle>div{width:79px;height:79px}
+ .readiness-circle strong{font-size:23px}
+ .readiness-copy h3{font-size:19px}
+ .chapter-summary{grid-template-columns:1fr 1fr 1fr}
+ .chapter-summary strong{font-size:19px}
+}
+
+
+/* BUILD 05 — English Coach, piano giornaliero, salvati e backup */
+.daily-banner{width:100%;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:15px;border:0;border-radius:23px;padding:17px;margin:0 0 18px;background:linear-gradient(135deg,#fff4cf,#f6d56c);color:#513c05;text-align:left;box-shadow:var(--shadow)}
+.daily-banner.complete{background:linear-gradient(135deg,#dff4e7,#a9ddb9);color:#164b2c}
+.daily-banner h2{margin:2px 0 4px;font-size:20px}
+.daily-banner p{margin:0;font-size:13px;line-height:1.35;opacity:.82}
+.daily-banner>div>span{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.05em}
+.daily-streak{font-size:18px;white-space:nowrap}
+.daily-ring{--daily:0;width:62px;height:62px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#c68a00 calc(var(--daily)*1%),rgba(255,255,255,.62) 0);position:relative}
+.daily-ring:after{content:"";position:absolute;width:46px;height:46px;border-radius:50%;background:#fff8df}
+.daily-ring strong{position:relative;z-index:1;font-size:14px}
+.daily-ring.large{width:118px;height:118px;flex:0 0 auto}
+.daily-ring.large:after{width:88px;height:88px}
+.daily-ring.large strong{font-size:23px}
+.daily-ring.large span{position:absolute;z-index:2;margin-top:42px;font-size:10px;font-weight:800}
+.daily-detail{display:flex;align-items:center;gap:18px;margin:18px 0}
+.big-action.daily-action{background:linear-gradient(135deg,#d69b12,#ad7400);color:#fff}
+.big-action.coach-action{background:linear-gradient(135deg,#0d8290,#075c70);color:#fff}
+.big-action.saved-action{background:linear-gradient(135deg,#bf7b13,#8f5404);color:#fff}
+.home-card.coach{background:linear-gradient(145deg,#e5f8fa,#c7edf2)}
+.home-card.saved{background:linear-gradient(145deg,#fff3db,#f5ddb0)}
+.mode-pill.daily{background:#fff0c3;color:#795200}
+.learning-tools{grid-template-columns:repeat(3,1fr)!important}
+.favourite-quiz.active{background:#fff2cc;border-color:#d89b16;color:#704900}
+.vocabulary-list{display:grid;gap:13px;margin-top:14px}
+.vocabulary-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow)}
+.vocabulary-card.known{border-color:#87cba0;background:linear-gradient(145deg,var(--card),rgba(112,201,144,.12))}
+.vocabulary-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.vocabulary-head h3{font-size:24px;margin:7px 0 3px}
+.vocabulary-head strong{font-size:18px;color:var(--sea)}
+.word-audio{width:48px;height:48px;border:0;border-radius:15px;background:#e6f2f5;font-size:22px}
+.word-example{background:#edf4f7;border-radius:14px;padding:12px;margin:13px 0}
+.word-example span{font-size:12px;text-transform:uppercase;font-weight:900;color:var(--muted)}
+.word-example p{margin:6px 0;line-height:1.4}
+.known-button{width:100%;border:1px solid var(--line);border-radius:13px;background:transparent;color:var(--text);padding:11px;font-weight:850}
+.known-button.active{background:#e4f4ea;border-color:#9bd0ad;color:#11633a}
+.saved-question{display:grid;grid-template-columns:1fr auto;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:19px;padding:6px;box-shadow:var(--shadow)}
+.saved-open{border:0;background:transparent;color:var(--text);text-align:left;padding:11px}
+.saved-open h3{margin:8px 0 5px;font-size:17px;line-height:1.35}
+.saved-open p{margin:0;color:var(--muted);line-height:1.35}
+.saved-remove{align-self:center;width:48px;height:48px;border:0;border-radius:14px;background:#fff0c9;color:#9a6500;font-size:22px}
+.empty-state{text-align:center;padding:30px 18px}
+.empty-state>div{font-size:45px}
+.backup-card .actions{display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:620px){
+ .daily-banner{grid-template-columns:auto 1fr;padding:14px}
+ .daily-streak{grid-column:2}
+ .daily-detail{align-items:flex-start}
+ .learning-tools{grid-template-columns:1fr 1fr!important}
+ .favourite-quiz{grid-column:1/-1}
+}
+
+/* BUILD 05.1 — correzione English Coach e Studio guidato */
+.home-card.guided-home{background:linear-gradient(145deg,#e4f5ea,#bfe3cb)}
+.guided-primary{outline:3px solid rgba(255,255,255,.32)}
+.empty-search{text-align:center;padding:28px 18px}
+.empty-search>div{font-size:40px}
+.empty-search h3{margin:8px 0}
+
+/* BUILD 05.2 */
+.vocabulary-chips{display:flex;gap:8px;overflow-x:auto;padding:11px 1px 2px;scrollbar-width:none}
+.vocabulary-chips::-webkit-scrollbar{display:none}
+.vocabulary-chips button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:9px 13px;font-weight:850;white-space:nowrap}

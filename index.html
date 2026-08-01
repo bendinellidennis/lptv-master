@@ -42,7 +42,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <section id="home">
   <div class="card">
     <h2>Benvenuto Dennis 👋</h2>
-    <p class="muted">Versione 2.5 • Database: <strong id="count"></strong> domande</p>
+    <p class="muted">Versione 2.6 • Database: <strong id="count"></strong> domande</p>
     <div id="resumeBox" class="hidden" style="margin-bottom:14px">
       <button class="btn pause big" onclick="resumeSavedSession()">▶️ Riprendi sessione interrotta</button>
     </div>
@@ -86,6 +86,8 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <button class="btn secondary big" onclick="showProfile()">👤 Il mio profilo</button>
 <button class="btn secondary big" onclick="showExamDate()">📅 Data esame</button>
 <button class="btn secondary big" onclick="startHighProbability()">🔥 Alta probabilità</button>
+<button class="btn secondary big" onclick="startFlashcards()">🗂️ Flashcard</button>
+<button class="btn secondary big" onclick="startWeakestCategory()">🎯 Categoria più debole</button>
     </div>
   </div>
 
@@ -192,6 +194,25 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <div id="examCountdownBox" style="margin-top:18px"></div>
 </div></section>
 
+
+<section id="flashcards" class="hidden"><div class="card">
+<div class="topline"><h2>Flashcard</h2><button class="btn light" onclick="goHome()">Esci</button></div>
+<div class="progress"><span id="flashProgress" style="width:0%"></span></div>
+<p class="small muted" id="flashCount"></p>
+<div class="question" id="flashQuestion"></div>
+<div id="flashTranslation" class="translation hidden"></div>
+<div id="flashAnswer" class="explain hidden"></div>
+<div class="actions">
+<button class="btn secondary" onclick="toggleFlashTranslation()">🇮🇹 Traduzione</button>
+<button class="btn secondary" onclick="speakFlashcard()">🔊 Ascolta</button>
+<button class="btn" id="showFlashAnswerBtn" onclick="showFlashAnswer()">Mostra risposta</button>
+</div>
+<div class="actions hidden" id="flashRateActions">
+<button class="btn danger" onclick="rateFlash(false)">Non la so</button>
+<button class="btn" onclick="rateFlash(true)">La so</button>
+</div>
+</div></section>
+
 </main>
 
 <div id="pauseScreen" class="pause-screen hidden">
@@ -205,9 +226,10 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <script src="database.js"></script>
 <script>
 const Q=window.LPTV_QUESTIONS||[], $=id=>document.getElementById(id);
-const sections=['home','studySetup','search','quiz','result','dashboard','history','profile','examDate'];
+const sections=['home','studySetup','search','quiz','result','dashboard','history','profile','examDate','flashcards'];
 const STORAGE='lptvProgressV20', SESSION='lptvActiveSessionV20';
 const state={list:[],i:0,selected:new Set(),answered:false,mode:'study',remaining:2700,interval:null,details:[],answers:{},flags:new Set(),questionStartedAt:0,paused:false};
+const flash={list:[],i:0,revealed:false};
 
 function show(id){sections.forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo(0,0)}
 function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
@@ -253,6 +275,7 @@ function renderDailyPlan(p){
   const items=[];
   if(weak)items.push(`${Math.min(10,weak)} domande sbagliate da recuperare`);
   if(seen<Q.length)items.push(`${Math.min(15,Q.length-seen)} domande nuove`);
+  const weakCat=weakestCategoryName(p);if(weakCat)items.push(`Ripasso mirato: ${weakCat}`);
   items.push('1 mini-test adattivo da 20 domande');
   $('dailyPlan').innerHTML='<ul>'+items.map(x=>`<li>${x}</li>`).join('')+'</ul><p class="muted">Tempo stimato: 20–30 minuti</p>';
 }
@@ -458,13 +481,27 @@ function categoryStats(p){
   for(const q of Q){const seen=p.seen[q.id]||0,cor=p.correct[q.id]||0;if(!seen)continue;map[q.category]??={seen:0,correct:0};map[q.category].seen+=seen;map[q.category].correct+=cor}
   return map;
 }
+function weakestCategoryName(p){
+  const map=categoryStats(p);
+  const entries=Object.entries(map).filter(([,v])=>v.seen>=2);
+  if(!entries.length)return null;
+  entries.sort((a,b)=>(a[1].correct/a[1].seen)-(b[1].correct/b[1].seen));
+  return entries[0][0];
+}
+function startWeakestCategory(){
+  const p=getProgress(),cat=weakestCategoryName(p);
+  if(!cat)return alert('Completa prima alcune domande per individuare la categoria più debole.');
+  const pool=Q.filter(q=>q.category===cat);
+  begin(shuffle(pool).slice(0,Math.min(20,pool.length)),'weakcategory');
+}
+
 function showDashboard(){
   show('dashboard');const p=getProgress(),map=categoryStats(p),mastery=computeReadiness(p);
   const rows=Object.entries(map).sort((a,b)=>(b[1].correct/b[1].seen)-(a[1].correct/a[1].seen)).map(([cat,v])=>{
     const pct=Math.round(v.correct/v.seen*100);
     return `<div class="category-row"><div class="category-head"><strong>${cat}</strong><span>${pct}%</span></div><div class="progress"><span style="width:${pct}%"></span></div></div>`
   }).join('');
-  $('dashboardBody').innerHTML=`<div class="center"><div class="hero-score">${mastery}%</div><p class="muted">Preparazione stimata</p></div>${rows||'<p class="muted">Completa alcune domande per vedere le statistiche per categoria.</p>'}`
+  const weakCat=weakestCategoryName(p);$('dashboardBody').innerHTML=`<div class="center"><div class="hero-score">${mastery}%</div><p class="muted">Preparazione stimata</p>${weakCat?`<p><span class="badge">Da rinforzare: ${weakCat}</span></p>`:''}</div>${rows||'<p class="muted">Completa alcune domande per vedere le statistiche per categoria.</p>'}`
 }
 function showHistory(){
   show('history');const p=getProgress();
@@ -627,6 +664,63 @@ function handleBackupFile(event){
   };
   reader.readAsText(file);
   event.target.value='';
+}
+
+
+function startFlashcards(){
+  const p=getProgress();
+  const ranked=[...Q].sort((a,b)=>{
+    const aw=(p.wrong[a.id]||0)*4+(p.seen[a.id]?0:2)-(p.correct[a.id]||0);
+    const bw=(p.wrong[b.id]||0)*4+(p.seen[b.id]?0:2)-(p.correct[b.id]||0);
+    return bw-aw;
+  });
+  flash.list=ranked.slice(0,30);
+  flash.i=0;
+  flash.revealed=false;
+  show('flashcards');
+  renderFlashcard();
+}
+function renderFlashcard(){
+  if(!flash.list.length){goHome();return}
+  const q=flash.list[flash.i];
+  flash.revealed=false;
+  $('flashCount').textContent=`Scheda ${flash.i+1} di ${flash.list.length} • ${q.category}`;
+  $('flashProgress').style.width=`${Math.round((flash.i+1)/flash.list.length*100)}%`;
+  $('flashQuestion').textContent=q.question;
+  $('flashTranslation').textContent=q.question_it;
+  $('flashTranslation').classList.add('hidden');
+  $('flashAnswer').classList.add('hidden');
+  $('showFlashAnswerBtn').classList.remove('hidden');
+  $('flashRateActions').classList.add('hidden');
+}
+function toggleFlashTranslation(){
+  $('flashTranslation').classList.toggle('hidden');
+}
+function speakFlashcard(){
+  const q=flash.list[flash.i];
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(q.question);
+  u.lang='en-GB';u.rate=.9;speechSynthesis.speak(u);
+}
+function showFlashAnswer(){
+  const q=flash.list[flash.i];
+  const correct=q.correct.map(i=>q.answers[i]).join(' • ');
+  const correctIt=q.correct.map(i=>q.answers_it[i]||'').join(' • ');
+  $('flashAnswer').innerHTML=`<strong>✅ ${correct}</strong><p><strong>Italiano:</strong> ${correctIt}</p><p>${q.explanation_it||q.explanation||''}</p>`;
+  $('flashAnswer').classList.remove('hidden');
+  $('showFlashAnswerBtn').classList.add('hidden');
+  $('flashRateActions').classList.remove('hidden');
+  flash.revealed=true;
+}
+function rateFlash(known){
+  const q=flash.list[flash.i],p=getProgress();
+  p.seen[q.id]=(p.seen[q.id]||0)+1;
+  if(known)p.correct[q.id]=(p.correct[q.id]||0)+1;
+  else p.wrong[q.id]=(p.wrong[q.id]||0)+1;
+  const day=new Date().toISOString().slice(0,10);p.days[day]=(p.days[day]||0)+1;
+  saveProgress(p);
+  if(flash.i<flash.list.length-1){flash.i++;renderFlashcard()}
+  else{alert('Sessione flashcard completata.');goHome()}
 }
 
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.list.length)saveSession()});

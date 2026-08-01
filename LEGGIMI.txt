@@ -1,30 +1,33 @@
-MALTA DRIVING MASTER — BUILD 06.2
+MALTA DRIVING MASTER — BUILD 07
 
-CORREZIONE DELLA BANCA DOMANDE
+NUOVE FUNZIONI
 
-Transport Malta non pubblica il numero totale della banca ufficiale LPTV.
-Per questo la Build 06.2 non presenta più 68 come numero totale ufficiale.
+1. BANCA DOMANDE COMPLETA
+- Consultazione delle 250 domande pertinenti.
+- Ricerca in inglese, italiano, categoria e codice domanda.
+- Filtri per:
+  • tutte le domande / nucleo LPTV / sicurezza stradale;
+  • uno dei quattro capitoli;
+  • mai studiate, errate, salvate, da ripassare o imparate.
+- Ogni scheda mostra tentativi, precisione, traduzione italiana,
+  ascolto, salvataggio e accesso immediato allo Studio guidato.
+- Caricamento progressivo per non appesantire l’iPhone.
 
-BANCA DI PREPARAZIONE ESTESA: 250 DOMANDE
-- 68 domande del nucleo LPTV:
-  materiale di preparazione, customer care, sicurezza e obblighi del conducente.
-- 182 domande di sicurezza stradale pertinenti:
-  pericoli, pedoni, ciclisti, motociclisti, incroci, segnali, incidenti,
-  alcol, medicinali, condizioni atmosferiche, veicolo ed eco-driving.
+2. RIPASSO PROGRAMMATO
+- Dopo ogni risposta l’app programma automaticamente il ripasso.
+- Risposta corretta: la domanda ritorna dopo 1, 3, 7, 14, 30 e 60 giorni.
+- Risposta errata: la domanda ritorna subito.
+- Schermata dedicata con domande in scadenza, domande programmate
+  e domande considerate imparate.
+- Il sistema funziona anche con le risposte date nel Centro Esame.
 
-ESCLUSE DAI TEST TAG
-- 31 domande per operatori, SOV, garaging aziendale,
-  sanzioni dell’operatore e gestione della flotta.
-- 2 domande amministrative specifiche della patente B.
+3. PROFILO E BACKUP
+- Il Profilo mostra domande da ripassare e domande imparate.
+- Esportazione e importazione comprendono anche il calendario dei ripassi.
+- Compatibilità mantenuta con i backup precedenti.
 
-STUDIO GUIDATO
-Permette di scegliere:
-- tutte le 250 domande pertinenti;
-- solo il nucleo LPTV da 68;
-- solo le 182 domande di sicurezza stradale.
-
-CENTRO ESAME
-- 35 domande dalla banca estesa;
-- distribuzione bilanciata sui quattro capitoli;
-- non viene presentato come copia della banca ufficiale completa,
-  perché tale banca non è pubblicata da Transport Malta.
+La banca domande resta quella della Build 06.2:
+- 250 domande pertinenti;
+- 68 nel nucleo LPTV;
+- 182 di sicurezza stradale;
+- contenuti per operatori e gestione aziendale esclusi.

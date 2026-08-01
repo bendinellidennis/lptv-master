@@ -1,4 +1,4 @@
-const CACHE='lptv-master-v2-0';
+const CACHE='lptv-master-v2-1';
 const ASSETS=['./','./index.html','./database.js','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)))});
 self.addEventListener('activate',e=>e.waitUntil(Promise.all([

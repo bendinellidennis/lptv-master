@@ -1,19 +1,13 @@
-LPTV MASTER V2.0
+LPTV MASTER V2.1
 
-Database incluso: 229 domande reali.
+Database incluso: 255 domande reali.
 
-NOVITÀ REALI:
-- Dashboard preparazione stimata
-- Statistiche per categoria
-- Piano di studio giornaliero
-- Allenamento intelligente
-- Storico degli ultimi 30 esami
-- Media esami
-- Copertura del database
-- Sessione salvata e riprendibile
-- Pausa vera
-- Preferiti, ricerca, errori, traduzioni e pronuncia
-- Funzionamento offline aggiornato
-
-NOTA:
-La percentuale di preparazione è una stima basata su copertura, accuratezza e ultimi esami.
+NOVITÀ:
+- 26 nuove domande ufficiali sulle regole LPTV entrate in vigore il 29 luglio 2026
+- SOV: prenotazioni, piattaforme e sosta di 3 ore
+- Garaging e capacità approvata
+- Obblighi di operatori, veicoli e conducenti
+- Registri di lavoro e riposo
+- Modulo LPTS010
+- Documentazione per controllo ed enforcement
+- Sistema progressivo delle multe

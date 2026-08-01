@@ -1,13 +1,12 @@
-LPTV MASTER V2.3
+LPTV MASTER V2.4
 
 Database incluso: 255 domande.
 
 NOVITÀ:
-- Profilo personale Dennis Bendinelli
-- Sistema XP e livelli
-- Miglior simulazione
-- Serie di giorni consecutivi
-- Tempo totale di studio
-- Badge sbloccabili
-- Preparazione per argomento nel profilo
-- Mantiene esame realistico, dashboard, piano giornaliero e allenamento adattivo
+- Audio legge domanda e tutte le risposte
+- Ricerca anche per ID e stato della domanda
+- Pulsante Domanda difficile
+- Sezione Domande difficili
+- Conteggio difficili nella Home e nel Profilo
+- Nuovo badge dedicato
+- Mantiene profilo, XP, badge, esame realistico e dashboard

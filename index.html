@@ -31,7 +31,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 .review-dot{min-width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#f7f9fc;font-weight:750}.review-dot.current{border:2px solid var(--blue)}.review-dot.answered{background:#dff2e5}.review-dot.flagged{background:#fff1b8}
 .list-item{padding:13px 0;border-bottom:1px solid var(--line)}.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#eef3fa;font-size:12px;font-weight:700;color:#3c4e68}
 .pause-screen{position:fixed;inset:0;background:#07162de8;color:white;display:flex;align-items:center;justify-content:center;z-index:99;padding:24px}.pause-box{max-width:430px;text-align:center}
-.hero-score{font-size:48px;font-weight:900;color:var(--blue);line-height:1}.subgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.mini{background:#f5f8fc;border-radius:16px;padding:14px;text-align:center}.mini strong{display:block;font-size:22px}.category-row{margin:13px 0}.category-head{display:flex;justify-content:space-between;margin-bottom:6px}.history-item{padding:12px;border:1px solid var(--line);border-radius:14px;margin:8px 0}
+.hero-score{font-size:48px;font-weight:900;color:var(--blue);line-height:1}.subgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.mini{background:#f5f8fc;border-radius:16px;padding:14px;text-align:center}.mini strong{display:block;font-size:22px}.category-row{margin:13px 0}.category-head{display:flex;justify-content:space-between;margin-bottom:6px}.history-item{padding:12px;border:1px solid var(--line);border-radius:14px;margin:8px 0}
 .daily{border:2px solid #d9e6f7;background:linear-gradient(180deg,#fff,#f8fbff)}.daily ul{padding-left:20px}.badge-item{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);border-radius:14px;margin:9px 0}.badge-item.locked{opacity:.42;filter:grayscale(1)}.badge-icon{font-size:30px}
 @media(max-width:640px){.grid{grid-template-columns:1fr}.subgrid{grid-template-columns:1fr 1fr}.question{font-size:22px}.card{padding:17px}}
 </style>
@@ -42,7 +42,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <section id="home">
   <div class="card">
     <h2>Benvenuto Dennis 👋</h2>
-    <p class="muted">Versione 2.3 • Database: <strong id="count"></strong> domande</p>
+    <p class="muted">Versione 2.4 • Database: <strong id="count"></strong> domande</p>
     <div id="resumeBox" class="hidden" style="margin-bottom:14px">
       <button class="btn pause big" onclick="resumeSavedSession()">▶️ Riprendi sessione interrotta</button>
     </div>
@@ -63,6 +63,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
       <div class="mini"><span>Domande viste</span><strong id="seenMini">0</strong></div>
       <div class="mini"><span>Media esami</span><strong id="examAvgMini">—</strong></div>
       <div class="mini"><span>Da recuperare</span><strong id="weakMini">0</strong></div>
+<div class="mini"><span>Difficili</span><strong id="hardMini">0</strong></div>
     </div>
   </div>
 
@@ -73,6 +74,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
       <button class="btn secondary big" onclick="startAdaptive()">🧠 Allenamento intelligente</button>
       <button class="btn secondary big" onclick="startWeak()">⚠️ Solo errori</button>
       <button class="btn secondary big" onclick="startFavorites()">⭐ Preferiti</button>
+<button class="btn secondary big" onclick="startDifficult()">🧩 Domande difficili</button>
       <button class="btn secondary big" onclick="showSearch()">🔎 Cerca domanda</button>
       <button class="btn secondary big" onclick="showDashboard()">📊 Dashboard</button>
       <button class="btn secondary big" onclick="showHistory()">📝 Storico esami</button>
@@ -99,7 +101,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 
 <section id="search" class="hidden"><div class="card">
 <div class="topline"><h2>Cerca domanda</h2><button class="btn light" onclick="goHome()">Esci</button></div>
-<input id="searchInput" placeholder="Es. horn, cyclist, shock..." oninput="renderSearch()">
+<input id="searchInput" placeholder="Cerca testo, categoria o ID domanda..." oninput="renderSearch()">
 <div id="searchResults"></div>
 </div></section>
 
@@ -111,9 +113,10 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <div class="question" id="question"></div>
 <div class="actions">
 <button class="btn secondary" onclick="toggleTranslation()">🇮🇹 Traduzione</button>
-<button class="btn secondary" onclick="speakQuestion()">🔊 Ascolta</button>
+<button class="btn secondary" onclick="speakQuestion()">🔊 Domanda + risposte</button>
 <button class="btn star" id="favBtn" onclick="toggleFavorite()">☆ Preferita</button>
 <button class="btn light" id="flagBtn" onclick="toggleFlag()">🚩 Segna</button>
+<button class="btn light" id="hardBtn" onclick="toggleDifficult()">🧩 Difficile</button>
 <button class="btn pause" onclick="pauseQuiz()">⏸️ Pausa</button>
 </div>
 <div id="questionIt" class="translation hidden"></div>
@@ -158,6 +161,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
   <div class="mini"><span>Tempo totale</span><strong id="totalStudyTime">0m</strong></div>
   <div class="mini"><span>Domande viste</span><strong id="profileSeen">0</strong></div>
   <div class="mini"><span>Errori aperti</span><strong id="profileWeak">0</strong></div>
+<div class="mini"><span>Difficili</span><strong id="profileDifficult">0</strong></div>
 </div>
 </div>
 <div class="card">
@@ -189,7 +193,7 @@ const state={list:[],i:0,selected:new Set(),answered:false,mode:'study',remainin
 
 function show(id){sections.forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo(0,0)}
 function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
-function getProgress(){try{return JSON.parse(localStorage.getItem(STORAGE))||{seen:{},wrong:{},correct:{},exams:[],favorites:[],times:{},days:{}}}catch{return{seen:{},wrong:{},correct:{},exams:[],favorites:[],times:{},days:{}}}}
+function getProgress(){try{return JSON.parse(localStorage.getItem(STORAGE))||{seen:{},wrong:{},correct:{},exams:[],favorites:[],difficult:[],times:{},days:{}}}catch{return{seen:{},wrong:{},correct:{},exams:[],favorites:[],difficult:[],times:{},days:{}}}}
 function saveProgress(p){localStorage.setItem(STORAGE,JSON.stringify(p))}
 function statusAllowed(q,f){const s=(q.status||'').toLowerCase();if(f==='ALL')return true;if(f==='official')return s.includes('official');return s.includes('official')||s.includes('verified')||s.includes('confirmed')}
 function goHome(){clearInterval(state.interval);show('home');refreshHome()}
@@ -210,7 +214,7 @@ function refreshHome(){
   $('readinessText').textContent=mastery>=85?'Sei vicino al livello obiettivo per l’esame.':mastery>=70?'Buona base, ma ci sono ancora argomenti da rinforzare.':'Serve ancora allenamento regolare.';
   $('seenMini').textContent=seen+'/'+Q.length;
   $('examAvgMini').textContent=examAvg===null?'—':examAvg+'%';
-  $('weakMini').textContent=weak;
+  $('weakMini').textContent=weak;$('hardMini').textContent=(p.difficult||[]).length;
   $('todayDate').textContent=new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});
   renderDailyPlan(p);
 }
@@ -244,7 +248,7 @@ function showStudySetup(){show('studySetup')}
 function showSearch(){show('search');$('searchInput').value='';renderSearch()}
 function renderSearch(){
   const s=$('searchInput').value.trim().toLowerCase();
-  const list=(s?Q.filter(q=>(q.question+' '+q.question_it+' '+q.category).toLowerCase().includes(s)):Q.slice(0,20)).slice(0,50);
+  const list=(s?Q.filter(q=>(q.id+' '+q.question+' '+q.question_it+' '+q.category+' '+(q.status||'')).toLowerCase().includes(s)):Q.slice(0,20)).slice(0,50);
   $('searchResults').innerHTML=list.map(q=>`<div class="list-item"><span class="pill">${q.category}</span><p><strong>${q.question}</strong></p><p class="muted">${q.question_it}</p><button class="btn secondary" onclick="startSingle('${q.id}')">Apri</button></div>`).join('');
 }
 function startSingle(id){const q=Q.find(x=>x.id===id);if(q)begin([q],'study')}
@@ -290,6 +294,11 @@ function startFavorites(){
   if(!pool.length)return alert('Non hai ancora salvato domande preferite.');
   begin(shuffle(pool).slice(0,50),'favorites')
 }
+function startDifficult(){
+  const p=getProgress();let pool=Q.filter(q=>(p.difficult||[]).includes(q.id));
+  if(!pool.length)return alert('Non hai ancora segnato domande difficili.');
+  begin(shuffle(pool).slice(0,50),'difficult')
+}
 function begin(list,mode){
   clearInterval(state.interval);
   state.list=list;state.i=0;state.mode=mode;state.details=[];state.remaining=2700;state.answers={};state.flags=new Set();state.paused=false;
@@ -308,7 +317,7 @@ function render(){
   $('question').textContent=q.question;$('questionIt').textContent=q.question_it;$('questionIt').classList.add('hidden');
   $('selectHint').textContent=q.correct.length===1?'Seleziona 1 risposta':`Seleziona ${q.correct.length} risposte`;
   $('explanation').classList.add('hidden');$('confirmBtn').classList.toggle('hidden',!!saved);$('nextBtn').classList.toggle('hidden',!saved);$('prevBtn').disabled=state.i===0;state.questionStartedAt=Date.now();
-  const p=getProgress();$('favBtn').textContent=p.favorites.includes(q.id)?'★ Preferita':'☆ Preferita';$('flagBtn').textContent=state.flags.has(q.id)?'🚩 Segnata':'🚩 Segna';
+  const p=getProgress();$('favBtn').textContent=p.favorites.includes(q.id)?'★ Preferita':'☆ Preferita';$('flagBtn').textContent=state.flags.has(q.id)?'🚩 Segnata':'🚩 Segna';$('hardBtn').textContent=(p.difficult||[]).includes(q.id)?'🧩 Difficile ✓':'🧩 Difficile';
   const order=q._order||(q._order=shuffle(q.answers.map((_,i)=>i)));$('options').innerHTML='';
   order.forEach(idx=>{
     const b=document.createElement('button');
@@ -325,8 +334,26 @@ function choose(btn,idx,max){
   saveSession()
 }
 function toggleTranslation(){$('questionIt').classList.toggle('hidden');document.querySelectorAll('.option .it').forEach(x=>x.classList.toggle('hidden'))}
-function speakQuestion(){const q=state.list[state.i];speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(q.question);u.lang='en-GB';speechSynthesis.speak(u)}
+function speakQuestion(){
+  const q=state.list[state.i];
+  speechSynthesis.cancel();
+  const parts=[q.question,...q.answers.map((a,i)=>`${String.fromCharCode(65+i)}. ${a}`)];
+  parts.forEach((part,i)=>{
+    const u=new SpeechSynthesisUtterance(part);
+    u.lang='en-GB';
+    u.rate=0.9;
+    u.pitch=1;
+    speechSynthesis.speak(u);
+  });
+}
 function toggleFavorite(){const q=state.list[state.i],p=getProgress(),i=p.favorites.indexOf(q.id);if(i>=0)p.favorites.splice(i,1);else p.favorites.push(q.id);saveProgress(p);render()}
+function toggleDifficult(){
+  const q=state.list[state.i],p=getProgress();
+  p.difficult=p.difficult||[];
+  const i=p.difficult.indexOf(q.id);
+  if(i>=0)p.difficult.splice(i,1);else p.difficult.push(q.id);
+  saveProgress(p);render();
+}
 function toggleFlag(){const id=state.list[state.i].id;state.flags.has(id)?state.flags.delete(id):state.flags.add(id);render()}
 function confirmAnswer(){
   const q=state.list[state.i];
@@ -457,7 +484,7 @@ function showProfile(){
   $('studyStreak').textContent=streak+' '+(streak===1?'giorno':'giorni');
   $('totalStudyTime').textContent=formatDuration(totalTimeSeconds(p));
   $('profileSeen').textContent=Object.keys(p.seen||{}).length+'/'+Q.length;
-  $('profileWeak').textContent=weak;
+  $('profileWeak').textContent=weak;$('profileDifficult').textContent=(p.difficult||[]).length;
   $('xpText').textContent=xp+' / '+lvl.max+' XP';
   const pct=Math.max(0,Math.min(100,Math.round((xp-lvl.min)/(lvl.max-lvl.min)*100)));
   $('xpBar').style.width=pct+'%';
@@ -469,6 +496,7 @@ function showProfile(){
     {icon:'💎',name:'35/35 perfetto',ok:(p.exams||[]).some(e=>e.score===35)},
     {icon:'🔥',name:'7 giorni consecutivi',ok:streak>=7},
     {icon:'📚',name:'250 domande studiate',ok:Object.keys(p.seen||{}).length>=250},
+    {icon:'🧩',name:'20 domande difficili affrontate',ok:(p.difficult||[]).length>=20},
     {icon:'🚖',name:'Pronto per Transport Malta',ok:ready>=85}
   ];
   $('badgeList').innerHTML=badges.map(b=>`<div class="badge-item ${b.ok?'':'locked'}"><div class="badge-icon">${b.icon}</div><div><strong>${b.name}</strong><br><span class="muted">${b.ok?'Sbloccato':'Non ancora sbloccato'}</span></div></div>`).join('');

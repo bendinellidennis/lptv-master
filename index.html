@@ -23,7 +23,7 @@ main{max-width:900px;margin:auto;padding:18px 14px calc(34px + env(safe-area-ins
 .option{display:block;width:100%;text-align:left;border:2px solid var(--line);background:#f8fafc;border-radius:15px;padding:15px;margin:10px 0;font-size:18px;color:var(--text)}
 .option.selected{border-color:var(--blue);background:#e8f0fb}.option.correct{border-color:var(--ok);background:#eaf8ef}.option.wrong{border-color:var(--bad);background:#fff0f0}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.actions .btn{flex:1;min-width:115px}
-.explain{border-left:5px solid var(--blue);background:#f4f8fe;padding:14px;border-radius:12px;margin-top:16px;line-height:1.45}
+.explain{border-left:5px solid var(--blue);background:#f4f8fe;padding:14px;border-radius:12px;margin-top:16px;line-height:1.45}.why-list{margin:8px 0 0;padding-left:18px}.why-list li{margin:6px 0}
 .stat{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line)}.stat:last-child{border-bottom:0}
 .progress{height:12px;background:#e3eaf3;border-radius:999px;overflow:hidden}.progress span{display:block;height:100%;background:var(--blue);transition:width .25s}
 select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:13px;background:#fff;font-size:17px;margin:6px 0 12px}
@@ -42,7 +42,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <section id="home">
   <div class="card">
     <h2>Benvenuto Dennis 👋</h2>
-    <p class="muted">Versione 2.6 • Database: <strong id="count"></strong> domande</p>
+    <p class="muted">Versione 2.7 • Database: <strong id="count"></strong> domande</p>
     <div id="resumeBox" class="hidden" style="margin-bottom:14px">
       <button class="btn pause big" onclick="resumeSavedSession()">▶️ Riprendi sessione interrotta</button>
     </div>
@@ -88,6 +88,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <button class="btn secondary big" onclick="startHighProbability()">🔥 Alta probabilità</button>
 <button class="btn secondary big" onclick="startFlashcards()">🗂️ Flashcard</button>
 <button class="btn secondary big" onclick="startWeakestCategory()">🎯 Categoria più debole</button>
+<button class="btn secondary big" onclick="showLanguageSettings()">🌍 Lingua del quiz</button>
     </div>
   </div>
 
@@ -118,7 +119,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <div class="topline"><span class="badge" id="qnum"></span><span class="timer" id="timer"></span></div>
 <div class="progress"><span id="quizProgress" style="width:0%"></span></div><p id="examNotice" class="small muted hidden">Modalità esame: le soluzioni appariranno solo alla fine.</p>
 <div class="review-strip" id="reviewStrip"></div>
-<div class="small muted" id="categoryLabel"></div>
+<div class="small muted" id="categoryLabel"></div><div class="small muted" id="languageLabel"></div>
 <div class="question" id="question"></div>
 <div class="actions">
 <button class="btn secondary" onclick="toggleTranslation()">🇮🇹 Traduzione</button>
@@ -171,6 +172,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
   <div class="mini"><span>Domande viste</span><strong id="profileSeen">0</strong></div>
   <div class="mini"><span>Errori aperti</span><strong id="profileWeak">0</strong></div>
 <div class="mini"><span>Difficili</span><strong id="profileDifficult">0</strong></div>
+<div class="mini"><span>Lingua quiz</span><strong id="profileLanguage">EN</strong></div>
 </div>
 </div>
 <div class="card">
@@ -213,6 +215,19 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 </div>
 </div></section>
 
+
+<section id="languageSettings" class="hidden"><div class="card">
+<div class="topline"><h2>Lingua del quiz</h2><button class="btn light" onclick="goHome()">Esci</button></div>
+<label>Modalità visualizzazione</label>
+<select id="languageMode">
+  <option value="english">Solo inglese</option>
+  <option value="bilingual">Inglese + italiano</option>
+  <option value="italian">Solo italiano</option>
+</select>
+<button class="btn" onclick="saveLanguageMode()">Salva impostazione</button>
+<p class="muted">Questa scelta verrà mantenuta anche dopo la chiusura dell’app.</p>
+</div></section>
+
 </main>
 
 <div id="pauseScreen" class="pause-screen hidden">
@@ -226,7 +241,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <script src="database.js"></script>
 <script>
 const Q=window.LPTV_QUESTIONS||[], $=id=>document.getElementById(id);
-const sections=['home','studySetup','search','quiz','result','dashboard','history','profile','examDate','flashcards'];
+const sections=['home','studySetup','search','quiz','result','dashboard','history','profile','examDate','flashcards','languageSettings'];
 const STORAGE='lptvProgressV20', SESSION='lptvActiveSessionV20';
 const state={list:[],i:0,selected:new Set(),answered:false,mode:'study',remaining:2700,interval:null,details:[],answers:{},flags:new Set(),questionStartedAt:0,paused:false};
 const flash={list:[],i:0,revealed:false};
@@ -237,6 +252,25 @@ function getProgress(){try{return JSON.parse(localStorage.getItem(STORAGE))||{se
 function saveProgress(p){localStorage.setItem(STORAGE,JSON.stringify(p))}
 function statusAllowed(q,f){const s=(q.status||'').toLowerCase();if(f==='ALL')return true;if(f==='official')return s.includes('official');return s.includes('official')||s.includes('verified')||s.includes('confirmed')}
 function goHome(){clearInterval(state.interval);show('home');refreshHome()}
+
+function getLanguageMode(){
+  return localStorage.getItem('lptvLanguageMode')||'english';
+}
+function showLanguageSettings(){
+  show('languageSettings');
+  $('languageMode').value=getLanguageMode();
+}
+function saveLanguageMode(){
+  localStorage.setItem('lptvLanguageMode',$('languageMode').value);
+  alert('Lingua salvata.');
+  goHome();
+}
+function languageModeLabel(mode){
+  if(mode==='bilingual')return 'Modalità bilingue';
+  if(mode==='italian')return 'Solo italiano';
+  return 'Solo inglese';
+}
+
 function init(){
   $('count').textContent=Q.length;
   const cats=[...new Set(Q.map(q=>q.category))].sort();
@@ -370,7 +404,11 @@ function render(){
   $('timer').textContent=state.mode==='exam'?formatTime(state.remaining):'';
   $('quizProgress').style.width=`${Math.round((state.i+1)/state.list.length*100)}%`;
   $('categoryLabel').textContent=q.category+' • '+(q.status||'verificata');
-  $('question').textContent=q.question;$('questionIt').textContent=q.question_it;$('questionIt').classList.add('hidden');
+  const langMode=getLanguageMode();
+  $('languageLabel').textContent=languageModeLabel(langMode);
+  $('question').textContent=langMode==='italian'?q.question_it:q.question;
+  $('questionIt').textContent=q.question_it;
+  $('questionIt').classList.toggle('hidden',langMode!=='bilingual');
   $('selectHint').textContent=q.correct.length===1?'Seleziona 1 risposta':`Seleziona ${q.correct.length} risposte`;
   $('explanation').classList.add('hidden');$('confirmBtn').classList.toggle('hidden',!!saved);$('nextBtn').classList.toggle('hidden',!saved);$('prevBtn').disabled=state.i===0;state.questionStartedAt=Date.now();
   const p=getProgress();$('favBtn').textContent=p.favorites.includes(q.id)?'★ Preferita':'☆ Preferita';$('flagBtn').textContent=state.flags.has(q.id)?'🚩 Segnata':'🚩 Segna';$('hardBtn').textContent=(p.difficult||[]).includes(q.id)?'🧩 Difficile ✓':'🧩 Difficile';
@@ -378,7 +416,10 @@ function render(){
   order.forEach(idx=>{
     const b=document.createElement('button');
     b.className='option'+(state.selected.has(idx)?' selected':'');b.dataset.idx=idx;
-    b.innerHTML=`<strong>${String.fromCharCode(65+idx)}.</strong> <span>${q.answers[idx]}</span><span class="it hidden"><br><small>${q.answers_it[idx]||''}</small></span>`;
+    const langMode=getLanguageMode();
+    const mainText=langMode==='italian'?(q.answers_it[idx]||q.answers[idx]):q.answers[idx];
+    const second=langMode==='bilingual'?`<br><small>${q.answers_it[idx]||''}</small>`:'';
+    b.innerHTML=`<strong>${String.fromCharCode(65+idx)}.</strong> <span>${mainText}</span>${second}`;
     b.onclick=()=>choose(b,idx,q.correct.length);$('options').appendChild(b)
   });
   if(saved&&state.mode!=='exam')applyReview(q,saved);renderStrip();$('examNotice').classList.toggle('hidden',state.mode!=='exam');saveSession()
@@ -389,7 +430,17 @@ function choose(btn,idx,max){
   else{if(state.selected.size>=max)return;state.selected.add(idx);btn.classList.add('selected')}
   saveSession()
 }
-function toggleTranslation(){$('questionIt').classList.toggle('hidden');document.querySelectorAll('.option .it').forEach(x=>x.classList.toggle('hidden'))}
+function toggleTranslation(){
+  const q=state.list[state.i],mode=getLanguageMode();
+  if(mode==='english'){
+    $('questionIt').classList.toggle('hidden');
+  }else if(mode==='italian'){
+    $('questionIt').textContent=q.question;
+    $('questionIt').classList.toggle('hidden');
+  }else{
+    $('questionIt').classList.toggle('hidden');
+  }
+}
 function speakQuestion(){
   const q=state.list[state.i];
   speechSynthesis.cancel();
@@ -430,7 +481,15 @@ function confirmAnswer(){
 }
 function applyReview(q,saved){
   document.querySelectorAll('.option').forEach(b=>{const i=+b.dataset.idx;if(q.correct.includes(i))b.classList.add('correct');else if(saved.selected.includes(i))b.classList.add('wrong')});
-  $('explanation').innerHTML=`<strong>${saved.ok?'✅ Risposta corretta':'❌ Risposta errata'}</strong><p>${q.explanation||''}</p><p><strong>Italiano:</strong> ${q.explanation_it||''}</p><p class="small muted">Tempo risposta: ${saved.time||0} secondi</p>`;
+  const chosen=(saved.selected||[]).map(i=>q.answers[i]).join(' • ')||'Nessuna risposta';
+  const correct=q.correct.map(i=>q.answers[i]).join(' • ');
+  const wrongChosen=(saved.selected||[]).filter(i=>!q.correct.includes(i)).map(i=>q.answers[i]);
+  const whyWrong=wrongChosen.length?`<ul class="why-list">${wrongChosen.map(x=>`<li><strong>${x}</strong>: non corrisponde alla regola richiesta dalla domanda.</li>`).join('')}</ul>`:'';
+  $('explanation').innerHTML=`<strong>${saved.ok?'✅ Risposta corretta':'❌ Risposta errata'}</strong>
+  <p><strong>La tua risposta:</strong> ${chosen}</p>
+  <p><strong>Risposta corretta:</strong> ${correct}</p>
+  ${whyWrong}
+  <p>${q.explanation||''}</p><p><strong>Italiano:</strong> ${q.explanation_it||''}</p><p class="small muted">Tempo risposta: ${saved.time||0} secondi</p>`;
   $('explanation').classList.remove('hidden')
 }
 function nextQuestion(){
@@ -554,7 +613,7 @@ function showProfile(){
   $('studyStreak').textContent=streak+' '+(streak===1?'giorno':'giorni');
   $('totalStudyTime').textContent=formatDuration(totalTimeSeconds(p));
   $('profileSeen').textContent=Object.keys(p.seen||{}).length+'/'+Q.length;
-  $('profileWeak').textContent=weak;$('profileDifficult').textContent=(p.difficult||[]).length;
+  $('profileWeak').textContent=weak;$('profileDifficult').textContent=(p.difficult||[]).length;$('profileLanguage').textContent=getLanguageMode()==='english'?'EN':getLanguageMode()==='italian'?'IT':'EN+IT';
   $('xpText').textContent=xp+' / '+lvl.max+' XP';
   const pct=Math.max(0,Math.min(100,Math.round((xp-lvl.min)/(lvl.max-lvl.min)*100)));
   $('xpBar').style.width=pct+'%';
@@ -686,8 +745,8 @@ function renderFlashcard(){
   flash.revealed=false;
   $('flashCount').textContent=`Scheda ${flash.i+1} di ${flash.list.length} • ${q.category}`;
   $('flashProgress').style.width=`${Math.round((flash.i+1)/flash.list.length*100)}%`;
-  $('flashQuestion').textContent=q.question;
-  $('flashTranslation').textContent=q.question_it;
+  const mode=getLanguageMode();$('flashQuestion').textContent=mode==='italian'?q.question_it:q.question;
+  $('flashTranslation').textContent=mode==='italian'?q.question:q.question_it;
   $('flashTranslation').classList.add('hidden');
   $('flashAnswer').classList.add('hidden');
   $('showFlashAnswerBtn').classList.remove('hidden');

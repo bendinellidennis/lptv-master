@@ -1,13 +1,13 @@
-LPTV MASTER V2.6
+LPTV MASTER V2.7
 
 Database incluso: 255 domande.
 
 NOVITÀ:
-- Modalità Flashcard
-- Autovalutazione “La so / Non la so”
-- Aggiornamento automatico dei progressi dalle flashcard
-- Individuazione automatica della categoria più debole
-- Test mirato sulla categoria più debole
-- Categoria da rinforzare mostrata nella Dashboard
-- Piano giornaliero più mirato
-- Mantiene data esame, backup, alta probabilità, audio, profilo, XP e badge
+- Scelta lingua quiz: solo inglese, bilingue o solo italiano
+- Impostazione salvata automaticamente
+- Domande e risposte adattate alla lingua scelta
+- Flashcard adattate alla lingua scelta
+- Spiegazione più completa della risposta
+- Evidenza della risposta scelta e di quella corretta
+- Lingua mostrata nel profilo
+- Mantiene flashcard, categoria debole, data esame, backup, audio, XP e badge

@@ -32,7 +32,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 .list-item{padding:13px 0;border-bottom:1px solid var(--line)}.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#eef3fa;font-size:12px;font-weight:700;color:#3c4e68}
 .pause-screen{position:fixed;inset:0;background:#07162de8;color:white;display:flex;align-items:center;justify-content:center;z-index:99;padding:24px}.pause-box{max-width:430px;text-align:center}
 .hero-score{font-size:48px;font-weight:900;color:var(--blue);line-height:1}.subgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.mini{background:#f5f8fc;border-radius:16px;padding:14px;text-align:center}.mini strong{display:block;font-size:22px}.category-row{margin:13px 0}.category-head{display:flex;justify-content:space-between;margin-bottom:6px}.history-item{padding:12px;border:1px solid var(--line);border-radius:14px;margin:8px 0}
-.daily{border:2px solid #d9e6f7;background:linear-gradient(180deg,#fff,#f8fbff)}.daily ul{padding-left:20px}
+.daily{border:2px solid #d9e6f7;background:linear-gradient(180deg,#fff,#f8fbff)}.daily ul{padding-left:20px}.badge-item{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);border-radius:14px;margin:9px 0}.badge-item.locked{opacity:.42;filter:grayscale(1)}.badge-icon{font-size:30px}
 @media(max-width:640px){.grid{grid-template-columns:1fr}.subgrid{grid-template-columns:1fr 1fr}.question{font-size:22px}.card{padding:17px}}
 </style>
 </head>
@@ -42,7 +42,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <section id="home">
   <div class="card">
     <h2>Benvenuto Dennis 👋</h2>
-    <p class="muted">Versione 2.2 • Database: <strong id="count"></strong> domande</p>
+    <p class="muted">Versione 2.3 • Database: <strong id="count"></strong> domande</p>
     <div id="resumeBox" class="hidden" style="margin-bottom:14px">
       <button class="btn pause big" onclick="resumeSavedSession()">▶️ Riprendi sessione interrotta</button>
     </div>
@@ -76,6 +76,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
       <button class="btn secondary big" onclick="showSearch()">🔎 Cerca domanda</button>
       <button class="btn secondary big" onclick="showDashboard()">📊 Dashboard</button>
       <button class="btn secondary big" onclick="showHistory()">📝 Storico esami</button>
+<button class="btn secondary big" onclick="showProfile()">👤 Il mio profilo</button>
     </div>
   </div>
 
@@ -141,6 +142,34 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <div class="topline"><h2>Storico esami</h2><button class="btn light" onclick="goHome()">Esci</button></div>
 <div id="historyBody"></div>
 </div></section>
+
+<section id="profile" class="hidden"><div class="card">
+<div class="topline"><h2>Il mio profilo</h2><button class="btn light" onclick="goHome()">Esci</button></div>
+<div class="center">
+  <div style="font-size:58px">👤</div>
+  <h2>Dennis Bendinelli</h2>
+  <span class="badge" id="profileLevel">Apprentice Driver</span>
+</div>
+<div class="category-row"><div class="category-head"><strong>Esperienza</strong><span id="xpText">0 / 1000 XP</span></div><div class="progress"><span id="xpBar" style="width:0%"></span></div></div>
+<div class="subgrid">
+  <div class="mini"><span>Preparazione</span><strong id="profileReadiness">0%</strong></div>
+  <div class="mini"><span>Miglior esame</span><strong id="bestExam">—</strong></div>
+  <div class="mini"><span>Serie di studio</span><strong id="studyStreak">0 giorni</strong></div>
+  <div class="mini"><span>Tempo totale</span><strong id="totalStudyTime">0m</strong></div>
+  <div class="mini"><span>Domande viste</span><strong id="profileSeen">0</strong></div>
+  <div class="mini"><span>Errori aperti</span><strong id="profileWeak">0</strong></div>
+</div>
+</div>
+<div class="card">
+<h3>🏅 Badge</h3>
+<div id="badgeList"></div>
+</div>
+<div class="card">
+<h3>📊 Preparazione per argomento</h3>
+<div id="profileCategories"></div>
+</div>
+</section>
+
 </main>
 
 <div id="pauseScreen" class="pause-screen hidden">
@@ -154,7 +183,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <script src="database.js"></script>
 <script>
 const Q=window.LPTV_QUESTIONS||[], $=id=>document.getElementById(id);
-const sections=['home','studySetup','search','quiz','result','dashboard','history'];
+const sections=['home','studySetup','search','quiz','result','dashboard','history','profile'];
 const STORAGE='lptvProgressV20', SESSION='lptvActiveSessionV20';
 const state={list:[],i:0,selected:new Set(),answered:false,mode:'study',remaining:2700,interval:null,details:[],answers:{},flags:new Set(),questionStartedAt:0,paused:false};
 
@@ -381,6 +410,76 @@ function showHistory(){
   show('history');const p=getProgress();
   $('historyBody').innerHTML=p.exams.length?[...p.exams].reverse().map((e,i)=>`<div class="history-item"><strong>${new Date(e.date).toLocaleDateString('it-IT')} — ${e.score}/${e.total}</strong><p class="muted">Percentuale: ${Math.round(e.score/e.total*100)}% • Tempo medio: ${e.avg||0}s</p></div>`).join(''):'<p class="muted">Non hai ancora completato esami.</p>'
 }
+
+function computeStreak(p){
+  const dates=Object.keys(p.days||{}).sort().reverse();
+  if(!dates.length)return 0;
+  let streak=0;
+  let cursor=new Date();
+  cursor.setHours(0,0,0,0);
+  for(let i=0;i<400;i++){
+    const key=cursor.toISOString().slice(0,10);
+    if((p.days[key]||0)>0){streak++;cursor.setDate(cursor.getDate()-1)}
+    else if(i===0){cursor.setDate(cursor.getDate()-1)}
+    else break;
+  }
+  return streak;
+}
+function totalAnswered(p){return Object.values(p.seen||{}).reduce((a,b)=>a+b,0)}
+function totalTimeSeconds(p){
+  return Object.values(p.times||{}).flat().reduce((a,b)=>a+(Number(b)||0),0)
+}
+function formatDuration(sec){
+  const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60);
+  return h?`${h}h ${m}m`:`${m}m`
+}
+function xpFor(p){
+  const answered=totalAnswered(p);
+  const passed=(p.exams||[]).filter(e=>e.score>=30).length;
+  const perfect=(p.exams||[]).filter(e=>e.score===e.total).length;
+  return answered*5+(p.exams||[]).length*60+passed*150+perfect*300+Object.keys(p.days||{}).length*20;
+}
+function levelFor(xp){
+  if(xp>=6000)return {name:'LPTV Master',min:6000,max:9000};
+  if(xp>=3500)return {name:'Expert Driver',min:3500,max:6000};
+  if(xp>=1800)return {name:'Advanced Driver',min:1800,max:3500};
+  if(xp>=700)return {name:'Qualified Learner',min:700,max:1800};
+  return {name:'Apprentice Driver',min:0,max:700};
+}
+function showProfile(){
+  show('profile');
+  const p=getProgress(),ready=computeReadiness(p),xp=xpFor(p),lvl=levelFor(xp);
+  const best=(p.exams||[]).length?Math.max(...p.exams.map(e=>e.score)):null;
+  const streak=computeStreak(p),weak=Object.values(p.wrong||{}).filter(x=>x>0).length;
+  $('profileLevel').textContent=lvl.name;
+  $('profileReadiness').textContent=ready+'%';
+  $('bestExam').textContent=best===null?'—':best+'/35';
+  $('studyStreak').textContent=streak+' '+(streak===1?'giorno':'giorni');
+  $('totalStudyTime').textContent=formatDuration(totalTimeSeconds(p));
+  $('profileSeen').textContent=Object.keys(p.seen||{}).length+'/'+Q.length;
+  $('profileWeak').textContent=weak;
+  $('xpText').textContent=xp+' / '+lvl.max+' XP';
+  const pct=Math.max(0,Math.min(100,Math.round((xp-lvl.min)/(lvl.max-lvl.min)*100)));
+  $('xpBar').style.width=pct+'%';
+
+  const badges=[
+    {icon:'🥉',name:'Prima simulazione',ok:(p.exams||[]).length>=1},
+    {icon:'🥈',name:'10 simulazioni completate',ok:(p.exams||[]).length>=10},
+    {icon:'🥇',name:'30/35 raggiunto',ok:(p.exams||[]).some(e=>e.score>=30)},
+    {icon:'💎',name:'35/35 perfetto',ok:(p.exams||[]).some(e=>e.score===35)},
+    {icon:'🔥',name:'7 giorni consecutivi',ok:streak>=7},
+    {icon:'📚',name:'250 domande studiate',ok:Object.keys(p.seen||{}).length>=250},
+    {icon:'🚖',name:'Pronto per Transport Malta',ok:ready>=85}
+  ];
+  $('badgeList').innerHTML=badges.map(b=>`<div class="badge-item ${b.ok?'':'locked'}"><div class="badge-icon">${b.icon}</div><div><strong>${b.name}</strong><br><span class="muted">${b.ok?'Sbloccato':'Non ancora sbloccato'}</span></div></div>`).join('');
+
+  const map=categoryStats(p);
+  $('profileCategories').innerHTML=Object.entries(map).sort((a,b)=>(b[1].correct/b[1].seen)-(a[1].correct/a[1].seen)).map(([cat,v])=>{
+    const pct=Math.round(v.correct/v.seen*100);
+    return `<div class="category-row"><div class="category-head"><strong>${cat}</strong><span>${pct}%</span></div><div class="progress"><span style="width:${pct}%"></span></div></div>`
+  }).join('')||'<p class="muted">Completa alcune domande per vedere i risultati per argomento.</p>';
+}
+
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.list.length)saveSession()});
 window.addEventListener('beforeunload',saveSession);
 init();

@@ -32,7 +32,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 .list-item{padding:13px 0;border-bottom:1px solid var(--line)}.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#eef3fa;font-size:12px;font-weight:700;color:#3c4e68}
 .pause-screen{position:fixed;inset:0;background:#07162de8;color:white;display:flex;align-items:center;justify-content:center;z-index:99;padding:24px}.pause-box{max-width:430px;text-align:center}
 .hero-score{font-size:48px;font-weight:900;color:var(--blue);line-height:1}.subgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.mini{background:#f5f8fc;border-radius:16px;padding:14px;text-align:center}.mini strong{display:block;font-size:22px}.category-row{margin:13px 0}.category-head{display:flex;justify-content:space-between;margin-bottom:6px}.history-item{padding:12px;border:1px solid var(--line);border-radius:14px;margin:8px 0}
-.daily{border:2px solid #d9e6f7;background:linear-gradient(180deg,#fff,#f8fbff)}.daily ul{padding-left:20px}.badge-item{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);border-radius:14px;margin:9px 0}.badge-item.locked{opacity:.42;filter:grayscale(1)}.badge-icon{font-size:30px}
+.daily{border:2px solid #d9e6f7;background:linear-gradient(180deg,#fff,#f8fbff)}.daily ul{padding-left:20px}.countdown-big{font-size:42px;font-weight:900;color:var(--blue)}.plan-chip{display:inline-block;padding:7px 10px;border-radius:999px;background:#eef4fb;margin:4px 5px 4px 0;font-weight:700}.badge-item{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);border-radius:14px;margin:9px 0}.badge-item.locked{opacity:.42;filter:grayscale(1)}.badge-icon{font-size:30px}
 @media(max-width:640px){.grid{grid-template-columns:1fr}.subgrid{grid-template-columns:1fr 1fr}.question{font-size:22px}.card{padding:17px}}
 </style>
 </head>
@@ -42,10 +42,15 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <section id="home">
   <div class="card">
     <h2>Benvenuto Dennis 👋</h2>
-    <p class="muted">Versione 2.4 • Database: <strong id="count"></strong> domande</p>
+    <p class="muted">Versione 2.5 • Database: <strong id="count"></strong> domande</p>
     <div id="resumeBox" class="hidden" style="margin-bottom:14px">
       <button class="btn pause big" onclick="resumeSavedSession()">▶️ Riprendi sessione interrotta</button>
     </div>
+  </div>
+
+  <div id="homeExamCountdown" class="card hidden">
+    <div class="topline" style="position:static"><h2>⏳ Conto alla rovescia</h2><span class="badge" id="countdownBadge"></span></div>
+    <div id="countdownText"></div>
   </div>
 
   <div class="card daily">
@@ -79,6 +84,8 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
       <button class="btn secondary big" onclick="showDashboard()">📊 Dashboard</button>
       <button class="btn secondary big" onclick="showHistory()">📝 Storico esami</button>
 <button class="btn secondary big" onclick="showProfile()">👤 Il mio profilo</button>
+<button class="btn secondary big" onclick="showExamDate()">📅 Data esame</button>
+<button class="btn secondary big" onclick="startHighProbability()">🔥 Alta probabilità</button>
     </div>
   </div>
 
@@ -172,7 +179,18 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <h3>📊 Preparazione per argomento</h3>
 <div id="profileCategories"></div>
 </div>
+<div class="card"><h3>💾 Backup progressi</h3><div class="actions"><button class="btn secondary" onclick="exportProgress()">Esporta backup</button><button class="btn secondary" onclick="importProgress()">Importa backup</button></div><input id="backupFile" type="file" accept=".json,application/json" class="hidden" onchange="handleBackupFile(event)"></div>
 </section>
+
+
+<section id="examDate" class="hidden"><div class="card">
+<div class="topline"><h2>Data dell'esame</h2><button class="btn light" onclick="goHome()">Esci</button></div>
+<label>Seleziona la data dell'esame</label>
+<input id="examDateInput" type="date">
+<button class="btn" onclick="saveExamDate()">Salva data</button>
+<button class="btn danger" style="margin-top:10px" onclick="clearExamDate()">Rimuovi data</button>
+<div id="examCountdownBox" style="margin-top:18px"></div>
+</div></section>
 
 </main>
 
@@ -187,7 +205,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <script src="database.js"></script>
 <script>
 const Q=window.LPTV_QUESTIONS||[], $=id=>document.getElementById(id);
-const sections=['home','studySetup','search','quiz','result','dashboard','history','profile'];
+const sections=['home','studySetup','search','quiz','result','dashboard','history','profile','examDate'];
 const STORAGE='lptvProgressV20', SESSION='lptvActiveSessionV20';
 const state={list:[],i:0,selected:new Set(),answered:false,mode:'study',remaining:2700,interval:null,details:[],answers:{},flags:new Set(),questionStartedAt:0,paused:false};
 
@@ -217,6 +235,7 @@ function refreshHome(){
   $('weakMini').textContent=weak;$('hardMini').textContent=(p.difficult||[]).length;
   $('todayDate').textContent=new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});
   renderDailyPlan(p);
+  renderExamCountdown();
 }
 function computeReadiness(p){
   const seen=Object.keys(p.seen).length;
@@ -284,6 +303,20 @@ function adaptivePool(p){
   });
 }
 function startAdaptive(){const p=getProgress();begin(adaptivePool(p).slice(0,20),'adaptive')}
+function startHighProbability(){
+  const p=getProgress();
+  let pool=Q.filter(q=>{
+    const s=(q.status||'').toLowerCase();
+    return s.includes('official')||s.includes('confirmed')||s.includes('high');
+  });
+  if(pool.length<35)pool=[...pool,...Q.filter(q=>!pool.some(x=>x.id===q.id))];
+  pool=pool.sort((a,b)=>{
+    const aw=(p.wrong[a.id]||0)*3+(p.seen[a.id]?0:2);
+    const bw=(p.wrong[b.id]||0)*3+(p.seen[b.id]?0:2);
+    return bw-aw;
+  });
+  begin(pool.slice(0,35),'highprob')
+}
 function startWeak(){
   const p=getProgress();let pool=Q.filter(q=>(p.wrong[q.id]||0)>0);
   if(!pool.length)return alert('Non ci sono ancora domande sbagliate salvate.');
@@ -506,6 +539,94 @@ function showProfile(){
     const pct=Math.round(v.correct/v.seen*100);
     return `<div class="category-row"><div class="category-head"><strong>${cat}</strong><span>${pct}%</span></div><div class="progress"><span style="width:${pct}%"></span></div></div>`
   }).join('')||'<p class="muted">Completa alcune domande per vedere i risultati per argomento.</p>';
+}
+
+
+function getExamDate(){
+  return localStorage.getItem('lptvExamDate')||'';
+}
+function showExamDate(){
+  show('examDate');
+  $('examDateInput').value=getExamDate();
+  renderExamDatePanel();
+}
+function saveExamDate(){
+  const value=$('examDateInput').value;
+  if(!value)return alert('Seleziona una data.');
+  localStorage.setItem('lptvExamDate',value);
+  renderExamDatePanel();
+  renderExamCountdown();
+}
+function clearExamDate(){
+  localStorage.removeItem('lptvExamDate');
+  $('examDateInput').value='';
+  renderExamDatePanel();
+  renderExamCountdown();
+}
+function daysUntilExam(){
+  const value=getExamDate();
+  if(!value)return null;
+  const target=new Date(value+'T00:00:00');
+  const today=new Date();today.setHours(0,0,0,0);
+  return Math.ceil((target-today)/86400000);
+}
+function renderExamDatePanel(){
+  const d=daysUntilExam();
+  const box=$('examCountdownBox');
+  if(d===null){box.innerHTML='<p class="muted">Nessuna data salvata.</p>';return}
+  if(d<0){box.innerHTML='<p class="muted">La data selezionata è già passata.</p>';return}
+  box.innerHTML=`<div class="countdown-big">${d}</div><p>${d===1?'giorno rimanente':'giorni rimanenti'}</p>${examPlanHtml(d)}`
+}
+function renderExamCountdown(){
+  const d=daysUntilExam();
+  const card=$('homeExamCountdown');
+  if(d===null||d<0){card.classList.add('hidden');return}
+  card.classList.remove('hidden');
+  $('countdownBadge').textContent=d===0?'OGGI':d+' giorni';
+  $('countdownText').innerHTML=`<div class="countdown-big">${d===0?'Esame oggi':d+' giorni'}</div>${examPlanHtml(d)}`
+}
+function examPlanHtml(d){
+  let plan=[];
+  if(d===0)plan=['Ripasso leggero','Solo errori','Niente maratone'];
+  else if(d<=3)plan=['1 esame completo al giorno','Solo errori','Alta probabilità'];
+  else if(d<=7)plan=['2 mini-test adattivi','1 esame completo','Ripasso categorie deboli'];
+  else plan=['Piano giornaliero','Allenamento intelligente','1 esame ogni 2 giorni'];
+  return '<div>'+plan.map(x=>`<span class="plan-chip">${x}</span>`).join('')+'</div>'
+}
+function exportProgress(){
+  const payload={
+    version:'2.5',
+    exportedAt:new Date().toISOString(),
+    progress:getProgress(),
+    examDate:getExamDate()
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='LPTV_MASTER_backup.json';a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function importProgress(){
+  $('backupFile').click();
+}
+function handleBackupFile(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const payload=JSON.parse(reader.result);
+      if(!payload.progress)throw new Error();
+      localStorage.setItem(STORAGE,JSON.stringify(payload.progress));
+      if(payload.examDate)localStorage.setItem('lptvExamDate',payload.examDate);
+      alert('Backup importato correttamente.');
+      refreshHome();
+    }catch{
+      alert('File di backup non valido.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value='';
 }
 
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.list.length)saveSession()});

@@ -1,12 +1,12 @@
-LPTV MASTER V2.4
+LPTV MASTER V2.5
 
 Database incluso: 255 domande.
 
 NOVITÀ:
-- Audio legge domanda e tutte le risposte
-- Ricerca anche per ID e stato della domanda
-- Pulsante Domanda difficile
-- Sezione Domande difficili
-- Conteggio difficili nella Home e nel Profilo
-- Nuovo badge dedicato
-- Mantiene profilo, XP, badge, esame realistico e dashboard
+- Impostazione della data dell'esame
+- Conto alla rovescia in Home
+- Piano automatico in base ai giorni rimasti
+- Modalità Alta probabilità
+- Esportazione backup dei progressi
+- Importazione backup dei progressi
+- Mantiene audio completo, difficili, profilo, XP, badge, esame realistico e dashboard

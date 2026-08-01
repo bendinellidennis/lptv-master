@@ -42,7 +42,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <section id="home">
   <div class="card">
     <h2>Benvenuto Dennis 👋</h2>
-    <p class="muted">Versione 2.1 • Database: <strong id="count"></strong> domande</p>
+    <p class="muted">Versione 2.2 • Database: <strong id="count"></strong> domande</p>
     <div id="resumeBox" class="hidden" style="margin-bottom:14px">
       <button class="btn pause big" onclick="resumeSavedSession()">▶️ Riprendi sessione interrotta</button>
     </div>
@@ -68,7 +68,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 
   <div class="card">
     <div class="grid">
-      <button class="btn big" onclick="startExam()">🎯 Esame ufficiale</button>
+      <button class="btn big" onclick="startExam()">🎯 Esame realistico 35/45</button>
       <button class="btn big" onclick="showStudySetup()">📚 Studio per argomento</button>
       <button class="btn secondary big" onclick="startAdaptive()">🧠 Allenamento intelligente</button>
       <button class="btn secondary big" onclick="startWeak()">⚠️ Solo errori</button>
@@ -104,7 +104,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 
 <section id="quiz" class="hidden"><div class="card">
 <div class="topline"><span class="badge" id="qnum"></span><span class="timer" id="timer"></span></div>
-<div class="progress"><span id="quizProgress" style="width:0%"></span></div>
+<div class="progress"><span id="quizProgress" style="width:0%"></span></div><p id="examNotice" class="small muted hidden">Modalità esame: le soluzioni appariranno solo alla fine.</p>
 <div class="review-strip" id="reviewStrip"></div>
 <div class="small muted" id="categoryLabel"></div>
 <div class="question" id="question"></div>
@@ -129,7 +129,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 
 <section id="result" class="hidden">
 <div class="card center"><h2 id="resultTitle"></h2><div style="font-size:52px;font-weight:900" id="score"></div><p id="resultText"></p><button class="btn" onclick="goHome()">Torna alla Home</button></div>
-<div class="card"><h3>Risultato per categoria</h3><div id="categoryResults"></div></div>
+<div class="card"><h3>Risultato per categoria</h3><div id="categoryResults"></div></div><div class="card"><h3>Revisione delle risposte</h3><div id="answerReview"></div></div>
 </section>
 
 <section id="dashboard" class="hidden"><div class="card">
@@ -226,7 +226,22 @@ function startStudy(){
 }
 function startExam(){
   let pool=Q.filter(q=>statusAllowed(q,'verified'));if(pool.length<35)pool=Q;
-  begin(shuffle(pool).slice(0,35),'exam')
+  const groups=[
+    {match:q=>/customer|passenger|vulnerable/i.test(q.category),n:8},
+    {match:q=>/health|first aid|safety|loading/i.test(q.category),n:9},
+    {match:q=>/road|sign|traffic|vehicle|motor|pedestrian|cyclist|alcohol|document|insurance|parking/i.test(q.category),n:9},
+    {match:q=>/LPTV|operator|driver requirements|garaging|platform|penalt|special occasion|driving and rest/i.test(q.category),n:9}
+  ];
+  const selected=[], used=new Set();
+  for(const g of groups){
+    const candidates=shuffle(pool.filter(q=>g.match(q)&&!used.has(q.id)));
+    for(const q of candidates.slice(0,g.n)){selected.push(q);used.add(q.id)}
+  }
+  for(const q of shuffle(pool)){
+    if(selected.length>=35)break;
+    if(!used.has(q.id)){selected.push(q);used.add(q.id)}
+  }
+  begin(shuffle(selected).slice(0,35),'exam')
 }
 function adaptivePool(p){
   return [...Q].sort((a,b)=>{
@@ -272,7 +287,7 @@ function render(){
     b.innerHTML=`<strong>${String.fromCharCode(65+idx)}.</strong> <span>${q.answers[idx]}</span><span class="it hidden"><br><small>${q.answers_it[idx]||''}</small></span>`;
     b.onclick=()=>choose(b,idx,q.correct.length);$('options').appendChild(b)
   });
-  if(saved)applyReview(q,saved);renderStrip();saveSession()
+  if(saved&&state.mode!=='exam')applyReview(q,saved);renderStrip();$('examNotice').classList.toggle('hidden',state.mode!=='exam');saveSession()
 }
 function choose(btn,idx,max){
   if(state.answered)return;
@@ -293,14 +308,31 @@ function confirmAnswer(){
   const p=getProgress();p.seen[q.id]=(p.seen[q.id]||0)+1;p.times[q.id]=[...(p.times[q.id]||[]),elapsed].slice(-10);
   if(ok)p.correct[q.id]=(p.correct[q.id]||0)+1;else p.wrong[q.id]=(p.wrong[q.id]||0)+1;
   const day=new Date().toISOString().slice(0,10);p.days[day]=(p.days[day]||0)+1;
-  saveProgress(p);applyReview(q,state.answers[q.id]);$('confirmBtn').classList.add('hidden');$('nextBtn').classList.remove('hidden');renderStrip();saveSession()
+  saveProgress(p);
+  if(state.mode==='exam'){
+    $('confirmBtn').classList.add('hidden');$('nextBtn').classList.remove('hidden');
+  }else{
+    applyReview(q,state.answers[q.id]);$('confirmBtn').classList.add('hidden');$('nextBtn').classList.remove('hidden');
+  }
+  renderStrip();saveSession()
 }
 function applyReview(q,saved){
   document.querySelectorAll('.option').forEach(b=>{const i=+b.dataset.idx;if(q.correct.includes(i))b.classList.add('correct');else if(saved.selected.includes(i))b.classList.add('wrong')});
   $('explanation').innerHTML=`<strong>${saved.ok?'✅ Risposta corretta':'❌ Risposta errata'}</strong><p>${q.explanation||''}</p><p><strong>Italiano:</strong> ${q.explanation_it||''}</p><p class="small muted">Tempo risposta: ${saved.time||0} secondi</p>`;
   $('explanation').classList.remove('hidden')
 }
-function nextQuestion(){if(state.i<state.list.length-1){state.i++;render()}else finish()}
+function nextQuestion(){
+  if(state.i<state.list.length-1){state.i++;render()}
+  else{
+    const unanswered=state.list.filter(q=>!state.answers[q.id]).length;
+    if(unanswered&&state.mode==='exam'){
+      if(confirm(`Hai ancora ${unanswered} domande senza risposta. Vuoi tornare alla prima non risposta?`)){
+        state.i=state.list.findIndex(q=>!state.answers[q.id]);render();return;
+      }
+    }
+    finish()
+  }
+}
 function prevQuestion(){if(state.i>0){state.i--;render()}}
 function jumpTo(i){state.i=i;render()}
 function pauseQuiz(){state.paused=true;clearInterval(state.interval);$('pauseScreen').classList.remove('hidden');saveSession()}
@@ -322,6 +354,13 @@ function finish(){
   $('score').textContent=`${correct}/${total}`;$('resultText').textContent=`Risposte date: ${answered}/${total} • Corrette: ${Math.round(correct/total*100)}% • Tempo medio: ${avg}s`;
   const by={};state.details.forEach(d=>{by[d.category]??={ok:0,n:0};by[d.category].n++;if(d.ok)by[d.category].ok++});
   $('categoryResults').innerHTML=Object.entries(by).map(([c,v])=>`<div class="stat"><span>${c}</span><strong>${v.ok}/${v.n}</strong></div>`).join('');
+  $('answerReview').innerHTML=state.list.map((q,i)=>{
+    const a=state.answers[q.id], ok=!!a?.ok;
+    const chosen=a?.selected||[];
+    const chosenText=chosen.length?chosen.map(x=>q.answers[x]).join(' • '):'Nessuna risposta';
+    const correctText=q.correct.map(x=>q.answers[x]).join(' • ');
+    return `<div class="history-item"><strong>${i+1}. ${ok?'✅':'❌'} ${q.question}</strong><p><b>La tua risposta:</b> ${chosenText}</p><p><b>Corretta:</b> ${correctText}</p><p class="muted">${q.explanation_it||q.explanation||''}</p></div>`
+  }).join('');
   if(state.mode==='exam'){const p=getProgress();p.exams.push({date:new Date().toISOString(),score:correct,total,avg});p.exams=p.exams.slice(-30);saveProgress(p)}
   refreshHome()
 }

@@ -1,0 +1,10 @@
+{
+  "name": "LPTV MASTER",
+  "short_name": "LPTV MASTER",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#edf3fb",
+  "theme_color": "#0b4ea2",
+  "description": "Simulatore bilingue per l'esame LPTV Malta",
+  "icons": []
+}

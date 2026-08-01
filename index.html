@@ -1,972 +1,137 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b4ea2">
+<link rel="manifest" href="manifest.webmanifest">
 <title>LPTV MASTER</title>
-
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #edf3fb;
-    color: #172033;
-}
-
-header {
-    background: #0b4ea2;
-    color: white;
-    text-align: center;
-    padding: 28px 18px;
-}
-
-header h1 {
-    margin: 0;
-    font-size: 32px;
-}
-
-header p {
-    margin: 10px 0 0;
-    font-size: 18px;
-}
-
-main {
-    max-width: 700px;
-    margin: auto;
-    padding: 18px;
-}
-
-.card {
-    background: white;
-    border-radius: 18px;
-    padding: 20px;
-    margin-bottom: 18px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-}
-
-button {
-    width: 100%;
-    padding: 16px;
-    margin-top: 12px;
-    border: none;
-    border-radius: 12px;
-    font-size: 18px;
-    font-weight: bold;
-    background: #0b4ea2;
-    color: white;
-}
-
-.secondary {
-    background: #e6eef9;
-    color: #073777;
-}
-
-.answer {
-    background: #edf3fb;
-    color: #172033;
-    text-align: left;
-    line-height: 1.4;
-    border: 3px solid transparent;
-}
-
-.answer.selected {
-    background: #dbeafe;
-    border-color: #0b4ea2;
-}
-
-.answer.correct {
-    background: #dcfce7 !important;
-    color: #166534 !important;
-    border-color: #15803d !important;
-}
-
-.answer.wrong {
-    background: #fee2e2 !important;
-    color: #991b1b !important;
-    border-color: #b91c1c !important;
-}
-
-.answer:disabled {
-    opacity: 1;
-}
-
-.hidden {
-    display: none;
-}
-
-.translation {
-    background: #fff7d6;
-    padding: 14px;
-    border-radius: 12px;
-    margin-top: 14px;
-    line-height: 1.5;
-}
-
-.feedback {
-    padding: 14px;
-    border-radius: 12px;
-    margin-top: 14px;
-    line-height: 1.5;
-}
-
-.ok {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.bad {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
-.solution {
-    background: #eef6ff;
-    border-left: 6px solid #0b4ea2;
-    padding: 16px;
-    border-radius: 12px;
-    margin-top: 16px;
-    line-height: 1.5;
-}
-
-.row {
-    display: flex;
-    gap: 10px;
-}
-
-.row button {
-    flex: 1;
-}
-
-.counter {
-    color: #5b6473;
-    font-size: 17px;
-}
-
-.instruction {
-    background: #fff3cd;
-    color: #664d03;
-    padding: 13px;
-    border-radius: 12px;
-    font-weight: bold;
-    margin: 14px 0;
-}
-
-.option-translation {
-    display: block;
-    margin-top: 7px;
-    font-size: 15px;
-    color: #5b6473;
-    font-weight: normal;
-}
-
-.small-title {
-    font-size: 15px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #0b4ea2;
-}
+:root{--blue:#0b4ea2;--blue2:#07356f;--bg:#edf3fb;--card:#fff;--text:#172033;--muted:#627087;--ok:#15803d;--bad:#b91c1c;--line:#dbe5f1;--warn:#a16207}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+header{background:linear-gradient(145deg,var(--blue),var(--blue2));color:#fff;padding:calc(18px + env(safe-area-inset-top)) 18px 18px;text-align:center;position:sticky;top:0;z-index:10}
+header h1{margin:0;font-size:30px}header p{margin:6px 0 0;opacity:.9}
+main{max-width:820px;margin:auto;padding:18px 14px calc(30px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border-radius:22px;padding:20px;box-shadow:0 8px 24px #15325c18;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btn{border:0;border-radius:16px;padding:16px 13px;background:var(--blue);color:#fff;font-size:17px;font-weight:700;cursor:pointer}
+.btn.secondary{background:#e8f0fb;color:#123d7a}.btn.light{background:#f3f6fa;color:#24334b}.btn.danger{background:var(--bad)}.btn:disabled{opacity:.45}
+.big{font-size:21px}.muted{color:var(--muted)}.hidden{display:none!important}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}.badge{padding:8px 11px;border-radius:999px;background:#e8f0fb;color:#123d7a;font-weight:700}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:20px}.timer.warn{color:var(--bad)}
+.question{font-size:25px;line-height:1.25;font-weight:800;margin:18px 0}.translation{font-size:19px;line-height:1.35;background:#f3f6fa;border-radius:14px;padding:13px;margin:10px 0 16px}
+.option{display:block;width:100%;text-align:left;border:2px solid var(--line);background:#f8fafc;border-radius:15px;padding:15px;margin:10px 0;font-size:18px;color:var(--text)}
+.option.selected{border-color:var(--blue);background:#e8f0fb}.option.correct{border-color:var(--ok);background:#eaf8ef}.option.wrong{border-color:var(--bad);background:#fff0f0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.actions .btn{flex:1;min-width:130px}
+.explain{border-left:5px solid var(--blue);background:#f4f8fe;padding:14px;border-radius:12px;margin-top:16px;line-height:1.45}
+.stat{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line)}.stat:last-child{border-bottom:0}
+.progress{height:12px;background:#e3eaf3;border-radius:999px;overflow:hidden}.progress span{display:block;height:100%;background:var(--blue)}
+select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:13px;background:#fff;font-size:17px;margin:6px 0 12px}
+.small{font-size:14px}.center{text-align:center}
+@media(max-width:540px){.grid{grid-template-columns:1fr}.question{font-size:23px}.card{padding:17px}}
 </style>
 </head>
-
 <body>
-
-<header>
-    <h1>🚖 LPTV MASTER</h1>
-    <p>English • Italiano • Quiz • Pronuncia</p>
-</header>
-
+<header><h1>🚕 LPTV MASTER</h1><p>English • Italiano • Quiz • Pronuncia</p></header>
 <main>
-
-<section id="home" class="card">
-
+<section id="home">
+  <div class="card">
     <h2>Benvenuto Dennis 👋</h2>
-
-    <p>
-        Allenati con domande a risposta singola e multipla,
-        traduzioni e spiegazioni complete.
-    </p>
-
-    <button onclick="startQuiz()">
-        📝 Practice Quiz
-    </button>
-
-    <button class="secondary" onclick="showProgress()">
-        📊 My Progress
-    </button>
-
-</section>
-
-<section id="quiz" class="card hidden">
-
-    <p id="counter" class="counter"></p>
-
-    <div id="selectionInstruction" class="instruction"></div>
-
-    <h2 id="question"></h2>
-
-    <div id="questionTranslation" class="translation hidden"></div>
-
-    <div class="row">
-
-        <button class="secondary" onclick="toggleQuestionTranslation()">
-            🇮🇹 Domanda
-        </button>
-
-        <button class="secondary" onclick="speakQuestion()">
-            🔊 Ascolta
-        </button>
-
+    <p class="muted">Database attuale: <strong id="count"></strong> domande verificate e strutturate.</p>
+    <div class="grid">
+      <button class="btn big" onclick="startExam()">🎯 Esame 35 / 45 min</button>
+      <button class="btn big" onclick="showStudySetup()">📚 Studio per argomento</button>
+      <button class="btn secondary big" onclick="startWeak()">⚠️ Solo errori</button>
+      <button class="btn secondary big" onclick="showStats()">📊 Progressi</button>
     </div>
-
-    <button class="secondary" onclick="toggleOptionsTranslation()">
-        🇮🇹 Traduci le opzioni
-    </button>
-
-    <div id="answers"></div>
-
-    <button id="confirmButton" onclick="confirmAnswer()">
-        Conferma risposta
-    </button>
-
-    <div id="feedback" class="hidden"></div>
-
-    <div id="solutionBox" class="solution hidden">
-
-        <div class="small-title">
-            SOLUTION AND EXPLANATION
-        </div>
-
-        <div id="correctAnswerEnglish"></div>
-
-        <br>
-
-        <div id="explanationEnglish"></div>
-
-        <button class="secondary" onclick="toggleItalianExplanation()">
-            🇮🇹 Traduci soluzione e spiegazione
-        </button>
-
-        <div id="italianExplanation" class="translation hidden"></div>
-
-    </div>
-
-    <button id="nextButton" class="hidden" onclick="nextQuestion()">
-        Prossima domanda
-    </button>
-
-    <button class="secondary" onclick="goHome()">
-        Esci
-    </button>
-
+  </div>
+  <div class="card">
+    <h3>Regole dell'esame</h3>
+    <div class="stat"><span>Domande</span><strong>35</strong></div>
+    <div class="stat"><span>Tempo</span><strong>45 minuti</strong></div>
+    <div class="stat"><span>Promozione</span><strong>30 / 35</strong></div>
+    <div class="stat"><span>Ripetizioni nello stesso test</span><strong>Nessuna</strong></div>
+  </div>
 </section>
 
-<section id="result" class="card hidden">
-
-    <h2>Risultato finale</h2>
-
-    <p id="resultText"></p>
-
-    <button onclick="goHome()">
-        Torna alla Home
-    </button>
-
+<section id="studySetup" class="hidden">
+ <div class="card">
+  <div class="topline"><h2>Studio per argomento</h2><button class="btn light" onclick="goHome()">Esci</button></div>
+  <label>Categoria</label><select id="category"></select>
+  <label>Numero di domande</label><select id="studyCount"><option>10</option><option>20</option><option>35</option><option>50</option></select>
+  <button class="btn" onclick="startStudy()">Inizia studio</button>
+ </div>
 </section>
 
-<section id="progress" class="card hidden">
-
-    <h2>I tuoi progressi</h2>
-
-    <p>
-        ✅ Risposte corrette:
-        <b id="correctStat">0</b>
-    </p>
-
-    <p>
-        ❌ Risposte errate:
-        <b id="wrongStat">0</b>
-    </p>
-
-    <button onclick="goHome()">
-        Torna alla Home
-    </button>
-
+<section id="quiz" class="hidden">
+ <div class="card">
+  <div class="topline"><span class="badge" id="qnum"></span><span class="timer" id="timer"></span></div>
+  <div class="small muted" id="categoryLabel"></div>
+  <div class="question" id="question"></div>
+  <div class="actions">
+   <button class="btn secondary" onclick="toggleTranslation()">🇮🇹 Traduzione</button>
+   <button class="btn secondary" onclick="speakQuestion()">🔊 Ascolta</button>
+  </div>
+  <div id="questionIt" class="translation hidden"></div>
+  <div id="selectHint" class="badge"></div>
+  <div id="options"></div>
+  <div id="explanation" class="explain hidden"></div>
+  <div class="actions">
+   <button class="btn light" onclick="exitQuiz()">Esci</button>
+   <button class="btn" id="confirmBtn" onclick="confirmAnswer()">Conferma</button>
+   <button class="btn hidden" id="nextBtn" onclick="nextQuestion()">Avanti</button>
+  </div>
+ </div>
 </section>
 
+<section id="result" class="hidden">
+ <div class="card center">
+  <h2 id="resultTitle"></h2><div style="font-size:52px;font-weight:900" id="score"></div>
+  <p id="resultText"></p><button class="btn" onclick="goHome()">Torna alla Home</button>
+ </div>
+ <div class="card"><h3>Risultato per categoria</h3><div id="categoryResults"></div></div>
+</section>
+
+<section id="stats" class="hidden">
+ <div class="card">
+  <div class="topline"><h2>I miei progressi</h2><button class="btn light" onclick="goHome()">Esci</button></div>
+  <div id="statsBody"></div><button class="btn danger" onclick="resetProgress()">Azzera progressi</button>
+ </div>
+</section>
 </main>
-
+<script src="database.js"></script>
 <script>
-const questions = [
-
-    {
-        question:
-            "Your vehicle breaks down in a tunnel. What should you do?",
-
-        questionItalian:
-            "Il tuo veicolo si guasta in un tunnel. Cosa devi fare?",
-
-        answersEnglish: [
-            "Stay in your vehicle and wait for the police",
-            "Stand in the lane behind your vehicle",
-            "Stand in front of your vehicle",
-            "Switch on hazard lights, leave safely and call for help"
-        ],
-
-        answersItalian: [
-            "Rimani nel veicolo e aspetta la polizia",
-            "Rimani nella corsia dietro al veicolo",
-            "Mettiti davanti al veicolo",
-            "Accendi le luci di emergenza, esci in sicurezza e chiama aiuto"
-        ],
-
-        correctAnswers: [3],
-
-        explanationEnglish:
-            "Switch on the hazard lights, leave the vehicle safely and call for help. Never stand in the traffic lane.",
-
-        explanationItalian:
-            "Accendi le luci di emergenza, esci dal veicolo in sicurezza e chiama aiuto. Non restare mai fermo nella corsia."
-    },
-
-    {
-        question:
-            "You notice a bicycle wheel sticking out between parked cars. What should you do?",
-
-        questionItalian:
-            "Noti la ruota di una bicicletta sporgere tra le auto parcheggiate. Cosa devi fare?",
-
-        answersEnglish: [
-            "Accelerate quickly",
-            "Slow down and wave the cyclist across",
-            "Brake sharply",
-            "Slow down and be prepared to stop"
-        ],
-
-        answersItalian: [
-            "Accelera rapidamente",
-            "Rallenta e fai cenno al ciclista di attraversare",
-            "Frena bruscamente",
-            "Rallenta e preparati a fermarti"
-        ],
-
-        correctAnswers: [3],
-
-        explanationEnglish:
-            "The cyclist may suddenly emerge from between the parked vehicles. Slow down and be ready to stop.",
-
-        explanationItalian:
-            "Il ciclista potrebbe uscire improvvisamente tra le auto parcheggiate. Devi rallentare ed essere pronto a fermarti."
-    },
-
-    {
-        question:
-            "What should you do before moving off?",
-
-        questionItalian:
-            "Cosa devi fare prima di partire?",
-
-        answersEnglish: [
-            "Check mirrors and blind spots",
-            "Sound the horn",
-            "Switch on hazard lights",
-            "Move immediately"
-        ],
-
-        answersItalian: [
-            "Controlla gli specchi e gli angoli ciechi",
-            "Suona il clacson",
-            "Accendi le luci di emergenza",
-            "Parti immediatamente"
-        ],
-
-        correctAnswers: [0],
-
-        explanationEnglish:
-            "Before moving off, check the mirrors and blind spots to make sure that it is safe.",
-
-        explanationItalian:
-            "Prima di partire devi controllare gli specchi e gli angoli ciechi per assicurarti che sia sicuro."
-    },
-
-    {
-        question:
-            "Why should you keep a safe distance?",
-
-        questionItalian:
-            "Perché devi mantenere la distanza di sicurezza?",
-
-        answersEnglish: [
-            "To save fuel only",
-            "To have enough time and space to stop",
-            "To prevent overtaking",
-            "To drive faster"
-        ],
-
-        answersItalian: [
-            "Solo per risparmiare carburante",
-            "Per avere abbastanza tempo e spazio per fermarti",
-            "Per impedire agli altri di sorpassare",
-            "Per guidare più velocemente"
-        ],
-
-        correctAnswers: [1],
-
-        explanationEnglish:
-            "A safe distance gives you enough time and space to react and stop safely.",
-
-        explanationItalian:
-            "La distanza di sicurezza ti dà abbastanza tempo e spazio per reagire e fermarti in sicurezza."
-    },
-
-    {
-        question:
-            "What should you do when carrying a vulnerable passenger?",
-
-        questionItalian:
-            "Cosa devi fare quando trasporti un passeggero vulnerabile?",
-
-        answersEnglish: [
-            "Drive smoothly and offer assistance",
-            "Drive faster",
-            "Avoid speaking",
-            "Ask the passenger to stand"
-        ],
-
-        answersItalian: [
-            "Guida dolcemente e offri assistenza",
-            "Guida più velocemente",
-            "Evita di parlare",
-            "Chiedi al passeggero di stare in piedi"
-        ],
-
-        correctAnswers: [0],
-
-        explanationEnglish:
-            "Drive smoothly and provide appropriate assistance while respecting the passenger's safety and dignity.",
-
-        explanationItalian:
-            "Devi guidare dolcemente e offrire l'assistenza adeguata, rispettando la sicurezza e la dignità del passeggero."
-    },
-
-    {
-        question:
-            "When overtaking a horse and rider, what should you do? Select 2 answers.",
-
-        questionItalian:
-            "Quando sorpassi un cavallo con il suo cavaliere, cosa devi fare? Seleziona 2 risposte.",
-
-        answersEnglish: [
-            "Pass slowly",
-            "Leave plenty of room",
-            "Sound your horn continuously",
-            "Accelerate hard past the horse"
-        ],
-
-        answersItalian: [
-            "Passa lentamente",
-            "Lascia molto spazio",
-            "Suona continuamente il clacson",
-            "Accelera con forza mentre sorpassi il cavallo"
-        ],
-
-        correctAnswers: [0, 1],
-
-        explanationEnglish:
-            "Pass slowly and leave plenty of room. Horses can be frightened by noise and sudden movements.",
-
-        explanationItalian:
-            "Passa lentamente e lascia molto spazio. I cavalli possono spaventarsi per rumori e movimenti improvvisi."
-    }
-];
-
-let currentQuestion = 0;
-let score = 0;
-let order = [];
-let selectedAnswers = [];
-let optionsTranslated = false;
-let answerConfirmed = false;
-
-function showSection(sectionId) {
-
-    document.getElementById("home").classList.add("hidden");
-    document.getElementById("quiz").classList.add("hidden");
-    document.getElementById("result").classList.add("hidden");
-    document.getElementById("progress").classList.add("hidden");
-
-    document.getElementById(sectionId).classList.remove("hidden");
-}
-
-function createUniqueRandomOrder() {
-
-    const indexes = questions.map((question, index) => index);
-
-    for (let i = indexes.length - 1; i > 0; i--) {
-
-        const randomIndex =
-            Math.floor(Math.random() * (i + 1));
-
-        const temporaryValue = indexes[i];
-
-        indexes[i] = indexes[randomIndex];
-        indexes[randomIndex] = temporaryValue;
-    }
-
-    return indexes;
-}
-
-function startQuiz() {
-
-    order = createUniqueRandomOrder();
-
-    currentQuestion = 0;
-    score = 0;
-
-    showSection("quiz");
-    showQuestion();
-}
-
-function showQuestion() {
-
-    const questionData =
-        questions[order[currentQuestion]];
-
-    selectedAnswers = [];
-    optionsTranslated = false;
-    answerConfirmed = false;
-
-    document.getElementById("counter").textContent =
-        "Domanda " +
-        (currentQuestion + 1) +
-        " di " +
-        order.length;
-
-    const requiredAnswers =
-        questionData.correctAnswers.length;
-
-    if (requiredAnswers === 1) {
-
-        document.getElementById(
-            "selectionInstruction"
-        ).textContent =
-            "Select 1 answer • Seleziona 1 risposta";
-
-    } else {
-
-        document.getElementById(
-            "selectionInstruction"
-        ).textContent =
-            "Select " +
-            requiredAnswers +
-            " answers • Seleziona " +
-            requiredAnswers +
-            " risposte";
-    }
-
-    document.getElementById("question").textContent =
-        questionData.question;
-
-    document.getElementById(
-        "questionTranslation"
-    ).textContent =
-        questionData.questionItalian;
-
-    document.getElementById(
-        "questionTranslation"
-    ).classList.add("hidden");
-
-    document.getElementById("feedback").className =
-        "hidden";
-
-    document.getElementById(
-        "solutionBox"
-    ).classList.add("hidden");
-
-    document.getElementById(
-        "italianExplanation"
-    ).classList.add("hidden");
-
-    document.getElementById(
-        "nextButton"
-    ).classList.add("hidden");
-
-    document.getElementById(
-        "confirmButton"
-    ).classList.remove("hidden");
-
-    createAnswerButtons();
-}
-
-function createAnswerButtons() {
-
-    const questionData =
-        questions[order[currentQuestion]];
-
-    const answersBox =
-        document.getElementById("answers");
-
-    answersBox.innerHTML = "";
-
-    questionData.answersEnglish.forEach(
-        (answer, index) => {
-
-            const button =
-                document.createElement("button");
-
-            button.className = "answer";
-
-            if (selectedAnswers.includes(index)) {
-                button.classList.add("selected");
-            }
-
-            let buttonText = answer;
-
-            if (optionsTranslated) {
-
-                buttonText +=
-                    '<span class="option-translation">' +
-                    questionData.answersItalian[index] +
-                    "</span>";
-            }
-
-            button.innerHTML = buttonText;
-
-            button.disabled = answerConfirmed;
-
-            button.onclick = () =>
-                selectAnswer(index);
-
-            answersBox.appendChild(button);
-        }
-    );
-}
-
-function selectAnswer(answerIndex) {
-
-    if (answerConfirmed) {
-        return;
-    }
-
-    const questionData =
-        questions[order[currentQuestion]];
-
-    const maximumSelections =
-        questionData.correctAnswers.length;
-
-    if (selectedAnswers.includes(answerIndex)) {
-
-        selectedAnswers =
-            selectedAnswers.filter(
-                index => index !== answerIndex
-            );
-
-    } else {
-
-        if (
-            selectedAnswers.length >=
-            maximumSelections
-        ) {
-
-            alert(
-                "Puoi selezionare solamente " +
-                maximumSelections +
-                (
-                    maximumSelections === 1
-                    ? " risposta."
-                    : " risposte."
-                )
-            );
-
-            return;
-        }
-
-        selectedAnswers.push(answerIndex);
-    }
-
-    createAnswerButtons();
-}
-
-function confirmAnswer() {
-
-    const questionData =
-        questions[order[currentQuestion]];
-
-    const requiredAnswers =
-        questionData.correctAnswers.length;
-
-    if (selectedAnswers.length !== requiredAnswers) {
-
-        alert(
-            "Devi selezionare " +
-            requiredAnswers +
-            (
-                requiredAnswers === 1
-                ? " risposta."
-                : " risposte."
-            )
-        );
-
-        return;
-    }
-
-    answerConfirmed = true;
-
-    const selectedSorted =
-        [...selectedAnswers].sort(
-            (a, b) => a - b
-        );
-
-    const correctSorted =
-        [...questionData.correctAnswers].sort(
-            (a, b) => a - b
-        );
-
-    const isCorrect =
-        selectedSorted.length ===
-        correctSorted.length &&
-        selectedSorted.every(
-            (value, index) =>
-                value === correctSorted[index]
-        );
-
-    let statistics = JSON.parse(
-        localStorage.getItem(
-            "lptvStatistics"
-        ) ||
-        '{"correct":0,"wrong":0}'
-    );
-
-    const feedback =
-        document.getElementById("feedback");
-
-    if (isCorrect) {
-
-        score++;
-        statistics.correct++;
-
-        feedback.className = "feedback ok";
-
-        feedback.innerHTML =
-            "<b>✅ Correct answer!</b>";
-
-    } else {
-
-        statistics.wrong++;
-
-        feedback.className = "feedback bad";
-
-        feedback.innerHTML =
-            "<b>❌ Wrong answer.</b>";
-    }
-
-    localStorage.setItem(
-        "lptvStatistics",
-        JSON.stringify(statistics)
-    );
-
-    showAnswerColours(questionData);
-
-    showSolution(questionData);
-
-    document.getElementById(
-        "confirmButton"
-    ).classList.add("hidden");
-
-    document.getElementById(
-        "nextButton"
-    ).classList.remove("hidden");
-}
-
-function showAnswerColours(questionData) {
-
-    const answerButtons =
-        document.querySelectorAll(".answer");
-
-    answerButtons.forEach(
-        (button, index) => {
-
-            button.disabled = true;
-
-            button.classList.remove("selected");
-
-            if (
-                questionData.correctAnswers.includes(
-                    index
-                )
-            ) {
-
-                button.classList.add("correct");
-
-            } else if (
-                selectedAnswers.includes(index)
-            ) {
-
-                button.classList.add("wrong");
-            }
-        }
-    );
-}
-
-function toggleQuestionTranslation() {
-
-    document.getElementById(
-        "questionTranslation"
-    ).classList.toggle("hidden");
-}
-
-function toggleOptionsTranslation() {
-
-    optionsTranslated = !optionsTranslated;
-
-    createAnswerButtons();
-
-    if (answerConfirmed) {
-
-        showAnswerColours(
-            questions[order[currentQuestion]]
-        );
-    }
-}
-
-function showSolution(questionData) {
-
-    const correctEnglish =
-        questionData.correctAnswers
-            .map(
-                index =>
-                    "• " +
-                    questionData.answersEnglish[index]
-            )
-            .join("<br>");
-
-    const correctItalian =
-        questionData.correctAnswers
-            .map(
-                index =>
-                    "• " +
-                    questionData.answersItalian[index]
-            )
-            .join("<br>");
-
-    document.getElementById(
-        "correctAnswerEnglish"
-    ).innerHTML =
-        "<b>Correct answer" +
-        (
-            questionData.correctAnswers.length > 1
-            ? "s"
-            : ""
-        ) +
-        ":</b><br>" +
-        correctEnglish;
-
-    document.getElementById(
-        "explanationEnglish"
-    ).innerHTML =
-        "<b>Explanation:</b><br>" +
-        questionData.explanationEnglish;
-
-    document.getElementById(
-        "italianExplanation"
-    ).innerHTML =
-        "<b>Risposta" +
-        (
-            questionData.correctAnswers.length > 1
-            ? "e corrette"
-            : " corretta"
-        ) +
-        ":</b><br>" +
-        correctItalian +
-        "<br><br>" +
-        "<b>Spiegazione:</b><br>" +
-        questionData.explanationItalian;
-
-    document.getElementById(
-        "solutionBox"
-    ).classList.remove("hidden");
-}
-
-function toggleItalianExplanation() {
-
-    document.getElementById(
-        "italianExplanation"
-    ).classList.toggle("hidden");
-}
-
-function nextQuestion() {
-
-    currentQuestion++;
-
-    if (currentQuestion >= order.length) {
-
-        const percentage =
-            Math.round(
-                score / order.length * 100
-            );
-
-        document.getElementById(
-            "resultText"
-        ).innerHTML =
-            "Hai risposto correttamente a <b>" +
-            score +
-            " domande su " +
-            order.length +
-            "</b>.<br><br>" +
-            "Percentuale: <b>" +
-            percentage +
-            "%</b>";
-
-        showSection("result");
-
-    } else {
-
-        showQuestion();
-    }
-}
-
-function speakQuestion() {
-
-    const text =
-        document.getElementById(
-            "question"
-        ).textContent;
-
-    const speech =
-        new SpeechSynthesisUtterance(text);
-
-    speech.lang = "en-GB";
-
-    speechSynthesis.cancel();
-    speechSynthesis.speak(speech);
-}
-
-function showProgress() {
-
-    const statistics = JSON.parse(
-        localStorage.getItem(
-            "lptvStatistics"
-        ) ||
-        '{"correct":0,"wrong":0}'
-    );
-
-    document.getElementById(
-        "correctStat"
-    ).textContent =
-        statistics.correct;
-
-    document.getElementById(
-        "wrongStat"
-    ).textContent =
-        statistics.wrong;
-
-    showSection("progress");
-}
-
-function goHome() {
-
-    speechSynthesis.cancel();
-    showSection("home");
-}
+const Q=window.LPTV_QUESTIONS||[];
+const state={list:[],i:0,selected:new Set(),answered:false,correct:0,mode:'study',remaining:2700,interval:null,details:[]};
+const $=id=>document.getElementById(id);
+const sections=['home','studySetup','quiz','result','stats'];
+function show(id){sections.forEach(x=>$(x).classList.toggle('hidden',x!==id))}
+function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function getProgress(){try{return JSON.parse(localStorage.getItem('lptvProgress'))||{seen:{},wrong:{},exams:[]}}catch{return{seen:{},wrong:{},exams:[]}}}
+function saveProgress(p){localStorage.setItem('lptvProgress',JSON.stringify(p))}
+function goHome(){clearInterval(state.interval);show('home')}
+function init(){ $('count').textContent=Q.length; const cats=[...new Set(Q.map(q=>q.category))].sort();$('category').innerHTML='<option value="ALL">Tutte le categorie</option>'+cats.map(c=>`<option>${c}</option>`).join(''); if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});}
+function showStudySetup(){show('studySetup')}
+function startStudy(){const cat=$('category').value,n=+$('studyCount').value;let pool=cat==='ALL'?Q:Q.filter(q=>q.category===cat);begin(shuffle(pool).slice(0,Math.min(n,pool.length)),'study')}
+function startExam(){begin(shuffle(Q).slice(0,Math.min(35,Q.length)),'exam')}
+function startWeak(){const p=getProgress();let pool=Q.filter(q=>(p.wrong[q.id]||0)>0);if(!pool.length){alert('Non ci sono ancora domande sbagliate salvate.');return}begin(shuffle(pool).slice(0,Math.min(35,pool.length)),'weak')}
+function begin(list,mode){state.list=list;state.i=0;state.correct=0;state.mode=mode;state.details=[];state.remaining=2700;show('quiz');if(mode==='exam'){state.interval=setInterval(tick,1000)}render()}
+function tick(){state.remaining--;const m=Math.floor(state.remaining/60),s=state.remaining%60;$('timer').textContent=`${m}:${String(s).padStart(2,'0')}`;$('timer').classList.toggle('warn',state.remaining<=300);if(state.remaining<=0){clearInterval(state.interval);finish()}}
+function render(){const q=state.list[state.i];state.selected=new Set();state.answered=false;$('qnum').textContent=`Domanda ${state.i+1} di ${state.list.length}`;$('timer').textContent=state.mode==='exam'?`${Math.floor(state.remaining/60)}:${String(state.remaining%60).padStart(2,'0')}`:'';$('categoryLabel').textContent=q.category;$('question').textContent=q.question;$('questionIt').textContent=q.question_it;$('questionIt').classList.add('hidden');$('selectHint').textContent=q.correct.length===1?'Seleziona 1 risposta':`Seleziona ${q.correct.length} risposte`;$('explanation').classList.add('hidden');$('confirmBtn').classList.remove('hidden');$('nextBtn').classList.add('hidden');
+ const order=shuffle(q.answers.map((_,i)=>i)); $('options').innerHTML='';order.forEach(idx=>{const b=document.createElement('button');b.className='option';b.dataset.idx=idx;b.innerHTML=`<strong>${String.fromCharCode(65+idx)}.</strong> <span class="en">${q.answers[idx]}</span><span class="it hidden"><br><small>${q.answers_it[idx]||''}</small></span>`;b.onclick=()=>choose(b,idx,q.correct.length);$('options').appendChild(b)})}
+function choose(btn,idx,max){if(state.answered)return;if(state.selected.has(idx)){state.selected.delete(idx);btn.classList.remove('selected')}else{if(state.selected.size>=max)return;state.selected.add(idx);btn.classList.add('selected')}}
+function toggleTranslation(){$('questionIt').classList.toggle('hidden');document.querySelectorAll('.option .it').forEach(x=>x.classList.toggle('hidden'))}
+function speakQuestion(){const q=state.list[state.i];speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(q.question);u.lang='en-GB';speechSynthesis.speak(u)}
+function confirmAnswer(){const q=state.list[state.i];if(state.selected.size!==q.correct.length){alert(`Seleziona esattamente ${q.correct.length} ${q.correct.length===1?'risposta':'risposte'}.`);return}state.answered=true;const chosen=[...state.selected].sort((a,b)=>a-b),correct=[...q.correct].sort((a,b)=>a-b),ok=JSON.stringify(chosen)===JSON.stringify(correct);if(ok)state.correct++;
+ document.querySelectorAll('.option').forEach(b=>{const i=+b.dataset.idx;if(q.correct.includes(i))b.classList.add('correct');else if(state.selected.has(i))b.classList.add('wrong')});
+ const p=getProgress();p.seen[q.id]=(p.seen[q.id]||0)+1;if(!ok)p.wrong[q.id]=(p.wrong[q.id]||0)+1;else if(p.wrong[q.id])p.wrong[q.id]=Math.max(0,p.wrong[q.id]-1);saveProgress(p);
+ state.details.push({category:q.category,ok});$('explanation').innerHTML=`<strong>${ok?'✅ Risposta corretta':'❌ Risposta errata'}</strong><p>${q.explanation||''}</p><p><strong>Italiano:</strong> ${q.explanation_it||''}</p>`;$('explanation').classList.remove('hidden');$('confirmBtn').classList.add('hidden');$('nextBtn').classList.remove('hidden')}
+function nextQuestion(){if(state.i<state.list.length-1){state.i++;render();window.scrollTo(0,0)}else finish()}
+function exitQuiz(){if(confirm('Vuoi uscire dal test?'))goHome()}
+function finish(){clearInterval(state.interval);show('result');const total=state.list.length,pass=state.mode==='exam'&&state.correct>=30;$('resultTitle').textContent=state.mode==='exam'?(pass?'✅ PROMOSSO':'❌ NON SUPERATO'):'Sessione completata';$('score').textContent=`${state.correct}/${total}`;$('resultText').textContent=`Risposte corrette: ${Math.round(state.correct/total*100)}%`;
+ const by={};state.details.forEach(d=>{by[d.category]??={ok:0,n:0};by[d.category].n++;if(d.ok)by[d.category].ok++});$('categoryResults').innerHTML=Object.entries(by).map(([c,v])=>`<div class="stat"><span>${c}</span><strong>${v.ok}/${v.n}</strong></div>`).join('');
+ if(state.mode==='exam'){const p=getProgress();p.exams.push({date:new Date().toISOString(),score:state.correct,total});p.exams=p.exams.slice(-20);saveProgress(p)}}
+function showStats(){show('stats');const p=getProgress(),seen=Object.keys(p.seen).length,wrong=Object.values(p.wrong).filter(x=>x>0).length,last=p.exams.at(-1);$('statsBody').innerHTML=`<div class="stat"><span>Domande viste</span><strong>${seen}/${Q.length}</strong></div><div class="stat"><span>Domande da recuperare</span><strong>${wrong}</strong></div><div class="stat"><span>Esami completati</span><strong>${p.exams.length}</strong></div><div class="stat"><span>Ultimo esame</span><strong>${last?last.score+'/'+last.total:'—'}</strong></div><br><div class="progress"><span style="width:${Math.round(seen/Q.length*100)}%"></span></div><p class="center muted">${Math.round(seen/Q.length*100)}% del database visto</p>`}
+function resetProgress(){if(confirm('Vuoi cancellare tutti i progressi?')){localStorage.removeItem('lptvProgress');showStats()}}
+init();
 </script>
-
-</body>
-</html>
+</body></html>

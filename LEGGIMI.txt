@@ -1,0 +1,18 @@
+LPTV MASTER PWA READY
+
+Contenuto reale incluso:
+- 229 domande valide e senza ID duplicati
+- Esame: 35 domande, 45 minuti, promozione 30/35
+- Studio per categoria
+- Domande singole e multiple
+- Traduzioni EN/IT
+- Pronuncia inglese
+- Spiegazioni EN/IT
+- Progressi e ripasso errori
+- Funzionamento offline dopo il primo caricamento
+
+Caricare TUTTI questi file nella radice del repository GitHub Pages:
+index.html
+database.js
+manifest.webmanifest
+sw.js

@@ -42,7 +42,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <section id="home">
   <div class="card">
     <h2>Benvenuto Dennis 👋</h2>
-    <p class="muted">Versione 3.0 • Database: <strong id="count"></strong> domande</p>
+    <p class="muted">Versione 3.1 • Database: <strong id="count"></strong> domande</p>
     <div id="resumeBox" class="hidden" style="margin-bottom:14px">
       <button class="btn pause big" onclick="resumeSavedSession()">▶️ Riprendi sessione interrotta</button>
     </div>
@@ -107,6 +107,7 @@ select,input{width:100%;padding:14px;border:1px solid var(--line);border-radius:
 <button class="btn secondary big" onclick="startCategoryChallenge()">🏁 Sfida categoria</button>
 <button class="btn secondary big" onclick="startHardExam()">🔥 Esame difficile</button>
 <button class="btn secondary big" onclick="startLast30()">⏱️ Ultimi 30 minuti</button>
+<button class="btn secondary big" onclick="startNewOfficial()">🆕 Nuove ufficiali</button>
     </div>
   </div>
 
@@ -502,6 +503,11 @@ function startHardExam(){
     return bw-aw;
   });
   prepareExam(buildBalancedExam(pool,35),'exam',2400,'Esame difficile','35 domande più impegnative, 40 minuti, correzione soltanto alla fine.')
+}
+function startNewOfficial(){
+  const ids=['LPOINTS1.62','LPOINTS1.74','LPOINTS1.79','LPOINTS1.92','LPOINTS1.93','LPOINTS1.97','LPOINTS1.98','LPOINTS1.99','LPOINTS1.100','LPOINTS1.103','LPOINTS1.106','LPOINTS1.107','LPOINTS1.108','LPOINTS1.110','LPOINTS1.111','LPOINTS1.114','LPOINTS1.115','LPOINTS1.118','LPOINTS1.123','LPOINTS1.124','LPOINTS1.134','LPOINTS1.171','LPOINTS1.172','LPOINTS1.175','LPOINTS1.176','LPOINTS1.182','LPOINTS1.183','LPOINTS1.184','CARS3.38'];
+  const list=ids.map(id=>Q.find(q=>q.id===id)).filter(Boolean);
+  begin(shuffle(list),'newofficial');
 }
 function startLast30(){
   const p=getProgress();

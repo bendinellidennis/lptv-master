@@ -1,15 +1,13 @@
-LPTV MASTER V3.0
+LPTV MASTER V3.1
 
-Database incluso: 255 domande.
+Database incluso: 283 domande.
 
 NOVITÀ:
-- Schermata preparazione prima dell’esame
-- Esame realistico bilanciato per argomento
-- Esame difficile: 35 domande in 40 minuti
-- Modalità Ultimi 30 minuti
-- Etichetta Ufficiale / Verificata / Variante
-- ID domanda visibile
-- Difficoltà dinamica da 1 a 5 stelle
-- Timer attivo anche nel ripasso intensivo
-- Correzione completa soltanto alla fine nelle modalità esame
-- Mantiene tutte le funzioni precedenti
+- 29 nuove domande ufficiali Transport Malta
+- Uso del clacson e divieto 23:00–06:00 nei centri abitati
+- Clacson vicino agli ospedali
+- Distanza di parcheggio da angoli e incroci
+- Distanza da fermate autobus
+- Tunnel, fatica, box junction, sorpasso, segnalazioni e carico
+- Nuova modalità “Nuove ufficiali”
+- Mantiene tutte le funzioni della v3.0

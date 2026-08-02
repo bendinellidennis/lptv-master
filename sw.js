@@ -1,11 +1,11 @@
-const CACHE='mdm-build-18';
+const CACHE='mdm-build-19-1';
 const ASSETS=[
  './',
  './index.html',
- './styles.css?v=18.0',
- './app.js?v=18.0',
- './database.js?v=18.0',
- './content.js?v=18.0',
+ './styles.css?v=19.1',
+ './app.js?v=19.1',
+ './database.js?v=19.1',
+ './content.js?v=19.1',
  './manifest.webmanifest',
  './icon-192.png',
  './icon-512.png'

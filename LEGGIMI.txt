@@ -1,60 +1,26 @@
-MALTA DRIVING MASTER — BUILD 18
+MALTA DRIVING MASTER — BUILD 19
 
-MDM COACH FOUNDATION
+MDM COACH EXPLAIN & RECOVERY
 
-1. CONFIDENCE SCORE
-Stima interna da 0 a 100 composta da:
-- precisione;
-- copertura delle domande;
-- simulazioni;
-- Bridge Test;
-- costanza;
-- comportamento nei ripassi.
-
-Non è una garanzia e non è una valutazione ufficiale.
-
-2. PREVISIONE TRASPARENTE
-Mostra:
-- probabilità stimata oggi;
-- probabilità stimata tra sette giorni;
-- andamento recente.
-
-3. DAILY MISSION
-Missione quotidiana composta da:
-- studio;
-- ripasso;
-- Bridge.
-
-L’utente può segnare ogni passaggio come completato.
-
-4. ACHIEVEMENT SYSTEM
-Traguardi utili:
-- 25 domande;
-- 100 domande;
-- simulazione superata;
-- Bridge Champion;
-- Safety Expert;
-- Passenger Care Master;
-- costanza di sette giorni;
-- Passport completato.
-
-5. INVESTOR PREVIEW
-Presentazione interna della piattaforma con:
-- problema;
-- soluzione;
-- valore per studenti;
-- valore per scuole;
-- differenziazione;
-- scalabilità;
-- architettura;
-- metriche del prototipo.
-
-6. CHIAREZZA SULL’IA
-MDM Coach è una base intelligente offline.
-Analizza esclusivamente i dati locali dell’utente.
-Non è ancora collegato a una vera IA generativa online.
-
-7. DATI
-- Tutti i dati Build 17 vengono preservati.
-- Missione e stato Coach sono inclusi nel backup.
+- Diagnosi delle cause degli errori già registrate:
+  regola, inglese, parola, risposte multiple, fretta, insicurezza.
+- Prescrizione personalizzata e trasparente.
+- Piano in tre fasi: Comprendi, Allenati, Verifica.
+- Dialogo guidato offline con quattro domande:
+  perché sbaglio, inglese, preparazione, prossima azione.
+- Domande prioritarie scelte da:
+  errori, cause ripetute, ripassi e argomento debole.
+- Stato “Risolta” per seguire il recupero.
+- Rapporto di recupero condivisibile.
+- Nessun dato inviato automaticamente.
+- Nessuna falsa affermazione di IA generativa online.
+- Dati Build 18 preservati.
 - Banca attiva invariata: 250 domande.
+
+
+BUILD 19.1 — CORREZIONE
+
+- Corretto il caricamento della schermata Coach Spiegazione e Recupero.
+- Il controllo delle domande in scadenza usa ora il sistema di ripasso reale.
+- Nessun dato utente viene cancellato.
+- Nessuna domanda è stata modificata.

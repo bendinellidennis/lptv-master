@@ -828,3 +828,31 @@ select,textarea{width:100%;border:2px solid var(--line);border-radius:15px;backg
  .investor-actions{grid-template-columns:1fr}
  .investor-profile-card{display:block}.investor-profile-card .btn{width:100%;margin-top:10px}
 }
+
+
+/* BUILD 19 — COACH EXPLAIN & RECOVERY */
+.home-card.recovery-home{background:linear-gradient(145deg,#f6ebe8,#ead8d2)}
+.coach-recovery-launch{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:11px;width:100%;margin-bottom:14px;border:1px solid #bd8b7e;border-radius:18px;background:linear-gradient(145deg,#fbefec,#f2dfda);color:#6d3d35;padding:13px;text-align:left}.coach-recovery-launch>span{font-size:29px}.coach-recovery-launch strong,.coach-recovery-launch small{display:block}.coach-recovery-launch small{margin-top:3px}.coach-recovery-launch>b{font-size:25px}
+.recovery-offline{display:flex;align-items:flex-start;gap:11px;margin-bottom:14px;padding:14px;border:1px solid #8a9db7;border-radius:17px;background:#edf2fa;color:#354d72}.recovery-offline>span{font-size:27px}.recovery-offline strong,.recovery-offline p{display:block}.recovery-offline p{margin:5px 0 0;line-height:1.45}
+.recovery-diagnosis-card{display:grid;grid-template-columns:125px 1fr;align-items:center;gap:16px;margin-bottom:14px;padding:17px;border-radius:22px;background:linear-gradient(145deg,#542f39,#875160);color:#fff}.recovery-score{--recovery-score:0;display:grid;place-items:center;width:108px;height:108px;border-radius:50%;background:conic-gradient(#f3c58d calc(var(--recovery-score)*1%),rgba(255,255,255,.15) 0);position:relative}.recovery-score:after{content:"";position:absolute;inset:9px;border-radius:50%;background:#653b47}.recovery-score>div{position:relative;z-index:1;text-align:center}.recovery-score strong,.recovery-score span{display:block}.recovery-score strong{font-size:26px}.recovery-score span{max-width:72px;font-size:9px}.recovery-diagnosis-card>div:last-child>span{font-size:10px;opacity:.72;font-weight:900}.recovery-diagnosis-card h3{margin:6px 0;font-size:23px}.recovery-diagnosis-card p{margin:0;opacity:.82}
+.recovery-reason-card,.recovery-prescription,.recovery-dialogue-card{margin-bottom:14px}.recovery-reason-card h3{margin-top:0}.recovery-reason-bars{display:grid;gap:8px}.recovery-reason-bars>div{display:grid;grid-template-columns:130px 1fr 35px;gap:8px;align-items:center}.recovery-reason-bars span{font-size:10px;color:var(--muted)}.recovery-reason-bars i{height:8px;border-radius:999px;background:#e7ecef;overflow:hidden}.recovery-reason-bars i b{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#a55d68,#e5a270)}.recovery-reason-bars strong{text-align:right;font-size:11px}
+.recovery-empty-reasons{margin-bottom:14px}.recovery-empty-reasons p{margin:0;color:var(--muted);line-height:1.5}
+.recovery-prescription{border-color:#d2a46d;background:linear-gradient(145deg,#fff7e9,#f8ead5)}.recovery-prescription>span{font-size:10px;font-weight:900;color:#855a23}.recovery-prescription h3{margin:7px 0 0;line-height:1.45}
+.recovery-plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}.recovery-plan-grid article{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:14px}.recovery-plan-grid article>span{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#e9edf7;color:#4b5e8c;font-weight:950}.recovery-plan-grid h3{margin:9px 0 5px}.recovery-plan-grid p{margin:0;color:var(--muted);line-height:1.45}
+.recovery-dialogue-card h3{margin-top:0}.recovery-dialogue-card>p{color:var(--muted);line-height:1.45}.recovery-prompt-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.recovery-prompt-grid button{border:1px solid var(--line);border-radius:13px;background:#f4f7f9;color:var(--text);padding:10px;text-align:left;font-weight:800}.recovery-prompt-grid button.selected{border-color:#6e78b6;background:#ebedfb;color:#3e477d}.recovery-dialogue-answer{margin-top:11px;border-radius:15px;background:#edf4f7;padding:13px;line-height:1.55;font-weight:700}
+.recovery-question-list{display:grid;gap:10px;margin-bottom:14px}.recovery-question-list article{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:14px}.recovery-question-list article.resolved{border-color:#79b68f;background:#edf8f1}.recovery-question-list article>div:first-child>span{font-size:9px;color:var(--muted);font-weight:900}.recovery-question-list h3{margin:6px 0;line-height:1.4}.recovery-question-list p{margin:0;color:var(--muted);line-height:1.4}.recovery-question-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.recovery-report-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+[data-theme="dark"] .coach-recovery-launch{background:#3e2928;color:#f7d7d1;border-color:#704b48}
+[data-theme="dark"] .recovery-offline{background:#202d49;color:#dfe7fa;border-color:#4b6087}
+[data-theme="dark"] .recovery-score:after{background:#57333e}
+[data-theme="dark"] .recovery-prescription{background:#44331f;color:#ffe2b4}
+[data-theme="dark"] .recovery-prompt-grid button,[data-theme="dark"] .recovery-dialogue-answer{background:#21343d}
+[data-theme="dark"] .recovery-question-list article.resolved{background:#173a25}
+@media(max-width:700px){
+ .recovery-plan-grid{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+ .recovery-diagnosis-card{grid-template-columns:1fr;text-align:center}.recovery-score{margin:auto}
+ .recovery-prompt-grid,.recovery-question-actions,.recovery-report-actions{grid-template-columns:1fr}
+ .recovery-reason-bars>div{grid-template-columns:105px 1fr 30px}
+}

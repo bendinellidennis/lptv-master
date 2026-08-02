@@ -1,7 +1,7 @@
 {
   "name": "Malta Driving Master",
   "short_name": "Driving Master",
-  "description": "Malta Driving Master con MDM Coach, Confidence Score, Daily Mission, Investor Preview, Roadmap e Passport.",
+  "description": "Malta Driving Master Build 19.1 con Coach Explain & Recovery corretto.",
   "start_url": "./index.html#home",
   "scope": "./",
   "display": "standalone",
@@ -34,6 +34,19 @@
   ],
   "shortcuts": [
     {
+      "name": "Coach Recovery",
+      "short_name": "Recovery",
+      "description": "Diagnosi errori, dialogo guidato e piano di recupero",
+      "url": "./index.html#recoverycoach",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
       "name": "MDM Coach",
       "short_name": "Coach",
       "description": "Confidence Score, missione giornaliera e analisi della preparazione",
@@ -64,19 +77,6 @@
       "short_name": "Roadmap",
       "description": "Prossima azione, piano di sette giorni e preparazione complessiva",
       "url": "./index.html#roadmap",
-      "icons": [
-        {
-          "src": "icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "LPTV Passport",
-      "short_name": "Passport",
-      "description": "Checklist, scadenze e percorso personale fino al Driver Permit Tag",
-      "url": "./index.html#passport",
       "icons": [
         {
           "src": "icon-192.png",

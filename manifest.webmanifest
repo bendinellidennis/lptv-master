@@ -1,7 +1,7 @@
 {
   "name": "Malta Driving Master",
   "short_name": "Driving Master",
-  "description": "Malta Driving Master con Exam Day Mode, MDM Coach, Recovery, Confidence Score, Roadmap e Passport.",
+  "description": "Malta Driving Master con Zero Error Mode, Exam Day, MDM Coach, Recovery, Roadmap e Passport.",
   "start_url": "./index.html#home",
   "scope": "./",
   "display": "standalone",
@@ -34,6 +34,19 @@
   ],
   "shortcuts": [
     {
+      "name": "Zero Error Mode",
+      "short_name": "Zero Error",
+      "description": "Top 20 rischi, piano automatico ed errori sconfitti",
+      "url": "./index.html#zeroerror",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
       "name": "Exam Day Mode",
       "short_name": "Exam Day",
       "description": "Preparazione finale, checklist, calma e certificato interno",
@@ -64,19 +77,6 @@
       "short_name": "Coach",
       "description": "Confidence Score, missione giornaliera e analisi della preparazione",
       "url": "./index.html#coach",
-      "icons": [
-        {
-          "src": "icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "School Dashboard",
-      "short_name": "School",
-      "description": "Prototipo locale per studenti, gruppi, inviti e rapporti",
-      "url": "./index.html#schooldashboard",
       "icons": [
         {
           "src": "icon-192.png",

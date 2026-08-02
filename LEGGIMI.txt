@@ -1,28 +1,29 @@
-MALTA DRIVING MASTER — BUILD 21
+MALTA DRIVING MASTER — BUILD 22
 
-MODALITÀ ERRORE ZERO
+SCHOOL PARTNER 2.0
 
-- Indice Errore Zero da 0 a 100.
-- Semaforo Rosso, Giallo o Verde.
-- Top 20 domande critiche personalizzate.
-- Top 10 da ripetere oggi.
-- Top 5 da ripetere domani.
-- Analisi basata su:
-  • errori ripetuti;
-  • precisione;
-  • domande mai corrette;
-  • ripassi in scadenza;
-  • argomento debole;
-  • cause degli errori registrate.
-- Pulsante “Elimina questo errore”.
-- Verifica di padronanza.
-- Sezione Errori Sconfitti.
-- Rapporto condivisibile.
+- Profilo pubblico più completo.
+- Headline, sito, WhatsApp e iniziali logo.
+- Gestione istruttori.
+- Gestione corsi.
+- Gestione offerte.
+- Recensioni dimostrative chiaramente indicate.
+- Richieste degli studenti.
+- Prenotazioni locali.
+- Anteprima del profilo per lo studente.
+- Rapporto scuola condivisibile.
+- Dati demo facoltativi e fittizi.
 
-NOTA
-La versione attuale non misura ancora con precisione il tempo impiegato
-su ogni singola domanda. Il punteggio utilizza soltanto i dati realmente
-registrati dall’app e non presenta stime inventate.
+LIMITI ATTUALI
+- Nessuna pubblicazione reale.
+- Nessun account verificato.
+- Nessun pagamento.
+- Nessuna sincronizzazione online.
+- Nessuna recensione reale.
+- Nessuna prenotazione inviata a un server.
 
-- Dati Build 20 preservati.
+Per il lancio commerciale serviranno backend sicuro, autenticazione,
+database, verifica scuole e sistema di pagamento.
+
+- Dati Build 21 preservati.
 - Banca attiva invariata: 250 domande.

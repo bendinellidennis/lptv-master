@@ -1,26 +1,16 @@
-MALTA DRIVING MASTER — BUILD 19
+MALTA DRIVING MASTER — BUILD 20
 
-MDM COACH EXPLAIN & RECOVERY
+EXAM DAY MODE
 
-- Diagnosi delle cause degli errori già registrate:
-  regola, inglese, parola, risposte multiple, fretta, insicurezza.
-- Prescrizione personalizzata e trasparente.
-- Piano in tre fasi: Comprendi, Allenati, Verifica.
-- Dialogo guidato offline con quattro domande:
-  perché sbaglio, inglese, preparazione, prossima azione.
-- Domande prioritarie scelte da:
-  errori, cause ripetute, ripassi e argomento debole.
-- Stato “Risolta” per seguire il recupero.
-- Rapporto di recupero condivisibile.
-- Nessun dato inviato automaticamente.
-- Nessuna falsa affermazione di IA generativa online.
-- Dati Build 18 preservati.
+- Preparazione finale per il giorno del test.
+- Data obiettivo e giorni rimanenti.
+- Final Readiness Score.
+- Rischio principale rilevato.
+- Checklist pratica del giorno dell’esame.
+- Routine guidata di calma da circa 60 secondi.
+- Simulazione finale da 35 domande.
+- Ripasso rapido per sicurezza, passeggeri, strada, eco e inglese.
+- Certificato interno di preparazione.
+- Il certificato non è ufficiale e non ha valore legale.
+- Tutti i dati Build 19.1 vengono preservati.
 - Banca attiva invariata: 250 domande.
-
-
-BUILD 19.1 — CORREZIONE
-
-- Corretto il caricamento della schermata Coach Spiegazione e Recupero.
-- Il controllo delle domande in scadenza usa ora il sistema di ripasso reale.
-- Nessun dato utente viene cancellato.
-- Nessuna domanda è stata modificata.

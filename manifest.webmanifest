@@ -1,7 +1,7 @@
 {
   "name": "Malta Driving Master",
   "short_name": "Driving Master",
-  "description": "Malta Driving Master Build 19.1 con Coach Explain & Recovery corretto.",
+  "description": "Malta Driving Master con Exam Day Mode, MDM Coach, Recovery, Confidence Score, Roadmap e Passport.",
   "start_url": "./index.html#home",
   "scope": "./",
   "display": "standalone",
@@ -34,6 +34,19 @@
   ],
   "shortcuts": [
     {
+      "name": "Exam Day Mode",
+      "short_name": "Exam Day",
+      "description": "Preparazione finale, checklist, calma e certificato interno",
+      "url": "./index.html#examday",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
       "name": "Coach Recovery",
       "short_name": "Recovery",
       "description": "Diagnosi errori, dialogo guidato e piano di recupero",
@@ -64,19 +77,6 @@
       "short_name": "School",
       "description": "Prototipo locale per studenti, gruppi, inviti e rapporti",
       "url": "./index.html#schooldashboard",
-      "icons": [
-        {
-          "src": "icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Personal Roadmap",
-      "short_name": "Roadmap",
-      "description": "Prossima azione, piano di sette giorni e preparazione complessiva",
-      "url": "./index.html#roadmap",
       "icons": [
         {
           "src": "icon-192.png",

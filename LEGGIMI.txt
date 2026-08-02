@@ -1,28 +1,54 @@
-MALTA DRIVING MASTER — BUILD 08.2
+MALTA DRIVING MASTER — BUILD 12
 
-CORREZIONE INVIO REGISTRAZIONE
+UNA PIATTAFORMA, DUE AREE
 
-Il precedente collegamento Mail poteva essere bloccato dall’anteprima di Koder.
-La Build 08.2 offre quattro metodi separati:
-
-1. CONDIVIDI REGISTRAZIONE
-- Apre il menu di condivisione dell’iPhone quando disponibile.
-- L’utilizzatore può scegliere Gmail, Mail o un’altra app.
-
-2. APRI GMAIL
-- Apre la composizione Gmail tramite collegamento web.
-- Destinatario: maltadrivingmaster@gmail.com
-
-3. APRI MAIL
-- Usa direttamente il collegamento e-mail del dispositivo.
-- Non viene più utilizzato il ritardo che poteva bloccarne l’apertura.
-
-4. COPIA DATI REGISTRAZIONE
-- Copia destinatario, oggetto e contenuto.
-- I dati possono essere incollati manualmente dentro Gmail.
+1. AREA STUDENTE — TROVA UNA SCUOLA
+- Smart Match basato su:
+  • zona;
+  • lingua dell’istruttore;
+  • corso LPTV/TAG o patente B;
+  • cambio automatico o manuale;
+  • orari;
+  • supporto per inglese, documenti e TAG;
+  • risultato del Bridge Test.
+- Confronto di massimo tre scuole.
+- Dettaglio dei servizi e richiesta di informazioni.
+- Condivisione, Gmail, Mail e copia del messaggio.
 
 IMPORTANTE
-- Nessun messaggio viene inviato automaticamente.
-- L’utilizzatore deve controllare il destinatario e premere Invia.
-- Il sistema continua a conservare i dati sul dispositivo.
+I quattro profili inclusi sono esclusivamente dimostrativi e inventati.
+Non rappresentano scuole reali e non contengono recensioni, prezzi o
+autorizzazioni inventate.
+
+2. AREA SCHOOL PARTNER
+- Presentazione di tre modelli:
+  • profilo base gratuito;
+  • School Pro a pagamento;
+  • servizi sponsorizzati chiaramente indicati.
+- Modulo per inserire:
+  • identità e autorizzazione;
+  • zone;
+  • lingue;
+  • servizi;
+  • prezzi;
+  • disponibilità;
+  • caratteristiche particolari.
+- Invio candidatura tramite Condividi, Gmail, Mail o Copia.
+
+3. PRINCIPI
+- Ogni scuola dovrà essere verificata prima della pubblicazione.
+- Il pagamento non modifica il punteggio Smart Match.
+- I servizi sponsorizzati devono essere sempre indicati.
+- Lo studente decide quali dati e progressi condividere.
+
+4. LIMITAZIONE ATTUALE
+GitHub Pages non dispone di un database.
+Questa Build realizza e prova l’esperienza completa sul telefono, ma:
+- le scuole reali non possono ancora aggiornare autonomamente il profilo;
+- le richieste pilota arrivano a Malta Driving Master;
+- account, pagamenti e pannello scuola online richiederanno un backend sicuro.
+
+5. COMPATIBILITÀ
+- Tutte le funzioni delle Build precedenti restano disponibili.
 - La banca delle 250 domande non è stata modificata.
+- Il backup comprende preferenze scuola, confronto e bozza School Partner.

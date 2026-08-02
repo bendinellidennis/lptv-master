@@ -1,8 +1,8 @@
 {
   "name": "Malta Driving Master",
-  "short_name": "Drive Malta",
-  "description": "Drive Smarter. Drive Malta.",
-  "start_url": "./index.html",
+  "short_name": "Driving Master",
+  "description": "Preparazione LPTV Malta con Bridge Test, Smart Match studenti-scuole, rispetto della strada e sicurezza dei passeggeri.",
+  "start_url": "./index.html#home",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f3f6f8",
@@ -11,12 +11,79 @@
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "id": "./index.html",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "categories": [
+    "education",
+    "utilities"
+  ],
+  "shortcuts": [
+    {
+      "name": "Trova una scuola",
+      "short_name": "Scuole",
+      "description": "Apri Smart Match per confrontare i servizi delle scuole",
+      "url": "./index.html#schools",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "School Partner",
+      "short_name": "Partner",
+      "description": "Apri l’area dedicata alle scuole guida",
+      "url": "./index.html#schoolpartner",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Bridge Test",
+      "short_name": "Bridge",
+      "description": "Distingui conoscenza delle regole e comprensione dell’inglese",
+      "url": "./index.html#bridgesetup",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Centro Esame",
+      "short_name": "Esame",
+      "description": "Avvia la preparazione all’esame LPTV",
+      "url": "./index.html#examsetup",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

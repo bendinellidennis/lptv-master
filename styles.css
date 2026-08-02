@@ -390,3 +390,194 @@ select,textarea{width:100%;border:2px solid var(--line);border-radius:15px;backg
 @media(max-width:500px){
  .registration-methods{grid-template-columns:1fr}
 }
+
+
+/* BUILD 09 — STORICO ESAMI E RAPPORTI */
+.stats-fix-note{display:flex;align-items:center;gap:11px;margin-bottom:14px;padding:13px;border:1px solid #80bd95;border-radius:17px;background:linear-gradient(145deg,#eaf7ee,#dff1e5);color:#155c36}
+.stats-fix-note>span{display:grid;place-items:center;width:39px;height:39px;border-radius:50%;background:#fff;font-size:21px;font-weight:950}
+.stats-fix-note strong,.stats-fix-note small{display:block}.stats-fix-note small{margin-top:3px;line-height:1.35}
+.report-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}
+.history-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.history-heading h3{margin:0}.history-heading p{margin:4px 0 12px;color:var(--muted)}
+.history-heading>span{display:grid;place-items:center;min-width:39px;height:39px;border-radius:50%;background:#eaf0f3;color:#32576a;font-weight:900}
+.exam-history.detailed .exam-detail-row{width:100%;display:grid;grid-template-columns:1.4fr .55fr .75fr .9fr;align-items:center;gap:8px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--text);padding:12px 0;text-align:left}
+.exam-history.detailed .exam-detail-row:last-child{border-bottom:0}
+.exam-detail-row>b{text-align:right;color:var(--sea);font-size:12px}
+.exam-score-pill{border-radius:999px;padding:9px 13px;font-size:20px;font-weight:950}
+.exam-score-pill.pass{background:#e1f4e7;color:#12683a}.exam-score-pill.fail{background:#fde5e5;color:#a02e2e}
+.exam-detail-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.exam-detail-summary>div{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:13px;text-align:center;box-shadow:var(--shadow)}
+.exam-detail-summary strong,.exam-detail-summary span{display:block}
+.exam-detail-summary strong{font-size:25px}.exam-detail-summary span{margin-top:5px;color:var(--muted);font-size:12px;line-height:1.25}
+.exam-detail-list{display:grid;gap:12px;margin-top:14px}
+.exam-answer-card{background:var(--card);border:1px solid var(--line);border-left-width:5px;border-radius:19px;padding:15px;box-shadow:var(--shadow)}
+.exam-answer-card.correct{border-left-color:#55a974}.exam-answer-card.wrong{border-left-color:#d35656}
+.exam-answer-head{display:flex;align-items:center;gap:10px}
+.exam-answer-head>span{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#eef2f4;font-weight:900}
+.exam-answer-head>div{flex:1}.exam-answer-head small,.exam-answer-head strong{display:block}
+.exam-answer-head small{color:var(--muted)}.exam-answer-head strong{margin-top:3px}
+.exam-answer-head>b{color:#d19513;font-size:22px}
+.exam-answer-card h3{font-size:18px;line-height:1.4;margin:13px 0 6px}
+.exam-answer-it{color:var(--sea);line-height:1.4;margin:0 0 12px}
+.exam-choice{border-radius:13px;padding:11px;margin-top:8px}
+.exam-choice span,.exam-choice strong{display:block}
+.exam-choice span{font-size:11px;text-transform:uppercase;font-weight:850;opacity:.75}
+.exam-choice strong{margin-top:5px;line-height:1.4}
+.exam-choice.selected{background:#eef2f4}.exam-choice.correct{background:#e4f4e9;color:#155e37}
+.old-exam-notice{display:flex;align-items:flex-start;gap:12px;margin-top:14px}
+.old-exam-notice>span{font-size:25px}.old-exam-notice p{margin:0;line-height:1.5}
+.exam-detail-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
+[data-theme="dark"] .stats-fix-note{background:linear-gradient(145deg,#173a25,#112d1d);border-color:#3c7350;color:#d9f3e1}
+[data-theme="dark"] .stats-fix-note>span{background:#214d32}
+[data-theme="dark"] .exam-choice.selected{background:#24343b}
+[data-theme="dark"] .exam-choice.correct{background:#173b25;color:#d9f5e2}
+@media(max-width:650px){
+ .exam-detail-summary{grid-template-columns:1fr 1fr}
+ .exam-history.detailed .exam-detail-row{grid-template-columns:1fr auto auto}
+ .exam-detail-row>b{grid-column:1/-1;text-align:left}
+}
+@media(max-width:430px){
+ .report-actions,.exam-detail-actions{grid-template-columns:1fr}
+}
+
+
+/* BUILD 10 — AIUTO, INSTALLAZIONE E ASSISTENZA */
+.home-card.help-home{background:linear-gradient(145deg,#fff5df,#f3dfb9)}
+.profile-help-card{display:flex;align-items:center;justify-content:space-between;gap:13px}
+.profile-help-card h3{margin:0 0 4px}.profile-help-card p{margin:0}
+.help-install-card{border:1px solid var(--line);border-radius:22px;background:var(--card);padding:17px;box-shadow:var(--shadow)}
+.help-install-card.installed{border-color:#78bd91;background:linear-gradient(145deg,var(--card),rgba(76,177,111,.1))}
+.help-install-card.browser{border-color:#d4a75c;background:linear-gradient(145deg,var(--card),rgba(240,180,74,.1))}
+.help-install-head{display:flex;align-items:flex-start;gap:12px}
+.help-install-head>span{display:grid;place-items:center;width:48px;height:48px;flex:0 0 auto;border-radius:15px;background:#e8f1f5;color:#1e607d;font-size:25px;font-weight:950}
+.help-install-card.installed .help-install-head>span{background:#e2f4e8;color:#126a3b}
+.help-install-head>div{flex:1}.help-install-head h3{margin:0 0 4px}.help-install-head p{margin:0;color:var(--muted);line-height:1.4}
+.help-install-head>b{border-radius:999px;padding:7px 9px;background:#fff0d3;color:#81530f;font-size:11px;white-space:nowrap}
+.help-install-card.installed .help-install-head>b{background:#e2f4e8;color:#126a3b}
+.install-instruction{margin-top:15px;padding:13px;border-radius:15px;background:rgba(61,113,139,.08)}
+.install-instruction strong,.install-instruction p{display:block}.install-instruction p{margin:5px 0 0;line-height:1.45;color:var(--muted)}
+.help-action-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+.app-version-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:13px;padding-top:12px;border-top:1px solid var(--line)}
+.app-version-row span{color:var(--muted)}.app-version-row strong{margin-right:auto}.app-version-row small{border-radius:999px;background:#edf2f4;padding:5px 8px;color:var(--muted)}
+.help-card-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.help-card-title h3{margin:0 0 4px}.help-card-title p{margin:0;color:var(--muted);line-height:1.4}.help-card-title>span{font-size:28px}
+.quick-guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.quick-guide-grid button{display:flex;flex-direction:column;align-items:flex-start;border:1px solid var(--line);border-radius:16px;background:rgba(62,112,138,.05);color:var(--text);padding:14px;text-align:left}
+.quick-guide-grid button>span{font-size:25px}.quick-guide-grid button>strong{margin-top:9px}.quick-guide-grid button>small{margin-top:5px;color:var(--muted);line-height:1.35}
+.faq-card>h3{margin-top:0}
+.faq-card details{border-top:1px solid var(--line);padding:11px 0}
+.faq-card details:last-child{padding-bottom:0}.faq-card summary{cursor:pointer;font-weight:850;line-height:1.4}.faq-card details p{margin:9px 0 0;color:var(--muted);line-height:1.5}
+.support-form{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:15px}
+.support-form label{display:block}.support-form label.full{grid-column:1/-1}
+.support-form label>span{display:block;margin-bottom:6px;color:var(--muted);font-size:12px;font-weight:850}
+.support-form input,.support-form select,.support-form textarea{width:100%;box-sizing:border-box}
+.support-form textarea{min-height:140px;resize:vertical}
+.support-method-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+.support-contact{text-align:center;color:var(--muted);font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+.privacy-summary-card{display:flex;align-items:center;gap:13px}
+.privacy-summary-card>span{font-size:29px}.privacy-summary-card>div{flex:1}.privacy-summary-card h3{margin:0 0 4px}.privacy-summary-card p{margin:0;color:var(--muted);line-height:1.4}
+[data-theme="dark"] .home-card.help-home{background:linear-gradient(145deg,#45361f,#352919)}
+[data-theme="dark"] .install-instruction,[data-theme="dark"] .quick-guide-grid button{background:rgba(255,255,255,.05)}
+[data-theme="dark"] .app-version-row small{background:#24363e}
+@media(max-width:620px){
+ .help-install-head{flex-wrap:wrap}.help-install-head>div{min-width:calc(100% - 65px)}.help-install-head>b{margin-left:60px}
+ .quick-guide-grid,.support-form,.support-method-grid{grid-template-columns:1fr}
+ .support-form label.full{grid-column:auto}
+ .privacy-summary-card{align-items:flex-start;flex-wrap:wrap}.privacy-summary-card>div{min-width:calc(100% - 50px)}.privacy-summary-card>button{width:100%}
+}
+@media(max-width:430px){
+ .help-action-grid{grid-template-columns:1fr}
+ .profile-help-card{align-items:flex-start;flex-direction:column}.profile-help-card .btn{width:100%}
+}
+
+
+/* BUILD 11 — BRIDGE TEST, DNA DELL’ERRORE E ASSISTENTE LPTV */
+.hero h1{max-width:680px;line-height:1.12}
+.home-card.bridge-home{background:linear-gradient(145deg,#e9f4f4,#cce6e6)}
+.big-action.bridge-action{background:linear-gradient(135deg,#167c82,#0b5960);color:#fff}
+.bridge-intro-card>p{font-size:16px;line-height:1.55;color:var(--muted)}
+.bridge-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:8px;margin:18px 0}
+.bridge-flow>div{height:105px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:17px;background:#eef7f7;text-align:center;padding:8px}
+.bridge-flow span{display:grid;place-items:center;width:31px;height:31px;border-radius:50%;background:#167c82;color:#fff;font-weight:950;margin-bottom:7px}
+.bridge-flow strong{font-size:12px;line-height:1.3}.bridge-flow>b{color:#609398;font-size:22px}
+.bridge-disclaimer{text-align:center;color:var(--muted);font-size:12px;line-height:1.4;margin:13px 0 0}
+.bridge-quiz-card{max-width:760px;margin:auto}.bridge-quiz-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.bridge-quiz-head>b{font-size:17px}.bridge-no-help{padding:10px 12px;border-radius:13px;background:#eef6f6;color:#45666a;line-height:1.4}
+.bridge-result-score{display:grid;place-items:center;min-width:70px;height:52px;padding:0 10px;border-radius:999px;background:#dff1ef;color:#11666b;font-size:23px;font-weight:950}
+.bridge-result-grid,.bridge-mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.bridge-result-grid>div,.bridge-mini-grid>div{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:14px;text-align:center;box-shadow:var(--shadow)}
+.bridge-result-grid strong,.bridge-result-grid span,.bridge-mini-grid b,.bridge-mini-grid span{display:block}.bridge-result-grid strong{font-size:25px}.bridge-mini-grid b{font-size:21px}.bridge-result-grid span,.bridge-mini-grid span{margin-top:5px;color:var(--muted);font-size:12px;line-height:1.25}
+.bridge-diagnosis{display:grid;gap:10px;margin-top:14px}.bridge-diagnosis article{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:17px;padding:14px;background:var(--card)}.bridge-diagnosis article>span{font-size:27px}.bridge-diagnosis h3{margin:0 0 5px}.bridge-diagnosis p{margin:0;color:var(--muted);line-height:1.45}.bridge-diagnosis .mastered{border-left:5px solid #54a972}.bridge-diagnosis .language{border-left:5px solid #9b6bd0}.bridge-diagnosis .rule{border-left:5px solid #d69a39}
+.bridge-result-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}.bridge-progress-card{margin:14px 0}.bridge-progress-card>.btn{width:100%;margin-top:12px}
+.feature-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.feature-heading h3{margin:0 0 4px}.feature-heading p{margin:0;color:var(--muted);line-height:1.4}.feature-heading>strong{display:grid;place-items:center;min-width:43px;height:43px;border-radius:50%;background:#e5f2f2;color:#14666c}
+.error-reason-box{margin-top:14px;padding:14px;border:1px solid #d8bb7c;border-radius:16px;background:#fff7e7}.error-reason-box h4{margin:0 0 10px;color:#6c4b12}.error-reason-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.error-reason-grid button{border:1px solid #dfc796;border-radius:12px;background:#fff;color:#5d481d;padding:10px;text-align:left;font-weight:750}.error-reason-box.saved{border-color:#78ba8d;background:#e9f6ed}.error-reason-box.saved strong,.error-reason-box.saved span{display:block}.error-reason-box.saved span{margin-top:4px;color:#2a6c43}
+.error-dna-card{margin:14px 0}.dna-bars{display:grid;gap:9px;margin-top:14px}.dna-row{display:grid;grid-template-columns:minmax(120px,1.5fr) 1fr 26px 32px;align-items:center;gap:8px;font-size:12px}.dna-row>div{height:8px;border-radius:999px;background:#edf0f2;overflow:hidden}.dna-row i{display:block;height:100%;border-radius:999px;background:#72509b}.dna-row b{text-align:right}.dna-row button{width:32px;height:32px;border:0;border-radius:50%;background:#eee7f5;color:#5a377f;font-size:20px}
+.assistant-offline{background:#dff2e6!important;color:#17683d!important}.assistant-trust{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;padding:12px;border:1px solid #89b99a;border-radius:15px;background:#eaf6ee}.assistant-trust>span{font-size:22px}.assistant-trust p{margin:0;line-height:1.45;color:#235d3a}.assistant-try{display:block;margin:12px 0 7px}.assistant-bubble.bot.rich{max-width:100%}.assistant-results{display:grid;gap:10px;margin-top:10px}.assistant-results article{border:1px solid var(--line);border-radius:15px;padding:12px;background:var(--card);color:var(--text)}.assistant-results h4{margin:8px 0 5px;font-size:16px;line-height:1.35}.assistant-results p{margin:6px 0;line-height:1.4}.assistant-answer{padding:8px;border-radius:10px;background:#e7f4eb;color:#175b34}.assistant-results .btn{width:100%;margin-top:8px}
+[data-theme="dark"] .bridge-flow>div,[data-theme="dark"] .bridge-no-help{background:#18363a;color:#d6ecee}[data-theme="dark"] .error-reason-box{background:#3b301c;border-color:#715b30}[data-theme="dark"] .error-reason-grid button{background:#292317;color:#f4dfb0;border-color:#66542d}[data-theme="dark"] .error-reason-box.saved{background:#173823}[data-theme="dark"] .assistant-trust{background:#173825;border-color:#356d48}[data-theme="dark"] .assistant-trust p{color:#d7efdf}[data-theme="dark"] .assistant-answer{background:#173a25;color:#d7f1e0}
+@media(max-width:650px){.bridge-result-grid{grid-template-columns:1fr 1fr}.bridge-mini-grid{grid-template-columns:1fr 1fr}.bridge-flow{grid-template-columns:1fr}.bridge-flow>b{transform:rotate(90deg);text-align:center}.bridge-flow>div{height:auto;min-height:83px}.error-reason-grid{grid-template-columns:1fr}.dna-row{grid-template-columns:1.5fr 1fr 24px 30px}}
+@media(max-width:430px){.bridge-result-actions{grid-template-columns:1fr}}
+
+
+/* BUILD 12 — STUDENTI E SCHOOL PARTNER */
+.home-card.school-home{background:linear-gradient(145deg,#e9f4fb,#cde6f5)}
+.home-card.school-partner-home{background:linear-gradient(145deg,#f5eee3,#ead6b8)}
+.school-demo-notice{display:flex;align-items:flex-start;gap:11px;margin-bottom:14px;padding:14px;border:1px solid #d5a35b;border-radius:17px;background:#fff4df;color:#66420d}
+.school-demo-notice>span{font-size:24px}.school-demo-notice p{margin:0;line-height:1.5}
+.school-demo-notice.partner{border-color:#8aa8ba;background:#eef5f8;color:#244f64}
+.school-filter-card{margin-bottom:14px}.school-filter-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.school-filter-title h3{margin:0 0 4px}.school-filter-title p{margin:0;color:var(--muted);line-height:1.4}
+.school-filter-title>span{font-size:30px}
+.school-filter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:15px}
+.school-filter-grid label>span{display:block;margin-bottom:6px;color:var(--muted);font-size:12px;font-weight:850}
+.school-filter-grid select{width:100%}
+.school-support-checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.school-support-checks label{display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:13px;padding:10px;background:rgba(70,130,155,.05)}
+.school-support-checks input{width:20px;height:20px;flex:0 0 auto}
+.school-filter-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+.smart-match-trust{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;padding:13px;border-radius:16px;background:linear-gradient(145deg,#e8f4ed,#d9ede1);color:#155f38}
+.smart-match-trust strong,.smart-match-trust span{display:block}.smart-match-trust span{margin-top:3px;font-size:12px;line-height:1.35}
+.smart-match-trust>b{max-width:45%;font-size:11px;line-height:1.4;text-align:right}
+.school-result-heading{display:flex;align-items:baseline;gap:6px;margin:14px 2px 9px}
+.school-result-heading strong{font-size:25px}.school-result-heading span{color:var(--muted)}
+.school-list{display:grid;gap:13px}.school-card,.school-detail-card{background:var(--card);border:1px solid var(--line);border-radius:21px;padding:16px;box-shadow:var(--shadow)}
+.school-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.school-card h3{margin:8px 0 4px;font-size:20px}.school-card-top p{margin:0;color:var(--muted)}
+.school-badges{display:flex;gap:6px;flex-wrap:wrap}.badge.demo-school{background:#edf2f5;color:#3b5968}.badge.sponsored-school{background:#fff0c7;color:#8a5d00}
+.match-score{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:66px;height:66px;border-radius:50%;background:#e4f4e9;color:#135f37}
+.match-score.large{min-width:76px;height:76px}.match-score strong{font-size:21px}.match-score span{font-size:10px;font-weight:850}
+.school-description{line-height:1.5;color:var(--muted)}
+.school-service-chips{display:flex;gap:6px;flex-wrap:wrap}.school-service-chips span{border-radius:999px;background:#edf3f6;color:#375866;padding:6px 8px;font-size:11px;font-weight:800}
+.match-reasons{margin-top:12px;padding:11px;border-radius:14px;background:#eff7f2}.match-reasons strong,.match-reasons span{display:block}.match-reasons span{margin-top:5px;color:#276b43;font-size:12px}
+.school-card-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.school-card-actions .selected,.compare-detail-button.selected{background:#e4f4e9;color:#145f38;border-color:#75bb8e}
+.school-empty{text-align:center}.school-empty>span{font-size:35px}
+.school-detail-card h2{font-size:27px;margin:11px 0}.detail-match-reasons{padding:13px;border-radius:15px;background:#eef7f1}.detail-match-reasons h3{margin:0 0 7px}.detail-match-reasons span{display:block;margin-top:5px}
+.school-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}.school-detail-grid>div{border:1px solid var(--line);border-radius:14px;padding:11px}.school-detail-grid span,.school-detail-grid strong{display:block}.school-detail-grid span{font-size:11px;color:var(--muted);font-weight:850}.school-detail-grid strong{margin-top:5px;line-height:1.35}
+.detail-services{margin-top:15px}.detail-services h3{margin-bottom:8px}.detail-services span{display:block;margin-top:6px}
+.school-pricing-box{margin-top:15px;padding:13px;border-radius:15px;background:#f6f1e9}.school-pricing-box span,.school-pricing-box strong{display:block}.school-pricing-box span{font-size:11px;color:#7c6749}.school-pricing-box strong{margin-top:5px}
+.compare-detail-button{width:100%;margin-top:13px}
+.school-request-card{margin-top:14px}.school-request-card p{color:var(--muted);line-height:1.45}.request-method-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.school-compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.compare-school-card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:19px;padding:15px;box-shadow:var(--shadow)}
+.compare-school-card h3{min-height:52px}.compare-school-card .match-score{margin:10px auto}.compare-remove{position:absolute;right:9px;top:9px;width:34px;height:34px;border:0;border-radius:50%;background:#f7e3e3;color:#9d3030;font-size:22px}
+.compare-school-card dl{margin:13px 0}.compare-school-card dt{margin-top:9px;color:var(--muted);font-size:11px;font-weight:850}.compare-school-card dd{margin:3px 0 0;line-height:1.35}.compare-school-card>.btn{width:100%}
+.clear-school-comparison{width:100%;margin-top:12px}.comparison-empty{text-align:center}.comparison-empty>span{font-size:42px}
+.partner-badge{background:#f0e6d6;color:#74501e}
+.partner-plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.partner-plan-grid article{border:1px solid var(--line);border-radius:19px;background:var(--card);padding:15px;box-shadow:var(--shadow)}.partner-plan-grid article>span{display:inline-block;border-radius:999px;background:#edf1f3;padding:5px 8px;font-size:10px;font-weight:900}.partner-plan-grid h3{margin:10px 0 6px}.partner-plan-grid p{margin:0;color:var(--muted);line-height:1.45}.partner-plan-grid .pro{border-color:#6f9eba}.partner-plan-grid .featured{border-color:#d5a34f}.partner-plan-grid .featured>span{background:#fff0c8;color:#835900}
+.partner-principles p{line-height:1.45}.partner-form-card{margin-top:14px}.partner-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.partner-form-grid label>span,.partner-long-field>span{display:block;margin-bottom:6px;color:var(--muted);font-size:12px;font-weight:850}.partner-form-grid input,.partner-form-grid select,.partner-long-field textarea{width:100%;box-sizing:border-box}
+.partner-checks{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;border:1px solid var(--line);border-radius:15px;padding:12px}.partner-checks legend{padding:0 6px;font-weight:900}.partner-checks label{display:flex;align-items:flex-start;gap:7px}.partner-checks input{width:20px;height:20px;flex:0 0 auto}
+.partner-long-field{display:block;margin-top:13px}.partner-long-field textarea{min-height:90px}
+.partner-consent{display:flex;align-items:flex-start;gap:9px;margin-top:14px;padding:12px;border-radius:14px;background:#eef5f7}.partner-consent input{width:21px;height:21px;flex:0 0 auto}
+.partner-form-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px}
+[data-theme="dark"] .school-demo-notice{background:#423016;color:#ffe4b0;border-color:#805f2e}
+[data-theme="dark"] .school-demo-notice.partner{background:#17313b;color:#d8edf5;border-color:#3e6575}
+[data-theme="dark"] .smart-match-trust{background:#183a25;color:#d9f5e2}
+[data-theme="dark"] .school-service-chips span,[data-theme="dark"] .match-reasons{background:#24343b;color:#d5e7ed}
+[data-theme="dark"] .match-reasons span{color:#b9e5c8}
+[data-theme="dark"] .school-pricing-box{background:#392f21}
+@media(max-width:760px){
+ .school-compare-grid{grid-template-columns:1fr}
+ .partner-plan-grid{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+ .school-filter-grid,.school-detail-grid,.partner-form-grid{grid-template-columns:1fr}
+ .school-support-checks,.school-filter-actions,.school-card-actions,.request-method-grid,.partner-form-actions{grid-template-columns:1fr}
+ .partner-checks{grid-template-columns:1fr 1fr}
+ .smart-match-trust{display:block}.smart-match-trust>b{display:block;max-width:none;text-align:left;margin-top:8px}
+}

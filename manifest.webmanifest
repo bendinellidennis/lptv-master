@@ -1,12 +1,12 @@
 {
   "name": "Malta Driving Master",
   "short_name": "Driving Master",
-  "description": "Malta Driving Master con onboarding, Centro Privacy e Dati, Dashboard School Partner, Roadmap e Passport.",
+  "description": "Malta Driving Master Premium Experience con Roadmap, Passport, Bridge Test e School Partner.",
   "start_url": "./index.html#home",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f3f6f8",
-  "theme_color": "#092f4f",
+  "background_color": "#0b1e38",
+  "theme_color": "#10284a",
   "icons": [
     {
       "src": "icon-192.png",

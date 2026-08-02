@@ -1,19 +1,60 @@
-MALTA DRIVING MASTER — BUILD 17
+MALTA DRIVING MASTER — BUILD 18
 
-PREMIUM EXPERIENCE
+MDM COACH FOUNDATION
 
-- Apertura professionale con logo MDM animato.
-- Slogan internazionale:
-  Drive with knowledge. Respect every road. Protect every passenger.
-- Introduzione breve e sempre saltabile.
-- Home premium con benvenuto personalizzato.
-- Obiettivo consigliato del giorno collegato alla Personal Roadmap.
-- Transizioni fluide e micro-interazioni.
-- Rispetto automatico dell’impostazione “Riduci movimento”.
-- Tema PWA aggiornato.
-- Pulsante nel Profilo per rivedere l’introduzione.
-- Tutti i dati della Build 16 vengono preservati.
+1. CONFIDENCE SCORE
+Stima interna da 0 a 100 composta da:
+- precisione;
+- copertura delle domande;
+- simulazioni;
+- Bridge Test;
+- costanza;
+- comportamento nei ripassi.
+
+Non è una garanzia e non è una valutazione ufficiale.
+
+2. PREVISIONE TRASPARENTE
+Mostra:
+- probabilità stimata oggi;
+- probabilità stimata tra sette giorni;
+- andamento recente.
+
+3. DAILY MISSION
+Missione quotidiana composta da:
+- studio;
+- ripasso;
+- Bridge.
+
+L’utente può segnare ogni passaggio come completato.
+
+4. ACHIEVEMENT SYSTEM
+Traguardi utili:
+- 25 domande;
+- 100 domande;
+- simulazione superata;
+- Bridge Champion;
+- Safety Expert;
+- Passenger Care Master;
+- costanza di sette giorni;
+- Passport completato.
+
+5. INVESTOR PREVIEW
+Presentazione interna della piattaforma con:
+- problema;
+- soluzione;
+- valore per studenti;
+- valore per scuole;
+- differenziazione;
+- scalabilità;
+- architettura;
+- metriche del prototipo.
+
+6. CHIAREZZA SULL’IA
+MDM Coach è una base intelligente offline.
+Analizza esclusivamente i dati locali dell’utente.
+Non è ancora collegato a una vera IA generativa online.
+
+7. DATI
+- Tutti i dati Build 17 vengono preservati.
+- Missione e stato Coach sono inclusi nel backup.
 - Banca attiva invariata: 250 domande.
-
-La schermata premium viene mostrata una volta dopo l’aggiornamento.
-Può essere riaperta dal Profilo.

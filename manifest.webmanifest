@@ -1,7 +1,7 @@
 {
   "name": "Malta Driving Master",
   "short_name": "Driving Master",
-  "description": "Malta Driving Master Premium Experience con Roadmap, Passport, Bridge Test e School Partner.",
+  "description": "Malta Driving Master con MDM Coach, Confidence Score, Daily Mission, Investor Preview, Roadmap e Passport.",
   "start_url": "./index.html#home",
   "scope": "./",
   "display": "standalone",
@@ -34,6 +34,19 @@
   ],
   "shortcuts": [
     {
+      "name": "MDM Coach",
+      "short_name": "Coach",
+      "description": "Confidence Score, missione giornaliera e analisi della preparazione",
+      "url": "./index.html#coach",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
       "name": "School Dashboard",
       "short_name": "School",
       "description": "Prototipo locale per studenti, gruppi, inviti e rapporti",
@@ -64,19 +77,6 @@
       "short_name": "Passport",
       "description": "Checklist, scadenze e percorso personale fino al Driver Permit Tag",
       "url": "./index.html#passport",
-      "icons": [
-        {
-          "src": "icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Trova una scuola",
-      "short_name": "Scuole",
-      "description": "Apri Smart Match per confrontare i servizi delle scuole",
-      "url": "./index.html#schools",
       "icons": [
         {
           "src": "icon-192.png",

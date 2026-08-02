@@ -1,7 +1,7 @@
 {
   "name": "Malta Driving Master",
   "short_name": "Driving Master",
-  "description": "Malta Driving Master Build 13.1 con LPTV Passport e compatibilità Koder/iPhone migliorata.",
+  "description": "Malta Driving Master con Personal Roadmap, LPTV Passport, Bridge Test e Smart Match.",
   "start_url": "./index.html#home",
   "scope": "./",
   "display": "standalone",
@@ -34,6 +34,19 @@
   ],
   "shortcuts": [
     {
+      "name": "Personal Roadmap",
+      "short_name": "Roadmap",
+      "description": "Prossima azione, piano di sette giorni e preparazione complessiva",
+      "url": "./index.html#roadmap",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
       "name": "LPTV Passport",
       "short_name": "Passport",
       "description": "Checklist, scadenze e percorso personale fino al Driver Permit Tag",
@@ -64,19 +77,6 @@
       "short_name": "Partner",
       "description": "Apri l’area dedicata alle scuole guida",
       "url": "./index.html#schoolpartner",
-      "icons": [
-        {
-          "src": "icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Bridge Test",
-      "short_name": "Bridge",
-      "description": "Distingui conoscenza delle regole e comprensione dell’inglese",
-      "url": "./index.html#bridgesetup",
       "icons": [
         {
           "src": "icon-192.png",

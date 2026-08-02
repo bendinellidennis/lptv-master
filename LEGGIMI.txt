@@ -1,81 +1,74 @@
-MALTA DRIVING MASTER — BUILD 13
+MALTA DRIVING MASTER — BUILD 14
 
-LPTV PASSPORT
+PERSONAL ROADMAP
 
-1. PERCORSO PERSONALE
-- Prima richiesta o rinnovo del Driver Permit Tag.
-- Categoria:
-  • cittadino maltese;
-  • cittadino UE/SEE/Svizzera non maltese;
-  • cittadino di Paese terzo.
-- Stato della pratica dal primo studio fino al rilascio.
+1. UNA SCHERMATA UNICA
+La Personal Roadmap riunisce:
+- preparazione all’esame;
+- copertura e precisione;
+- Bridge Test e difficoltà con l’inglese;
+- ripassi programmati;
+- simulazioni complete;
+- LPTV Passport;
+- ricerca della scuola.
 
-2. AGGIORNAMENTO UFFICIALE DEL 29 LUGLIO 2026
-Per una nuova domanda LPTV:
-- patente B valida UE o convertita secondo le regole maltesi;
-- patente posseduta da almeno due anni;
-- non più di sei punti di penalità.
+2. PUNTEGGIO DEL PERCORSO
+È una stima interna dell’app composta da:
+- 50% preparazione esame;
+- 20% Bridge Test;
+- 20% Passport;
+- 10% abitudine di studio quotidiana.
 
-3. CHECKLIST DINAMICA
-La checklist cambia automaticamente tra:
-- prima richiesta;
-- rinnovo;
-- richiedente TCN.
+Non è una decisione ufficiale e non garantisce il superamento dell’esame.
 
-Comprende DPA13/DPA14, DRV032, corso Customer Care,
-casellari, documenti TCN, DPA16, JobsPlus e pagamenti.
+3. PROSSIMA AZIONE MIGLIORE
+L’app sceglie automaticamente cosa viene prima:
+- profilo;
+- ripasso in scadenza;
+- piano giornaliero;
+- Bridge Test;
+- studio guidato;
+- simulazione;
+- Passport;
+- confronto scuole.
 
-4. SCADENZE INTELLIGENTI
-È possibile inserire:
-- scadenza patente;
-- residenza;
-- autorizzazione al lavoro;
-- licenza operatore;
-- TAG;
-- certificato medico;
-- data domanda.
+4. PIANO DEI PROSSIMI SETTE PASSI
+Viene generata una sequenza equilibrata con:
+- studio adattivo;
+- argomento più debole;
+- inglese;
+- ripasso;
+- simulazione;
+- documenti;
+- controllo progressi.
 
-L’app mostra la prima scadenza inserita e i giorni rimanenti.
+5. DATA OBIETTIVO E RITMO
+L’utente può impostare:
+- data obiettivo;
+- minuti per sessione;
+- giorni di studio alla settimana;
+- obiettivo esame oppure TAG.
 
-5. CALENDARIO IPHONE
-Il pulsante “Crea promemoria Calendario iPhone” genera un file .ics
-con promemoria 90, 60, 30, 14, 7 e 1 giorno prima delle scadenze future.
+L’app mostra:
+- giorni mancanti;
+- domande mai viste;
+- numero stimato di sessioni.
 
-6. MODULI UFFICIALI
-Collegamenti diretti a:
-- pagina LPTV Transport Malta;
-- DPA13;
-- DPA14;
-- DPA16;
-- DRV032;
-- SOPT 01;
-- SOPT 02;
-- guida operatore;
-- formazione, downloads e contatti.
+6. TRAGUARDI
+La Roadmap riconosce automaticamente:
+- profilo completo;
+- 25 e 100 domande studiate;
+- prima simulazione;
+- simulazione superata;
+- Bridge almeno all’80%;
+- serie di sette giorni;
+- Passport completato.
 
-7. NOTE IMPORTANTI
-- La checklist non sostituisce una decisione ufficiale di Transport Malta.
-- Scaricare sempre l’ultima versione dei moduli.
-- Una Tag Eligibility Confirmation Letter non è il TAG e non autorizza
-  a guidare fino al rilascio formale.
-- I dati Passport restano sul dispositivo e sono inclusi nel backup.
-
-FONTI CONTROLLATE
-Transport Malta, pagina LPTV aggiornata il 29/07/2026.
-Verifica effettuata il 02/08/2026.
+7. CONDIVISIONE E BACKUP
+- Rapporto Roadmap condivisibile o copiabile.
+- Impostazioni incluse nel backup.
+- Progressi, Passport e dati delle Build precedenti preservati.
 
 COMPATIBILITÀ
-- Tutte le funzioni precedenti rimangono disponibili.
-- La banca delle 250 domande non è stata modificata.
-
-
-BUILD 13.1 — CORREZIONE KODER
-
-- I collegamenti ufficiali non usano più finestre esterne bloccate.
-- Ogni documento ha:
-  • Apri direttamente;
-  • Condividi / apri in Safari.
-- Se la condivisione non è disponibile, il collegamento viene copiato.
-- Il calendario prova prima a condividere il vero file .ics.
-- Se Koder non permette l’esportazione, copia automaticamente l’elenco
-  completo dei promemoria senza mostrare un falso messaggio di successo.
+- Tutte le funzioni precedenti restano disponibili.
+- La banca delle 250 domande attive non è stata modificata.

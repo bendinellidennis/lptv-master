@@ -581,3 +581,44 @@ select,textarea{width:100%;border:2px solid var(--line);border-radius:15px;backg
  .partner-checks{grid-template-columns:1fr 1fr}
  .smart-match-trust{display:block}.smart-match-trust>b{display:block;max-width:none;text-align:left;margin-top:8px}
 }
+
+
+/* BUILD 13 — LPTV PASSPORT */
+.home-card.passport-home{background:linear-gradient(145deg,#e6f4f0,#cce9df)}
+.passport-build{border-radius:999px;background:#e2f1eb;color:#1b6647;padding:8px 11px;font-size:12px;font-weight:900}
+.passport-update{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;padding:15px;border:1px solid #d69a42;border-radius:18px;background:linear-gradient(145deg,#fff5df,#ffe8bd);color:#65400b}
+.passport-update>span{display:grid;place-items:center;width:42px;height:42px;flex:0 0 auto;border-radius:50%;background:#fff;color:#a36200;font-size:25px;font-weight:950}
+.passport-update strong,.passport-update p,.passport-update small{display:block}.passport-update p{margin:5px 0;line-height:1.5}.passport-update small{opacity:.78}
+.passport-config-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.passport-config-grid label.full{grid-column:1/-1}.passport-config-grid label>span,.passport-date-grid label>span,.passport-eligibility-grid label>span{display:block;margin-bottom:6px;color:var(--muted);font-size:12px;font-weight:850}
+.passport-config-grid select,.passport-date-grid input,.passport-eligibility-grid input{width:100%;box-sizing:border-box}
+.passport-progress-card{margin:14px 0;padding:15px;border:1px solid #80b998;border-radius:18px;background:linear-gradient(145deg,#eaf7ef,#dff1e6)}
+.passport-progress-card>div:first-child{display:flex;align-items:center;justify-content:space-between;gap:10px}.passport-progress-card span,.passport-progress-card strong{display:block}.passport-progress-track{height:10px;margin:10px 0 7px;border-radius:999px;background:rgba(20,90,55,.13);overflow:hidden}.passport-progress-track>span{height:100%;border-radius:999px;background:linear-gradient(90deg,#2b8a57,#59b97f)}.passport-progress-card small{color:#3f6c52}
+.passport-card-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.passport-card-heading h3{margin:0 0 4px}.passport-card-heading p{margin:0;color:var(--muted);line-height:1.4}.passport-card-heading>span{font-size:27px}
+.passport-eligibility-card{margin-bottom:14px}.passport-eligibility-card.good{border-color:#79bc91}.passport-eligibility-card.attention{border-color:#d3a256}.passport-eligibility-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.eligible-date{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding:11px;border-radius:13px;background:#edf3f5}.eligible-date span{color:var(--muted);font-size:12px}
+.passport-checklist-card{margin-bottom:14px}.passport-check-group{margin-top:16px}.passport-check-group h3{margin:0 0 8px;font-size:15px;color:var(--sea)}
+.passport-check-row{display:flex;align-items:flex-start;gap:10px;padding:11px 5px;border-bottom:1px solid var(--line);line-height:1.4}.passport-check-row:last-child{border-bottom:0}.passport-check-row input{width:22px;height:22px;flex:0 0 auto;margin-top:1px}.passport-check-row span{flex:1}.passport-check-row strong{font-weight:750}.passport-check-row small{color:#b24e3d;margin-left:5px}
+.passport-dates-card{margin-bottom:14px}.passport-date-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.passport-earliest{margin-top:14px;padding:13px;border-radius:15px;background:#edf5f7}.passport-earliest span,.passport-earliest strong,.passport-earliest small{display:block}.passport-earliest span{font-size:11px;color:var(--muted);font-weight:850}.passport-earliest strong{margin-top:5px}.passport-earliest small{margin-top:5px;color:#456674}.passport-earliest.urgent{background:#fff0df;color:#8c4b08}.passport-calendar-btn{width:100%;margin-top:12px}
+.passport-rule-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}.passport-rule-grid article{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);border-radius:17px;background:var(--card);padding:14px;box-shadow:var(--shadow)}.passport-rule-grid article>span{font-size:24px}.passport-rule-grid p{margin:0;line-height:1.5}
+.passport-notes-card textarea{width:100%;min-height:115px;box-sizing:border-box}.passport-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0}
+.passport-official-card>p{color:var(--muted);line-height:1.5}.passport-official-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}.passport-official-link{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:14px;background:rgba(65,125,150,.05);color:var(--text);padding:11px;text-decoration:none}.passport-official-link>span{color:var(--sea);font-size:19px}.passport-official-link strong{line-height:1.35}
+.passport-office-box{margin-top:13px;padding:13px;border-radius:15px;background:#f5f0e8}.passport-office-box p{margin:6px 0 0;line-height:1.5;color:#6a5d49}.passport-reset{margin-top:12px}
+[data-theme="dark"] .passport-update{background:linear-gradient(145deg,#493416,#38270f);color:#ffe7b9;border-color:#805c2c}
+[data-theme="dark"] .passport-progress-card{background:linear-gradient(145deg,#183a26,#112d1e);border-color:#3f7351}
+[data-theme="dark"] .eligible-date,[data-theme="dark"] .passport-earliest{background:#22363e}
+[data-theme="dark"] .passport-earliest.urgent{background:#49301a;color:#ffd6aa}
+[data-theme="dark"] .passport-office-box{background:#382f23}.passport-office-box p{color:inherit}
+@media(max-width:640px){
+ .passport-config-grid,.passport-eligibility-grid,.passport-date-grid,.passport-official-grid{grid-template-columns:1fr}
+ .passport-config-grid label.full{grid-column:auto}
+ .passport-rule-grid{grid-template-columns:1fr}
+ .passport-actions{grid-template-columns:1fr}
+}
+
+
+/* BUILD 13.1 — HOTFIX KODER */
+.passport-official-link{display:block}
+.passport-official-link>div:first-child{display:flex;align-items:center;gap:9px}
+.passport-official-actions{display:grid;grid-template-columns:1fr;gap:7px;margin-top:10px}
+.passport-official-actions .btn{width:100%;padding:10px 8px;font-size:12px}
+.passport-koder-note{margin:10px 0 0;padding:11px;border-radius:13px;background:#eef5f7;color:#3d5f6d;line-height:1.45;font-size:12px}
+[data-theme="dark"] .passport-koder-note{background:#21343c;color:#d4e7ed}

@@ -1,11 +1,11 @@
-const CACHE='mdm-build-12';
+const CACHE='mdm-build-13-1';
 const ASSETS=[
  './',
  './index.html',
- './styles.css?v=12.0',
- './app.js?v=12.0',
- './database.js?v=12.0',
- './content.js?v=12.0',
+ './styles.css?v=13.1',
+ './app.js?v=13.1',
+ './database.js?v=13.1',
+ './content.js?v=13.1',
  './manifest.webmanifest',
  './icon-192.png',
  './icon-512.png'

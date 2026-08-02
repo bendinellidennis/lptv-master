@@ -1,54 +1,81 @@
-MALTA DRIVING MASTER — BUILD 12
+MALTA DRIVING MASTER — BUILD 13
 
-UNA PIATTAFORMA, DUE AREE
+LPTV PASSPORT
 
-1. AREA STUDENTE — TROVA UNA SCUOLA
-- Smart Match basato su:
-  • zona;
-  • lingua dell’istruttore;
-  • corso LPTV/TAG o patente B;
-  • cambio automatico o manuale;
-  • orari;
-  • supporto per inglese, documenti e TAG;
-  • risultato del Bridge Test.
-- Confronto di massimo tre scuole.
-- Dettaglio dei servizi e richiesta di informazioni.
-- Condivisione, Gmail, Mail e copia del messaggio.
+1. PERCORSO PERSONALE
+- Prima richiesta o rinnovo del Driver Permit Tag.
+- Categoria:
+  • cittadino maltese;
+  • cittadino UE/SEE/Svizzera non maltese;
+  • cittadino di Paese terzo.
+- Stato della pratica dal primo studio fino al rilascio.
 
-IMPORTANTE
-I quattro profili inclusi sono esclusivamente dimostrativi e inventati.
-Non rappresentano scuole reali e non contengono recensioni, prezzi o
-autorizzazioni inventate.
+2. AGGIORNAMENTO UFFICIALE DEL 29 LUGLIO 2026
+Per una nuova domanda LPTV:
+- patente B valida UE o convertita secondo le regole maltesi;
+- patente posseduta da almeno due anni;
+- non più di sei punti di penalità.
 
-2. AREA SCHOOL PARTNER
-- Presentazione di tre modelli:
-  • profilo base gratuito;
-  • School Pro a pagamento;
-  • servizi sponsorizzati chiaramente indicati.
-- Modulo per inserire:
-  • identità e autorizzazione;
-  • zone;
-  • lingue;
-  • servizi;
-  • prezzi;
-  • disponibilità;
-  • caratteristiche particolari.
-- Invio candidatura tramite Condividi, Gmail, Mail o Copia.
+3. CHECKLIST DINAMICA
+La checklist cambia automaticamente tra:
+- prima richiesta;
+- rinnovo;
+- richiedente TCN.
 
-3. PRINCIPI
-- Ogni scuola dovrà essere verificata prima della pubblicazione.
-- Il pagamento non modifica il punteggio Smart Match.
-- I servizi sponsorizzati devono essere sempre indicati.
-- Lo studente decide quali dati e progressi condividere.
+Comprende DPA13/DPA14, DRV032, corso Customer Care,
+casellari, documenti TCN, DPA16, JobsPlus e pagamenti.
 
-4. LIMITAZIONE ATTUALE
-GitHub Pages non dispone di un database.
-Questa Build realizza e prova l’esperienza completa sul telefono, ma:
-- le scuole reali non possono ancora aggiornare autonomamente il profilo;
-- le richieste pilota arrivano a Malta Driving Master;
-- account, pagamenti e pannello scuola online richiederanno un backend sicuro.
+4. SCADENZE INTELLIGENTI
+È possibile inserire:
+- scadenza patente;
+- residenza;
+- autorizzazione al lavoro;
+- licenza operatore;
+- TAG;
+- certificato medico;
+- data domanda.
 
-5. COMPATIBILITÀ
-- Tutte le funzioni delle Build precedenti restano disponibili.
+L’app mostra la prima scadenza inserita e i giorni rimanenti.
+
+5. CALENDARIO IPHONE
+Il pulsante “Crea promemoria Calendario iPhone” genera un file .ics
+con promemoria 90, 60, 30, 14, 7 e 1 giorno prima delle scadenze future.
+
+6. MODULI UFFICIALI
+Collegamenti diretti a:
+- pagina LPTV Transport Malta;
+- DPA13;
+- DPA14;
+- DPA16;
+- DRV032;
+- SOPT 01;
+- SOPT 02;
+- guida operatore;
+- formazione, downloads e contatti.
+
+7. NOTE IMPORTANTI
+- La checklist non sostituisce una decisione ufficiale di Transport Malta.
+- Scaricare sempre l’ultima versione dei moduli.
+- Una Tag Eligibility Confirmation Letter non è il TAG e non autorizza
+  a guidare fino al rilascio formale.
+- I dati Passport restano sul dispositivo e sono inclusi nel backup.
+
+FONTI CONTROLLATE
+Transport Malta, pagina LPTV aggiornata il 29/07/2026.
+Verifica effettuata il 02/08/2026.
+
+COMPATIBILITÀ
+- Tutte le funzioni precedenti rimangono disponibili.
 - La banca delle 250 domande non è stata modificata.
-- Il backup comprende preferenze scuola, confronto e bozza School Partner.
+
+
+BUILD 13.1 — CORREZIONE KODER
+
+- I collegamenti ufficiali non usano più finestre esterne bloccate.
+- Ogni documento ha:
+  • Apri direttamente;
+  • Condividi / apri in Safari.
+- Se la condivisione non è disponibile, il collegamento viene copiato.
+- Il calendario prova prima a condividere il vero file .ics.
+- Se Koder non permette l’esportazione, copia automaticamente l’elenco
+  completo dei promemoria senza mostrare un falso messaggio di successo.

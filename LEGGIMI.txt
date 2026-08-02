@@ -1,65 +1,79 @@
-MALTA DRIVING MASTER — BUILD 15
+MALTA DRIVING MASTER — BUILD 16
 
-SCHOOL PARTNER DASHBOARD
+PRIMO ACCESSO, PRIVACY E CONTROLLO DEI DATI
 
-1. PROFILO SCUOLA
-- Mostra il completamento della candidatura School Partner.
-- Anteprima del possibile profilo pubblico.
-- Stato sempre indicato come “Non verificata”.
-- Nessuna scuola viene pubblicata realmente da questo prototipo.
+1. PRESENTAZIONE INIZIALE
+Al primo avvio la piattaforma chiede se viene utilizzata come:
+- Studente;
+- Scuola guida;
+- Entrambi.
 
-2. GRUPPI
-- Creazione di gruppi locali.
-- Lingua, orario e note.
-- Conteggio degli studenti appartenenti a ogni gruppo.
+La schermata spiega:
+- finalità dell’app;
+- salvataggio locale;
+- assenza di invio automatico;
+- limitazioni rispetto alle decisioni ufficiali.
 
-3. STUDENTI
-- Inserimento manuale di:
-  • nome ed e-mail;
-  • corso LPTV o patente B;
-  • gruppo;
-  • preparazione esame;
-  • Bridge;
-  • Passport;
-  • stato e note.
-- Modifica e rimozione.
-- Media locale dei tre valori di avanzamento.
+2. DICHIARAZIONI
+Per proseguire occorre confermare:
+- comprensione dell’archiviazione locale essenziale;
+- lettura delle informazioni e delle limitazioni.
 
-IMPORTANTE
-I dati non sono sincronizzati con l’app dello studente.
-Non inserire documenti d’identità, dati medici o informazioni penali.
+L’autorizzazione agli aggiornamenti è separata e facoltativa.
 
-4. CODICI DI INVITO
-- Generazione di codici dimostrativi.
-- Condivisione e copia.
-- I codici non possono ancora registrare studenti online perché manca
-  un sistema sicuro di account e backend.
+3. CENTRO PRIVACY E DATI
+Mostra un riepilogo di:
+- profilo;
+- progressi di studio;
+- Passport;
+- Roadmap;
+- dati School Partner;
+- preferenze privacy.
 
-5. RAPPORTI
-- Rapporto scuola condivisibile o copiabile.
-- Esportazione CSV degli studenti.
-- Note interne locali.
+4. ESPORTAZIONE
+Il backup JSON generale rappresenta l’esportazione leggibile da sistemi
+informatici dei dati locali gestiti dall’app.
 
-6. DATI DIMOSTRATIVI
-- Pulsante facoltativo per inserire due gruppi e due studenti inventati.
-- Tutti i record sono chiaramente indicati come Demo.
-- Nessun nome appartiene a una persona reale.
+5. CANCELLAZIONE SELETTIVA
+È possibile cancellare separatamente:
+- studio;
+- profilo;
+- Passport;
+- Roadmap;
+- dati scuola.
 
-7. LIMITAZIONE TECNICA
-GitHub Pages non offre:
-- autenticazione sicura;
-- database privato;
-- sincronizzazione scuola-studente;
-- pagamenti;
-- inviti realmente riscattabili;
-- pannello amministratore centrale.
+È inoltre disponibile la cancellazione completa di tutti i dati locali.
 
-Queste funzioni richiederanno un backend prima del lancio commerciale.
+6. RICHIESTE PER DATI GIÀ INVIATI
+Se l’utilizzatore ha volontariamente inviato e-mail di registrazione o
+assistenza, può preparare richieste di:
+- accesso;
+- correzione;
+- cancellazione.
 
-8. BACKUP
-Studenti, gruppi, inviti e note locali sono inclusi nel backup generale.
+Le richieste sono indirizzate a:
+maltadrivingmaster@gmail.com
+
+7. PREFERENZE FACOLTATIVE
+Sono predisposte scelte separate per:
+- future statistiche anonime;
+- future comunicazioni promozionali.
+
+Queste funzioni non sono attive nella versione locale.
+
+8. PRINCIPI UTILIZZATI
+La Build è progettata secondo principi di:
+- trasparenza;
+- minimizzazione;
+- controllo dell’utilizzatore;
+- accesso, portabilità e cancellazione.
+
+NOTA LEGALE
+Il Centro Privacy è un riepilogo trasparente interno all’app.
+Prima del lancio commerciale servirà una privacy policy definitiva,
+revisionata da un professionista e adattata al backend realmente utilizzato.
 
 COMPATIBILITÀ
 - Tutte le Build precedenti restano disponibili.
-- I dati della Build 14 vengono preservati.
+- I dati della Build 15 vengono preservati.
 - La banca delle 250 domande attive non è stata modificata.

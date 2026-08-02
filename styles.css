@@ -701,3 +701,36 @@ select,textarea{width:100%;border:2px solid var(--line);border-radius:15px;backg
  .dashboard-invite-create,.dashboard-invite-card{grid-template-columns:1fr}
  .dashboard-demo-card{display:block}.dashboard-demo-card .btn{width:100%;margin-top:11px}
 }
+
+
+/* BUILD 16 — ONBOARDING E PRIVACY */
+.onboarding-shell{max-width:760px;margin:0 auto;padding:10px 0 28px}
+.onboarding-brand{text-align:center;padding:22px 16px}.onboarding-logo{display:grid;place-items:center;width:78px;height:78px;margin:0 auto 11px;border-radius:23px;background:linear-gradient(145deg,#233b70,#3e66a0);color:#fff;font-size:23px;font-weight:950;box-shadow:var(--shadow)}.onboarding-brand>span{display:inline-block;border-radius:999px;background:#e9eef6;color:#3f5b82;padding:6px 9px;font-size:10px;font-weight:900}.onboarding-brand h1{margin:13px 0 6px;font-size:31px}.onboarding-brand p{margin:0;color:var(--muted);font-size:17px;line-height:1.45}
+.onboarding-panel{border:1px solid var(--line);border-radius:24px;background:var(--card);padding:18px;box-shadow:var(--shadow)}.onboarding-panel>h2{margin-top:0}
+.onboarding-role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.onboarding-role-grid label{position:relative;border:2px solid var(--line);border-radius:18px;padding:14px;text-align:center;cursor:pointer}.onboarding-role-grid label.selected{border-color:#4b6fa9;background:#eef2fb}.onboarding-role-grid input{position:absolute;opacity:0}.onboarding-role-grid span,.onboarding-role-grid strong,.onboarding-role-grid small{display:block}.onboarding-role-grid span{font-size:32px}.onboarding-role-grid strong{margin-top:7px}.onboarding-role-grid small{margin-top:5px;color:var(--muted);line-height:1.35}
+.onboarding-data-card{margin-top:15px;padding:15px;border:1px solid #83a5b6;border-radius:18px;background:#eef6f8}.onboarding-data-card>div{display:flex;align-items:flex-start;gap:11px}.onboarding-data-card>div>span{font-size:28px}.onboarding-data-card h3{margin:0 0 5px}.onboarding-data-card p{margin:0;line-height:1.5;color:#456471}.onboarding-data-card ul{margin:13px 0 0;padding-left:20px;color:#496571;line-height:1.55}
+.onboarding-consents{display:grid;gap:9px;margin-top:15px}.onboarding-consents label{display:flex;align-items:flex-start;gap:9px;border:1px solid var(--line);border-radius:14px;padding:11px;line-height:1.45}.onboarding-consents label.optional{background:#f5f7f8}.onboarding-consents input{width:21px;height:21px;flex:0 0 auto}.onboarding-continue{width:100%;margin-top:14px;padding:14px}.onboarding-privacy-link{text-align:center;margin:12px 0 0}.onboarding-privacy-link button{border:0;background:transparent;color:var(--sea);font-weight:850;text-decoration:underline}
+.privacy-checked{border-radius:999px;background:#edf2f5;color:#526d79;padding:7px 9px;font-size:10px;font-weight:850}
+.privacy-local-banner{display:flex;align-items:flex-start;gap:11px;margin-bottom:14px;padding:14px;border:1px solid #74a88c;border-radius:17px;background:#eaf6ee;color:#245f3c}.privacy-local-banner>span{font-size:27px}.privacy-local-banner strong,.privacy-local-banner p{display:block}.privacy-local-banner p{margin:5px 0 0;line-height:1.45}
+.privacy-summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.privacy-summary-grid article{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:12px;text-align:center;box-shadow:var(--shadow)}.privacy-summary-grid span,.privacy-summary-grid strong,.privacy-summary-grid small{display:block}.privacy-summary-grid span{font-size:10px;color:var(--muted);font-weight:850}.privacy-summary-grid strong{margin-top:5px;font-size:24px}.privacy-summary-grid small{margin-top:3px;color:var(--muted);font-size:9px}
+.privacy-explain-card,.privacy-export-card,.privacy-preferences-card,.privacy-delete-card,.privacy-request-card{margin-top:14px}.privacy-explain-card p,.privacy-export-card p,.privacy-preferences-card p,.privacy-delete-card p,.privacy-request-card p{color:var(--muted);line-height:1.5}.privacy-role-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px;border-radius:13px;background:#edf3f6;margin:11px 0}.privacy-explain-card>.btn,.privacy-export-card>.btn,.privacy-preferences-card>.btn{width:100%}
+.privacy-preferences-card label{display:flex;align-items:flex-start;gap:9px;margin:9px 0;padding:10px;border:1px solid var(--line);border-radius:13px}.privacy-preferences-card input{width:21px;height:21px;flex:0 0 auto}
+.privacy-delete-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.privacy-delete-grid button{border:1px solid #d3a0a0;border-radius:13px;background:#fff5f5;color:#8f3636;padding:11px;font-weight:850;text-align:left}.privacy-delete-all{width:100%;margin-top:10px}
+.privacy-request-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.privacy-rights{padding:11px;border-radius:13px;background:#eef5f7}.privacy-legal-note{margin:14px 0;padding:12px;border-radius:14px;background:#fff4df;color:#765014;line-height:1.45;font-size:12px}
+.profile-privacy-card{display:flex;align-items:center;justify-content:space-between;gap:12px}.profile-privacy-card h3{margin:0 0 4px}.profile-privacy-card p{margin:0}
+[data-theme="dark"] .onboarding-role-grid label.selected{background:#283553}.onboarding-data-card{color:inherit}
+[data-theme="dark"] .onboarding-data-card{background:#18323b;color:#dceef4;border-color:#3c6878}
+[data-theme="dark"] .onboarding-data-card p,[data-theme="dark"] .onboarding-data-card ul{color:#c5dbe3}
+[data-theme="dark"] .privacy-local-banner{background:#173a25;color:#d8f4e1}
+[data-theme="dark"] .privacy-role-row,[data-theme="dark"] .privacy-rights{background:#21343c}
+[data-theme="dark"] .privacy-delete-grid button{background:#3d2525;color:#ffd2d2;border-color:#744949}
+[data-theme="dark"] .privacy-legal-note{background:#443116;color:#ffe1ae}
+@media(max-width:700px){
+ .onboarding-role-grid{grid-template-columns:1fr}
+ .privacy-summary-grid{grid-template-columns:1fr 1fr}
+ .privacy-request-actions{grid-template-columns:1fr}
+}
+@media(max-width:500px){
+ .privacy-delete-grid{grid-template-columns:1fr}
+ .profile-privacy-card{display:block}.profile-privacy-card .btn{width:100%;margin-top:10px}
+}

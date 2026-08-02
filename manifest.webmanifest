@@ -1,7 +1,7 @@
 {
   "name": "Malta Driving Master",
   "short_name": "Driving Master",
-  "description": "Malta Driving Master con Dashboard School Partner, Personal Roadmap, Passport e Bridge Test.",
+  "description": "Malta Driving Master con onboarding, Centro Privacy e Dati, Dashboard School Partner, Roadmap e Passport.",
   "start_url": "./index.html#home",
   "scope": "./",
   "display": "standalone",

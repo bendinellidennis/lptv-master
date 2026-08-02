@@ -1,29 +1,30 @@
-MALTA DRIVING MASTER — BUILD 22
+MALTA DRIVING MASTER — BUILD 23
 
-SCHOOL PARTNER 2.0
+PORTALE ISTRUTTORE
 
-- Profilo pubblico più completo.
-- Headline, sito, WhatsApp e iniziali logo.
-- Gestione istruttori.
-- Gestione corsi.
-- Gestione offerte.
-- Recensioni dimostrative chiaramente indicate.
-- Richieste degli studenti.
-- Prenotazioni locali.
-- Anteprima del profilo per lo studente.
-- Rapporto scuola condivisibile.
-- Dati demo facoltativi e fittizi.
+- Profilo istruttore.
+- Monitoraggio degli allievi locali.
+- Livello di attenzione: basso, medio o alto.
+- Azione consigliata per ogni studente.
+- Assegnazione di:
+  • studio guidato;
+  • ripasso errori;
+  • Bridge Test;
+  • simulazione;
+  • Errore Zero;
+  • Passport.
+- Priorità e scadenze.
+- Note private locali.
+- Stato aperta/completata.
+- Rapporti individuali condivisibili.
+- Dati demo fittizi e facoltativi.
 
 LIMITI ATTUALI
-- Nessuna pubblicazione reale.
-- Nessun account verificato.
-- Nessun pagamento.
-- Nessuna sincronizzazione online.
-- Nessuna recensione reale.
-- Nessuna prenotazione inviata a un server.
+- Nessun account reale istruttore.
+- Nessuna sincronizzazione con l’app dello studente.
+- Nessuna notifica automatica.
+- Nessun backend.
+- Dati salvati soltanto sul dispositivo.
 
-Per il lancio commerciale serviranno backend sicuro, autenticazione,
-database, verifica scuole e sistema di pagamento.
-
-- Dati Build 21 preservati.
+- Dati Build 22 preservati.
 - Banca attiva invariata: 250 domande.

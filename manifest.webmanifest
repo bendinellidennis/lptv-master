@@ -1,7 +1,7 @@
 {
   "name": "Malta Driving Master",
   "short_name": "Driving Master",
-  "description": "Malta Driving Master con School Partner 2.0, Zero Error Mode, Exam Day e MDM Coach.",
+  "description": "Malta Driving Master con Portale Istruttore, School Partner 2.0, Zero Error Mode e MDM Coach.",
   "start_url": "./index.html#home",
   "scope": "./",
   "display": "standalone",
@@ -34,6 +34,19 @@
   ],
   "shortcuts": [
     {
+      "name": "Instructor Portal",
+      "short_name": "Instructor",
+      "description": "Monitoraggio allievi, assegnazioni, note e rapporti",
+      "url": "./index.html#instructorportal",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
       "name": "School Partner 2.0",
       "short_name": "School 2.0",
       "description": "Profilo, istruttori, corsi, offerte, richieste e prenotazioni",
@@ -64,19 +77,6 @@
       "short_name": "Exam Day",
       "description": "Preparazione finale, checklist, calma e certificato interno",
       "url": "./index.html#examday",
-      "icons": [
-        {
-          "src": "icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Coach Recovery",
-      "short_name": "Recovery",
-      "description": "Diagnosi errori, dialogo guidato e piano di recupero",
-      "url": "./index.html#recoverycoach",
       "icons": [
         {
           "src": "icon-192.png",

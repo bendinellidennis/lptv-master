@@ -1,7 +1,7 @@
 {
   "name": "Malta Driving Master",
   "short_name": "Driving Master",
-  "description": "Malta Driving Master con Portale Istruttore, School Partner 2.0, Zero Error Mode e MDM Coach.",
+  "description": "Malta Driving Master Build 24.1 con AI Instructor coerente con la lingua selezionata.",
   "start_url": "./index.html#home",
   "scope": "./",
   "display": "standalone",
@@ -34,6 +34,19 @@
   ],
   "shortcuts": [
     {
+      "name": "AI Instructor",
+      "short_name": "AI Instructor",
+      "description": "Spiegazioni contestuali e modalità Fammi capire",
+      "url": "./index.html#aiinstructor",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
       "name": "Instructor Portal",
       "short_name": "Instructor",
       "description": "Monitoraggio allievi, assegnazioni, note e rapporti",
@@ -64,19 +77,6 @@
       "short_name": "Zero Error",
       "description": "Top 20 rischi, piano automatico ed errori sconfitti",
       "url": "./index.html#zeroerror",
-      "icons": [
-        {
-          "src": "icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Exam Day Mode",
-      "short_name": "Exam Day",
-      "description": "Preparazione finale, checklist, calma e certificato interno",
-      "url": "./index.html#examday",
       "icons": [
         {
           "src": "icon-192.png",

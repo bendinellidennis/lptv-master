@@ -1,30 +1,62 @@
-MALTA DRIVING MASTER — BUILD 23
+MALTA DRIVING MASTER — BUILD 24
 
-PORTALE ISTRUTTORE
+AI INSTRUCTOR FOUNDATION
 
-- Profilo istruttore.
-- Monitoraggio degli allievi locali.
-- Livello di attenzione: basso, medio o alto.
-- Azione consigliata per ogni studente.
-- Assegnazione di:
-  • studio guidato;
-  • ripasso errori;
-  • Bridge Test;
-  • simulazione;
-  • Errore Zero;
-  • Passport.
-- Priorità e scadenze.
-- Note private locali.
-- Stato aperta/completata.
-- Rapporti individuali condivisibili.
-- Dati demo fittizi e facoltativi.
+- Pulsante “Parla con l’Istruttore AI” dopo la correzione del quiz.
+- Pulsante “Fammi capire” dopo la correzione.
+- Lezione contestuale per ogni domanda:
+  • spiegazione semplice;
+  • spiegazione tecnica;
+  • esempio pratico a Malta;
+  • trucco per ricordare;
+  • errore più comune;
+  • analisi delle risposte errate;
+  • domanda simile.
+- Modalità lingua:
+  • inglese;
+  • italiano;
+  • bilingue.
+- Livello:
+  • semplice;
+  • normale;
+  • tecnico.
+- Dialogo socratico in tre passaggi.
+- Memoria locale del numero di spiegazioni richieste.
+- Metodo didattico adattato alle ripetizioni.
+- “Il mio Tutor” con punti forti, debolezze e prossima lezione.
+- Lezione condivisibile o copiabile.
 
-LIMITI ATTUALI
-- Nessun account reale istruttore.
-- Nessuna sincronizzazione con l’app dello studente.
-- Nessuna notifica automatica.
-- Nessun backend.
-- Dati salvati soltanto sul dispositivo.
+TRASPARENZA
+La Build 24 non è ancora collegata a un modello generativo online.
+Utilizza esclusivamente:
+- banca domande;
+- spiegazioni esistenti;
+- dati locali dell’utente;
+- regole didattiche programmate.
 
-- Dati Build 22 preservati.
+La struttura è pronta per un futuro collegamento sicuro a un servizio AI.
+
+- Dati Build 23 preservati.
 - Banca attiva invariata: 250 domande.
+
+
+BUILD 24.1 — CORREZIONE LINGUISTICA
+
+MODALITÀ IT
+- Domanda originale in inglese.
+- Traduzione italiana immediatamente sotto.
+- Spiegazione semplice in italiano.
+- Spiegazione tecnica in italiano.
+- Esempio reale a Malta in italiano.
+- Trucco per ricordare in italiano.
+- Metodo adattivo in italiano.
+- Dialoghi e consigli dell’Istruttore AI in italiano.
+
+MODALITÀ EN
+- Tutto in inglese.
+
+MODALITÀ BILINGUE
+- Inglese e italiano.
+
+La lingua dell’interfaccia ha la precedenza:
+se l’app è impostata su IT, le spiegazioni vengono mostrate in italiano.

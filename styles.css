@@ -985,3 +985,32 @@ select,textarea{width:100%;border:2px solid var(--line);border-radius:15px;backg
  .ai-settings-grid,.ai-lesson-grid,.ai-lesson-actions,.ai-share-actions,.ai-context-launch{grid-template-columns:1fr}
  .ai-search-card{grid-template-columns:1fr}
 }
+
+
+/* BUILD 25 — CLOUD READY & MISSIONS */
+.home-card.cloud-ready-home{background:linear-gradient(145deg,#edf5fb,#dae9f4)}
+.home-card.missions-home{background:linear-gradient(145deg,#fff4df,#f5e3bc)}
+.cloud-ready-notice{display:flex;align-items:flex-start;gap:11px;margin-bottom:14px;padding:14px;border:1px solid #7e9ab2;border-radius:17px;background:#edf4f9;color:#355870}.cloud-ready-notice>span{font-size:27px}.cloud-ready-notice strong,.cloud-ready-notice p{display:block}.cloud-ready-notice p{margin:5px 0 0;line-height:1.45}
+.cloud-status-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}.cloud-status-grid article{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:12px;text-align:center}.cloud-status-grid span,.cloud-status-grid strong{display:block}.cloud-status-grid span{font-size:9px;color:var(--muted)}.cloud-status-grid strong{margin-top:5px;font-size:14px}
+.cloud-identity-card,.cloud-queue-card,.cloud-device-card,.cloud-login-card{margin-bottom:14px}.cloud-id-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.cloud-id-grid label{border:1px solid var(--line);border-radius:14px;padding:10px}.cloud-id-grid span,.cloud-id-grid code{display:block}.cloud-id-grid span{font-size:9px;color:var(--muted)}.cloud-id-grid code{margin-top:6px;font-size:11px;word-break:break-all}.cloud-identity-card>.btn{width:100%;margin-top:10px}
+.cloud-card-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.cloud-card-heading h3{margin:0 0 4px}.cloud-card-heading p{margin:0;color:var(--muted)}.cloud-card-heading>strong{font-size:24px}.cloud-queue-summary{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:12px 0}.cloud-queue-summary span{border-radius:12px;background:#edf3f6;padding:9px;font-size:10px}.cloud-queue-list{display:grid;gap:6px}.cloud-queue-list article{display:grid;grid-template-columns:90px 1fr auto;gap:8px;border:1px solid var(--line);border-radius:12px;padding:8px}.cloud-queue-list span{font-weight:850}.cloud-queue-list code{font-size:9px}.cloud-queue-list small{color:var(--muted)}.cloud-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.cloud-device-form{display:grid;grid-template-columns:130px 1fr auto;gap:8px;margin-top:12px}.cloud-device-form select,.cloud-device-form input{width:100%;box-sizing:border-box}.cloud-device-list{display:grid;gap:8px;margin-top:12px}.cloud-device-list article{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px}.cloud-device-list article>span{font-size:25px}.cloud-device-list strong,.cloud-device-list small{display:block}.cloud-device-list small{margin-top:3px;color:var(--muted)}.cloud-device-list button{border:1px solid #d1a0a0;border-radius:10px;background:#fff5f5;color:#8f3636;padding:7px;font-weight:850}
+.cloud-login-card{display:grid;grid-template-columns:auto 1fr auto;gap:11px;align-items:center}.cloud-login-card>span{font-size:29px}.cloud-login-card h3{margin:0 0 4px}.cloud-login-card p{margin:0;color:var(--muted)}.cloud-login-card>strong{font-size:10px;color:#8a5a23}
+.mission-hero{display:grid;grid-template-columns:120px 1fr;gap:15px;align-items:center;margin-bottom:14px;padding:18px;border-radius:22px;background:linear-gradient(145deg,#704d1f,#a87832);color:#fff}.mission-hero>div:first-child{text-align:center}.mission-hero>div:first-child span,.mission-hero>div:first-child strong{display:block}.mission-hero>div:first-child strong{font-size:38px}.mission-hero>div:last-child>span{font-size:10px;opacity:.72}.mission-hero h3{margin:6px 0}.mission-hero p{margin:0;opacity:.86}
+.mission-active-card{margin-bottom:14px}.mission-progress-head{display:flex;justify-content:space-between;align-items:center}.mission-progress-bar,.mission-card-progress{height:9px;border-radius:999px;background:#e7ecef;overflow:hidden}.mission-progress-bar{margin:10px 0}.mission-progress-bar span,.mission-card-progress span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#a7772d,#e0b765)}.mission-active-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.mission-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}.mission-grid article{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:14px}.mission-grid article.completed{border-color:#79b58f;background:#eef8f1}.mission-grid article>span{font-size:30px}.mission-grid h3{margin:7px 0 5px}.mission-grid p{min-height:60px;margin:0;color:var(--muted);line-height:1.45}.mission-grid small{display:block;margin:8px 0;color:#805b24;font-weight:850}.mission-card-progress{margin:9px 0}.mission-grid .btn{width:100%}
+.mission-reward-card{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:center;margin-bottom:12px}.mission-reward-card>span{font-size:32px}.mission-reward-card h3{margin:0 0 4px}.mission-reward-card p{margin:0;color:var(--muted)}
+[data-theme="dark"] .cloud-ready-notice{background:#20343d;color:#dcebf1}
+[data-theme="dark"] .cloud-queue-summary span{background:#263a43}
+[data-theme="dark"] .cloud-device-list button{background:#3d2525;color:#ffd3d3}
+[data-theme="dark"] .mission-grid article.completed{background:#173a25}
+@media(max-width:760px){
+ .cloud-status-grid,.mission-grid{grid-template-columns:1fr 1fr}
+ .cloud-id-grid{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+ .cloud-actions,.cloud-device-form,.mission-active-actions{grid-template-columns:1fr}
+ .cloud-queue-summary{grid-template-columns:1fr}
+ .cloud-status-grid,.mission-grid{grid-template-columns:1fr}
+ .mission-hero{grid-template-columns:1fr;text-align:center}
+}

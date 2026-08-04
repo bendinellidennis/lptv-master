@@ -1,7 +1,7 @@
 {
   "name": "Malta Driving Master",
   "short_name": "Driving Master",
-  "description": "Malta Driving Master con Cloud Ready Architecture, Sync Center, Missioni e AI Instructor.",
+  "description": "Malta Driving Master Build 34A con Replay Core Engine separato per scene cinematiche e timeline.",
   "start_url": "./index.html#home",
   "scope": "./",
   "display": "standalone",
@@ -34,6 +34,19 @@
   ],
   "shortcuts": [
     {
+      "name": "Replay dell’Errore",
+      "short_name": "Replay",
+      "description": "Ricostruzioni tecniche realistiche per comprendere pericoli e decisioni di guida",
+      "url": "./index.html#errorreplay",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
       "name": "Cloud Ready",
       "short_name": "Cloud",
       "description": "Identità, dispositivi e coda di sincronizzazione locale",
@@ -64,19 +77,6 @@
       "short_name": "AI Instructor",
       "description": "Spiegazioni contestuali e modalità Fammi capire",
       "url": "./index.html#aiinstructor",
-      "icons": [
-        {
-          "src": "icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Instructor Portal",
-      "short_name": "Instructor",
-      "description": "Monitoraggio allievi, assegnazioni, note e rapporti",
-      "url": "./index.html#instructorportal",
       "icons": [
         {
           "src": "icon-192.png",

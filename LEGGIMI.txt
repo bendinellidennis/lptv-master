@@ -1,37 +1,27 @@
-MALTA DRIVING MASTER — BUILD 25
+MALTA DRIVING MASTER — BUILD 38.0
+REPLAY ENGINE 2.0
 
-CLOUD READY ARCHITECTURE
+RISCRITTURA COMPLETA DEI COMPONENTI PROBLEMATICI
 
-- ID utente locale univoco.
-- ID dispositivo locale.
-- Coda di sincronizzazione locale.
-- Eventi demo per quiz, profilo e missioni.
-- Gestione dispositivi simulata.
-- Preparazione strutturale del login.
-- Sync Center trasparente.
+FULLSCREEN IPHONE/KODER
+- Ogni pressione crea un nuovo player video nativo.
+- Non riutilizza lo stesso elemento dopo l’uscita.
+- Il tempo del filmato viene riportato nel player principale.
+- Il fullscreen può essere aperto più volte.
 
-IMPORTANTE
-Il cloud non è ancora attivo.
-Nessun dato viene inviato online.
-Non esiste ancora:
-- backend;
-- autenticazione;
-- database remoto;
-- sincronizzazione reale;
-- backup cloud reale.
+TROVA IL PERICOLO
+- Il primo passaggio si chiama “Trova”.
+- Le fasi 02, 03 e 04 sono bloccate finché il punto corretto non è trovato.
+- Un errore non ricrea più la schermata.
+- Rimangono visibili cerchio, spiegazione e Coach.
+- Un solo tentativo grafico alla volta.
+- Dopo la risposta corretta, passa automaticamente alla fase 02.
 
-MISSIONI
+COACH DINAMICO
+- Compare direttamente dentro il messaggio sull’immagine.
+- Mostra una spiegazione diversa in base a precisione e tempo.
+- Resta visibile dopo un errore.
 
-- Missione del giorno.
-- Missione Sicurezza.
-- Missione Inglese.
-- Missione Errore Zero.
-- Missione Esame.
-- Missione Passport.
-- Avanzamento da 0 a 100.
-- Missione attiva.
-- Missioni completate.
-- Badge utili collegati alla preparazione.
-
-- Dati Build 24.1 preservati.
-- Banca attiva invariata: 250 domande.
+NON MODIFICATI
+Quiz, esame, banca delle 250 domande, Missioni, Cloud Ready,
+Istruttore AI, profilo e progressi.

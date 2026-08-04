@@ -1,0 +1,34 @@
+
+(function(global){
+ 'use strict';
+ if(!global.ReplayEngine) throw new Error('ReplayEngine must load before replay-scenes.js');
+
+ global.ReplayEngine.registerScene({
+  id:'MT_OVERTAKE_LIMITED_VIEW_PILOT',
+  category:'overtaking',
+  country:'MT',
+  licenceType:'LPTV',
+  drivingSide:'left',
+  countryPackId:'MT-LPTV',
+  sceneKey:'overtakeLimitedView',
+  visualStatus:'pilot-awaiting-malta-footage',
+  title:'Overtaking with limited visibility',
+  accessibilityLabel:'Real driving on a country road while maintaining lane position',
+  playbackRate:0.82,
+  media:{
+   video:'https://www.pexels.com/download/video/11791710/',
+   poster:'https://images.pexels.com/videos/11791710/pexels-photo-11791710.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Vizual Production'
+  },
+  timeline:[
+   {at:0.7,end:2.2,event:'slow',textIt:'Rallenta progressivamente',textEn:'Slow down smoothly'},
+   {at:2.8,end:4.5,event:'distance',textIt:'Mantieni la distanza',textEn:'Keep your distance'},
+   {at:5.1,end:7.2,event:'lane',textIt:'Resta nella tua corsia',textEn:'Stay in your lane'},
+   {at:7.8,end:9.0,event:'wait',textIt:'Attendi visuale completa',textEn:'Wait for a complete view'}
+  ],
+  learning:{
+   correctIt:'Resta dietro al veicolo e sorpassa soltanto quando la corsia opposta è completamente visibile.',
+   correctEn:'Stay behind the vehicle and overtake only when the opposing lane is completely visible.'
+  }
+ });
+})(window);

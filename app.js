@@ -16,8 +16,8 @@ const SETTINGS = 'mdm-v1-settings';
 const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
-const BUILD_VERSION = '38.5';
-const BUILD_RELEASE_DATE = '04/08/2026';
+const BUILD_VERSION = '38.8';
+const BUILD_RELEASE_DATE = '05/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
 const MISSION_SYSTEM_KEY = 'mdm-v1-mission-system';
@@ -1054,10 +1054,8 @@ function requestFinishExam(){
 function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200)}
 function applyTheme(){document.documentElement.dataset.theme=settings.theme==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):settings.theme}
 function updateChrome(){document.documentElement.lang=settings.lang;$('#langBtn').textContent=settings.lang.toUpperCase();document.querySelectorAll('[data-i18n]').forEach(x=>x.textContent=t(x.dataset.i18n));backBtn.classList.toggle('hidden',route.name==='home'||route.name==='quiz');$('#bottomNav').classList.toggle('hidden',route.name==='quiz'||route.name==='bridgequiz');document.querySelectorAll('[data-nav]').forEach(x=>x.classList.toggle('active',x.dataset.nav===route.name));}
-function go(name,data=null,push=true){if(timerId&&name!=='quiz'){clearInterval(timerId);timerId=null}if(name!=='errorreplay')stopErrorReplayAutoplay();if(name!=='errorreplay'&&window.ReplayEngine)ReplayEngine.stop();route={name,data};if(push)history.pushState({name,data},'',`#${name}`);render();}
+function go(name,data=null,push=true){if(timerId&&name!=='quiz'){clearInterval(timerId);timerId=null}if(errorReplayTimer&&name!=='errorreplay'){clearInterval(errorReplayTimer);errorReplayTimer=null}if(name!=='errorreplay'&&window.ReplayEngine)ReplayEngine.stop();route={name,data};if(push)history.pushState({name,data},'',`#${name}`);render();}
 function render(options={}){
- const preserveScroll=options.preserveScroll===true;
- const previousScrollY=window.scrollY;
  if(route.name!=='quiz'&&timerId){clearInterval(timerId);timerId=null}
  updateChrome();
  const existingSplash=$('#premiumSplash');
@@ -1065,11 +1063,7 @@ function render(options={}){
  const fn=views[route.name]||views.home;
  screen.innerHTML=fn(route.data);
  screen.focus({preventScroll:true});
- if(preserveScroll){
-  requestAnimationFrame(()=>window.scrollTo(0,previousScrollY));
- }else{
-  window.scrollTo(0,0);
- }
+ if(!options.preserveScroll)window.scrollTo(0,0);
  document.body.classList.toggle('premium-splash-open',shouldShowPremiumSplash());
  const splashMarkup=premiumSplashHtml();
  if(splashMarkup)document.body.insertAdjacentHTML('beforeend',splashMarkup);
@@ -2021,15 +2015,6 @@ function aiEffectiveLanguageMode(){
 
 let errorReplayTimer=null;
 let errorReplayStep=0;
-let replayTransitionLocked=false;
-
-function stopErrorReplayAutoplay(){
- if(errorReplayTimer){
-  clearInterval(errorReplayTimer);
-  errorReplayTimer=null;
- }
- replayTransitionLocked=false;
-}
 function errorReplaySave(){save(ERROR_REPLAY_KEY,errorReplay)}
 function errorReplayQuestion(id){return Q.find(question=>question.id===id)||null}
 function errorReplayViewedCount(){return Object.keys(errorReplay.viewed).filter(id=>errorReplay.viewed[id]).length}
@@ -2516,28 +2501,23 @@ function errorReplayViewHtml(){
   `<div class="replay-library-grid">${pool.length?pool.map(item=>{const s=errorReplayScenario(item);return `<button data-replay-open="${esc(item.id)}"><span>${esc(item.id)} · ${esc(replayUi(s.labelIt,s.labelEn))}</span><strong>${esc(item.question)}</strong><small>${esc(item.question_it||item.question)}</small></button>`}).join(''):`<p>${esc(t('errorReplayNoQuestion'))}</p>`}</div>`
  ].join('');
 }
-function errorReplayOpen(id){
- const question=errorReplayQuestion(id);
- if(!question)return toast(t('noResults'));
- stopErrorReplayAutoplay();
- errorReplayStep=0;
- replayCoachFeedback=null;
- errorReplayMarkViewed(id);
- go('errorreplay',{questionId:id});
-}
+function errorReplayOpen(id){const question=errorReplayQuestion(id);if(!question)return toast(t('noResults'));errorReplayStep=0;replayCoachFeedback=null;errorReplayMarkViewed(id);go('errorreplay',{questionId:id})}
 function errorReplaySearch(){const value=cleanProfileValue($('#errorReplaySearch')?.value,180).toLowerCase();if(!value)return;const question=Q.find(item=>item.id.toLowerCase()===value)||Q.find(item=>(item.question+' '+(item.question_it||'')).toLowerCase().includes(value));if(!question)return toast(t('noResults'));errorReplayOpen(question.id)}
-function errorReplayNextStep(questionId){
- if(replayTransitionLocked)return;
- stopErrorReplayAutoplay();
- replayTransitionLocked=true;
- errorReplayStep=Math.min(3,errorReplayStep+1);
- if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);
+function renderReplayStable(){
+ const anchor=screen.querySelector('[data-real-film]')||screen.querySelector('.replay-main-card');
+ const anchorTop=anchor?anchor.getBoundingClientRect().top:null;
  render({preserveScroll:true});
- replayTransitionLocked=false;
+ if(anchorTop===null)return;
+ requestAnimationFrame(()=>{
+  const nextAnchor=screen.querySelector('[data-real-film]')||screen.querySelector('.replay-main-card');
+  if(!nextAnchor)return;
+  const delta=nextAnchor.getBoundingClientRect().top-anchorTop;
+  if(Math.abs(delta)>.5)window.scrollBy(0,delta);
+ });
 }
+function errorReplayNextStep(questionId){errorReplayStep=Math.min(3,errorReplayStep+1);if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);renderReplayStable()}
 function errorReplayPlay(questionId){
- if(replayTransitionLocked)return;
- stopErrorReplayAutoplay();
+ if(errorReplayTimer){clearInterval(errorReplayTimer);errorReplayTimer=null}
  if(errorReplayStep===0){
   toast(replayUi(
    'Prima individua il pericolo nella scena e premi Continua.',
@@ -2548,22 +2528,7 @@ function errorReplayPlay(questionId){
  if(errorReplayStep>=3)errorReplayStep=1;
  const speed=$('#errorReplaySpeed')?.value||errorReplay.speed||'normal';errorReplay.speed=speed;errorReplaySave();
  const delay=speed==='slow'?2300:speed==='fast'?900:1500;
- replayTransitionLocked=true;
- errorReplayTimer=setInterval(()=>{
-  if(route.name!=='errorreplay'||route.data?.questionId!==questionId){
-   stopErrorReplayAutoplay();
-   return;
-  }
-  errorReplayStep++;
-  if(errorReplayStep>=3){
-   errorReplayStep=3;
-   clearInterval(errorReplayTimer);
-   errorReplayTimer=null;
-   replayTransitionLocked=false;
-   errorReplayMarkCompleted(questionId);
-  }
-  render({preserveScroll:true});
- },delay);
+ errorReplayTimer=setInterval(()=>{errorReplayStep++;if(errorReplayStep>=3){errorReplayStep=3;clearInterval(errorReplayTimer);errorReplayTimer=null;errorReplayMarkCompleted(questionId)}renderReplayStable()},delay);
 }
 function bindErrorReplay(){
  const questionId=route.data?.questionId||errorReplay.lastQuestionId||'';
@@ -2587,7 +2552,6 @@ function bindErrorReplay(){
  const nextButton=$('#errorReplayNext');
  if(nextButton){
   nextButton.onclick=()=>{
-   if(replayTransitionLocked)return;
    // Stage 01 must be completed by finding the hazard.
    if(errorReplayStep===0){
     toast(replayUi(
@@ -2610,7 +2574,6 @@ function bindErrorReplay(){
 
  screen.querySelectorAll('[data-replay-stage]').forEach(button=>{
   button.onclick=()=>{
-   if(replayTransitionLocked)return;
    if(button.disabled||button.getAttribute('aria-disabled')==='true'){
     toast(replayUi(
      'Prima individua il pericolo.',
@@ -2629,10 +2592,9 @@ function bindErrorReplay(){
     return;
    }
 
-   stopErrorReplayAutoplay();
    errorReplayStep=requested;
    if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);
-   render({preserveScroll:true});
+   renderReplayStable();
   };
  });
 
@@ -2695,15 +2657,8 @@ function bindErrorReplay(){
     continueButton.onclick=continueEvent=>{
      continueEvent.preventDefault();
      continueEvent.stopPropagation();
-     if(replayTransitionLocked)return;
-     replayTransitionLocked=true;
-     continueButton.disabled=true;
-     continueButton.setAttribute('aria-disabled','true');
-     stopErrorReplayAutoplay();
-     replayTransitionLocked=true;
      errorReplayStep=1;
-     render({preserveScroll:true});
-     replayTransitionLocked=false;
+     renderReplayStable();
     };
    }
   };
@@ -2791,7 +2746,7 @@ function bindErrorReplay(){
      guide.style.top=`${targetY*100}%`;
     }
 
-    // No render() here: message and Coach remain visible.
+    // No renderReplayStable() here: message and Coach remain visible.
     renderInlineFeedback(replayCoachFeedback,false);
    }
   };

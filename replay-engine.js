@@ -30,9 +30,7 @@
 
   return `<div class="replay-engine-player" data-replay-engine-player="${scene.id}">
    <video class="cinematic-action-video" data-replay-engine-video
-    muted="muted" playsinline="true" webkit-playsinline="true"
-    disablepictureinpicture="true" controlslist="nofullscreen nodownload noremoteplayback"
-    x-webkit-airplay="deny" preload="metadata" src="${media.video||''}"
+    src="${media.video||''}" muted playsinline webkit-playsinline preload="metadata" disablepictureinpicture
     poster="${media.poster||''}" aria-label="${label}"></video>
 
    <div class="cinematic-video-fallback replay-neutral-loader" data-replay-engine-fallback>
@@ -157,22 +155,14 @@
   updateTimeline();
  }
 
- function forceInlineMode(video){
+ function forceInlinePresentation(video){
   if(!video)return;
-  video.playsInline=true;
-  video.setAttribute('playsinline','true');
-  video.setAttribute('webkit-playsinline','true');
-  video.setAttribute('disablepictureinpicture','true');
-  video.setAttribute('controlslist','nofullscreen nodownload noremoteplayback');
-  video.setAttribute('x-webkit-airplay','deny');
-
+  setInlinePlayback(video);
   try{
-   if(typeof video.webkitSetPresentationMode==='function'&&
-      video.webkitPresentationMode&&video.webkitPresentationMode!=='inline'){
+   if(typeof video.webkitSetPresentationMode==='function'){
     video.webkitSetPresentationMode('inline');
    }
   }catch(_){}
-
   try{
    if(video.webkitDisplayingFullscreen&&typeof video.webkitExitFullscreen==='function'){
     video.webkitExitFullscreen();
@@ -182,10 +172,12 @@
 
  function play(){
   if(!mounted?.video)return;
-  forceInlineMode(mounted.video);
-  mounted.video.play().then(()=>{
-   forceInlineMode(mounted?.video);
-  }).catch(()=>{});
+  forceInlinePresentation(mounted.video);
+  const promise=mounted.video.play();
+  if(promise&&typeof promise.catch==='function'){
+   promise.catch(()=>{});
+  }
+  requestAnimationFrame(()=>forceInlinePresentation(mounted?.video));
  }
 
  function pause(){
@@ -207,35 +199,65 @@
   sync();
  }
 
- function setAppFullscreen(active){
-  if(!mounted?.root)return;
-  const player=mounted.root;
-  const enable=Boolean(active);
+ function setInlinePlayback(video){
+  if(!video)return;
+  video.setAttribute('playsinline','');
+  video.setAttribute('webkit-playsinline','');
+  video.playsInline=true;
+  video.controls=false;
+ }
 
-  mounted.fullscreenActive=enable;
-  player.classList.toggle('replay-app-fullscreen',enable);
-  document.documentElement.classList.toggle('replay-fullscreen-open',enable);
-  document.body.classList.toggle('replay-fullscreen-open',enable);
+ function exitAppFullscreen(){
+  if(!mounted?.root||!mounted.isFullscreen)return;
 
-  if(mounted.fullscreen){
-   mounted.fullscreen.textContent=enable?'✕':'⛶';
-   mounted.fullscreen.setAttribute('aria-label',enable?'Exit fullscreen':'Fullscreen');
-   mounted.fullscreen.setAttribute('aria-pressed',enable?'true':'false');
+  const root=mounted.root;
+  root.classList.remove('replay-app-fullscreen');
+  document.body.classList.remove('replay-fullscreen-open');
+
+  if(mounted.placeholder?.parentNode){
+   mounted.placeholder.parentNode.insertBefore(root,mounted.placeholder);
+   mounted.placeholder.remove();
   }
 
-  // The same embedded video is always used. It remains inline on iPhone,
-  // so pressing Play after leaving fullscreen cannot reopen the native player.
-  if(mounted.video)forceInlineMode(mounted.video);
+  mounted.placeholder=null;
+  mounted.isFullscreen=false;
+  if(mounted.fullscreen){
+   mounted.fullscreen.textContent='⛶';
+   mounted.fullscreen.setAttribute('aria-label','Fullscreen');
+  }
+  forceInlinePresentation(mounted.video);
+  sync();
+ }
+
+ function enterAppFullscreen(){
+  if(!mounted?.root||mounted.isFullscreen)return;
+
+  const root=mounted.root;
+  const placeholder=document.createComment('replay-fullscreen-placeholder');
+  root.parentNode?.insertBefore(placeholder,root);
+  document.body.appendChild(root);
+
+  mounted.placeholder=placeholder;
+  mounted.isFullscreen=true;
+  root.classList.add('replay-app-fullscreen');
+  document.body.classList.add('replay-fullscreen-open');
+
+  if(mounted.fullscreen){
+   mounted.fullscreen.textContent='✕';
+   mounted.fullscreen.setAttribute('aria-label','Exit fullscreen');
+  }
+  forceInlinePresentation(mounted.video);
+  sync();
  }
 
  function toggleAppFullscreen(){
-  if(!mounted)return;
-  setAppFullscreen(!mounted.fullscreenActive);
+  if(mounted?.isFullscreen)exitAppFullscreen();
+  else enterAppFullscreen();
  }
 
  function stop(){
   if(!mounted)return;
-  setAppFullscreen(false);
+  if(mounted.isFullscreen)exitAppFullscreen();
   mounted.cleanup.forEach(cleanup=>{
    try{cleanup();}catch(_){}
   });
@@ -270,11 +292,13 @@
    soundEnabled:false,
    lastEventIndex:-1,
    seeking:false,
-   cleanup:[],
-   fullscreenActive:false
+   isFullscreen:false,
+   placeholder:null,
+   cleanup:[]
   };
 
   if(video){
+   setInlinePlayback(video);
    video.playbackRate=Number(options.playbackRate||scene.playbackRate||1);
    video.loop=false;
 
@@ -290,13 +314,14 @@
     if(mounted)mounted.lastEventIndex=-1;
     sync();
    };
-   const onNativeFullscreen=event=>{
-    try{event.preventDefault();}catch(_){}
-    requestAnimationFrame(()=>forceInlineMode(video));
+   const onNativeFullscreenStart=()=>{
+    if(!mounted||mounted.video!==video)return;
+    forceInlinePresentation(video);
    };
-   const onPresentationModeChanged=()=>{
+   const onPresentationModeChange=()=>{
+    if(!mounted||mounted.video!==video)return;
     if(video.webkitPresentationMode&&video.webkitPresentationMode!=='inline'){
-     requestAnimationFrame(()=>forceInlineMode(video));
+     forceInlinePresentation(video);
     }
    };
 
@@ -308,10 +333,8 @@
    video.addEventListener('pause',onSync);
    video.addEventListener('ended',onSync);
    video.addEventListener('seeked',onSeeked);
-   video.addEventListener('webkitbeginfullscreen',onNativeFullscreen);
-   video.addEventListener('webkitpresentationmodechanged',onPresentationModeChanged);
-
-   forceInlineMode(video);
+   video.addEventListener('webkitbeginfullscreen',onNativeFullscreenStart);
+   video.addEventListener('webkitpresentationmodechanged',onPresentationModeChange);
 
    mounted.cleanup.push(
     ()=>video.removeEventListener('canplay',onCanPlay),
@@ -322,8 +345,8 @@
     ()=>video.removeEventListener('pause',onSync),
     ()=>video.removeEventListener('ended',onSync),
     ()=>video.removeEventListener('seeked',onSeeked),
-    ()=>video.removeEventListener('webkitbeginfullscreen',onNativeFullscreen),
-    ()=>video.removeEventListener('webkitpresentationmodechanged',onPresentationModeChanged)
+    ()=>video.removeEventListener('webkitbeginfullscreen',onNativeFullscreenStart),
+    ()=>video.removeEventListener('webkitpresentationmodechanged',onPresentationModeChange)
    );
   }
 
@@ -333,7 +356,6 @@
   if(mounted.forward)mounted.forward.onclick=()=>seekBy(5);
 
   if(mounted.fullscreen){
-   // One direct click handler only. No rebinding or accumulating touch events.
    mounted.fullscreen.onclick=event=>{
     event.preventDefault();
     event.stopPropagation();
@@ -369,7 +391,7 @@
  }
 
  global.ReplayEngine=Object.freeze({
-  version:'2.0.1',
+  version:'2.1.1',
   registerScene,
   getScene,
   listScenes,

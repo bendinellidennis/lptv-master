@@ -1,27 +1,14 @@
-MALTA DRIVING MASTER — BUILD 38.0
-REPLAY ENGINE 2.0
+MALTA DRIVING MASTER — BUILD 38.5
+REPLAY ENGINE — STABILIZZAZIONE FINALE
 
-RISCRITTURA COMPLETA DEI COMPONENTI PROBLEMATICI
+Base: Build 38.1 testata e funzionante.
 
-FULLSCREEN IPHONE/KODER
-- Ogni pressione crea un nuovo player video nativo.
-- Non riutilizza lo stesso elemento dopo l’uscita.
-- Il tempo del filmato viene riportato nel player principale.
-- Il fullscreen può essere aperto più volte.
+Correzioni di stabilità:
+- protezione da doppi tap sul pulsante Continua;
+- blocco dei cambi di fase durante le transizioni;
+- arresto sicuro del replay automatico quando si cambia scena o pagina;
+- reset pulito di timer, Coach e stato del Replay a ogni nuova domanda;
+- nessun avanzamento automatico dopo il riconoscimento del pericolo;
+- flusso invariato: Trova -> Pericolo -> Spiega -> Azione.
 
-TROVA IL PERICOLO
-- Il primo passaggio si chiama “Trova”.
-- Le fasi 02, 03 e 04 sono bloccate finché il punto corretto non è trovato.
-- Un errore non ricrea più la schermata.
-- Rimangono visibili cerchio, spiegazione e Coach.
-- Un solo tentativo grafico alla volta.
-- Dopo la risposta corretta, passa automaticamente alla fase 02.
-
-COACH DINAMICO
-- Compare direttamente dentro il messaggio sull’immagine.
-- Mostra una spiegazione diversa in base a precisione e tempo.
-- Resta visibile dopo un errore.
-
-NON MODIFICATI
-Quiz, esame, banca delle 250 domande, Missioni, Cloud Ready,
-Istruttore AI, profilo e progressi.
+Questa build non aggiunge nuovi moduli.

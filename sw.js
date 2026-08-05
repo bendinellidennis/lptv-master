@@ -1,4 +1,4 @@
-const CACHE='mdm-build-38-7-replay-final-clean';
+const CACHE='mdm-build-38-9-replay-library-pack-1';
 const ASSETS=[
  './',
  './index.html',
@@ -11,7 +11,7 @@ const ASSETS=[
  './manifest.webmanifest',
  './icon-192.png',
  './icon-512.png',
- './replay-overtaking-fallback.webp','./replay-overtaking-photo.webp',
+ './replay-overtaking-fallback.webp','./assets/mt/junction-roundabout.webp','./assets/mt/junction-roundabout.mp4','./assets/mt/tunnel-breakdown.webp','./assets/mt/tunnel-breakdown.mp4','./assets/mt/bus-stop-departure.webp','./assets/mt/bus-stop-departure.mp4','./assets/mt/motorcycle-blind-spot.webp','./assets/mt/motorcycle-blind-spot.mp4','./assets/mt/pedestrian-hidden.webp','./assets/mt/pedestrian-hidden.mp4','./replay-overtaking-photo.webp',
  './country-packs.js?v=38.8',
  './malta-pack.js?v=38.8',
  './replay-coach.js?v=38.8',

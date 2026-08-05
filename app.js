@@ -16,7 +16,7 @@ const SETTINGS = 'mdm-v1-settings';
 const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
-const BUILD_VERSION = '38.8';
+const BUILD_VERSION = '38.9';
 const BUILD_RELEASE_DATE = '05/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -2383,12 +2383,12 @@ function replayLibraryCardHtml(question){
  </div>`;
 }
 
-const REPLAY_ACTION_SCENE_ID='MT_OVERTAKE_LIMITED_VIEW_PILOT';
-
-function replayCorrectMotionHtml(){
+function replayCorrectMotionHtml(question){
+ const selection=replaySceneSelection(question);
+ const sceneId=selection.validation.ok?selection.scene.id:'MT_OVERTAKE_LIMITED_VIEW_PILOT';
  const offlineText=esc(replayUi('Il video richiede una connessione Internet','The video requires an Internet connection'));
  const label=esc(replayUi('Guida reale mantenendo la corsia e la distanza di sicurezza','Real driving while maintaining lane and safety distance'));
- return ReplayEngine.renderVideoMarkup(REPLAY_ACTION_SCENE_ID,{offlineText,label});
+ return ReplayEngine.renderVideoMarkup(sceneId,{offlineText,label});
 }
 
 function replayAnswerCard(copy,phase){
@@ -2431,7 +2431,7 @@ function replayRealFilmScene(question,phase){
     <i></i><span>${esc(replayUi('ATTENDI','WAIT'))}</span>
    </div>`:''}
 
-   ${phase===3?replayCorrectMotionHtml():''}
+   ${phase===3?replayCorrectMotionHtml(question):''}
 
    <div class="real-film-credit">
     ${phase===1?'Foto: Sergi Kabrera · Unsplash':'Foto: Olya P · Unsplash'}

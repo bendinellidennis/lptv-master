@@ -5,6 +5,18 @@
 
  const entries=[
   {
+   key:'zebraWaitingStop',
+   category:'pedestrian',
+   titleIt:'Pedoni in attesa a un attraversamento zebra',
+   titleEn:'Pedestrians waiting at a zebra crossing',
+   status:'ready',
+   engineSceneId:'MT_ZEBRA_WAITING_STOP_V1',
+   countryPackId:'MT-LPTV',
+   visualStatus:'real-footage-with-instructional-overlay',
+   required:['zebra-crossing','waiting-pedestrians','approaching-traffic'],
+   prohibited:['rural-road','overtaking']
+  },
+  {
    key:'pedestrianWaveAcross',
    category:'pedestrian',
    titleIt:'Non invitare il pedone ad attraversare',

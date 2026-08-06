@@ -16,7 +16,7 @@ const SETTINGS = 'mdm-v1-settings';
 const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
-const BUILD_VERSION = '39.0';
+const BUILD_VERSION = '39.1';
 const BUILD_RELEASE_DATE = '05/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -2273,11 +2273,17 @@ function replayPackStatusHtml(){
  </div>`;
 }
 
-function replayHazardSurfaceHtml(){
+function replayHazardSurfaceHtml(options={}){
+ const ariaIt=options.ariaIt||'Tocca il punto in cui termina la visuale';
+ const ariaEn=options.ariaEn||'Tap where visibility ends';
+ const instructionIt=options.instructionIt||'TOCCA DOVE FINISCE LA VISUALE';
+ const instructionEn=options.instructionEn||'TAP WHERE VISIBILITY ENDS';
+ const left=Number.isFinite(options.left)?options.left:53;
+ const top=Number.isFinite(options.top)?options.top:47;
  return `<button class="replay-hazard-surface" data-hazard-surface
-  aria-label="${esc(replayUi('Tocca il punto in cui termina la visuale','Tap where visibility ends'))}">
-  <span class="hazard-instruction">${esc(replayUi('TOCCA DOVE FINISCE LA VISUALE','TAP WHERE VISIBILITY ENDS'))}</span>
-  <i class="hazard-target-guide" style="left:53%;top:47%"></i>
+  aria-label="${esc(replayUi(ariaIt,ariaEn))}">
+  <span class="hazard-instruction">${esc(replayUi(instructionIt,instructionEn))}</span>
+  <i class="hazard-target-guide" style="left:${left}%;top:${top}%"></i>
  </button>`;
 }
 
@@ -2385,6 +2391,40 @@ function replayLibraryCardHtml(question){
 
 const REPLAY_ACTION_SCENE_ID='MT_OVERTAKE_LIMITED_VIEW_PILOT';
 const PEDESTRIAN_WAVE_SCENE_ID='MT_PEDESTRIAN_WAVE_ACROSS_V1';
+const ZEBRA_WAITING_SCENE_ID='MT_ZEBRA_WAITING_STOP_V1';
+function replayZebraWaitingOverlay(phase){
+ if(phase===1)return `<div class="wave-across-freeze danger"><strong>${esc(replayUi('PEDONI IN ATTESA: DEVI ESSERE PRONTO A FERMARTI','PEDESTRIANS WAITING: BE READY TO STOP'))}</strong><span>${esc(replayUi('Avvicinarti troppo velocemente riduce il tempo per reagire e può mettere i pedoni in pericolo.','Approaching too fast reduces reaction time and may endanger pedestrians.'))}</span></div>`;
+ if(phase===2)return `<div class="wave-across-freeze explain"><strong>${esc(replayUi('RALLENTA E PREPARATI A FERMARTI','SLOW DOWN AND PREPARE TO STOP'))}</strong><span>${esc(replayUi('La risposta corretta della domanda è rallentare e prepararsi a fermarsi per i pedoni in attesa.','The correct answer is to slow down and prepare to stop for pedestrians waiting to cross.'))}</span></div>`;
+ if(phase===3)return `<div class="wave-across-action"><strong>${esc(replayUi('RALLENTA • CONTROLLA • FERMATI SE NECESSARIO','SLOW DOWN • CHECK • STOP IF NECESSARY'))}</strong></div>`;
+ return '';
+}
+function replayZebraWaitingScene(question,phase){
+ const labels=[
+  [replayUi('SCENA REALE · OSSERVAZIONE','REAL SCENE · OBSERVATION'),replayUi('Tocca i pedoni in attesa vicino all’attraversamento','Tap the pedestrians waiting near the crossing')],
+  [replayUi('FREEZE TIME · PERICOLO','FREEZE TIME · HAZARD'),''],
+  [replayUi('SPIEGAZIONE · REGOLA','EXPLANATION · RULE'),''],
+  [replayUi('AZIONE CORRETTA · IN MOVIMENTO','CORRECT ACTION · IN MOTION'),'']
+ ][phase];
+ const options={
+  0:{startRatio:0,autoplay:true,endRatio:.48},
+  1:{startRatio:.36,freeze:true},
+  2:{startRatio:.36,freeze:true},
+  3:{startRatio:.48,autoplay:false,endRatio:.95}
+ }[phase];
+ return `<section class="real-film-replay wave-across-replay zebra-waiting-replay phase-${phase}" data-zebra-waiting>
+  <div class="wave-across-stage">
+   ${ReplayEngine.renderVideoMarkup(ZEBRA_WAITING_SCENE_ID,{label:replayUi('Pedoni in attesa a un attraversamento zebra','Pedestrians waiting at a zebra crossing')})}
+   <div class="real-film-top compact"><span class="real-film-badge"><i></i>${esc(labels[0])}</span><span class="real-film-count">${String(phase+1).padStart(2,'0')} / 04</span></div>
+   ${phase===0?`<div class="wave-across-instruction">${esc(labels[1])}</div>${replayHazardSurfaceHtml({instructionIt:'TOCCA I PEDONI IN ATTESA',instructionEn:'TAP THE WAITING PEDESTRIANS',ariaIt:'Tocca i pedoni in attesa vicino all’attraversamento',ariaEn:'Tap the pedestrians waiting near the crossing',left:50,top:58})}`:''}
+   ${replayZebraWaitingOverlay(phase)}
+  </div>
+  ${replayCoachVisibleHtml()}
+  <div class="real-film-controls four ${phase===0?'hazard-locked':''}">
+   ${['Trova','Pericolo','Spiega','Esegui'].map((name,i)=>`<button class="${phase===i?'active':''}" data-replay-stage="${i}" ${phase===0&&i>0?'disabled aria-disabled="true"':''}><span>0${i+1}</span><strong>${esc(replayUi(name,['Find','Hazard','Explain','Perform'][i]))}</strong></button>`).join('')}
+  </div>
+  <template data-replay-phase-options>${esc(JSON.stringify(options))}</template>
+ </section>`;
+}
 function replayWaveAcrossOverlay(phase){
  if(phase===1)return `<div class="wave-across-freeze danger"><div class="driver-wave-hand" aria-hidden="true">✋</div><strong>${esc(replayUi('NON DARE IL VIA CON UN GESTO','DO NOT WAVE THEM ACROSS'))}</strong><span>${esc(replayUi('Il pedone può interpretarlo come “puoi attraversare”.','The pedestrian may interpret it as permission to cross.'))}</span></div>`;
  if(phase===2)return `<div class="wave-across-freeze explain"><strong>${esc(replayUi('NON PUOI GARANTIRE LE ALTRE CORSIE','YOU CANNOT GUARANTEE THE OTHER LANES'))}</strong><span>${esc(replayUi('Un altro veicolo potrebbe arrivare da una direzione che il pedone non vede.','Another vehicle may approach from a direction the pedestrian cannot see.'))}</span><div class="cross-traffic-arrows">← ${esc(replayUi('TRAFFICO','TRAFFIC'))} →</div></div>`;
@@ -2502,6 +2542,9 @@ function errorReplayVisualHtml(question,step=0){
  const selection=replaySceneSelection(question);
  if(question?.id==='CARS2.6'&&selection.validation.ok&&selection.assetAllowed&&selection.scene?.id===PEDESTRIAN_WAVE_SCENE_ID){
   return replayWaveAcrossScene(question,phase);
+ }
+ if(question?.id==='CARS2.4'&&selection.validation.ok&&selection.assetAllowed&&selection.scene?.id===ZEBRA_WAITING_SCENE_ID){
+  return replayZebraWaitingScene(question,phase);
  }
  if(scenario.type==='overtaking'&&selection.validation.ok&&selection.assetAllowed&&selection.scene?.id===REPLAY_ACTION_SCENE_ID){
   return replayRealFilmScene(question,phase);
@@ -2668,9 +2711,10 @@ function bindErrorReplay(){
     :replayUi('Non è questo il punto','This is not the point');
 
    const isWaveAcross=question?.id==='CARS2.6';
+   const isZebraWaiting=question?.id==='CARS2.4';
    const instruction=hit
-    ?(isWaveAcross?replayUi('Hai individuato il pedone e il punto in cui un gesto potrebbe essere frainteso.','You identified the pedestrian and where a gesture could be misunderstood.'):replayUi('Hai trovato il punto in cui la visuale non è più completa.','You found where the view is no longer complete.'))
-    :(isWaveAcross?replayUi('Tocca il pedone e controlla anche il traffico che potrebbe arrivare dalle altre corsie.','Tap the pedestrian and also check traffic that may approach from other lanes.'):replayUi('Osserva dove la strada smette di essere visibile.','Look where the road stops being visible.'));
+    ?(isWaveAcross?replayUi('Hai individuato il pedone e il punto in cui un gesto potrebbe essere frainteso.','You identified the pedestrian and where a gesture could be misunderstood.'):isZebraWaiting?replayUi('Hai individuato i pedoni in attesa: ora devi rallentare e prepararti a fermarti.','You identified the waiting pedestrians: now slow down and prepare to stop.'):replayUi('Hai trovato il punto in cui la visuale non è più completa.','You found where the view is no longer complete.'))
+    :(isWaveAcross?replayUi('Tocca il pedone e controlla anche il traffico che potrebbe arrivare dalle altre corsie.','Tap the pedestrian and also check traffic that may approach from other lanes.'):isZebraWaiting?replayUi('Tocca i pedoni in attesa vicino all’attraversamento.','Tap the pedestrians waiting near the crossing.'):replayUi('Osserva dove la strada smette di essere visibile.','Look where the road stops being visible.'));
 
    panel.innerHTML=`
     <strong>${esc(heading)}</strong>
@@ -2715,10 +2759,11 @@ function bindErrorReplay(){
    // Calibrated to the actual observation image:
    // road horizon / loss of full opposing-lane visibility.
    const isWaveAcross=question?.id==='CARS2.6';
-   const targetX=isWaveAcross?.50:.53;
-   const targetY=isWaveAcross?.58:.47;
-   const radiusX=isWaveAcross?.28:.20;
-   const radiusY=isWaveAcross?.24:.16;
+   const isZebraWaiting=question?.id==='CARS2.4';
+   const targetX=(isWaveAcross||isZebraWaiting)?.50:.53;
+   const targetY=(isWaveAcross||isZebraWaiting)?.58:.47;
+   const radiusX=(isWaveAcross||isZebraWaiting)?.28:.20;
+   const radiusY=(isWaveAcross||isZebraWaiting)?.24:.16;
 
    const dx=(x-targetX)/radiusX;
    const dy=(y-targetY)/radiusY;

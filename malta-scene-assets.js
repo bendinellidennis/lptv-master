@@ -5,6 +5,18 @@
 
  [
   {
+   sceneKey:'zebraWaitingStop',
+   countryPackId:'MT-LPTV',
+   drivingSide:'left',
+   status:'approved',
+   sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/2863232/',
+   poster:'https://images.pexels.com/videos/2863232/free-video-2863232.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · George Morina',
+   tags:['zebra-crossing','waiting-pedestrians','approaching-traffic'],
+   note:'Real crossing footage used specifically for CARS2.4 with question-specific overlays and timing.'
+  },
+  {
    sceneKey:'pedestrianWaveAcross',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

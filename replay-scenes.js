@@ -61,4 +61,33 @@
   }
  });
 
+ global.ReplayEngine.registerScene({
+  id:'MT_ZEBRA_WAITING_STOP_V1',
+  category:'pedestrian',
+  country:'MT',
+  licenceType:'LPTV',
+  drivingSide:'left',
+  countryPackId:'MT-LPTV',
+  sceneKey:'zebraWaitingStop',
+  visualStatus:'real-footage-with-instructional-overlay',
+  title:'Approaching a zebra crossing with pedestrians waiting',
+  accessibilityLabel:'Pedestrians waiting at a zebra crossing while vehicles approach',
+  playbackRate:0.9,
+  media:{
+   video:'https://www.pexels.com/download/video/2863232/',
+   poster:'https://images.pexels.com/videos/2863232/free-video-2863232.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · George Morina'
+  },
+  timeline:[
+   {at:0.5,event:'info',textIt:'Individua i pedoni in attesa',textEn:'Identify the pedestrians waiting'},
+   {at:2.5,event:'danger',textIt:'Avvicinarsi troppo velocemente riduce il margine di sicurezza',textEn:'Approaching too fast reduces the safety margin'},
+   {at:4.5,event:'slow',textIt:'Rallenta e preparati a fermarti',textEn:'Slow down and prepare to stop'},
+   {at:6.5,event:'wait',textIt:'Fermati se necessario e lascia attraversare in sicurezza',textEn:'Stop if necessary and let them cross safely'}
+  ],
+  learning:{
+   correctIt:'Avvicinati lentamente all’attraversamento zebra e preparati a fermarti per i pedoni in attesa.',
+   correctEn:'Approach the zebra crossing slowly and prepare to stop for pedestrians waiting to cross.'
+  }
+ });
+
 })(window);

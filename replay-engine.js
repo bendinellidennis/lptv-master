@@ -294,6 +294,11 @@
    seeking:false,
    isFullscreen:false,
    placeholder:null,
+   initialPositionApplied:false,
+   startRatio:Number.isFinite(options.startRatio)?options.startRatio:null,
+   endRatio:Number.isFinite(options.endRatio)?options.endRatio:null,
+   autoplay:Boolean(options.autoplay),
+   freeze:Boolean(options.freeze),
    cleanup:[]
   };
 
@@ -302,14 +307,27 @@
    video.playbackRate=Number(options.playbackRate||scene.playbackRate||1);
    video.loop=false;
 
+   const applyInitialPosition=()=>{
+    if(!mounted||mounted.video!==video||mounted.initialPositionApplied||!Number.isFinite(video.duration)||video.duration<=0)return;
+    mounted.initialPositionApplied=true;
+    if(mounted.startRatio!==null)video.currentTime=Math.max(0,Math.min(video.duration-.05,video.duration*mounted.startRatio));
+    if(mounted.freeze){video.pause();sync();return;}
+    if(mounted.autoplay)play();
+    else sync();
+   };
    const onCanPlay=()=>{
     if(mounted?.fallback)mounted.fallback.hidden=true;
+    applyInitialPosition();
     sync();
    };
    const onError=()=>{
     if(mounted?.fallback)mounted.fallback.hidden=false;
    };
-   const onSync=()=>sync();
+   const onSync=()=>{
+    applyInitialPosition();
+    if(mounted?.endRatio!==null&&Number.isFinite(video.duration)&&video.currentTime>=video.duration*mounted.endRatio){video.pause();}
+    sync();
+   };
    const onSeeked=()=>{
     if(mounted)mounted.lastEventIndex=-1;
     sync();

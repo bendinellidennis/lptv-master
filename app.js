@@ -16,7 +16,7 @@ const SETTINGS = 'mdm-v1-settings';
 const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
-const BUILD_VERSION = '38.9';
+const BUILD_VERSION = '39.0';
 const BUILD_RELEASE_DATE = '05/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -2383,12 +2383,47 @@ function replayLibraryCardHtml(question){
  </div>`;
 }
 
-function replayCorrectMotionHtml(question){
- const selection=replaySceneSelection(question);
- const sceneId=selection.validation.ok?selection.scene.id:'MT_OVERTAKE_LIMITED_VIEW_PILOT';
+const REPLAY_ACTION_SCENE_ID='MT_OVERTAKE_LIMITED_VIEW_PILOT';
+const PEDESTRIAN_WAVE_SCENE_ID='MT_PEDESTRIAN_WAVE_ACROSS_V1';
+function replayWaveAcrossOverlay(phase){
+ if(phase===1)return `<div class="wave-across-freeze danger"><div class="driver-wave-hand" aria-hidden="true">✋</div><strong>${esc(replayUi('NON DARE IL VIA CON UN GESTO','DO NOT WAVE THEM ACROSS'))}</strong><span>${esc(replayUi('Il pedone può interpretarlo come “puoi attraversare”.','The pedestrian may interpret it as permission to cross.'))}</span></div>`;
+ if(phase===2)return `<div class="wave-across-freeze explain"><strong>${esc(replayUi('NON PUOI GARANTIRE LE ALTRE CORSIE','YOU CANNOT GUARANTEE THE OTHER LANES'))}</strong><span>${esc(replayUi('Un altro veicolo potrebbe arrivare da una direzione che il pedone non vede.','Another vehicle may approach from a direction the pedestrian cannot see.'))}</span><div class="cross-traffic-arrows">← ${esc(replayUi('TRAFFICO','TRAFFIC'))} →</div></div>`;
+ if(phase===3)return `<div class="wave-across-action"><strong>${esc(replayUi('RALLENTA • NON FARE CENNI • RESTA PRONTO A FERMARTI','SLOW DOWN • DO NOT WAVE • BE READY TO STOP'))}</strong></div>`;
+ return '';
+}
+function replayWaveAcrossScene(question,phase){
+ const labels=[
+  [replayUi('SCENA REALE · OSSERVAZIONE','REAL SCENE · OBSERVATION'),replayUi('Tocca il pedone e controlla il traffico intorno','Tap the pedestrian and check the surrounding traffic')],
+  [replayUi('FREEZE TIME · PERICOLO','FREEZE TIME · HAZARD'),''],
+  [replayUi('SPIEGAZIONE · REGOLA','EXPLANATION · RULE'),''],
+  [replayUi('AZIONE CORRETTA · IN MOVIMENTO','CORRECT ACTION · IN MOTION'),'']
+ ][phase];
+ const options={
+  0:{startRatio:0,autoplay:true,endRatio:.48},
+  1:{startRatio:.36,freeze:true},
+  2:{startRatio:.36,freeze:true},
+  3:{startRatio:.48,autoplay:false,endRatio:.95}
+ }[phase];
+ return `<section class="real-film-replay wave-across-replay phase-${phase}" data-wave-across>
+  <div class="wave-across-stage">
+   ${ReplayEngine.renderVideoMarkup(PEDESTRIAN_WAVE_SCENE_ID,{label:replayUi('Pedoni e traffico a un attraversamento','Pedestrians and traffic at a crossing')})}
+   <div class="real-film-top compact"><span class="real-film-badge"><i></i>${esc(labels[0])}</span><span class="real-film-count">${String(phase+1).padStart(2,'0')} / 04</span></div>
+   ${phase===0?`<div class="wave-across-instruction">${esc(labels[1])}</div>${replayHazardSurfaceHtml()}`:''}
+   ${replayWaveAcrossOverlay(phase)}
+  </div>
+  ${replayCoachVisibleHtml()}
+  <div class="real-film-controls four ${phase===0?'hazard-locked':''}">
+   ${['Trova','Pericolo','Spiega','Esegui'].map((name,i)=>`<button class="${phase===i?'active':''}" data-replay-stage="${i}" ${phase===0&&i>0?'disabled aria-disabled="true"':''}><span>0${i+1}</span><strong>${esc(replayUi(name,['Find','Hazard','Explain','Perform'][i]))}</strong></button>`).join('')}
+  </div>
+  <template data-replay-phase-options>${esc(JSON.stringify(options))}</template>
+ </section>`;
+}
+
+
+function replayCorrectMotionHtml(){
  const offlineText=esc(replayUi('Il video richiede una connessione Internet','The video requires an Internet connection'));
  const label=esc(replayUi('Guida reale mantenendo la corsia e la distanza di sicurezza','Real driving while maintaining lane and safety distance'));
- return ReplayEngine.renderVideoMarkup(sceneId,{offlineText,label});
+ return ReplayEngine.renderVideoMarkup(REPLAY_ACTION_SCENE_ID,{offlineText,label});
 }
 
 function replayAnswerCard(copy,phase){
@@ -2431,7 +2466,7 @@ function replayRealFilmScene(question,phase){
     <i></i><span>${esc(replayUi('ATTENDI','WAIT'))}</span>
    </div>`:''}
 
-   ${phase===3?replayCorrectMotionHtml(question):''}
+   ${phase===3?replayCorrectMotionHtml():''}
 
    <div class="real-film-credit">
     ${phase===1?'Foto: Sergi Kabrera · Unsplash':'Foto: Olya P · Unsplash'}
@@ -2465,6 +2500,9 @@ function replayRealFilmScene(question,phase){
 function errorReplayVisualHtml(question,step=0){
  const scenario=errorReplayScenario(question),phase=Math.min(3,step);
  const selection=replaySceneSelection(question);
+ if(question?.id==='CARS2.6'&&selection.validation.ok&&selection.assetAllowed&&selection.scene?.id===PEDESTRIAN_WAVE_SCENE_ID){
+  return replayWaveAcrossScene(question,phase);
+ }
  if(scenario.type==='overtaking'&&selection.validation.ok&&selection.assetAllowed&&selection.scene?.id===REPLAY_ACTION_SCENE_ID){
   return replayRealFilmScene(question,phase);
  }
@@ -2600,11 +2638,14 @@ function bindErrorReplay(){
 
  const replayPlayer=$('[data-replay-engine-player]');
  if(replayPlayer){
-  ReplayEngine.mount(replayPlayer,REPLAY_ACTION_SCENE_ID,{
+  const sceneId=replayPlayer.dataset.replayEnginePlayer||REPLAY_ACTION_SCENE_ID;
+  let phaseOptions={};
+  const optionsTemplate=screen.querySelector('[data-replay-phase-options]');
+  if(optionsTemplate){try{phaseOptions=JSON.parse(optionsTemplate.textContent||'{}')}catch(_){phaseOptions={}}}
+  ReplayEngine.mount(replayPlayer,sceneId,{
    language:settings.lang==='it'?'it':'en',
-   playbackRate:
-    errorReplay.speed==='slow'?.68:
-    errorReplay.speed==='fast'?1:.82
+   playbackRate:errorReplay.speed==='slow'?.68:errorReplay.speed==='fast'?1:.82,
+   ...phaseOptions
   });
  }
 
@@ -2626,15 +2667,10 @@ function bindErrorReplay(){
     ?replayUi('Pericolo individuato','Hazard identified')
     :replayUi('Non è questo il punto','This is not the point');
 
+   const isWaveAcross=question?.id==='CARS2.6';
    const instruction=hit
-    ?replayUi(
-      'Hai trovato il punto in cui la visuale non è più completa.',
-      'You found where the view is no longer complete.'
-     )
-    :replayUi(
-      'Osserva dove la strada smette di essere visibile.',
-      'Look where the road stops being visible.'
-     );
+    ?(isWaveAcross?replayUi('Hai individuato il pedone e il punto in cui un gesto potrebbe essere frainteso.','You identified the pedestrian and where a gesture could be misunderstood.'):replayUi('Hai trovato il punto in cui la visuale non è più completa.','You found where the view is no longer complete.'))
+    :(isWaveAcross?replayUi('Tocca il pedone e controlla anche il traffico che potrebbe arrivare dalle altre corsie.','Tap the pedestrian and also check traffic that may approach from other lanes.'):replayUi('Osserva dove la strada smette di essere visibile.','Look where the road stops being visible.'));
 
    panel.innerHTML=`
     <strong>${esc(heading)}</strong>
@@ -2678,10 +2714,11 @@ function bindErrorReplay(){
 
    // Calibrated to the actual observation image:
    // road horizon / loss of full opposing-lane visibility.
-   const targetX=.53;
-   const targetY=.47;
-   const radiusX=.20;
-   const radiusY=.16;
+   const isWaveAcross=question?.id==='CARS2.6';
+   const targetX=isWaveAcross?.50:.53;
+   const targetY=isWaveAcross?.58:.47;
+   const radiusX=isWaveAcross?.28:.20;
+   const radiusY=isWaveAcross?.24:.16;
 
    const dx=(x-targetX)/radiusX;
    const dy=(y-targetY)/radiusY;

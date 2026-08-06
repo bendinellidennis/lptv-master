@@ -5,6 +5,18 @@
 
  const entries=[
   {
+   key:'pedestrianWaveAcross',
+   category:'pedestrian',
+   titleIt:'Non invitare il pedone ad attraversare',
+   titleEn:'Never wave a pedestrian across',
+   status:'ready',
+   engineSceneId:'MT_PEDESTRIAN_WAVE_ACROSS_V1',
+   countryPackId:'MT-LPTV',
+   visualStatus:'real-footage-with-instructional-overlay',
+   required:['pedestrian-crossing','moving-traffic','pedestrian-risk'],
+   prohibited:['rural-road','overtaking']
+  },
+  {
    key:'overtakeLimitedView',
    category:'overtaking',
    titleIt:'Sorpasso con visuale limitata',
@@ -21,10 +33,10 @@
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',
    titleEn:'Pedestrian hidden between parked cars',
-   status:'ready',
-   engineSceneId:'MT_PEDESTRIAN_HIDDEN',
+   status:'production',
+   engineSceneId:null,
    countryPackId:'MT-LPTV',
-   visualStatus:'local-animation-v1',
+   visualStatus:'awaiting-malta-footage',
    required:['left-driving','urban-malta','parked-cars','pedestrian'],
    prohibited:['empty-landscape','motorway']
   },
@@ -33,10 +45,10 @@
    category:'motorcycle',
    titleIt:'Motocicletta nell’angolo cieco',
    titleEn:'Motorcycle in the blind spot',
-   status:'ready',
-   engineSceneId:'MT_MOTORCYCLE_BLIND_SPOT',
+   status:'production',
+   engineSceneId:null,
    countryPackId:'MT-LPTV',
-   visualStatus:'local-animation-v1',
+   visualStatus:'awaiting-malta-footage',
    required:['left-driving','mirror-view','motorcycle'],
    prohibited:['unrelated-rural-landscape']
   },
@@ -45,10 +57,10 @@
    category:'bus',
    titleIt:'Autobus in partenza dalla fermata',
    titleEn:'Bus departing from a stop',
-   status:'ready',
-   engineSceneId:'MT_BUS_STOP_DEPARTURE',
+   status:'planned',
+   engineSceneId:null,
    countryPackId:'MT-LPTV',
-   visualStatus:'local-animation-v1',
+   visualStatus:'planned',
    required:['malta-bus','left-driving','bus-stop'],
    prohibited:['non-malta-bus']
   },
@@ -57,10 +69,10 @@
    category:'tunnel',
    titleIt:'Guasto in galleria',
    titleEn:'Breakdown in a tunnel',
-   status:'ready',
-   engineSceneId:'MT_TUNNEL_BREAKDOWN',
+   status:'planned',
+   engineSceneId:null,
    countryPackId:'MT-LPTV',
-   visualStatus:'local-animation-v1',
+   visualStatus:'planned',
    required:['tunnel','hazard-lights','safe-stop'],
    prohibited:['open-road']
   },
@@ -69,10 +81,10 @@
    category:'junction',
    titleIt:'Incrocio o rotatoria',
    titleEn:'Junction or roundabout',
-   status:'ready',
-   engineSceneId:'MT_JUNCTION_ROUNDABOUT',
+   status:'planned',
+   engineSceneId:null,
    countryPackId:'MT-LPTV',
-   visualStatus:'local-animation-v1',
+   visualStatus:'planned',
    required:['left-driving','malta-markings','give-way'],
    prohibited:['right-driving']
   }

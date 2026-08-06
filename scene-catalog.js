@@ -17,6 +17,7 @@
  function classifyQuestion(question){
   const text=`${question?.question||''} ${(question?.answers||[]).join(' ')}`.toLowerCase();
 
+  if(question?.id==='CARS2.6'||/never wave|urge people across|invite.*gesture|invitare.*gesto/.test(text))return 'pedestrianWaveAcross';
   if(/overtak|limited view|crest|blind bend|curve/.test(text))return 'overtakeLimitedView';
   if(/pedestrian|parked cars|crossing|pelican/.test(text))return 'pedestrianHidden';
   if(/blind spot|motorcycl|shoulder check/.test(text))return 'motorcycleBlindSpot';

@@ -1842,3 +1842,21 @@ body.replay-fullscreen-open{
  pointer-events:none!important;
  -webkit-touch-callout:none!important;
 }
+
+
+/* BUILD 39.0 — CARS2.6 SPECIFIC REAL-FOOTAGE REPLAY */
+.wave-across-stage{position:relative;overflow:hidden;border-radius:28px;background:#02080d;min-height:620px}
+.wave-across-stage .replay-engine-player{min-height:620px;border-radius:28px;overflow:hidden}
+.wave-across-stage .cinematic-action-video,.wave-across-stage .cinematic-video-fallback{width:100%;height:620px;object-fit:cover;background:#000}
+.wave-across-stage .real-film-top{position:absolute;z-index:15;left:24px;right:24px;top:22px}
+.wave-across-instruction{position:absolute;z-index:16;top:110px;left:50%;transform:translateX(-50%);max-width:85%;padding:11px 18px;border-radius:999px;background:rgba(5,22,32,.86);border:1px solid rgba(160,205,225,.35);color:#fff;font-weight:900;letter-spacing:.12em;text-align:center}
+.wave-across-stage [data-hazard-surface]{z-index:14}
+.wave-across-freeze{position:absolute;z-index:16;left:50%;bottom:120px;transform:translateX(-50%);width:min(86%,620px);padding:22px;border-radius:24px;text-align:center;color:#fff;backdrop-filter:blur(9px);box-shadow:0 15px 40px rgba(0,0,0,.35)}
+.wave-across-freeze.danger{background:rgba(90,12,24,.86);border:2px solid #ff5168}
+.wave-across-freeze.explain{background:rgba(4,48,43,.9);border:2px solid #54e4ad}
+.wave-across-freeze strong{display:block;font-size:22px;line-height:1.2}.wave-across-freeze span{display:block;margin-top:10px;font-size:16px;line-height:1.35}
+.driver-wave-hand{font-size:58px;line-height:1;margin-bottom:8px;animation:waveHand .8s ease-in-out infinite alternate;transform-origin:bottom center}
+@keyframes waveHand{from{transform:rotate(-10deg)}to{transform:rotate(12deg)}}
+.cross-traffic-arrows{margin-top:15px;font-weight:950;letter-spacing:.18em;color:#ffcf66}
+.wave-across-action{position:absolute;z-index:16;left:20px;right:20px;bottom:115px;padding:15px 18px;border-radius:18px;background:rgba(4,48,43,.88);border:1px solid #54e4ad;color:#fff;text-align:center;font-weight:950;letter-spacing:.08em}
+@media(max-width:620px){.wave-across-stage,.wave-across-stage .replay-engine-player{min-height:560px}.wave-across-stage .cinematic-action-video,.wave-across-stage .cinematic-video-fallback{height:560px}.wave-across-freeze{bottom:105px}.wave-across-freeze strong{font-size:18px}.wave-across-freeze span{font-size:14px}}

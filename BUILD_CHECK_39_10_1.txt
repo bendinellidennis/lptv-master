@@ -1,0 +1,7 @@
+BUILD 39.10.1 — CARS2.6
+Question: Why should you never wave or urge people across at a pedestrian crossing?
+Correct: There may be another vehicle coming.
+Strict visual target: pedestrian + crossing/road + multiple moving vehicles.
+Replay message explicitly explains that the pedestrian may not see traffic from another direction.
+Previously approved CARS1.9, CARS1.10, CARS1.18 and CARS2.4 are untouched.
+Safari multi-source fallback retained.

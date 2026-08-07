@@ -1,0 +1,27 @@
+MALTA DRIVING MASTER — BUILD 39.10.2
+CARS2.6 REGISTRATION FIX
+
+CAUSE CONFIRMED
+ReplayEngine.registerScene requires scene.timeline to be an array.
+SceneCatalog.validate additionally requires at least 4 timeline events.
+Build 39.10.1 had no timeline in MT_PEDESTRIAN_WAVE_ACROSS_V1, so that scene could not be registered correctly.
+
+FIX
+Added exactly 4 CARS2.6 timeline events:
+1. Observe pedestrian + traffic
+2. Do not wave pedestrian across
+3. Check traffic from other directions
+4. Slow down and let pedestrian decide
+
+UNCHANGED
+CARS1.9
+CARS1.10
+CARS1.18
+CARS2.4
+CARS2.6 video, overlay text and coach logic
+
+TESTS
+- JavaScript syntax check
+- Replay scene registration check
+- CARS2.6 timeline length = 4
+- ZIP integrity check

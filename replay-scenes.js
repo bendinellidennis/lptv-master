@@ -1,6 +1,32 @@
 
 (function(global){
  'use strict';
+
+
+ global.ReplayEngine.registerScene({
+  id:'MT_PHONE_STOP_SAFE_V1',
+  category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'phoneStopSafe',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Stop safely before using a mobile phone',
+  accessibilityLabel:'Driver seated in a parked stationary car using a mobile phone',playbackRate:0.9,
+  media:{video:'https://www.pexels.com/download/video/3048166/',videoSources:["https://www.pexels.com/download/video/3048166/","https://videos.pexels.com/video-files/3048166/3048166-hd_1920_1080_25fps.mp4","https://www.pexels.com/download/video/4281368/"],poster:'https://images.pexels.com/videos/3048166/free-video-3048166.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · fauxels'},
+  timeline:[
+   {at:.5,end:1.8,event:'phone',textIt:'Il telefono richiede attenzione',textEn:'The phone demands your attention'},
+   {at:2.0,end:3.8,event:'stop',textIt:'Prima fermati in un luogo adatto e sicuro',textEn:'First stop in a proper and safe place'},
+   {at:4.0,end:5.8,event:'stationary',textIt:'Usa il telefono solo a veicolo fermo',textEn:'Use the phone only when the vehicle is stationary'},
+   {at:6.0,end:8.5,event:'resume',textIt:'Riparti solo dopo aver terminato',textEn:'Resume driving only after finishing'}
+  ],
+  ui:{
+   hotspot:{left:56,top:52,radiusX:34,radiusY:35,instructionIt:'TOCCA TELEFONO E AUTO FERMA',instructionEn:'TAP PHONE AND PARKED CAR',ariaIt:'Tocca il telefono usato nell’auto ferma',ariaEn:'Tap the phone being used in the stationary car'},
+   phases:[{},
+    {titleIt:'NON RISPONDERE MENTRE GUIDI',titleEn:'DO NOT ANSWER WHILE DRIVING',bodyIt:'Il telefono toglie attenzione alla strada.',bodyEn:'The phone takes attention away from the road.'},
+    {titleIt:'PRIMA FERMATI IN SICUREZZA',titleEn:'STOP SAFELY FIRST',bodyIt:'La risposta corretta è fermarti in un luogo adatto e sicuro prima di rispondere.',bodyEn:'The correct answer is to stop in a proper and safe place before answering.'},
+    {titleIt:'AUTO FERMA • POI TELEFONO',titleEn:'VEHICLE STOPPED • THEN PHONE',bodyIt:'Usa il telefono solo dopo esserti fermato.',bodyEn:'Use the phone only after stopping.'}],
+   phaseOptions:[{startRatio:0,autoplay:true,endRatio:.45},{startRatio:.25,freeze:true},{startRatio:.25,freeze:true},{startRatio:.45,autoplay:false,endRatio:.95}]
+  },
+  coach:{missIt:'Osserva il dettaglio decisivo: l’auto è ferma.',missEn:'Notice the key detail: the car is stationary.',hitIt:'Esatto: prima ti fermi in sicurezza, poi rispondi.',hitEn:'Correct: stop safely first, then answer.'},
+  learning:{correctIt:'Fermati in un luogo adatto e sicuro prima di rispondere o fare una chiamata.',correctEn:'Stop in a proper and safe place before answering or making a call.'}
+ });
  if(!global.ReplayEngine) throw new Error('ReplayEngine must load before replay-scenes.js');
 
  global.ReplayEngine.registerScene({
@@ -57,24 +83,41 @@
   drivingSide:'left',
   countryPackId:'MT-LPTV',
   sceneKey:'pedestrianWaveAcross',
-  visualStatus:'real-footage-with-instructional-overlay',
+  visualStatus:'final-real-footage',
+  replayTemplate:'standard-video',
   title:'Never wave a pedestrian across',
-  accessibilityLabel:'Pedestrians and moving traffic at a pedestrian crossing',
+  accessibilityLabel:'Pedestrians crossing while multiple vehicles move through the road environment',
   playbackRate:0.9,
   media:{
-   video:'https://www.pexels.com/download/video/12769743/',
-   poster:'https://images.pexels.com/videos/12769743/free-video-12769743.jpg?auto=compress&dpr=1&h=750&w=1260',
-   credit:'Pexels · utopia 36'
+   video:'https://www.pexels.com/download/video/3121459/',
+   videoSources:["https://www.pexels.com/download/video/3121459/", "https://videos.pexels.com/video-files/3121459/3121459-hd_1920_1080_25fps.mp4", "https://www.pexels.com/download/video/12769743/"],
+   poster:'https://images.pexels.com/videos/3121459/free-video-3121459.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels',
+   sourcePage:'https://www.pexels.com/video/pedestrians-crossing-a-busy-road-with-moving-vehicles-3121459/'
   },
   timeline:[
-   {at:0.5,event:'info',textIt:'Osserva il pedone e tutto il traffico',textEn:'Observe the pedestrian and all traffic'},
-   {at:2.5,event:'danger',textIt:'Un gesto può essere interpretato come via libera',textEn:'A gesture may be interpreted as permission to cross'},
-   {at:4.5,event:'slow',textIt:'Rallenta e mantieni il controllo',textEn:'Slow down and remain in control'},
-   {at:6.5,event:'wait',textIt:'Non fare cenni: lascia decidere il pedone',textEn:'Do not wave: let the pedestrian decide'}
+   {at:0.8,end:2.2,event:'observe',textIt:'Osserva pedone e traffico circostante',textEn:'Observe the pedestrian and surrounding traffic'},
+   {at:2.5,end:4.2,event:'hazard',textIt:'Non dare tu il via con un gesto',textEn:'Do not wave the pedestrian across'},
+   {at:4.5,end:6.4,event:'other-traffic',textIt:'Controlla il traffico che può arrivare da altre direzioni',textEn:'Check traffic that may approach from other directions'},
+   {at:6.7,end:9.0,event:'safe-action',textIt:'Rallenta e lascia decidere al pedone quando attraversare',textEn:'Slow down and let the pedestrian decide when to cross'}
   ],
+  ui:{
+   hotspot:{left:50,top:54,radiusX:40,radiusY:34,instructionIt:'TOCCA PEDONE E TRAFFICO',instructionEn:'TAP PEDESTRIAN AND TRAFFIC',ariaIt:'Tocca la zona del pedone e del traffico',ariaEn:'Tap the pedestrian and traffic area'},
+   phases:[
+    {},
+    {titleIt:'NON DARE TU IL VIA',titleEn:'DO NOT WAVE THEM ACROSS',bodyIt:'Il pedone potrebbe interpretare il tuo gesto come se tutta la strada fosse libera.',bodyEn:'The pedestrian may interpret your gesture as meaning the whole road is clear.'},
+    {titleIt:'IL PERICOLO PUÒ ARRIVARE DA ALTROVE',titleEn:'DANGER MAY COME FROM ELSEWHERE',bodyIt:'Un altro veicolo può arrivare da una direzione che il pedone non vede.',bodyEn:'Another vehicle may approach from a direction the pedestrian cannot see.'},
+    {titleIt:'RALLENTA • CONTROLLA • NESSUN CENNO',titleEn:'SLOW • CHECK • DO NOT WAVE',bodyIt:'Rallenta e preparati a fermarti, ma lascia che sia il pedone a decidere quando attraversare.',bodyEn:'Slow down and prepare to stop, but let the pedestrian decide when it is safe to cross.'}
+   ],
+   phaseOptions:[{startRatio:0,autoplay:true,endRatio:.45},{startRatio:.25,freeze:true},{startRatio:.25,freeze:true},{startRatio:.45,autoplay:false,endRatio:.95}]
+  },
+  coach:{
+   missIt:'Guarda insieme il pedone e gli altri veicoli: il rischio è ciò che il pedone potrebbe non vedere.',missEn:'Look at both the pedestrian and the other vehicles: the risk is what the pedestrian may not see.',
+   hitIt:'Esatto: non puoi garantire che le altre direzioni siano libere.',hitEn:'Correct: you cannot guarantee that traffic from other directions is clear.'
+  },
   learning:{
-   correctIt:'Rallenta e preparati a fermarti, ma non invitare mai il pedone con un gesto: potrebbe arrivare un altro veicolo.',
-   correctEn:'Slow down and prepare to stop, but never wave the pedestrian across because another vehicle may be approaching.'
+   correctIt:'Non invitare mai il pedone con un gesto: potrebbe arrivare un altro veicolo da una direzione che il pedone non vede.',
+   correctEn:'Never wave a pedestrian across: another vehicle may approach from a direction the pedestrian cannot see.'
   }
  });
 

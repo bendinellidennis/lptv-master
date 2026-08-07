@@ -6,6 +6,16 @@
  [
 
   {
+   sceneKey:'phoneStopSafe',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/3048166/',
+   videoSources:["https://www.pexels.com/download/video/3048166/","https://videos.pexels.com/video-files/3048166/3048166-hd_1920_1080_25fps.mp4","https://www.pexels.com/download/video/4281368/"],
+   poster:'https://images.pexels.com/videos/3048166/free-video-3048166.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · fauxels',sourcePage:'https://www.pexels.com/video/woman-on-the-driver-s-seat-of-a-car-using-her-phone-3048166/',
+   tags:['parked-car','driver-seat','mobile-phone','vehicle-stationary','safe-stop'],
+   note:'CARS1.19: phone used while vehicle is parked/stationary, illustrating the correct answer.'
+  },
+
+  {
    sceneKey:'cyclistSafePass',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://videos.pexels.com/video-files/30601919/30601919-hd_1920_1080_30fps.mp4',
    videoSources:["https://videos.pexels.com/video-files/30601919/30601919-hd_1920_1080_30fps.mp4", "https://videos.pexels.com/video-files/30601919/30601919-hd_1920_1080_25fps.mp4", "https://www.pexels.com/download/video/30601919/", "https://videos.pexels.com/video-files/6656000/6656000-hd_1920_1080_25fps.mp4", "https://www.pexels.com/download/video/6656000/"],poster:'https://images.pexels.com/videos/30601919/free-video-30601919.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · David Pickup',
@@ -44,11 +54,12 @@
    drivingSide:'left',
    status:'approved',
    sourceType:'remote-stock',
-   video:'https://www.pexels.com/download/video/2863232/',
-   poster:'https://images.pexels.com/videos/2863232/free-video-2863232.jpg?auto=compress&dpr=1&h=750&w=1260',
+   video:'https://www.pexels.com/download/video/3121459/',
+   videoSources:["https://www.pexels.com/download/video/3121459/", "https://videos.pexels.com/video-files/3121459/3121459-hd_1920_1080_25fps.mp4", "https://www.pexels.com/download/video/12769743/"],
+   poster:'https://images.pexels.com/videos/3121459/free-video-3121459.jpg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · George Morina',
    tags:['pedestrian-crossing','cars','urban-intersection','moving-traffic','pedestrian-risk'],
-   note:'Real crossing footage; instructional overlays explain why a driver must not wave a pedestrian across.'
+   note:'CARS2.6 strict-match: pedestrian plus multiple moving vehicles, chosen to make the unseen-other-vehicle risk visually understandable.'
   },
   {
    sceneKey:'overtakeLimitedView',

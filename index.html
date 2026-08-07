@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
+<script>
+(function(){
+ try{if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}}catch(e){}
+ try{if('caches' in window){caches.keys().then(function(keys){keys.forEach(function(k){caches.delete(k);});});}}catch(e){}
+})();
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#092f4f">
@@ -11,7 +17,7 @@
 <meta name="description" content="Preparazione LPTV Malta: esame, inglese, rispetto della strada e sicurezza dei passeggeri.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=39.9.2">
+<link rel="stylesheet" href="styles-3993.css?v=3993">
 <title>Malta Driving Master</title>
 </head>
 <body>
@@ -34,18 +40,18 @@
 </div>
 <div id="toast" class="toast" role="status"></div>
 <div id="modal" class="modal hidden" role="dialog" aria-modal="true"></div>
-<script src="database.js?v=39.9.2"></script>
-<script src="content.js?v=39.9.2"></script>
-<script src="country-packs.js?v=39.9.2"></script>
-<script src="malta-pack.js?v=39.9.2"></script>
-<script src="scene-catalog.js?v=39.9.2"></script>
-<script src="malta-scene-library.js?v=39.9.2"></script>
-<script src="scene-assets.js?v=39.9.2"></script>
-<script src="malta-scene-assets.js?v=39.9.2"></script>
-<script src="replay-engine.js?v=39.9.2"></script>
-<script src="replay-scenes.js?v=39.9.2"></script>
-<script src="scene-audit.js?v=39.9.2"></script>
-<script src="replay-coach.js?v=39.9.2"></script>
-<script src="app.js?v=39.9.2"></script>
+<script src="database.js?v=3993"></script>
+<script src="content.js?v=3993"></script>
+<script src="country-packs.js?v=3993"></script>
+<script src="malta-pack.js?v=3993"></script>
+<script src="scene-catalog.js?v=3993"></script>
+<script src="malta-scene-library.js?v=3993"></script>
+<script src="scene-assets.js?v=3993"></script>
+<script src="malta-scene-assets.js?v=3993"></script>
+<script src="replay-engine.js?v=3993"></script>
+<script src="replay-scenes.js?v=3993"></script>
+<script src="scene-audit.js?v=3993"></script>
+<script src="replay-coach.js?v=3993"></script>
+<script src="app-3993.js?v=3993"></script>
 </body>
 </html>

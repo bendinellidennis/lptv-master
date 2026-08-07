@@ -16,7 +16,7 @@ const SETTINGS = 'mdm-v1-settings';
 const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
-const BUILD_VERSION = '39.9.4';
+const BUILD_VERSION = '39.9.5';
 const BUILD_RELEASE_DATE = '06/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -2051,7 +2051,7 @@ function errorReplaySceneLabel(type){
 }
 function errorReplayMarkViewed(id){errorReplay.viewed[id]=true;errorReplay.lastQuestionId=id;errorReplay.lastVisit=new Date().toISOString();errorReplaySave()}
 function errorReplayMarkCompleted(id){errorReplay.completed[id]=true;errorReplaySave();cloudAddQueueEvent('error-replay',{questionId:id,action:'complete'})}
-/* Legacy SVG replay renderer permanently removed in Build 39.9.4. */
+/* Legacy SVG replay renderer permanently removed in Build 39.9.5. */
 function replayPerceptionAverage(){
  const p=errorReplay.perception||{};
  return p.hits?Math.round((p.totalMs||0)/p.hits):0;

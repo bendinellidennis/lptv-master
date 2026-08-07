@@ -17,7 +17,7 @@
   accessibilityLabel:'Real driving on a rural road approaching a dip with restricted forward visibility',
   playbackRate:0.82,
   media:{
-   video:'https://www.pexels.com/download/video/11791710/',
+   video:'https://videos.pexels.com/video-files/11791710/11791710-hd_1920_1080_25fps.mp4',
    poster:'https://images.pexels.com/videos/11791710/pexels-photo-11791710.jpeg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · Vizual Production'
   },

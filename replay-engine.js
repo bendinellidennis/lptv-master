@@ -31,7 +31,7 @@
   return `<div class="replay-engine-player" data-replay-engine-player="${scene.id}">
    ${media.poster?`<img class="replay-engine-poster" data-replay-engine-poster src="${media.poster}" alt="" aria-hidden="true" referrerpolicy="no-referrer">`:''}
    <video class="cinematic-action-video" data-replay-engine-video
-    src="${media.video||''}" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture
+    src="${(Array.isArray(media.videoSources)&&media.videoSources[0])||media.video||''}" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture
     poster="${media.poster||''}" aria-label="${label}"></video>
 
    <div class="cinematic-video-fallback replay-neutral-loader" data-replay-engine-fallback>
@@ -296,6 +296,7 @@
    seeking:false,
    isFullscreen:false,
    placeholder:null,
+   sourceIndex:0,
    initialPositionApplied:false,
    startRatio:Number.isFinite(options.startRatio)?options.startRatio:null,
    endRatio:Number.isFinite(options.endRatio)?options.endRatio:null,
@@ -334,6 +335,19 @@
     sync();
    };
    const onError=()=>{
+    if(!mounted||mounted.video!==video)return;
+    const sources=Array.isArray(scene?.media?.videoSources)?scene.media.videoSources.filter(Boolean):[];
+    const current=mounted.sourceIndex||0;
+    if(sources.length>current+1){
+     mounted.sourceIndex=current+1;
+     mounted.initialPositionApplied=false;
+     try{
+      video.pause();
+      video.src=sources[mounted.sourceIndex];
+      video.load();
+     }catch(_){}
+     return;
+    }
     if(mounted?.fallback)mounted.fallback.hidden=false;
    };
    const onSync=()=>{

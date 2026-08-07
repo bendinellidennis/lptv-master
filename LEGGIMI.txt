@@ -36,3 +36,5 @@ Fix 39.9: CARS1.24 sostituito con filmato dedicato di guida notturna con veicolo
 
 
 BUILD 39.9.2: Replay real-only. Rimossi i fallback grafici legacy. Una scena non validata viene bloccata, mai sostituita da un disegno. CARS1.10 mapping corretto.
+
+BUILD 39.9.6: CARS1.10 strict-match candidate upgraded to POV hilly/curvy road (Pexels 19201236). Replay Engine now supports ordered videoSources fallback so Safari tries alternate MP4 endpoints automatically and never loses the last known working source.

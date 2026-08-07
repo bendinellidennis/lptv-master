@@ -14,12 +14,14 @@
   visualStatus:'final-real-footage',
   replayTemplate:'standard-video',
   title:'Overtaking with limited visibility',
-  accessibilityLabel:'Real driving on a rural road approaching a dip with restricted forward visibility',
+  accessibilityLabel:'Driver point of view on a hilly curving road where forward visibility becomes restricted',
   playbackRate:0.82,
   media:{
-   video:'https://videos.pexels.com/video-files/11791710/11791710-hd_1920_1080_25fps.mp4',
-   poster:'https://images.pexels.com/videos/11791710/pexels-photo-11791710.jpeg?auto=compress&dpr=1&h=750&w=1260',
-   credit:'Pexels · Vizual Production'
+   video:'https://videos.pexels.com/video-files/19201236/19201236-hd_1920_1080_30fps.mp4',
+   videoSources:["https://videos.pexels.com/video-files/19201236/19201236-hd_1920_1080_30fps.mp4", "https://videos.pexels.com/video-files/19201236/19201236-hd_1920_1080_25fps.mp4", "https://www.pexels.com/download/video/19201236/", "https://videos.pexels.com/video-files/11791710/11791710-hd_1920_1080_25fps.mp4"],
+   poster:'https://images.pexels.com/videos/19201236/pexels-photo-19201236.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Mehmet Eray',
+   sourcePage:'https://www.pexels.com/video/a-view-from-the-driver-s-seat-of-a-car-on-a-road-19201236/'
   },
   timeline:[
    {at:0.7,end:2.2,event:'slow',textIt:'Rallenta progressivamente',textEn:'Slow down smoothly'},

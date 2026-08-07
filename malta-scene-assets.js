@@ -50,11 +50,13 @@
    drivingSide:'left',
    status:'approved',
    sourceType:'remote-stock',
-   video:'https://videos.pexels.com/video-files/11791710/11791710-hd_1920_1080_25fps.mp4',
-   poster:'https://images.pexels.com/videos/11791710/pexels-photo-11791710.jpeg?auto=compress&dpr=1&h=750&w=1260',
-   credit:'Pexels · Vizual Production',
-   tags:['left-driving','two-way-road','limited-visibility','rural-road'],
-   note:'Final approved real footage for CARS1.10. It demonstrates limited forward visibility on a rural road; the instructional overlay supplies the exact no-overtaking rule.'
+   video:'https://videos.pexels.com/video-files/19201236/19201236-hd_1920_1080_30fps.mp4',
+   videoSources:["https://videos.pexels.com/video-files/19201236/19201236-hd_1920_1080_30fps.mp4", "https://videos.pexels.com/video-files/19201236/19201236-hd_1920_1080_25fps.mp4", "https://www.pexels.com/download/video/19201236/", "https://videos.pexels.com/video-files/11791710/11791710-hd_1920_1080_25fps.mp4"],
+   poster:'https://images.pexels.com/videos/19201236/pexels-photo-19201236.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Mehmet Eray',
+   sourcePage:'https://www.pexels.com/video/a-view-from-the-driver-s-seat-of-a-car-on-a-road-19201236/',
+   tags:['pov-driving','hilly-road','curvy-road','limited-visibility','rural-road','dip-risk'],
+   note:'CARS1.10 strict-match candidate: driver POV on a hilly curving road with forward visibility reduction. Multiple MP4 sources are tried automatically on Safari; final fallback is the last known working direct MP4.'
   },
   {
    sceneKey:'pedestrianHidden',

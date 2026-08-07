@@ -2629,7 +2629,21 @@ function errorReplayViewHtml(){
   `<div class="replay-library-grid">${pool.length?pool.map(item=>{const s=errorReplayScenario(item);return `<button data-replay-open="${esc(item.id)}"><span>${esc(item.id)} · ${esc(replayUi(s.labelIt,s.labelEn))}</span><strong>${esc(item.question)}</strong><small>${esc(item.question_it||item.question)}</small></button>`}).join(''):`<p>${esc(t('errorReplayNoQuestion'))}</p>`}</div>`
  ].join('');
 }
-function errorReplayOpen(id){const question=errorReplayQuestion(id);if(!question)return toast(t('noResults'));errorReplayStep=0;replayCoachFeedback=null;errorReplayMarkViewed(id);go('errorreplay',{questionId:id})}
+function errorReplayOpen(id){
+ const question=errorReplayQuestion(id);
+ if(!question){toast(t('noResults'));return}
+ errorReplayStep=0;
+ replayCoachFeedback=null;
+ errorReplayMarkViewed(id);
+ try{
+  go('errorreplay',{questionId:id});
+ }catch(err){
+  console.error('Error Replay navigation fallback',err);
+  route={name:'errorreplay',data:{questionId:id}};
+  try{history.pushState({name:'errorreplay',data:{questionId:id}},'','#errorreplay')}catch(_){}
+  render();
+ }
+}
 function errorReplaySearch(){const value=cleanProfileValue($('#errorReplaySearch')?.value,180).toLowerCase();if(!value)return;const question=Q.find(item=>item.id.toLowerCase()===value)||Q.find(item=>(item.question+' '+(item.question_it||'')).toLowerCase().includes(value));if(!question)return toast(t('noResults'));errorReplayOpen(question.id)}
 function renderReplayStable(){
  const anchor=screen.querySelector('[data-real-film]')||screen.querySelector('.replay-main-card');
@@ -5634,7 +5648,17 @@ function showExplanation(q,a){
  box.querySelectorAll('[data-error-reason]').forEach(button=>button.onclick=()=>recordErrorReason(q,a,button.dataset.errorReason));
  $('#quizAiInstructor').onclick=()=>{aiRecordExplanation(q.id);go('aiinstructor',{questionId:q.id})};
  $('#quizAiUnderstand').onclick=()=>aiSocraticStart(q.id);
- $('#quizErrorReplay').onclick=()=>errorReplayOpen(q.id);
+ {
+ const replayBtn=$('#quizErrorReplay');
+ if(replayBtn){
+  replayBtn.type='button';
+  replayBtn.onclick=(event)=>{
+   event.preventDefault();
+   event.stopPropagation();
+   errorReplayOpen(q.id);
+  };
+ }
+}
 }
 function nextQuestion(){if(quiz?.mode==='exam'){if(quiz.index<quiz.list.length-1)goExamQuestion(quiz.index+1);else showExamNavigator();return}if(quiz.index<quiz.list.length-1){quiz.index++;quiz.selected=[];quiz.answered=false;quiz.showTranslation=false;quiz.showSentenceCoach=false;saveSession();renderQuiz();window.scrollTo(0,0)}else finishQuiz(false)}
 function finishQuiz(autoSubmitted=false){

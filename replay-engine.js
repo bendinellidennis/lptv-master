@@ -26,13 +26,14 @@
   const scene=getScene(sceneId);
   if(!scene)return '';
   const media=scene.media||{};
+  const activeMedia=options.mediaOverride||media;
   const label=options.label||scene.accessibilityLabel||scene.title||scene.id;
 
   return `<div class="replay-engine-player" data-replay-engine-player="${scene.id}">
-   ${media.poster?`<img class="replay-engine-poster" data-replay-engine-poster src="${media.poster}" alt="" aria-hidden="true" referrerpolicy="no-referrer">`:''}
+   ${activeMedia.poster?`<img class="replay-engine-poster" data-replay-engine-poster src="${activeMedia.poster}" alt="" aria-hidden="true" referrerpolicy="no-referrer">`:''}
    <video class="cinematic-action-video" data-replay-engine-video
-    src="${(Array.isArray(media.videoSources)&&media.videoSources[0])||media.video||''}" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture
-    poster="${media.poster||''}" aria-label="${label}"></video>
+    src="${(Array.isArray(activeMedia.videoSources)&&activeMedia.videoSources[0])||activeMedia.video||''}" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture
+    poster="${activeMedia.poster||''}" aria-label="${label}"></video>
 
    <div class="cinematic-video-fallback replay-neutral-loader" data-replay-engine-fallback>
     <div class="replay-loading-state"><i></i><span>${options.loadingText||'Loading video'}</span></div>
@@ -302,6 +303,7 @@
    endRatio:Number.isFinite(options.endRatio)?options.endRatio:null,
    autoplay:Boolean(options.autoplay),
    freeze:Boolean(options.freeze),
+   mediaSources:Array.isArray(options.videoSources)?options.videoSources.filter(Boolean):null,
    cleanup:[]
   };
 
@@ -336,7 +338,9 @@
    };
    const onError=()=>{
     if(!mounted||mounted.video!==video)return;
-    const sources=Array.isArray(scene?.media?.videoSources)?scene.media.videoSources.filter(Boolean):[];
+    const sources=(mounted?.mediaSources&&mounted.mediaSources.length)
+     ?mounted.mediaSources
+     :(Array.isArray(scene?.media?.videoSources)?scene.media.videoSources.filter(Boolean):[]);
     const current=mounted.sourceIndex||0;
     if(sources.length>current+1){
      mounted.sourceIndex=current+1;

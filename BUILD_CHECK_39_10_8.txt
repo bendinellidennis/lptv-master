@@ -1,0 +1,7 @@
+Malta Driving Master — Build 39.10.8
+Base: 39.10.7
+NEW REPLAY: CARS1.2 — final shoulder check before U-turn
+Question/answer mapping: CARS1.2 -> correct index [2]
+Scene: MT_UTURN_SHOULDER_CHECK_V1
+Real footage: visible U-turn + instructional blind-spot/shoulder-check phases.
+Existing approved replays preserved.

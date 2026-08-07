@@ -1,0 +1,14 @@
+MALTA DRIVING MASTER — BUILD 39.10.7
+CARS1.12 TWO-SCENE HAZARD REPLAY
+
+Stage 01: real driver actively driving while using handheld phone.
+Stage 02: freeze / distraction explanation on driver.
+Stage 03: switches to real pedestrian-crossing traffic scene to show the type of road hazard the distracted driver may fail to notice.
+Stage 04: same real hazard scene reinforces full attention on the road.
+
+Generic engine extension:
+- standard-video Replay can now use ui.phaseMedia per stage.
+- videoSources fallback is preserved per phase.
+- scenes without phaseMedia behave exactly as before.
+
+Previously approved Replay scenes were not changed.

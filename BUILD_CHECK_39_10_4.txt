@@ -1,0 +1,3 @@
+CARS1.12 strict-match replay.
+Validation: {"reason":"ready","timeline":4,"video":true,"correct":[2]}
+Previously approved scenes unchanged.

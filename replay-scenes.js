@@ -4,6 +4,85 @@
 
 
  global.ReplayEngine.registerScene({
+  id:'MT_UTURN_SHOULDER_CHECK_V1',category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'uTurnShoulderCheck',visualStatus:'real-footage-with-instructional-overlay',replayTemplate:'standard-video',
+  title:'Final shoulder check before a U-turn',accessibilityLabel:'Vehicle making a U-turn while the replay teaches the final blind-spot shoulder check',playbackRate:0.85,
+  media:{video:'https://www.pexels.com/download/video/3525672/',videoSources:['https://www.pexels.com/download/video/3525672/'],poster:'https://images.pexels.com/videos/3525672/free-video-3525672.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Matthias Groeneveld',sourcePage:'https://www.pexels.com/video/yellow-taxi-cab-making-a-u-turn-3525672/'},
+  timeline:[
+   {at:.3,end:2,event:'observe',textIt:'Osserva l’auto che si prepara all’inversione a U',textEn:'Watch the car preparing for the U-turn'},
+   {at:2.1,end:4,event:'hazard',textIt:'Prima di sterzare resta un’area che gli specchi non mostrano',textEn:'Before turning, an area remains hidden from the mirrors'},
+   {at:4.1,end:6,event:'explain',textIt:'Fai un ultimo controllo sopra la spalla',textEn:'Make one final check over your shoulder'},
+   {at:6.1,end:9,event:'correct',textIt:'Specchi • segnale • spalla • poi manovra',textEn:'Mirrors • signal • shoulder • then manoeuvre'}
+  ],
+  ui:{hotspot:{left:48,top:52,radiusX:38,radiusY:32,instructionIt:'TOCCA L’AUTO PRIMA DELLA MANOVRA',instructionEn:'TAP THE CAR BEFORE THE MANOEUVRE',ariaIt:'Tocca l’auto che sta per fare inversione',ariaEn:'Tap the car about to make a U-turn'},phases:[{},
+   {titleIt:'PRIMA DI GIRARE: ANGOLO CIECO',titleEn:'BEFORE TURNING: BLIND SPOT',bodyIt:'Gli specchi non coprono tutto. Un ciclista, moto o veicolo può trovarsi accanto a te.',bodyEn:'Mirrors do not cover everything. A cyclist, motorcycle or vehicle may be beside you.'},
+   {titleIt:'CONTROLLO FINALE SOPRA LA SPALLA',titleEn:'FINAL SHOULDER CHECK',bodyIt:'Subito prima di iniziare l’inversione, gira rapidamente la testa verso il lato della manovra e controlla l’angolo cieco.',bodyEn:'Immediately before the U-turn, quickly turn your head toward the manoeuvre and check the blind spot.'},
+   {titleIt:'CONTROLLA • POI ESEGUI LA U-TURN',titleEn:'CHECK • THEN MAKE THE U-TURN',bodyIt:'La risposta corretta è: guardare sopra la spalla per una conferma finale.',bodyEn:'The correct answer is: look over your shoulder for final confirmation.'}
+  ],phaseOptions:[{startRatio:0,autoplay:true,endRatio:.4},{startRatio:.25,freeze:true},{startRatio:.25,freeze:true},{startRatio:.4,autoplay:true,endRatio:.95}]},
+  coach:{missIt:'Concentrati sul momento immediatamente prima della U-turn: cosa può sfuggire agli specchi?',missEn:'Focus on the instant before the U-turn: what can the mirrors miss?',hitIt:'Esatto: prima della manovra serve l’ultimo controllo dell’angolo cieco.',hitEn:'Correct: before the manoeuvre you need one final blind-spot check.'},
+  learning:{correctIt:'Prima di effettuare un’inversione a U, guarda sopra la spalla per la conferma finale che l’angolo cieco sia libero.',correctEn:'Before making a U-turn, look over your shoulder for final confirmation that the blind spot is clear.'}
+ });
+
+
+
+ global.ReplayEngine.registerScene({
+  id:'MT_PHONE_DISTRACTION_DRIVING_V1',
+  category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'phoneDistractionDriving',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Mobile phone distraction while driving',
+  accessibilityLabel:'Driver actively driving in rainy conditions while talking on a handheld mobile phone',
+  playbackRate:0.9,
+  media:{
+   video:'https://videos.pexels.com/video-files/5290305/5290305-hd_1920_1080_30fps.mp4',
+   videoSources:["https://videos.pexels.com/video-files/5290305/5290305-hd_1920_1080_30fps.mp4","https://www.pexels.com/download/video/5290305/"],
+   poster:'https://images.pexels.com/videos/5290305/free-video-5290305.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · faizan amjed',
+   sourcePage:'https://www.pexels.com/video/man-answering-a-call-while-driving-5290305/'
+  },
+  timeline:[
+   {at:.5,end:2.0,event:'observe',textIt:'Osserva dove guarda il conducente',textEn:'Observe where the driver is looking'},
+   {at:2.2,end:4.0,event:'phone',textIt:'Il telefono sposta l’attenzione dalla strada',textEn:'The phone takes attention away from the road'},
+   {at:4.2,end:6.0,event:'hazard',textIt:'Basta un attimo per perdere un pericolo davanti',textEn:'A moment is enough to miss a hazard ahead'},
+   {at:6.2,end:8.8,event:'correct',textIt:'Durante la guida l’attenzione deve restare sulla strada',textEn:'While driving, attention must remain on the road'}
+  ],
+  ui:{
+   hotspot:{left:55,top:49,radiusX:35,radiusY:36,instructionIt:'TOCCA IL TELEFONO / CONDUCENTE',instructionEn:'TAP PHONE / DRIVER',ariaIt:'Tocca il conducente che usa il telefono',ariaEn:'Tap the driver using the phone'},
+   phases:[
+    {},
+    {titleIt:'ATTENZIONE SPOSTATA DALLA STRADA',titleEn:'ATTENTION TAKEN OFF THE ROAD',bodyIt:'Il conducente sta guidando ma una parte della sua attenzione è assorbita dalla telefonata.',bodyEn:'The driver is moving, but part of his attention is taken by the phone call.'},
+    {titleIt:'ECCO COSA PUOI NON VEDERE IN TEMPO',titleEn:'THIS IS WHAT YOU MAY MISS',bodyIt:'Mentre sei distratto dal telefono, davanti possono esserci pedoni o veicoli che richiedono una reazione immediata.',bodyEn:'While distracted by the phone, pedestrians or vehicles ahead may require an immediate reaction.'},
+    {titleIt:'TELEFONO VIA • ATTENZIONE ALLA STRADA',titleEn:'EYES AND ATTENTION ON THE ROAD',bodyIt:'La risposta corretta è: il telefono può distrarre la tua attenzione dalla strada davanti.',bodyEn:'The correct answer is: the phone may distract your attention from the road ahead.'}
+   ],
+   phaseMedia:[
+    null,
+    null,
+    {
+     video:'https://www.pexels.com/download/video/2863232/',
+     videoSources:["https://www.pexels.com/download/video/2863232/","https://videos.pexels.com/video-files/2863232/2863232-hd_1920_1080_25fps.mp4"],
+     poster:'https://images.pexels.com/videos/2863232/free-video-2863232.jpg?auto=compress&dpr=1&h=750&w=1260',
+     credit:'Pexels · George Morina'
+    },
+    {
+     video:'https://www.pexels.com/download/video/2863232/',
+     videoSources:["https://www.pexels.com/download/video/2863232/","https://videos.pexels.com/video-files/2863232/2863232-hd_1920_1080_25fps.mp4"],
+     poster:'https://images.pexels.com/videos/2863232/free-video-2863232.jpg?auto=compress&dpr=1&h=750&w=1260',
+     credit:'Pexels · George Morina'
+    }
+   ],
+   phaseOptions:[{startRatio:0,autoplay:true,endRatio:.45},{startRatio:.27,freeze:true},{startRatio:.27,freeze:true},{startRatio:.45,autoplay:false,endRatio:.95}]
+  },
+  coach:{
+   missIt:'Osserva insieme telefono, volante e guida in corso: il conducente sta facendo due cose contemporaneamente.',missEn:'Observe the phone, steering wheel and moving drive together: the driver is doing two things at once.',
+   hitIt:'Esatto: il problema è la distrazione dalla strada davanti.',hitEn:'Correct: the problem is distraction from the road ahead.'
+  },
+  learning:{
+   correctIt:'Non usare il telefono mentre guidi perché può distrarre la tua attenzione dalla strada davanti.',
+   correctEn:'Do not use a mobile phone while driving because it may distract your attention from the road ahead.'
+  }
+ });
+
+
+ global.ReplayEngine.registerScene({
   id:'MT_PHONE_STOP_SAFE_V1',
   category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
   sceneKey:'phoneStopSafe',visualStatus:'final-real-footage',replayTemplate:'standard-video',

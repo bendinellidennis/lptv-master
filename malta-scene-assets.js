@@ -5,6 +5,27 @@
 
  [
 
+
+  {
+   sceneKey:'uTurnShoulderCheck',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/3525672/',
+   videoSources:["https://www.pexels.com/download/video/3525672/"],
+   poster:'https://images.pexels.com/videos/3525672/free-video-3525672.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Matthias Groeneveld',sourcePage:'https://www.pexels.com/video/yellow-taxi-cab-making-a-u-turn-3525672/',
+   tags:['u-turn','turning','road','traffic','blind-spot','shoulder-check'],
+   note:'CARS1.2 dedicated U-turn footage. Replay overlays teach the final shoulder check immediately before committing to the manoeuvre.'
+  },
+  {
+   sceneKey:'phoneDistractionDriving',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/5290305/5290305-hd_1920_1080_30fps.mp4',
+   videoSources:["https://videos.pexels.com/video-files/5290305/5290305-hd_1920_1080_30fps.mp4","https://www.pexels.com/download/video/5290305/"],
+   poster:'https://images.pexels.com/videos/5290305/free-video-5290305.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · faizan amjed',
+   sourcePage:'https://www.pexels.com/video/man-answering-a-call-while-driving-5290305/',
+   tags:['driver','mobile-phone','vehicle-moving','road-visible','distraction'],
+   note:'CARS1.12 strict-match upgraded: moving driver visibly talking on a handheld phone with steering wheel and rainy road context, directly showing distraction while driving.'
+  },
+
   {
    sceneKey:'phoneStopSafe',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/3048166/',

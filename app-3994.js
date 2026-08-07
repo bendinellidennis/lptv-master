@@ -2458,7 +2458,9 @@ function replayStandardVideoOverlay(scene,phase){
 function replayStandardVideoScene(question,phase,scene){
  const ui=scene?.ui||{};
  const hotspot=ui.hotspot||{};
- const options=(ui.phaseOptions||[])[phase]||({0:{startRatio:0,autoplay:true,endRatio:.48},1:{startRatio:.36,freeze:true},2:{startRatio:.36,freeze:true},3:{startRatio:.48,autoplay:false,endRatio:.95}}[phase]);
+ const options={...((ui.phaseOptions||[])[phase]||({0:{startRatio:0,autoplay:true,endRatio:.48},1:{startRatio:.36,freeze:true},2:{startRatio:.36,freeze:true},3:{startRatio:.48,autoplay:false,endRatio:.95}}[phase]))};
+ const phaseMedia=(ui.phaseMedia||[])[phase]||null;
+ if(phaseMedia?.videoSources)options.videoSources=phaseMedia.videoSources;
  const labels=[
   replayUi('SCENA REALE · OSSERVAZIONE','REAL SCENE · OBSERVATION'),
   replayUi('FREEZE TIME · PERICOLO','FREEZE TIME · HAZARD'),
@@ -2468,7 +2470,7 @@ function replayStandardVideoScene(question,phase,scene){
  const instruction=replayUi(hotspot.instructionIt||'TOCCA IL PERICOLO',hotspot.instructionEn||'TAP THE HAZARD');
  return `<section class="real-film-replay wave-across-replay standard-video-replay phase-${phase}" data-standard-video>
   <div class="wave-across-stage">
-   ${ReplayEngine.renderVideoMarkup(scene.id,{label:replayUi(scene.accessibilityLabel||scene.title,scene.accessibilityLabel||scene.title)})}
+   ${ReplayEngine.renderVideoMarkup(scene.id,{label:replayUi(scene.accessibilityLabel||scene.title,scene.accessibilityLabel||scene.title),mediaOverride:phaseMedia||undefined})}
    <div class="real-film-top compact"><span class="real-film-badge"><i></i>${esc(labels[phase])}</span><span class="real-film-count">${String(phase+1).padStart(2,'0')} / 04</span></div>
    ${phase===0?`<div class="wave-across-instruction">${esc(instruction)}</div>${replayHazardSurfaceHtml({instructionIt:hotspot.instructionIt||'TOCCA IL PERICOLO',instructionEn:hotspot.instructionEn||'TAP THE HAZARD',ariaIt:hotspot.ariaIt||hotspot.instructionIt||'Tocca il pericolo',ariaEn:hotspot.ariaEn||hotspot.instructionEn||'Tap the hazard',left:Number(hotspot.left||50),top:Number(hotspot.top||50)})}`:''}
    ${replayStandardVideoOverlay(scene,phase)}

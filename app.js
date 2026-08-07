@@ -16,8 +16,8 @@ const SETTINGS = 'mdm-v1-settings';
 const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
-const BUILD_VERSION = '39.1';
-const BUILD_RELEASE_DATE = '05/08/2026';
+const BUILD_VERSION = '39.9';
+const BUILD_RELEASE_DATE = '06/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
 const MISSION_SYSTEM_KEY = 'mdm-v1-mission-system';
@@ -2353,11 +2353,20 @@ function replaySceneSelection(question){
  const entry=key?window.SceneCatalog?.get(key):null;
  const pack=activeCountryPack();
  const scene=entry?.engineSceneId?window.ReplayEngine?.getScene(entry.engineSceneId):null;
- const validation=window.SceneCatalog?.validate(entry,scene,pack)||{ok:false,reason:'catalog-unavailable'};
  const asset=key?window.SceneAssets?.get(key):null;
+ const validation=window.SceneCatalog?.validate(entry,scene,pack,question,asset)||{ok:false,reason:'catalog-unavailable'};
  const assetVerification=key?replayAssetVerification[key]:null;
  const assetAllowed=asset?.status==='approved'&&(assetVerification?.ok!==false);
  return {key,entry,scene,validation,asset,assetVerification,assetAllowed};
+}
+
+function replaySceneAudit(){
+ return window.SceneCatalog?.audit({
+  questions:window.LPTV_QUESTIONS||[],
+  engine:window.ReplayEngine,
+  assets:window.SceneAssets,
+  pack:activeCountryPack()
+ })||{ok:false,errors:[{code:'audit-unavailable'}],warnings:[]};
 }
 
 function replayLibraryCardHtml(question){
@@ -2389,7 +2398,7 @@ function replayLibraryCardHtml(question){
  </div>`;
 }
 
-const REPLAY_ACTION_SCENE_ID='MT_OVERTAKE_LIMITED_VIEW_PILOT';
+const REPLAY_ACTION_SCENE_ID='MT_OVERTAKE_LIMITED_VIEW_V1';
 const PEDESTRIAN_WAVE_SCENE_ID='MT_PEDESTRIAN_WAVE_ACROSS_V1';
 const ZEBRA_WAITING_SCENE_ID='MT_ZEBRA_WAITING_STOP_V1';
 function replayZebraWaitingOverlay(phase){
@@ -2537,6 +2546,41 @@ function replayRealFilmScene(question,phase){
   ${replayPerceptionPanel()}
  </section>`;
 }
+
+function replayStandardVideoOverlay(scene,phase){
+ const ui=scene?.ui||{};
+ const phaseData=(ui.phases||[])[phase]||{};
+ if(phase===0)return '';
+ const tone=phase===1?'danger':phase===2?'explain':'action';
+ const title=replayUi(phaseData.titleIt||'',phaseData.titleEn||'');
+ const body=replayUi(phaseData.bodyIt||'',phaseData.bodyEn||'');
+ return `<div class="wave-across-freeze ${tone}"><strong>${esc(title)}</strong>${body?`<span>${esc(body)}</span>`:''}</div>`;
+}
+function replayStandardVideoScene(question,phase,scene){
+ const ui=scene?.ui||{};
+ const hotspot=ui.hotspot||{};
+ const options=(ui.phaseOptions||[])[phase]||({0:{startRatio:0,autoplay:true,endRatio:.48},1:{startRatio:.36,freeze:true},2:{startRatio:.36,freeze:true},3:{startRatio:.48,autoplay:false,endRatio:.95}}[phase]);
+ const labels=[
+  replayUi('SCENA REALE · OSSERVAZIONE','REAL SCENE · OBSERVATION'),
+  replayUi('FREEZE TIME · PERICOLO','FREEZE TIME · HAZARD'),
+  replayUi('SPIEGAZIONE · REGOLA','EXPLANATION · RULE'),
+  replayUi('AZIONE CORRETTA · IN MOVIMENTO','CORRECT ACTION · IN MOTION')
+ ];
+ const instruction=replayUi(hotspot.instructionIt||'TOCCA IL PERICOLO',hotspot.instructionEn||'TAP THE HAZARD');
+ return `<section class="real-film-replay wave-across-replay standard-video-replay phase-${phase}" data-standard-video>
+  <div class="wave-across-stage">
+   ${ReplayEngine.renderVideoMarkup(scene.id,{label:replayUi(scene.accessibilityLabel||scene.title,scene.accessibilityLabel||scene.title)})}
+   <div class="real-film-top compact"><span class="real-film-badge"><i></i>${esc(labels[phase])}</span><span class="real-film-count">${String(phase+1).padStart(2,'0')} / 04</span></div>
+   ${phase===0?`<div class="wave-across-instruction">${esc(instruction)}</div>${replayHazardSurfaceHtml({instructionIt:hotspot.instructionIt||'TOCCA IL PERICOLO',instructionEn:hotspot.instructionEn||'TAP THE HAZARD',ariaIt:hotspot.ariaIt||hotspot.instructionIt||'Tocca il pericolo',ariaEn:hotspot.ariaEn||hotspot.instructionEn||'Tap the hazard',left:Number(hotspot.left||50),top:Number(hotspot.top||50)})}`:''}
+   ${replayStandardVideoOverlay(scene,phase)}
+  </div>
+  ${replayCoachVisibleHtml()}
+  <div class="real-film-controls four ${phase===0?'hazard-locked':''}">
+   ${['Trova','Pericolo','Spiega','Esegui'].map((name,i)=>`<button class="${phase===i?'active':''}" data-replay-stage="${i}" ${phase===0&&i>0?'disabled aria-disabled="true"':''}><span>0${i+1}</span><strong>${esc(replayUi(name,['Find','Hazard','Explain','Perform'][i]))}</strong></button>`).join('')}
+  </div>
+  <template data-replay-phase-options>${esc(JSON.stringify(options))}</template>
+ </section>`;
+}
 function errorReplayVisualHtml(question,step=0){
  const scenario=errorReplayScenario(question),phase=Math.min(3,step);
  const selection=replaySceneSelection(question);
@@ -2548,6 +2592,9 @@ function errorReplayVisualHtml(question,step=0){
  }
  if(scenario.type==='overtaking'&&selection.validation.ok&&selection.assetAllowed&&selection.scene?.id===REPLAY_ACTION_SCENE_ID){
   return replayRealFilmScene(question,phase);
+ }
+ if(selection.validation.ok&&selection.assetAllowed&&selection.scene?.replayTemplate==='standard-video'){
+  return replayStandardVideoScene(question,phase,selection.scene);
  }
  return errorReplayLegacyVisualHtml(question,Math.min(2,step));
 }
@@ -2712,9 +2759,10 @@ function bindErrorReplay(){
 
    const isWaveAcross=question?.id==='CARS2.6';
    const isZebraWaiting=question?.id==='CARS2.4';
+   const activeScene=replaySceneSelection(question).scene;
    const instruction=hit
-    ?(isWaveAcross?replayUi('Hai individuato il pedone e il punto in cui un gesto potrebbe essere frainteso.','You identified the pedestrian and where a gesture could be misunderstood.'):isZebraWaiting?replayUi('Hai individuato i pedoni in attesa: ora devi rallentare e prepararti a fermarti.','You identified the waiting pedestrians: now slow down and prepare to stop.'):replayUi('Hai trovato il punto in cui la visuale non è più completa.','You found where the view is no longer complete.'))
-    :(isWaveAcross?replayUi('Tocca il pedone e controlla anche il traffico che potrebbe arrivare dalle altre corsie.','Tap the pedestrian and also check traffic that may approach from other lanes.'):isZebraWaiting?replayUi('Tocca i pedoni in attesa vicino all’attraversamento.','Tap the pedestrians waiting near the crossing.'):replayUi('Osserva dove la strada smette di essere visibile.','Look where the road stops being visible.'));
+    ?(isWaveAcross?replayUi('Hai individuato il pedone e il punto in cui un gesto potrebbe essere frainteso.','You identified the pedestrian and where a gesture could be misunderstood.'):isZebraWaiting?replayUi('Hai individuato i pedoni in attesa: ora devi rallentare e prepararti a fermarti.','You identified the waiting pedestrians: now slow down and prepare to stop.'):activeScene?.coach?replayUi(activeScene.coach.hitIt||'Pericolo individuato.',activeScene.coach.hitEn||'Hazard identified.'):replayUi('Pericolo individuato.','Hazard identified.'))
+    :(isWaveAcross?replayUi('Tocca il pedone e controlla anche il traffico che potrebbe arrivare dalle altre corsie.','Tap the pedestrian and also check traffic that may approach from other lanes.'):isZebraWaiting?replayUi('Tocca i pedoni in attesa vicino all’attraversamento.','Tap the pedestrians waiting near the crossing.'):activeScene?.coach?replayUi(activeScene.coach.missIt||'Osserva meglio la scena.','Look more carefully at the scene.'):replayUi('Osserva meglio la scena.','Look more carefully at the scene.'));
 
    panel.innerHTML=`
     <strong>${esc(heading)}</strong>
@@ -2760,10 +2808,12 @@ function bindErrorReplay(){
    // road horizon / loss of full opposing-lane visibility.
    const isWaveAcross=question?.id==='CARS2.6';
    const isZebraWaiting=question?.id==='CARS2.4';
-   const targetX=(isWaveAcross||isZebraWaiting)?.50:.53;
-   const targetY=(isWaveAcross||isZebraWaiting)?.58:.47;
-   const radiusX=(isWaveAcross||isZebraWaiting)?.28:.20;
-   const radiusY=(isWaveAcross||isZebraWaiting)?.24:.16;
+   const activeScene=replaySceneSelection(question).scene;
+   const sceneHotspot=activeScene?.ui?.hotspot||null;
+   const targetX=sceneHotspot?Number(sceneHotspot.left||50)/100:(isWaveAcross||isZebraWaiting)?.50:.53;
+   const targetY=sceneHotspot?Number(sceneHotspot.top||50)/100:(isWaveAcross||isZebraWaiting)?.58:.47;
+   const radiusX=sceneHotspot?Number(sceneHotspot.radiusX||22)/100:(isWaveAcross||isZebraWaiting)?.28:.20;
+   const radiusY=sceneHotspot?Number(sceneHotspot.radiusY||20)/100:(isWaveAcross||isZebraWaiting)?.24:.16;
 
    const dx=(x-targetX)/radiusX;
    const dy=(y-targetY)/radiusY;

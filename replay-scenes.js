@@ -4,16 +4,16 @@
  if(!global.ReplayEngine) throw new Error('ReplayEngine must load before replay-scenes.js');
 
  global.ReplayEngine.registerScene({
-  id:'MT_OVERTAKE_LIMITED_VIEW_PILOT',
+  id:'MT_OVERTAKE_LIMITED_VIEW_V1',
   category:'overtaking',
   country:'MT',
   licenceType:'LPTV',
   drivingSide:'left',
   countryPackId:'MT-LPTV',
   sceneKey:'overtakeLimitedView',
-  visualStatus:'pilot-awaiting-malta-footage',
+  visualStatus:'final-real-footage',
   title:'Overtaking with limited visibility',
-  accessibilityLabel:'Real driving on a country road while maintaining lane position',
+  accessibilityLabel:'Real driving on a rural road approaching a dip with restricted forward visibility',
   playbackRate:0.82,
   media:{
    video:'https://www.pexels.com/download/video/11791710/',
@@ -47,7 +47,7 @@
   media:{
    video:'https://www.pexels.com/download/video/2863232/',
    poster:'https://images.pexels.com/videos/2863232/free-video-2863232.jpg?auto=compress&dpr=1&h=750&w=1260',
-   credit:'Pexels · George Morina'
+   credit:'Pexels · utopia 36'
   },
   timeline:[
    {at:0.5,event:'info',textIt:'Osserva il pedone e tutto il traffico',textEn:'Observe the pedestrian and all traffic'},
@@ -74,9 +74,9 @@
   accessibilityLabel:'Pedestrians waiting at a zebra crossing while vehicles approach',
   playbackRate:0.9,
   media:{
-   video:'https://www.pexels.com/download/video/2863232/',
-   poster:'https://images.pexels.com/videos/2863232/free-video-2863232.jpg?auto=compress&dpr=1&h=750&w=1260',
-   credit:'Pexels · George Morina'
+   video:'https://www.pexels.com/download/video/12769743/',
+   poster:'https://images.pexels.com/videos/12769743/free-video-12769743.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · utopia 36'
   },
   timeline:[
    {at:0.5,event:'info',textIt:'Individua i pedoni in attesa',textEn:'Identify the pedestrians waiting'},
@@ -88,6 +88,87 @@
    correctIt:'Avvicinati lentamente all’attraversamento zebra e preparati a fermarti per i pedoni in attesa.',
    correctEn:'Approach the zebra crossing slowly and prepare to stop for pedestrians waiting to cross.'
   }
+ });
+
+
+ global.ReplayEngine.registerScene({
+  id:'MT_CYCLIST_SAFE_PASS_V1',
+  category:'cyclist',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'cyclistSafePass',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Pass a cyclist slowly and leave plenty of room',
+  accessibilityLabel:'A car and cyclist sharing a country road',playbackRate:0.86,
+  media:{video:'https://www.pexels.com/download/video/6656000/',poster:'https://images.pexels.com/videos/6656000/free-video-6656000.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · 대정 김'},
+  timeline:[
+   {at:.5,event:'info',textIt:'Individua il ciclista davanti',textEn:'Identify the cyclist ahead'},
+   {at:2.2,event:'danger',textIt:'Riduci la velocità prima di affiancarlo',textEn:'Reduce speed before drawing alongside'},
+   {at:4.2,event:'distance',textIt:'Lascia un ampio margine laterale',textEn:'Leave a wide lateral gap'},
+   {at:6.2,event:'lane',textIt:'Rientra solo quando hai spazio sufficiente',textEn:'Move back only when there is enough room'}
+  ],
+  ui:{
+   hotspot:{left:55,top:55,radiusX:24,radiusY:28,instructionIt:'TOCCA IL CICLISTA',instructionEn:'TAP THE CYCLIST',ariaIt:'Tocca il ciclista sulla strada',ariaEn:'Tap the cyclist on the road'},
+   phases:[
+    {},
+    {titleIt:'NON PASSARE VELOCEMENTE O TROPPO VICINO',titleEn:'DO NOT PASS FAST OR TOO CLOSE',bodyIt:'Su una strada stretta il ciclista può oscillare o deviare improvvisamente.',bodyEn:'On a narrow road the cyclist may wobble or move unexpectedly.'},
+    {titleIt:'LENTAMENTE E CON MOLTO SPAZIO',titleEn:'SLOWLY WITH PLENTY OF ROOM',bodyIt:'La risposta corretta è ridurre la velocità e mantenere un ampio margine laterale.',bodyEn:'The correct answer is to reduce speed and keep a wide lateral margin.'},
+    {titleIt:'RALLENTA • ALLARGATI • RIENTRA CON MARGINE',titleEn:'SLOW • MOVE OUT • RETURN WITH MARGIN',bodyIt:'Completa il sorpasso solo quando puoi farlo senza stringere il ciclista.',bodyEn:'Complete the pass only when you can do so without squeezing the cyclist.'}
+   ],
+   phaseOptions:[{startRatio:0,autoplay:true,endRatio:.45},{startRatio:.32,freeze:true},{startRatio:.32,freeze:true},{startRatio:.45,autoplay:false,endRatio:.95}]
+  },
+  coach:{
+   missIt:'Cerca il ciclista e valuta lo spazio laterale che gli stai lasciando.',missEn:'Find the cyclist and judge the lateral space you are leaving.',
+   hitIt:'Hai individuato l’utente vulnerabile: ora la priorità è rallentare e lasciare molto spazio.',hitEn:'You identified the vulnerable road user: now slow down and leave plenty of room.'
+  },
+  learning:{correctIt:'Passa lentamente e lascia molto spazio al ciclista.',correctEn:'Pass slowly and leave plenty of room for the cyclist.'}
+ });
+
+ global.ReplayEngine.registerScene({
+  id:'MT_LARGE_VEHICLE_FOLLOWING_V1',
+  category:'following-distance',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'largeVehicleFollowing',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Stay well back behind a large vehicle',
+  accessibilityLabel:'Driver following a truck on the road',playbackRate:0.9,
+  media:{video:'https://www.pexels.com/download/video/35408009/',poster:'https://images.pexels.com/videos/35408009/free-video-35408009.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Altaf Shah'},
+  timeline:[
+   {at:.5,event:'info',textIt:'Osserva il veicolo grande davanti',textEn:'Observe the large vehicle ahead'},
+   {at:2.0,event:'danger',textIt:'Troppo vicino puoi sparire dai suoi specchi',textEn:'Too close, you may disappear from its mirrors'},
+   {at:4.0,event:'distance',textIt:'Aumenta la distanza',textEn:'Increase the gap'},
+   {at:6.0,event:'wait',textIt:'Resta visibile e migliora la visuale avanti',textEn:'Stay visible and improve your view ahead'}
+  ],
+  ui:{
+   hotspot:{left:50,top:48,radiusX:30,radiusY:28,instructionIt:'TOCCA IL VEICOLO GRANDE',instructionEn:'TAP THE LARGE VEHICLE',ariaIt:'Tocca il veicolo grande davanti',ariaEn:'Tap the large vehicle ahead'},
+   phases:[{},
+    {titleIt:'TROPPO VICINO = MENO VISIBILE',titleEn:'TOO CLOSE = LESS VISIBLE',bodyIt:'Se resti troppo vicino, il conducente del veicolo grande può non vederti negli specchi.',bodyEn:'If you stay too close, the large-vehicle driver may not see you in the mirrors.'},
+    {titleIt:'RESTA BEN DISTANTE',titleEn:'STAY WELL BACK',bodyIt:'La distanza ti rende più visibile negli specchi e migliora la tua visuale davanti.',bodyEn:'The gap keeps you visible in the mirrors and improves your view ahead.'},
+    {titleIt:'AUMENTA LA DISTANZA E RESTA VISIBILE',titleEn:'INCREASE THE GAP AND STAY VISIBLE',bodyIt:'Mantieni una posizione che il conducente possa vedere negli specchi.',bodyEn:'Keep a position the driver can see in the mirrors.'}],
+   phaseOptions:[{startRatio:0,autoplay:true,endRatio:.42},{startRatio:.28,freeze:true},{startRatio:.28,freeze:true},{startRatio:.42,autoplay:false,endRatio:.92}]
+  },
+  coach:{missIt:'Concentrati sul veicolo grande davanti e sulla distanza che mantieni.',missEn:'Focus on the large vehicle ahead and the gap you keep.',hitIt:'Hai individuato il veicolo grande: resta abbastanza indietro da essere visibile nei suoi specchi.',hitEn:'You identified the large vehicle: stay far enough back to remain visible in its mirrors.'},
+  learning:{correctIt:'Mantieniti ben distante per restare visibile negli specchi del conducente.',correctEn:'Stay well back so the driver can see you in the mirrors.'}
+ });
+
+ global.ReplayEngine.registerScene({
+  id:'MT_DAZZLED_HEADLIGHTS_V1',
+  category:'night-driving',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'dazzledHeadlights',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Dazzled by oncoming headlights',
+  accessibilityLabel:'Driver view on a dark road with an approaching vehicle and strong headlights',playbackRate:0.78,
+  media:{video:'https://www.pexels.com/download/video/34738405/',poster:'https://images.pexels.com/videos/34738405/free-video-34738405.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Ravi Kant'},
+  timeline:[
+   {at:.4,event:'info',textIt:'Osserva il veicolo che arriva di fronte',textEn:'Watch the approaching vehicle'},
+   {at:1.8,event:'danger',textIt:'I fari entrano direttamente nel campo visivo',textEn:'The headlights shine directly into your view'},
+   {at:3.6,event:'slow',textIt:'Rallenta subito e mantieni il controllo',textEn:'Slow down immediately and keep control'},
+   {at:5.6,event:'wait',textIt:'Se non vedi chiaramente, fermati finché l’abbagliamento passa',textEn:'If you cannot see clearly, stop until the glare passes'}
+  ],
+  ui:{
+   hotspot:{left:51,top:45,radiusX:30,radiusY:25,instructionIt:'TOCCA I FARI CHE ABBAGLIANO',instructionEn:'TAP THE GLARING HEADLIGHTS',ariaIt:'Tocca i fari del traffico in arrivo',ariaEn:'Tap the oncoming headlights'},
+   phases:[{},
+    {titleIt:'NON CONTINUARE ALLA STESSA VELOCITÀ',titleEn:'DO NOT CONTINUE AT THE SAME SPEED',bodyIt:'Se i fari ti abbagliano, la distanza visibile davanti si riduce.',bodyEn:'If headlights dazzle you, the visible distance ahead is reduced.'},
+    {titleIt:'RALLENTA O FERMATI',titleEn:'SLOW DOWN OR STOP',bodyIt:'Riduci la velocità e, se necessario, fermati finché recuperi una visibilità sicura.',bodyEn:'Reduce speed and, if necessary, stop until safe visibility returns.'},
+    {titleIt:'RIDUCI LA VELOCITÀ • RECUPERA VISIBILITÀ',titleEn:'REDUCE SPEED • REGAIN VISIBILITY',bodyIt:'Riprendi normalmente solo quando riesci a vedere chiaramente.',bodyEn:'Resume normally only when you can see clearly.'}],
+   phaseOptions:[{startRatio:0,autoplay:true,endRatio:.44},{startRatio:.30,freeze:true},{startRatio:.30,freeze:true},{startRatio:.44,autoplay:false,endRatio:.94}]
+  },
+  coach:{missIt:'Individua la sorgente dell’abbagliamento: i fari dei veicoli in arrivo.',missEn:'Identify the source of the glare: the oncoming vehicle headlights.',hitIt:'Hai riconosciuto l’abbagliamento: ora riduci la velocità e fermati se non vedi in sicurezza.',hitEn:'You recognised the glare: now reduce speed and stop if you cannot see safely.'},
+  learning:{correctIt:'Rallenta o fermati finché riesci a vedere chiaramente.',correctEn:'Slow down or stop until you can see clearly.'}
  });
 
 })(window);

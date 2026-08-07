@@ -29,8 +29,9 @@
   const label=options.label||scene.accessibilityLabel||scene.title||scene.id;
 
   return `<div class="replay-engine-player" data-replay-engine-player="${scene.id}">
+   ${media.poster?`<img class="replay-engine-poster" data-replay-engine-poster src="${media.poster}" alt="" aria-hidden="true" referrerpolicy="no-referrer">`:''}
    <video class="cinematic-action-video" data-replay-engine-video
-    src="${media.video||''}" muted playsinline webkit-playsinline preload="metadata" disablepictureinpicture
+    src="${media.video||''}" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture
     poster="${media.poster||''}" aria-label="${label}"></video>
 
    <div class="cinematic-video-fallback replay-neutral-loader" data-replay-engine-fallback>
@@ -279,6 +280,7 @@
    scene,
    video,
    fallback:query('[data-replay-engine-fallback]'),
+   poster:query('[data-replay-engine-poster]'),
    cue:query('[data-replay-engine-cue]'),
    toggle:query('[data-replay-toggle]'),
    bigPlay:query('[data-replay-big-play]'),
@@ -315,9 +317,20 @@
     if(mounted.autoplay)play();
     else sync();
    };
+   const revealVideoFrame=()=>{
+    if(!mounted||mounted.video!==video)return;
+    video.classList.add('replay-frame-ready');
+    if(mounted.poster)mounted.poster.classList.add('replay-poster-behind');
+    if(mounted.fallback)mounted.fallback.hidden=true;
+   };
    const onCanPlay=()=>{
-    if(mounted?.fallback)mounted.fallback.hidden=true;
     applyInitialPosition();
+    if(!mounted.freeze)revealVideoFrame();
+    sync();
+   };
+   const onLoadedData=()=>{
+    applyInitialPosition();
+    if(!mounted.freeze)revealVideoFrame();
     sync();
    };
    const onError=()=>{
@@ -330,6 +343,7 @@
    };
    const onSeeked=()=>{
     if(mounted)mounted.lastEventIndex=-1;
+    revealVideoFrame();
     sync();
    };
    const onNativeFullscreenStart=()=>{
@@ -344,6 +358,7 @@
    };
 
    video.addEventListener('canplay',onCanPlay);
+   video.addEventListener('loadeddata',onLoadedData);
    video.addEventListener('error',onError);
    video.addEventListener('loadedmetadata',onSync);
    video.addEventListener('timeupdate',onSync);
@@ -356,6 +371,7 @@
 
    mounted.cleanup.push(
     ()=>video.removeEventListener('canplay',onCanPlay),
+    ()=>video.removeEventListener('loadeddata',onLoadedData),
     ()=>video.removeEventListener('error',onError),
     ()=>video.removeEventListener('loadedmetadata',onSync),
     ()=>video.removeEventListener('timeupdate',onSync),

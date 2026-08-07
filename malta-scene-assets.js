@@ -4,17 +4,33 @@
  if(!global.SceneAssets)throw new Error('SceneAssets must load first');
 
  [
+
+  {
+   sceneKey:'cyclistSafePass',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/6656000/',poster:'https://images.pexels.com/videos/6656000/free-video-6656000.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · 대정 김',
+   tags:['country-road','car','cyclist','safe-passing'],note:'Unique real footage for CARS1.18 showing a car and bicycle sharing a country road.'
+  },
+  {
+   sceneKey:'largeVehicleFollowing',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/35408009/',poster:'https://images.pexels.com/videos/35408009/free-video-35408009.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Altaf Shah',
+   tags:['following','truck','night-road','visibility'],note:'Unique real footage for CARS1.9 showing a driver following a truck.'
+  },
+  {
+   sceneKey:'dazzledHeadlights',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/34738405/',poster:'https://images.pexels.com/videos/34738405/free-video-34738405.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Ravi Kant',
+   tags:['night-driving','driver-view','oncoming-vehicle','headlights','headlight-glare','dark-road'],note:'CARS1.24 dedicated real footage: driver-view night road with approaching vehicle lights; used only for the oncoming-headlight dazzle rule.'
+  },
   {
    sceneKey:'zebraWaitingStop',
    countryPackId:'MT-LPTV',
    drivingSide:'left',
    status:'approved',
    sourceType:'remote-stock',
-   video:'https://www.pexels.com/download/video/2863232/',
-   poster:'https://images.pexels.com/videos/2863232/free-video-2863232.jpg?auto=compress&dpr=1&h=750&w=1260',
-   credit:'Pexels · George Morina',
+   video:'https://www.pexels.com/download/video/12769743/',
+   poster:'https://images.pexels.com/videos/12769743/free-video-12769743.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · utopia 36',
    tags:['zebra-crossing','waiting-pedestrians','approaching-traffic'],
-   note:'Real crossing footage used specifically for CARS2.4 with question-specific overlays and timing.'
+   note:'Specific real footage for CARS2.4: pedestrians visibly waiting to cross while traffic passes.'
   },
   {
    sceneKey:'pedestrianWaveAcross',
@@ -33,12 +49,12 @@
    countryPackId:'MT-LPTV',
    drivingSide:'left',
    status:'approved',
-   sourceType:'remote-pilot',
+   sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/11791710/',
    poster:'https://images.pexels.com/videos/11791710/pexels-photo-11791710.jpeg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · Vizual Production',
    tags:['left-driving-compatible','rural-road','limited-view'],
-   note:'Technical pilot; not authentic Malta footage.'
+   note:'Final approved real footage for CARS1.10. It demonstrates limited forward visibility on a rural road; the instructional overlay supplies the exact no-overtaking rule.'
   },
   {
    sceneKey:'pedestrianHidden',

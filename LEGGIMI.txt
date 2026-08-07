@@ -1,3 +1,7 @@
+MALTA DRIVING MASTER — BUILD 39.9
+Scene nuove verificate: CARS1.18, CARS1.9, CARS1.24.
+Base: 39.6 stabile.
+
 MALTA DRIVING MASTER — BUILD 38.8
 REPLAY ENGINE 2.0
 
@@ -25,3 +29,7 @@ COACH DINAMICO
 NON MODIFICATI
 Quiz, esame, banca delle 250 domande, Missioni, Cloud Ready,
 Istruttore AI, profilo e progressi.
+
+Fix 39.8: poster/fotogrammi sempre visibili; CARS2.4 sostituito con video di pedoni in attesa; feedback Coach specifico per scena.
+
+Fix 39.9: CARS1.24 sostituito con filmato dedicato di guida notturna con veicolo/fari in arrivo; audit semantico ora blocca scene prive dei tag visivi obbligatori o con elementi proibiti.

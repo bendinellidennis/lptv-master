@@ -21,7 +21,7 @@
    overtakeLimitedView:{
     required:['left-driving','two-way-road','limited-visibility','vehicle-ahead'],
     forbidden:['right-driving','unrelated-skyline','unrelated-mountain-panorama'],
-    status:'pilot-awaiting-malta-footage'
+    status:'final-real-footage'
    }
   }
  });

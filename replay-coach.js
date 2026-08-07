@@ -93,6 +93,12 @@
 
  function coachMessage(question,scene,result,language='en'){
   const {category}=record(question,scene,result);
+  const custom=scene?.coach||null;
+  if(custom){
+   const it=language==='it';
+   if(!result.hit)return {tone:'warning',title:it?'Guarda meglio la scena':'Look more carefully',body:it?(custom.missIt||'Individua il pericolo principale.'):(custom.missEn||'Identify the main hazard.')};
+   return {tone:'success',title:it?'Pericolo individuato':'Hazard identified',body:it?(custom.hitIt||'Hai individuato il punto critico.'):(custom.hitEn||'You identified the critical point.')};
+  }
   const fast=result.elapsed>0&&result.elapsed<=2200;
   const slow=result.elapsed>=6000;
   const repeatedMiss=category.misses>=2&&category.streak===0;

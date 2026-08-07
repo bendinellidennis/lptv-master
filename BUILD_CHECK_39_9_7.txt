@@ -1,0 +1,18 @@
+MALTA DRIVING MASTER 39.9.7 — CARS1.18 STRICT MATCH
+
+QUESTION
+On a narrow country road, how should you pass a cyclist?
+Correct answer: Slowly, leaving plenty of room.
+
+NEW PRIMARY VIDEO
+Pexels 30601919 — Rural Road with Passing Cars and Cyclists.
+Why selected: it contains the three required visual elements together:
+1) rural/country road
+2) cars
+3) cyclists
+
+SAFARI
+Uses ordered videoSources fallback already supported by Replay Engine 39.9.6.
+If the preferred MP4 endpoint fails, the engine tries alternate endpoints and finally the previous cyclist source.
+
+CARS1.10 was not changed.

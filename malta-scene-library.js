@@ -8,7 +8,7 @@
   {
    key:'cyclistSafePass',category:'cyclist',titleIt:'Sorpasso sicuro del ciclista',titleEn:'Safe pass of a cyclist',status:'ready',
    questionIds:['CARS1.18'],expectedCorrect:[2],engineSceneId:'MT_CYCLIST_SAFE_PASS_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
-   required:['country-road','car','cyclist','wide-gap'],prohibited:['cyclist-only','no-car']
+   required:['car-view','cyclist-clearly-visible','real-road','passing-context'],prohibited:['cyclist-not-visible','empty-road','generic-road']
   },
   {
    key:'largeVehicleFollowing',category:'following-distance',titleIt:'Distanza dietro un veicolo grande',titleEn:'Following a large vehicle',status:'ready',
@@ -31,7 +31,7 @@
    engineSceneId:'MT_ZEBRA_WAITING_STOP_V1',
    countryPackId:'MT-LPTV',
    visualStatus:'real-footage-with-instructional-overlay',
-   required:['zebra-crossing','waiting-pedestrians','approaching-traffic'],
+   required:['zebra-crossing','pedestrians','cars-stopping','pedestrian-safety'],
    prohibited:['rural-road','overtaking']
   },
   {

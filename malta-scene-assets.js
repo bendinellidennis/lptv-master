@@ -7,13 +7,17 @@
 
   {
    sceneKey:'cyclistSafePass',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
-   video:'https://www.pexels.com/download/video/6656000/',poster:'https://images.pexels.com/videos/6656000/free-video-6656000.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · 대정 김',
-   tags:['country-road','car','cyclist','safe-passing','wide-gap'],note:'Unique real footage for CARS1.18 showing a car and bicycle sharing a country road.'
+   video:'https://videos.pexels.com/video-files/30601919/30601919-hd_1920_1080_30fps.mp4',
+   videoSources:["https://videos.pexels.com/video-files/30601919/30601919-hd_1920_1080_30fps.mp4", "https://videos.pexels.com/video-files/30601919/30601919-hd_1920_1080_25fps.mp4", "https://www.pexels.com/download/video/30601919/", "https://videos.pexels.com/video-files/6656000/6656000-hd_1920_1080_25fps.mp4", "https://www.pexels.com/download/video/6656000/"],poster:'https://images.pexels.com/videos/30601919/free-video-30601919.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · David Pickup',
+   sourcePage:'https://www.pexels.com/video/rural-road-with-passing-cars-and-cyclists-30601919/',
+   tags:['country-road','rural-road','cars','cyclists','passing','safe-passing','wide-gap'],note:'CARS1.18 strict-match candidate: rural road with cars and cyclists, selected to show the exact passing context rather than a generic cyclist clip.'
   },
   {
    sceneKey:'largeVehicleFollowing',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
-   video:'https://www.pexels.com/download/video/35408009/',poster:'https://images.pexels.com/videos/35408009/free-video-35408009.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Altaf Shah',
-   tags:['following','truck','night-road','visibility'],note:'Unique real footage for CARS1.9 showing a driver following a truck.'
+   video:'https://www.pexels.com/download/video/4608275/',
+   videoSources:["https://www.pexels.com/download/video/4608275/", "https://videos.pexels.com/video-files/4608275/4608275-hd_1920_1080_25fps.mp4", "https://videos.pexels.com/video-files/4608275/4608275-hd_1920_1080_30fps.mp4", "https://www.pexels.com/download/video/35408009/"],poster:'https://images.pexels.com/videos/4608275/free-video-4608275.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · K',
+   sourcePage:'https://www.pexels.com/video/moving-cars-on-expressway-4608275/',
+   tags:['pov','following','large-truck','expressway','following-gap','mirror-visibility'],note:'CARS1.9 strict-match: driver POV following large trucks, selected so the learner can judge the following gap and understand why staying back keeps the car visible to the truck driver.'
   },
   {
    sceneKey:'dazzledHeadlights',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
@@ -26,11 +30,13 @@
    drivingSide:'left',
    status:'approved',
    sourceType:'remote-stock',
-   video:'https://www.pexels.com/download/video/12769743/',
-   poster:'https://images.pexels.com/videos/12769743/free-video-12769743.jpg?auto=compress&dpr=1&h=750&w=1260',
-   credit:'Pexels · utopia 36',
-   tags:['zebra-crossing','waiting-pedestrians','approaching-traffic'],
-   note:'Specific real footage for CARS2.4: pedestrians visibly waiting to cross while traffic passes.'
+   video:'https://www.pexels.com/download/video/2863232/',
+   videoSources:["https://www.pexels.com/download/video/2863232/","https://videos.pexels.com/video-files/2863232/2863232-hd_1920_1080_25fps.mp4","https://www.pexels.com/download/video/12769743/"],
+   poster:'https://images.pexels.com/videos/2863232/free-video-2863232.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · George Morina',
+   sourcePage:'https://www.pexels.com/video/cars-stopping-at-a-pedestrian-crossing-2863232/',
+   tags:['zebra-crossing','pedestrians','cars-stopping','yielding','approach','pedestrian-safety'],
+   note:'CARS2.4 strict-match footage: cars visibly stopping at a pedestrian crossing; selected to teach slowing down and preparing to stop.'
   },
   {
    sceneKey:'pedestrianWaveAcross',

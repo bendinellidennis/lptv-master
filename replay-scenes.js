@@ -62,8 +62,8 @@
   accessibilityLabel:'Pedestrians and moving traffic at a pedestrian crossing',
   playbackRate:0.9,
   media:{
-   video:'https://www.pexels.com/download/video/2863232/',
-   poster:'https://images.pexels.com/videos/2863232/free-video-2863232.jpg?auto=compress&dpr=1&h=750&w=1260',
+   video:'https://www.pexels.com/download/video/12769743/',
+   poster:'https://images.pexels.com/videos/12769743/free-video-12769743.jpg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · utopia 36'
   },
   timeline:[
@@ -86,14 +86,17 @@
   drivingSide:'left',
   countryPackId:'MT-LPTV',
   sceneKey:'zebraWaitingStop',
-  visualStatus:'real-footage-with-instructional-overlay',
+  visualStatus:'final-real-footage',
+  replayTemplate:'standard-video',
   title:'Approaching a zebra crossing with pedestrians waiting',
-  accessibilityLabel:'Pedestrians waiting at a zebra crossing while vehicles approach',
+  accessibilityLabel:'Cars stopping at a pedestrian crossing with pedestrians clearly visible',
   playbackRate:0.9,
   media:{
-   video:'https://www.pexels.com/download/video/12769743/',
-   poster:'https://images.pexels.com/videos/12769743/free-video-12769743.jpg?auto=compress&dpr=1&h=750&w=1260',
-   credit:'Pexels · utopia 36'
+   video:'https://www.pexels.com/download/video/2863232/',
+   videoSources:["https://www.pexels.com/download/video/2863232/","https://videos.pexels.com/video-files/2863232/2863232-hd_1920_1080_25fps.mp4","https://www.pexels.com/download/video/12769743/"],
+   poster:'https://images.pexels.com/videos/2863232/free-video-2863232.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · George Morina',
+   sourcePage:'https://www.pexels.com/video/cars-stopping-at-a-pedestrian-crossing-2863232/'
   },
   timeline:[
    {at:0.5,event:'info',textIt:'Individua i pedoni in attesa',textEn:'Identify the pedestrians waiting'},
@@ -101,6 +104,20 @@
    {at:4.5,event:'slow',textIt:'Rallenta e preparati a fermarti',textEn:'Slow down and prepare to stop'},
    {at:6.5,event:'wait',textIt:'Fermati se necessario e lascia attraversare in sicurezza',textEn:'Stop if necessary and let them cross safely'}
   ],
+  ui:{
+   hotspot:{left:50,top:56,radiusX:38,radiusY:30,instructionIt:'TOCCA I PEDONI / ATTRAVERSAMENTO',instructionEn:'TAP THE PEDESTRIANS / CROSSING',ariaIt:'Tocca i pedoni in attesa o l’attraversamento zebra',ariaEn:'Tap the waiting pedestrians or zebra crossing'},
+   phases:[
+    {},
+    {titleIt:'PEDONI IN ATTESA: RIDUCI LA VELOCITÀ',titleEn:'PEDESTRIANS WAITING: SLOW DOWN',bodyIt:'Avvicinarti troppo velocemente riduce il tempo per fermarti in sicurezza.',bodyEn:'Approaching too fast reduces the time available to stop safely.'},
+    {titleIt:'PREPARATI A FERMARTI',titleEn:'PREPARE TO STOP',bodyIt:'Allo zebra crossing devi rallentare e poter arrestare il veicolo se i pedoni iniziano ad attraversare.',bodyEn:'At the zebra crossing, slow down and be able to stop if pedestrians begin to cross.'},
+    {titleIt:'RALLENTA • CONTROLLA • FERMATI SE NECESSARIO',titleEn:'SLOW • CHECK • STOP IF NEEDED',bodyIt:'La risposta corretta è rallentare e prepararti a fermarti.',bodyEn:'The correct answer is to slow down and prepare to stop.'}
+   ],
+   phaseOptions:[{startRatio:0,autoplay:true,endRatio:.48},{startRatio:.28,freeze:true},{startRatio:.28,freeze:true},{startRatio:.48,autoplay:false,endRatio:.95}]
+  },
+  coach:{
+   missIt:'Cerca i pedoni in attesa e lo zebra crossing davanti ai veicoli.',missEn:'Look for the waiting pedestrians and the zebra crossing ahead of the vehicles.',
+   hitIt:'Esatto: qui devi ridurre la velocità e prepararti a fermarti.',hitEn:'Correct: slow down here and prepare to stop.'
+  },
   learning:{
    correctIt:'Avvicinati lentamente all’attraversamento zebra e preparati a fermarti per i pedoni in attesa.',
    correctEn:'Approach the zebra crossing slowly and prepare to stop for pedestrians waiting to cross.'
@@ -113,8 +130,18 @@
   category:'cyclist',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
   sceneKey:'cyclistSafePass',visualStatus:'final-real-footage',replayTemplate:'standard-video',
   title:'Pass a cyclist slowly and leave plenty of room',
-  accessibilityLabel:'A car and cyclist sharing a country road',playbackRate:0.86,
-  media:{video:'https://www.pexels.com/download/video/6656000/',poster:'https://images.pexels.com/videos/6656000/free-video-6656000.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · 대정 김'},
+  accessibilityLabel:'Cyclists clearly visible from a car side-mirror perspective during a real road passing situation',playbackRate:0.86,
+  media:{
+   video:'https://www.pexels.com/download/video/34633207/',
+   videoSources:[
+    "https://www.pexels.com/download/video/34633207/",
+    "https://videos.pexels.com/video-files/34633207/34633207-hd_1920_1080_30fps.mp4",
+    "https://videos.pexels.com/video-files/34633207/34633207-hd_1920_1080_25fps.mp4"
+   ],
+   poster:'https://images.pexels.com/videos/34633207/free-video-34633207.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · BJ Zurc',
+   sourcePage:'https://www.pexels.com/video/cyclists-passing-by-in-car-side-mirror-view-34633207/'
+  },
   timeline:[
    {at:.5,event:'info',textIt:'Individua il ciclista davanti',textEn:'Identify the cyclist ahead'},
    {at:2.2,event:'danger',textIt:'Riduci la velocità prima di affiancarlo',textEn:'Reduce speed before drawing alongside'},
@@ -122,7 +149,7 @@
    {at:6.2,event:'lane',textIt:'Rientra solo quando hai spazio sufficiente',textEn:'Move back only when there is enough room'}
   ],
   ui:{
-   hotspot:{left:55,top:55,radiusX:24,radiusY:28,instructionIt:'TOCCA IL CICLISTA',instructionEn:'TAP THE CYCLIST',ariaIt:'Tocca il ciclista sulla strada',ariaEn:'Tap the cyclist on the road'},
+   hotspot:{left:50,top:52,radiusX:34,radiusY:34,instructionIt:'TOCCA IL CICLISTA',instructionEn:'TAP THE CYCLIST',ariaIt:'Tocca il ciclista sulla strada',ariaEn:'Tap the cyclist on the road'},
    phases:[
     {},
     {titleIt:'NON PASSARE VELOCEMENTE O TROPPO VICINO',titleEn:'DO NOT PASS FAST OR TOO CLOSE',bodyIt:'Su una strada stretta il ciclista può oscillare o deviare improvvisamente.',bodyEn:'On a narrow road the cyclist may wobble or move unexpectedly.'},
@@ -143,8 +170,14 @@
   category:'following-distance',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
   sceneKey:'largeVehicleFollowing',visualStatus:'final-real-footage',replayTemplate:'standard-video',
   title:'Stay well back behind a large vehicle',
-  accessibilityLabel:'Driver following a truck on the road',playbackRate:0.9,
-  media:{video:'https://www.pexels.com/download/video/35408009/',poster:'https://images.pexels.com/videos/35408009/free-video-35408009.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Altaf Shah'},
+  accessibilityLabel:'Driver point of view following large trucks on an expressway with a clearly visible following gap',playbackRate:0.9,
+  media:{
+   video:'https://www.pexels.com/download/video/4608275/',
+   videoSources:["https://www.pexels.com/download/video/4608275/", "https://videos.pexels.com/video-files/4608275/4608275-hd_1920_1080_25fps.mp4", "https://videos.pexels.com/video-files/4608275/4608275-hd_1920_1080_30fps.mp4", "https://www.pexels.com/download/video/35408009/"],
+   poster:'https://images.pexels.com/videos/4608275/free-video-4608275.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · K',
+   sourcePage:'https://www.pexels.com/video/moving-cars-on-expressway-4608275/'
+  },
   timeline:[
    {at:.5,event:'info',textIt:'Osserva il veicolo grande davanti',textEn:'Observe the large vehicle ahead'},
    {at:2.0,event:'danger',textIt:'Troppo vicino puoi sparire dai suoi specchi',textEn:'Too close, you may disappear from its mirrors'},
@@ -152,7 +185,7 @@
    {at:6.0,event:'wait',textIt:'Resta visibile e migliora la visuale avanti',textEn:'Stay visible and improve your view ahead'}
   ],
   ui:{
-   hotspot:{left:50,top:48,radiusX:30,radiusY:28,instructionIt:'TOCCA IL VEICOLO GRANDE',instructionEn:'TAP THE LARGE VEHICLE',ariaIt:'Tocca il veicolo grande davanti',ariaEn:'Tap the large vehicle ahead'},
+   hotspot:{left:50,top:42,radiusX:34,radiusY:30,instructionIt:'TOCCA IL VEICOLO GRANDE',instructionEn:'TAP THE LARGE VEHICLE',ariaIt:'Tocca il veicolo grande davanti',ariaEn:'Tap the large vehicle ahead'},
    phases:[{},
     {titleIt:'TROPPO VICINO = MENO VISIBILE',titleEn:'TOO CLOSE = LESS VISIBLE',bodyIt:'Se resti troppo vicino, il conducente del veicolo grande può non vederti negli specchi.',bodyEn:'If you stay too close, the large-vehicle driver may not see you in the mirrors.'},
     {titleIt:'RESTA BEN DISTANTE',titleEn:'STAY WELL BACK',bodyIt:'La distanza ti rende più visibile negli specchi e migliora la tua visuale davanti.',bodyEn:'The gap keeps you visible in the mirrors and improves your view ahead.'},

@@ -53,7 +53,7 @@
    video:'https://www.pexels.com/download/video/11791710/',
    poster:'https://images.pexels.com/videos/11791710/pexels-photo-11791710.jpeg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · Vizual Production',
-   tags:['left-driving-compatible','rural-road','limited-view'],
+   tags:['left-driving','two-way-road','limited-visibility','rural-road'],
    note:'Final approved real footage for CARS1.10. It demonstrates limited forward visibility on a rural road; the instructional overlay supplies the exact no-overtaking rule.'
   },
   {

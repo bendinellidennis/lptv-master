@@ -16,7 +16,7 @@ const SETTINGS = 'mdm-v1-settings';
 const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
-const BUILD_VERSION = '39.9';
+const BUILD_VERSION = '39.9.2';
 const BUILD_RELEASE_DATE = '06/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -2150,7 +2150,6 @@ function errorReplayLegacyVisualHtml(question,step=0){
  </div>`;
 }
 
-const REPLAY_OVERTAKING_PHOTO='replay-overtaking-photo.webp';
 
 
 function replayPerceptionAverage(){
@@ -2494,7 +2493,7 @@ function replayRealFilmScene(question,phase){
    ${phase===3?'':`<img class="real-film-photo" src="${image}"
     alt="${esc(replayUi('Scena stradale reale','Real road scene'))}"
     referrerpolicy="no-referrer"
-    onerror="this.onerror=null;this.src='replay-overtaking-photo.webp'">`}
+    onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('real-film-media-error')">`}
 
    ${phase===3?'':`<div class="real-film-loading">
     <span></span><b>${esc(replayUi('Caricamento scena reale','Loading real scene'))}</b>
@@ -2581,6 +2580,17 @@ function replayStandardVideoScene(question,phase,scene){
   <template data-replay-phase-options>${esc(JSON.stringify(options))}</template>
  </section>`;
 }
+function replayStrictUnavailableScene(question,selection){
+ const reason=selection?.validation?.reason||'scene-not-ready';
+ return `<section class="real-film-replay strict-unavailable-replay" data-strict-unavailable>
+  <div class="strict-unavailable-card">
+   <span>${esc(replayUi('SCENA REALE NON DISPONIBILE','REAL SCENE UNAVAILABLE'))}</span>
+   <strong>${esc(replayUi('Replay bloccato dal controllo qualità','Replay blocked by quality control'))}</strong>
+   <p>${esc(replayUi('Questa domanda non mostrerà disegni o video generici. Verrà riattivata solo con una scena reale approvata e perfettamente pertinente.','This question will not show drawings or generic video. It will be re-enabled only with an approved, directly relevant real scene.'))}</p>
+   <small>${esc(reason)}</small>
+  </div>
+ </section>`;
+}
 function errorReplayVisualHtml(question,step=0){
  const scenario=errorReplayScenario(question),phase=Math.min(3,step);
  const selection=replaySceneSelection(question);
@@ -2596,7 +2606,7 @@ function errorReplayVisualHtml(question,step=0){
  if(selection.validation.ok&&selection.assetAllowed&&selection.scene?.replayTemplate==='standard-video'){
   return replayStandardVideoScene(question,phase,selection.scene);
  }
- return errorReplayLegacyVisualHtml(question,Math.min(2,step));
+ return replayStrictUnavailableScene(question,selection);
 }
 
 function errorReplayLessonText(question){

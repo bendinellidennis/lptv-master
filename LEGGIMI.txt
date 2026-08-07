@@ -33,3 +33,6 @@ Istruttore AI, profilo e progressi.
 Fix 39.8: poster/fotogrammi sempre visibili; CARS2.4 sostituito con video di pedoni in attesa; feedback Coach specifico per scena.
 
 Fix 39.9: CARS1.24 sostituito con filmato dedicato di guida notturna con veicolo/fari in arrivo; audit semantico ora blocca scene prive dei tag visivi obbligatori o con elementi proibiti.
+
+
+BUILD 39.9.2: Replay real-only. Rimossi i fallback grafici legacy. Una scena non validata viene bloccata, mai sostituita da un disegno. CARS1.10 mapping corretto.

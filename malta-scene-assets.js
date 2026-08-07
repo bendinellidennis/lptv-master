@@ -8,7 +8,7 @@
   {
    sceneKey:'cyclistSafePass',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/6656000/',poster:'https://images.pexels.com/videos/6656000/free-video-6656000.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · 대정 김',
-   tags:['country-road','car','cyclist','safe-passing'],note:'Unique real footage for CARS1.18 showing a car and bicycle sharing a country road.'
+   tags:['country-road','car','cyclist','safe-passing','wide-gap'],note:'Unique real footage for CARS1.18 showing a car and bicycle sharing a country road.'
   },
   {
    sceneKey:'largeVehicleFollowing',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
@@ -41,7 +41,7 @@
    video:'https://www.pexels.com/download/video/2863232/',
    poster:'https://images.pexels.com/videos/2863232/free-video-2863232.jpg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · George Morina',
-   tags:['pedestrian-crossing','cars','urban-intersection'],
+   tags:['pedestrian-crossing','cars','urban-intersection','moving-traffic','pedestrian-risk'],
    note:'Real crossing footage; instructional overlays explain why a driver must not wave a pedestrian across.'
   },
   {

@@ -1,0 +1,13 @@
+MALTA DRIVING MASTER 39.9.4 — BUILD GATE
+
+PASS — old app filename absent
+PASS — old css filename absent
+PASS — no service worker
+PASS — CARS1.10 standard video
+PASS — cyclist evidence fixed
+PASS — pedestrian evidence fixed
+PASS — active visual path does not call photo legacy
+PASS — real unavailable not used for approved six by validation gate
+
+Active Replay IDs: CARS1.9, CARS1.10, CARS1.18, CARS1.24, CARS2.4, CARS2.6
+Policy: approved Replay scenes render real video/poster; no legacy photo renderer is used by the active path.

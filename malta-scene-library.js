@@ -116,6 +116,12 @@
   },
 
   {
+   key:'wetRoadFourSecondGap',category:'safety-margins',titleIt:'Strada bagnata: almeno quattro secondi',titleEn:'Wet road: at least four seconds',status:'ready',
+   questionIds:['CARS2.17'],expectedCorrect:[3],engineSceneId:'MT_WET_ROAD_FOUR_SECOND_GAP_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['pov-driving','wet-road','rain','vehicle-ahead','following-gap','four-second-rule'],prohibited:['dry-road-only','parked-only','reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

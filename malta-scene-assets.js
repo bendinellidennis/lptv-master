@@ -162,6 +162,17 @@
   },
 
   {
+   sceneKey:'wetRoadFourSecondGap',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/32015769/13645753_2160_3840_60fps.mp4',
+   videoSources:["https://videos.pexels.com/video-files/32015769/13645753_2160_3840_60fps.mp4"],
+   poster:'https://images.pexels.com/videos/32015769/carphotography-carview-instagood-travelgram-32015769.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Sapol Churanon',
+   sourcePage:'https://www.pexels.com/video/driving-through-rainy-weather-on-a-busy-road-32015769/',
+   tags:['pov-driving','rain','wet-road','windshield-wipers','vehicle-ahead','traffic','following-gap','four-second-rule'],
+   note:'CARS2.17 strict-match: driver POV in heavy rain on a busy wet road with vehicles ahead and active wipers. The replay teaches doubling the normal two-second gap to at least four seconds on wet and slippery roads.'
+  },
+
+  {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

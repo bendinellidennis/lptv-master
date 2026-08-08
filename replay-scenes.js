@@ -652,4 +652,52 @@
   }
  });
 
+
+ global.ReplayEngine.registerScene({
+  id:'MT_WET_ROAD_FOUR_SECOND_GAP_V1',
+  category:'safety-margins',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'wetRoadFourSecondGap',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Wet road — four-second following gap',
+  accessibilityLabel:'Driver point of view through a rain-covered windscreen on a wet busy road with vehicles ahead and wipers operating',
+  playbackRate:0.86,
+  media:{
+   video:'https://videos.pexels.com/video-files/32015769/13645753_2160_3840_60fps.mp4',
+   videoSources:["https://videos.pexels.com/video-files/32015769/13645753_2160_3840_60fps.mp4"],
+   poster:'https://images.pexels.com/videos/32015769/carphotography-carview-instagood-travelgram-32015769.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Sapol Churanon',
+   sourcePage:'https://www.pexels.com/video/driving-through-rainy-weather-on-a-busy-road-32015769/'
+  },
+  timeline:[
+   {at:.4,end:2.2,event:'observe',textIt:'Osserva la pioggia, la strada bagnata e il veicolo davanti',textEn:'Notice the rain, wet road and the vehicle ahead'},
+   {at:2.4,end:4.4,event:'danger',textIt:'Sul bagnato aumentano gli spazi di arresto e hai meno aderenza',textEn:'On a wet road, stopping distances increase and grip is reduced'},
+   {at:4.6,end:6.8,event:'rule',textIt:'Raddoppia la distanza normale: da due ad almeno quattro secondi',textEn:'Double the normal gap: from two to at least four seconds'},
+   {at:7.0,end:9.8,event:'correct',textIt:'Mantieni almeno quattro secondi dal veicolo davanti finché la strada resta bagnata e scivolosa',textEn:'Keep at least four seconds behind the vehicle ahead while the road remains wet and slippery'}
+  ],
+  ui:{
+   hotspot:{left:49,top:43,radiusX:29,radiusY:24,instructionIt:'TOCCA IL VEICOLO DAVANTI',instructionEn:'TAP THE VEHICLE AHEAD',ariaIt:'Tocca il veicolo che stai seguendo sulla strada bagnata',ariaEn:'Tap the vehicle you are following on the wet road'},
+   phases:[
+    {},
+    {titleIt:'BAGNATO = PIÙ SPAZIO PER FERMARTI',titleEn:'WET ROAD = MORE STOPPING SPACE',bodyIt:'Pioggia e asfalto bagnato riducono l’aderenza. La stessa distanza usata sull’asciutto non è sufficiente.',bodyEn:'Rain and wet tarmac reduce grip. The same gap used in dry conditions is not enough.'},
+    {titleIt:'RADDOPPIA: ALMENO 4 SECONDI',titleEn:'DOUBLE IT: AT LEAST 4 SECONDS',bodyIt:'In condizioni normali usi almeno due secondi. Su strada bagnata e scivolosa devi raddoppiare e lasciare almeno quattro secondi.',bodyEn:'In normal conditions use at least two seconds. On a wet and slippery road, double it and leave at least four seconds.'},
+    {titleIt:'QUATTRO SECONDI MINIMI',titleEn:'FOUR SECONDS MINIMUM',bodyIt:'La risposta corretta è quattro secondi: più tempo e più spazio per reagire e frenare in sicurezza sul bagnato.',bodyEn:'The correct answer is four seconds: more time and space to react and brake safely on a wet road.'}
+   ],
+   phaseOptions:[
+    {startRatio:0,autoplay:true,endRatio:.45},
+    {startRatio:.22,freeze:true},
+    {startRatio:.30,autoplay:false,endRatio:.72},
+    {startRatio:.45,autoplay:false,endRatio:.94}
+   ]
+  },
+  coach:{
+   missIt:'Guarda il veicolo davanti e le condizioni della strada: sul bagnato la distanza normale deve aumentare.',
+   missEn:'Look at the vehicle ahead and the road conditions: on a wet road the normal following gap must increase.',
+   hitIt:'Esatto. Con strada bagnata e scivolosa raddoppia i due secondi normali e lascia almeno quattro secondi.',
+   hitEn:'Correct. On a wet and slippery road, double the normal two-second gap and leave at least four seconds.'
+  },
+  learning:{
+   correctIt:'Su una strada bagnata e scivolosa lascia almeno quattro secondi dal veicolo che precede.',
+   correctEn:'On a wet and slippery road, leave at least four seconds behind the vehicle ahead.'
+  }
+ });
+
 })(window);

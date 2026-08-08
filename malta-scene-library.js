@@ -122,6 +122,12 @@
   },
 
   {
+   key:'rearFlashingAllowOvertake',category:'attitude',titleIt:'Veicolo rapido da dietro: lascia sorpassare',titleEn:'Fast vehicle behind: allow it to overtake',status:'ready',
+   questionIds:['CARS2.20'],expectedCorrect:[3],engineSceneId:'MT_REAR_FLASHING_ALLOW_OVERTAKE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['rear-view-mirror','vehicle-behind','overtaking','do-not-compete','allow-safe-pass'],prohibited:['horse-rider','brake-check','speed-up','block-overtake','reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

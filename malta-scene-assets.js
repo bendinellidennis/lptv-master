@@ -173,6 +173,17 @@
   },
 
   {
+   sceneKey:'rearFlashingAllowOvertake',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/5446333/',
+   videoSources:["https://www.pexels.com/download/video/5446333/"],
+   poster:'',
+   credit:'Pexels · Martina Tomšič',
+   sourcePage:'https://www.pexels.com/video/over-taking-cars-view-through-rear-view-mirror-5446333/',
+   tags:['rear-view-mirror','car-behind','headlights','overtaking','traffic','allow-pass','attitude'],
+   note:'CARS2.20 strict-match: rear/side-mirror traffic footage chosen to teach the correct response to a faster vehicle approaching from behind: do not compete, brake-check or block it; keep control and allow it to overtake when safe.'
+  },
+
+  {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

@@ -700,4 +700,53 @@
   }
  });
 
+
+
+ global.ReplayEngine.registerScene({
+  id:'MT_REAR_FLASHING_ALLOW_OVERTAKE_V1',
+  category:'attitude',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'rearFlashingAllowOvertake',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Fast vehicle approaching from behind — allow it to overtake',
+  accessibilityLabel:'Traffic visible in a vehicle mirror while another car approaches from behind, teaching calm and safe response to a faster driver wanting to overtake',
+  playbackRate:0.88,
+  media:{
+   video:'https://www.pexels.com/download/video/5446333/',
+   videoSources:["https://www.pexels.com/download/video/5446333/"],
+   poster:'',
+   credit:'Pexels · Martina Tomšič',
+   sourcePage:'https://www.pexels.com/video/over-taking-cars-view-through-rear-view-mirror-5446333/'
+  },
+  timeline:[
+   {at:.4,end:2.1,event:'observe',textIt:'Controlla lo specchio: un veicolo arriva rapidamente da dietro e vuole superare',textEn:'Check the mirror: a vehicle is closing quickly from behind and wants to overtake'},
+   {at:2.3,end:4.2,event:'danger',textIt:'Non competere: non accelerare, non frenare per intimidirlo e non impedirgli il sorpasso',textEn:'Do not compete: do not accelerate, brake-check or block the overtake'},
+   {at:4.4,end:6.6,event:'rule',textIt:'Mantieni una guida prevedibile e lascia spazio perché possa passare quando è sicuro',textEn:'Drive predictably and leave room for it to pass when safe'},
+   {at:6.8,end:9.6,event:'correct',textIt:'La risposta corretta è lasciare che il veicolo sorpassi in sicurezza',textEn:'The correct response is to allow the vehicle to overtake safely'}
+  ],
+  ui:{
+   hotspot:{left:53,top:43,radiusX:30,radiusY:27,instructionIt:'TOCCA IL VEICOLO NELLO SPECCHIO',instructionEn:'TAP THE VEHICLE IN THE MIRROR',ariaIt:'Tocca il veicolo che si avvicina da dietro',ariaEn:'Tap the vehicle approaching from behind'},
+   phases:[
+    {},
+    {titleIt:'NON TRASFORMARE LA SITUAZIONE IN UNA GARA',titleEn:'DO NOT TURN IT INTO A CONTEST',bodyIt:'Anche se stai già guidando al limite legale, non devi accelerare né ostacolare chi vuole superarti.',bodyEn:'Even if you are already at the legal limit, do not accelerate or obstruct a driver who wants to pass.'},
+    {titleIt:'NIENTE BRAKE CHECK',titleEn:'NO BRAKE-CHECKING',bodyIt:'Toccare i freni per reagire al conducente dietro può aumentare il rischio di tamponamento. Mantieni velocità e traiettoria prevedibili.',bodyEn:'Braking to react to the driver behind can increase rear-end collision risk. Keep your speed and path predictable.'},
+    {titleIt:'LASCIALO SORPASSARE QUANDO È SICURO',titleEn:'ALLOW IT TO OVERTAKE WHEN SAFE',bodyIt:'Non competere e non bloccare. Conserva il controllo del veicolo e lascia che l’altro conducente completi il sorpasso in sicurezza.',bodyEn:'Do not compete or block. Keep control and allow the other driver to complete the overtake safely.'}
+   ],
+   phaseOptions:[
+    {startRatio:0,autoplay:true,endRatio:.42},
+    {startRatio:.20,freeze:true},
+    {startRatio:.34,autoplay:false,endRatio:.70},
+    {startRatio:.48,autoplay:false,endRatio:.94}
+   ]
+  },
+  coach:{
+   missIt:'Guarda lo specchio: il punto chiave è il veicolo che arriva rapidamente da dietro e vuole superare.',
+   missEn:'Look at the mirror: the key hazard is the vehicle closing quickly from behind and wanting to overtake.',
+   hitIt:'Esatto. Non competere, non frenare per reazione e non bloccarlo: lascia che sorpassi quando è sicuro.',
+   hitEn:'Correct. Do not compete, brake in retaliation or block it: allow it to overtake when safe.'
+  },
+  learning:{
+   correctIt:'Se un veicolo arriva rapidamente da dietro lampeggiando mentre sei al limite legale, non competere: lascialo sorpassare quando è sicuro.',
+   correctEn:'If a vehicle closes quickly from behind flashing while you are at the legal speed limit, do not compete: allow it to overtake when safe.'
+  }
+ });
+
 })(window);

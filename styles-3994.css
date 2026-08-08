@@ -1955,3 +1955,9 @@ body.replay-fullscreen-open{
  .replay-caption-below>strong{font-size:16px}
  .replay-caption-below>p{font-size:13px;line-height:1.36}
 }
+
+/* BUILD 39.11.17 — GLOBAL DECODED-FRAME HANDOFF */
+.replay-engine-player{background:#102733}
+.replay-engine-player .replay-engine-poster{opacity:1!important;visibility:visible}
+.replay-engine-player .cinematic-action-video{opacity:0!important;transition:opacity .08s linear}
+.replay-engine-player .cinematic-action-video.replay-frame-ready{opacity:1!important}

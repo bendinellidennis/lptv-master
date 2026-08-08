@@ -1,0 +1,12 @@
+MALTA DRIVING MASTER — BUILD 39.11.17
+BASE: 39.11.16 (CARS3.8 approved)
+GLOBAL FIX: intermittent black first freeze / black flash between Replay phases on GitHub/iPhone.
+CAUSE: seeked can fire before Safari has actually painted the decoded frame.
+FIX:
+- keep poster visible and video opacity 0 during initial seek / phase seek;
+- reveal video only after requestVideoFrameCallback when available;
+- safe readyState + double requestAnimationFrame fallback;
+- cancel stale reveal operations during source/phase changes;
+- preserve poster during source fallback;
+- no question, database, scene, video, mapping or approved Replay content changed.
+ENGINE: 2.1.2.

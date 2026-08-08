@@ -806,14 +806,14 @@
   accessibilityLabel:'Police and emergency vehicles with blue flashing lights, followed by an ambulance, teaching the two correct answers',
   playbackRate:0.9,
   media:{
-   video:'https://videos.pexels.com/video-files/27974835/12279630_3840_2160_60fps.mp4',
+   video:'https://videos.pexels.com/video-files/10029631/10029631-hd_1920_1080_24fps.mp4',
    videoSources:[
-    'https://videos.pexels.com/video-files/27974835/12279630_3840_2160_60fps.mp4',
-    'https://www.pexels.com/download/video/27974835/'
+    'https://videos.pexels.com/video-files/10029631/10029631-hd_1920_1080_24fps.mp4',
+    'https://www.pexels.com/download/video/10029631/'
    ],
-   poster:'',
-   credit:'Pexels · Bubble Media',
-   sourcePage:'https://www.pexels.com/video/police-27974835/'
+   poster:'https://images.pexels.com/videos/10029631/free-video-10029631.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Connor Kane',
+   sourcePage:'https://www.pexels.com/video/police-car-lights-at-night-10029631/'
   },
   timeline:[
    {at:.4,end:2.2,event:'observe',textIt:'Osserva i lampeggianti blu sui veicoli di emergenza',textEn:'Observe the blue flashing lights on the emergency vehicles'},
@@ -833,24 +833,24 @@
     null,
     null,
     {
-     video:'https://videos.pexels.com/video-files/15285348/15285348-uhd_3840_2160_24fps.mp4',
+     video:'https://videos.pexels.com/video-files/3940427/3940427-hd_1920_1080_30fps.mp4',
      videoSources:[
-      'https://videos.pexels.com/video-files/15285348/15285348-uhd_3840_2160_24fps.mp4',
-      'https://www.pexels.com/download/video/15285348/'
+      'https://videos.pexels.com/video-files/3940427/3940427-hd_1920_1080_30fps.mp4',
+      'https://www.pexels.com/download/video/3940427/'
      ],
-     poster:'',
-     credit:'Pexels · Bubble Media',
-     sourcePage:'https://www.pexels.com/video/ambulance-emergency-services-15285348/'
+     poster:'https://images.pexels.com/videos/3940427/free-video-3940427.jpg?auto=compress&dpr=1&h=750&w=1260',
+     credit:'Pexels · CityXcape',
+     sourcePage:'https://www.pexels.com/video/emergency-medicine-paramedic-emergency-lights-3940427/'
     },
     {
-     video:'https://videos.pexels.com/video-files/15285348/15285348-uhd_3840_2160_24fps.mp4',
+     video:'https://videos.pexels.com/video-files/3940427/3940427-hd_1920_1080_30fps.mp4',
      videoSources:[
-      'https://videos.pexels.com/video-files/15285348/15285348-uhd_3840_2160_24fps.mp4',
-      'https://www.pexels.com/download/video/15285348/'
+      'https://videos.pexels.com/video-files/3940427/3940427-hd_1920_1080_30fps.mp4',
+      'https://www.pexels.com/download/video/3940427/'
      ],
-     poster:'',
-     credit:'Pexels · Bubble Media',
-     sourcePage:'https://www.pexels.com/video/ambulance-emergency-services-15285348/'
+     poster:'https://images.pexels.com/videos/3940427/free-video-3940427.jpg?auto=compress&dpr=1&h=750&w=1260',
+     credit:'Pexels · CityXcape',
+     sourcePage:'https://www.pexels.com/video/emergency-medicine-paramedic-emergency-lights-3940427/'
     }
    ],
    phaseOptions:[

@@ -196,6 +196,20 @@
   },
 
   {
+   sceneKey:'blueFlashingBeacons',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/10029631/10029631-hd_1920_1080_24fps.mp4',
+   videoSources:[
+    'https://videos.pexels.com/video-files/10029631/10029631-hd_1920_1080_24fps.mp4',
+    'https://www.pexels.com/download/video/10029631/'
+   ],
+   poster:'https://images.pexels.com/videos/10029631/free-video-10029631.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Connor Kane / CityXcape',
+   sourcePage:'https://www.pexels.com/video/police-car-lights-at-night-10029631/',
+   tags:['police-vehicle','ambulance','blue-flashing-beacons','emergency-response'],
+   note:'CARS2.30 strict-match. Primary scene shows police blue beacons; phase media shows ambulance emergency lights. Two correct answers taught in one standard Replay.'
+  },
+
+  {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

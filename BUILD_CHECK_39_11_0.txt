@@ -1,0 +1,4 @@
+MALTA DRIVING MASTER — BUILD 39.11.0
+CARS1.3 blind spot definition
+Runtime: {"question":"CARS1.3","key":"blindSpotDefinition","scene":"MT_BLIND_SPOT_DEFINITION_V1","timeline":4,"status":"ready","correct":[3]}
+All JS/CSS cache refs: 39110

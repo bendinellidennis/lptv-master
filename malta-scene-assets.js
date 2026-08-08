@@ -5,6 +5,17 @@
 
  [
 
+  {
+   sceneKey:'blindSpotDefinition',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/4607432/',
+   videoSources:["https://www.pexels.com/download/video/4607432/"],
+   poster:'https://images.pexels.com/videos/4607432/free-video-4607432.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · cottonbro studio',
+   sourcePage:'https://www.pexels.com/video/a-car-is-shown-in-the-side-mirror-of-a-car-4607432/',
+   tags:['side-mirror','traffic','mirror-coverage','blind-spot'],
+   note:'CARS1.3 strict-match: real side-mirror traffic view used to distinguish the area visible in mirrors from the blind spot outside mirror coverage.'
+  },
+
 
   {
    sceneKey:'uTurnShoulderCheck',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',

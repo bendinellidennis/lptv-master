@@ -4,6 +4,46 @@
 
 
  global.ReplayEngine.registerScene({
+  id:'MT_BLIND_SPOT_DEFINITION_V1',category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'blindSpotDefinition',visualStatus:'real-footage-with-instructional-overlay',replayTemplate:'standard-video',
+  title:'Blind spot: area not covered by mirrors',
+  accessibilityLabel:'Real traffic seen in a car side mirror, used to explain the area that remains outside mirror coverage',
+  playbackRate:0.85,
+  media:{
+   video:'https://www.pexels.com/download/video/4607432/',
+   videoSources:["https://www.pexels.com/download/video/4607432/"],
+   poster:'https://images.pexels.com/videos/4607432/free-video-4607432.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · cottonbro studio',
+   sourcePage:'https://www.pexels.com/video/a-car-is-shown-in-the-side-mirror-of-a-car-4607432/'
+  },
+  timeline:[
+   {at:.4,end:2.0,event:'observe',textIt:'Osserva ciò che compare nello specchietto',textEn:'Observe what appears in the side mirror'},
+   {at:2.2,end:4.0,event:'coverage',textIt:'Lo specchio mostra solo una parte dello spazio accanto e dietro al veicolo',textEn:'The mirror shows only part of the area beside and behind the vehicle'},
+   {at:4.2,end:6.2,event:'blind-spot',textIt:'La zona fuori dalla visuale degli specchi è l’angolo cieco',textEn:'The area outside mirror coverage is the blind spot'},
+   {at:6.4,end:8.8,event:'check',textIt:'Per controllarla serve anche un rapido controllo diretto sopra la spalla',textEn:'A quick direct shoulder check is also needed to check it'}
+  ],
+  ui:{
+   hotspot:{left:48,top:51,radiusX:38,radiusY:34,instructionIt:'TOCCA LO SPECCHIETTO',instructionEn:'TAP THE SIDE MIRROR',ariaIt:'Tocca lo specchietto laterale',ariaEn:'Tap the side mirror'},
+   phases:[
+    {},
+    {titleIt:'LO SPECCHIO NON MOSTRA TUTTO',titleEn:'THE MIRROR DOES NOT SHOW EVERYTHING',bodyIt:'Quello che vedi nello specchio è solo una parte dello spazio attorno al veicolo.',bodyEn:'What you see in the mirror is only part of the space around the vehicle.'},
+    {titleIt:'ANGOLO CIECO = FUORI DALLA VISUALE',titleEn:'BLIND SPOT = OUTSIDE MIRROR VIEW',bodyIt:'L’angolo cieco è precisamente l’area che non è coperta dagli specchi.',bodyEn:'The blind spot is precisely the area not covered by your mirrors.'},
+    {titleIt:'SPECCHI + CONTROLLO DIRETTO',titleEn:'MIRRORS + DIRECT CHECK',bodyIt:'Prima di spostarti lateralmente controlla gli specchi e, quando necessario, anche sopra la spalla.',bodyEn:'Before moving sideways, check the mirrors and, when needed, make a shoulder check.'}
+   ],
+   phaseOptions:[{startRatio:0,autoplay:true,endRatio:.45},{startRatio:.28,freeze:true},{startRatio:.28,freeze:true},{startRatio:.45,autoplay:false,endRatio:.95}]
+  },
+  coach:{
+   missIt:'Concentrati sullo specchietto: la domanda riguarda ciò che gli specchi non riescono a mostrarti.',missEn:'Focus on the mirror: the question is about what the mirrors cannot show you.',
+   hitIt:'Esatto: l’angolo cieco è la zona che resta fuori dalla visuale degli specchi.',hitEn:'Correct: the blind spot is the area that remains outside mirror coverage.'
+  },
+  learning:{
+   correctIt:'L’angolo cieco è un’area attorno al veicolo che non è visibile negli specchi.',
+   correctEn:'A blind spot is an area around the vehicle that cannot be seen in the mirrors.'
+  }
+ });
+
+
+ global.ReplayEngine.registerScene({
   id:'MT_UTURN_SHOULDER_CHECK_V1',category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
   sceneKey:'uTurnShoulderCheck',visualStatus:'real-footage-with-instructional-overlay',replayTemplate:'standard-video',
   title:'Final shoulder check before a U-turn',accessibilityLabel:'Vehicle making a U-turn while the replay teaches the final blind-spot shoulder check',playbackRate:0.85,

@@ -604,4 +604,52 @@
   }
  });
 
+
+ global.ReplayEngine.registerScene({
+  id:'MT_LARGE_VEHICLE_TOO_CLOSE_V1',
+  category:'safety-margins',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'largeVehicleTooClose',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Following a large vehicle too closely',
+  accessibilityLabel:'Driver point of view in motorway traffic with a large goods vehicle ahead, teaching the loss of forward view and mirror visibility when following too closely',
+  playbackRate:0.88,
+  media:{
+   video:'https://www.pexels.com/download/video/9521384/',
+   videoSources:["https://www.pexels.com/download/video/9521384/","https://videos.pexels.com/video-files/9521384/9521384-uhd_3840_2160_15fps.mp4"],
+   poster:'https://images.pexels.com/videos/9521384/car-s-motorway-road-traffic-united-kingdom-9521384.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · George Morina',
+   sourcePage:'https://www.pexels.com/video/a-car-driving-on-the-highway-with-other-cars-9521384/'
+  },
+  timeline:[
+   {at:.5,end:2.2,event:'observe',textIt:'Osserva il veicolo grande davanti e quanto spazio occupa nella tua visuale',textEn:'Watch the large vehicle ahead and how much of your forward view it occupies'},
+   {at:2.4,end:4.5,event:'danger',textIt:'Se lo segui troppo vicino, il veicolo grande ti nasconde una parte importante della strada davanti',textEn:'If you follow too closely, the large vehicle blocks an important part of the road ahead'},
+   {at:4.7,end:6.8,event:'blindspot',textIt:'Da troppo vicino puoi anche trovarti fuori dalla zona visibile nei suoi specchi',textEn:'From too close, you may also sit outside the area visible in its mirrors'},
+   {at:7.0,end:9.8,event:'correct',textIt:'Aumenta la distanza: recuperi visuale davanti e rendi più facile al conducente vederti',textEn:'Increase the gap: regain your forward view and make it easier for the driver to see you'}
+  ],
+  ui:{
+   hotspot:{left:50,top:38,radiusX:25,radiusY:28,instructionIt:'TOCCA IL VEICOLO GRANDE',instructionEn:'TAP THE LARGE VEHICLE',ariaIt:'Tocca il veicolo grande davanti',ariaEn:'Tap the large vehicle ahead'},
+   phases:[
+    {},
+    {titleIt:'TROPPO VICINO = VISUALE RIDOTTA',titleEn:'TOO CLOSE = REDUCED VIEW',bodyIt:'Il veicolo grande riempie il tuo campo visivo e ti impedisce di vedere bene cosa succede più avanti.',bodyEn:'The large vehicle fills your field of view and prevents you from seeing clearly what is happening farther ahead.'},
+    {titleIt:'PUOI SPARIRE DAI SUOI SPECCHI',titleEn:'YOU MAY DISAPPEAR FROM ITS MIRRORS',bodyIt:'I veicoli grandi hanno zone cieche. Se resti troppo vicino, il conducente può non vederti negli specchi.',bodyEn:'Large vehicles have blind areas. If you stay too close, the driver may not see you in the mirrors.'},
+    {titleIt:'RESTA BEN DISTANTE',titleEn:'STAY WELL BACK',bodyIt:'Le due ragioni corrette sono entrambe qui: più visuale davanti per te e maggiore possibilità di essere visto dal conducente del veicolo grande.',bodyEn:'Both correct reasons are here: more forward view for you and a better chance of being seen by the large-vehicle driver.'}
+   ],
+   phaseOptions:[
+    {startRatio:0,autoplay:true,endRatio:.46},
+    {startRatio:.18,freeze:true},
+    {startRatio:.34,freeze:true},
+    {startRatio:.42,autoplay:false,endRatio:.92}
+   ]
+  },
+  coach:{
+   missIt:'Cerca il veicolo grande davanti: devi capire cosa perdi quando gli stai troppo vicino.',
+   missEn:'Look for the large vehicle ahead: identify what you lose by following it too closely.',
+   hitIt:'Esatto. Troppo vicino perdi visuale davanti e puoi anche non essere visibile nei suoi specchi.',
+   hitEn:'Correct. Too close, you lose forward view and may also be invisible in its mirrors.'
+  },
+  learning:{
+   correctIt:'Non seguire troppo da vicino un veicolo grande: riduce la tua visuale davanti e il conducente può non vederti negli specchi.',
+   correctEn:'Do not follow a large vehicle too closely: it reduces your forward view and the driver may not see you in the mirrors.'
+  }
+ });
+
 })(window);

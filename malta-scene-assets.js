@@ -151,6 +151,17 @@
   },
 
   {
+   sceneKey:'largeVehicleTooClose',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/9521384/',
+   videoSources:["https://www.pexels.com/download/video/9521384/","https://videos.pexels.com/video-files/9521384/9521384-uhd_3840_2160_15fps.mp4"],
+   poster:'https://images.pexels.com/videos/9521384/car-s-motorway-road-traffic-united-kingdom-9521384.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · George Morina',
+   sourcePage:'https://www.pexels.com/video/a-car-driving-on-the-highway-with-other-cars-9521384/',
+   tags:['pov-driving','large-vehicle-ahead','truck','following-too-close','reduced-forward-view','mirror-blind-zone','traffic'],
+   note:'CARS2.14 strict-match: driver POV in live motorway traffic with a large goods vehicle ahead. The replay explicitly teaches both official answers: staying too close blocks the view ahead and can place the following car where the large-vehicle driver cannot see it in the mirrors.'
+  },
+
+  {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

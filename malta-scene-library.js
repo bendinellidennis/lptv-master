@@ -110,6 +110,12 @@
   },
 
   {
+   key:'largeVehicleTooClose',category:'safety-margins',titleIt:'Veicolo grande: troppo vicino riduce visuale e visibilità',titleEn:'Large vehicle: following too closely reduces view and visibility',status:'ready',
+   questionIds:['CARS2.14'],expectedCorrect:[1,3],engineSceneId:'MT_LARGE_VEHICLE_TOO_CLOSE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['pov-driving','large-vehicle-ahead','following-too-close','reduced-forward-view','mirror-blind-zone'],prohibited:['parked-only','pedestrian-only','reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

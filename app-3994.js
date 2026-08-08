@@ -2598,66 +2598,64 @@ function renderReplayStable(){
   if(Math.abs(delta)>.5)window.scrollBy(0,delta);
  });
 }
-let replayVisualHoldToken=0;
 
-function replayCaptureVisualHold(){
- const player=screen.querySelector('[data-replay-engine-player]');
- if(!player)return null;
- const poster=player.querySelector('[data-replay-engine-poster]');
- const video=player.querySelector('[data-replay-engine-video]');
- const src=poster?.currentSrc||poster?.src||video?.poster||'';
- const rect=player.getBoundingClientRect();
- if(!src||rect.width<2||rect.height<2)return null;
-
- const token=++replayVisualHoldToken;
- const layer=document.createElement('div');
- layer.className='replay-transition-hold';
- layer.dataset.replayTransitionHold=String(token);
- Object.assign(layer.style,{
+let replayStageHoldToken=0;
+function replayHoldCurrentStage(){
+ const stage=screen.querySelector('.standard-video-replay .wave-across-stage');
+ if(!stage)return null;
+ const rect=stage.getBoundingClientRect();
+ if(rect.width<2||rect.height<2)return null;
+ const holder=document.createElement('div');
+ holder.className='replay-stage-transition-hold';
+ holder.dataset.replayStageHold=String(++replayStageHoldToken);
+ Object.assign(holder.style,{
   position:'fixed',left:`${rect.left}px`,top:`${rect.top}px`,width:`${rect.width}px`,height:`${rect.height}px`,
-  zIndex:'2147483000',pointerEvents:'none',overflow:'hidden',background:'#10212b'
+  zIndex:'2147482000',pointerEvents:'none',overflow:'hidden',borderRadius:getComputedStyle(stage).borderRadius||'28px'
  });
- const image=document.createElement('img');
- image.src=src;
- image.alt='';
- image.setAttribute('aria-hidden','true');
- image.referrerPolicy='no-referrer';
- Object.assign(image.style,{width:'100%',height:'100%',display:'block',objectFit:'cover'});
- layer.appendChild(image);
- document.body.appendChild(layer);
- return {token,layer};
+ holder.appendChild(stage);
+ document.body.appendChild(holder);
+ return holder;
 }
-
-function replayReleaseVisualHold(hold){
- if(!hold?.layer)return;
- const remove=()=>{
-  if(!hold.layer?.isConnected)return;
-  hold.layer.style.opacity='0';
-  setTimeout(()=>hold.layer?.remove(),90);
+function replayReleaseStageWhenReady(holder){
+ if(!holder)return;
+ let released=false;
+ let observer=null;
+ let timeout=null;
+ const release=()=>{
+  if(released)return;released=true;
+  observer?.disconnect();
+  if(timeout)clearTimeout(timeout);
+  holder.classList.add('is-releasing');
+  setTimeout(()=>holder.remove(),90);
  };
- const nextPoster=screen.querySelector('[data-replay-engine-poster]');
- if(!nextPoster){setTimeout(remove,180);return;}
- if(nextPoster.complete&&nextPoster.naturalWidth>0){requestAnimationFrame(()=>requestAnimationFrame(remove));return;}
- let done=false;
- const finish=()=>{
-  if(done)return;done=true;
-  nextPoster.removeEventListener('load',finish);
-  nextPoster.removeEventListener('error',finish);
-  requestAnimationFrame(()=>requestAnimationFrame(remove));
+ const player=screen.querySelector('[data-replay-engine-player]');
+ const video=player?.querySelector('[data-replay-engine-video]');
+ const poster=player?.querySelector('[data-replay-engine-poster]');
+ if(video?.classList.contains('replay-frame-ready')){requestAnimationFrame(release);return;}
+ if(video&&typeof MutationObserver!=='undefined'){
+  observer=new MutationObserver(()=>{
+   if(video.classList.contains('replay-frame-ready'))requestAnimationFrame(release);
+  });
+  observer.observe(video,{attributes:true,attributeFilter:['class']});
+ }
+ // If the decoded frame callback is unusually slow, a fully loaded poster is still safe.
+ const posterReady=()=>{
+  if(poster?.complete&&poster.naturalWidth>0)requestAnimationFrame(()=>requestAnimationFrame(release));
  };
- nextPoster.addEventListener('load',finish,{once:true});
- nextPoster.addEventListener('error',finish,{once:true});
- setTimeout(finish,2200);
+ if(poster){poster.addEventListener('load',posterReady,{once:true});posterReady();}
+ timeout=setTimeout(()=>{
+  // Do not expose a black stage: only release on timeout when either frame or poster is demonstrably ready.
+  if(video?.classList.contains('replay-frame-ready')||(poster?.complete&&poster.naturalWidth>0))release();
+ },1800);
 }
-
-function replayTransitionWithoutBlack(question,targetPhase,{clearCoach=true}={}){
- const safeTarget=Math.max(0,Math.min(3,Number(targetPhase)||0));
- const hold=replayCaptureVisualHold();
+function replayTransitionWithStageHold(question,target,{clearCoach=true}={}){
+ const safeTarget=Math.max(0,Math.min(3,Number(target)||0));
+ const holder=replayHoldCurrentStage();
  errorReplayStep=safeTarget;
  if(errorReplayStep>=3)errorReplayMarkCompleted(question?.id||'');
  if(clearCoach)replayCoachFeedback=null;
  renderReplayStable();
- replayReleaseVisualHold(hold);
+ requestAnimationFrame(()=>replayReleaseStageWhenReady(holder));
 }
 
 function errorReplayNextStep(questionId){errorReplayStep=Math.min(3,errorReplayStep+1);if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);renderReplayStable()}
@@ -2752,7 +2750,7 @@ function bindErrorReplay(){
     return;
    }
 
-   replayTransitionWithoutBlack(question,requested,{clearCoach:false});
+   replayTransitionWithStageHold(question,requested,{clearCoach:false});
   };
  });
 
@@ -2763,7 +2761,7 @@ function bindErrorReplay(){
    event.stopPropagation();
    const target=Number(phaseContinue.dataset.replayPhaseContinue);
    if(!Number.isFinite(target)||target!==errorReplayStep+1)return;
-   replayTransitionWithoutBlack(question,target,{clearCoach:true});
+   replayTransitionWithStageHold(question,target,{clearCoach:true});
   };
  }
 
@@ -2826,7 +2824,7 @@ function bindErrorReplay(){
     continueButton.onclick=continueEvent=>{
      continueEvent.preventDefault();
      continueEvent.stopPropagation();
-     replayTransitionWithoutBlack(question,1,{clearCoach:false});
+     replayTransitionWithStageHold(question,1,{clearCoach:false});
     };
    }
   };

@@ -349,11 +349,48 @@
      revealVideoFrame();
     };
 
+    let frameCallbackScheduled=false;
     if(typeof video.requestVideoFrameCallback==='function'){
      try{
       video.requestVideoFrameCallback(()=>requestAnimationFrame(commit));
-      return;
+      frameCallbackScheduled=true;
      }catch(_){}
+    }
+
+    // Safari can report seeked while a paused video has not painted the requested frame yet.
+    // For freeze phases, briefly allow one muted inline frame to decode, then pause again.
+    if(mounted.freeze&&video.paused){
+     try{
+      const warm=video.play();
+      if(warm&&typeof warm.then==='function'){
+       warm.then(()=>{
+        if(!mounted||mounted.video!==video||token!==frameRevealToken)return;
+        if(typeof video.requestVideoFrameCallback==='function'){
+         try{
+          video.requestVideoFrameCallback(()=>{
+           if(!mounted||mounted.video!==video||token!==frameRevealToken)return;
+           video.pause();
+           requestAnimationFrame(commit);
+          });
+          return;
+         }catch(_){}
+        }
+        setTimeout(()=>{if(mounted&&mounted.video===video){video.pause();commit();}},90);
+       }).catch(()=>{});
+      }
+     }catch(_){}
+    }
+
+    // Never wait forever for requestVideoFrameCallback on iOS/WKWebView.
+    if(frameCallbackScheduled){
+     frameRevealTimer=setTimeout(()=>{
+      if(!mounted||mounted.video!==video||token!==frameRevealToken)return;
+      if(video.readyState>=2){
+       try{video.pause();}catch(_){}
+       requestAnimationFrame(()=>requestAnimationFrame(commit));
+      }
+     },420);
+     return;
     }
 
     const waitForDecodedFrame=(attempt=0)=>{

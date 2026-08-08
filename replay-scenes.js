@@ -4,6 +4,72 @@
 
 
  global.ReplayEngine.registerScene({
+  id:'MT_MSM_ROUTINE_V1',
+  category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'msmRoutine',visualStatus:'real-footage-sequence',replayTemplate:'standard-video',
+  title:'MSM — Mirror, Signal, Manoeuvre',
+  accessibilityLabel:'Driver checks traffic and mirrors, then the replay shows the indicator and a real turning manoeuvre',
+  playbackRate:0.9,
+  media:{
+   video:'https://www.pexels.com/download/video/4118586/',
+   videoSources:["https://www.pexels.com/download/video/4118586/"],
+   poster:'https://images.pexels.com/videos/4118586/free-video-4118586.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · WeStarMoney Rec',
+   sourcePage:'https://www.pexels.com/video/man-driving-a-car-and-looking-curious-4118586/'
+  },
+  timeline:[
+   {at:.4,end:2.2,event:'observe',textIt:'1. SPECCHIO: controlla il traffico dietro e accanto',textEn:'1. MIRROR: check traffic behind and beside you'},
+   {at:2.4,end:4.2,event:'signal',textIt:'2. SEGNALE: comunica per tempo ciò che vuoi fare',textEn:'2. SIGNAL: communicate your intention in good time'},
+   {at:4.4,end:6.2,event:'manoeuvre',textIt:'3. MANOVRA: muoviti solo quando è sicuro',textEn:'3. MANOEUVRE: move only when it is safe'},
+   {at:6.4,end:8.6,event:'sequence',textIt:'MSM = Specchio → Segnale → Manovra',textEn:'MSM = Mirror → Signal → Manoeuvre'}
+  ],
+  ui:{
+   hotspot:{left:54,top:48,radiusX:40,radiusY:35,instructionIt:'TOCCA IL CONTROLLO DEGLI SPECCHI',instructionEn:'TAP THE MIRROR CHECK',ariaIt:'Tocca il conducente o lo specchio durante il controllo',ariaEn:'Tap the driver or mirror during the check'},
+   phases:[
+    {},
+    {titleIt:'PRIMA CONTROLLA: NON INIZIARE DALLA MANOVRA',titleEn:'CHECK FIRST: DO NOT START WITH THE MANOEUVRE',bodyIt:'Se ti sposti o svolti prima di controllare gli specchi, puoi non sapere cosa sta arrivando dietro o accanto a te.',bodyEn:'If you move or turn before checking the mirrors, you may not know what is approaching behind or beside you.'},
+    {titleIt:'S = SIGNAL • SEGNALE',titleEn:'S = SIGNAL',bodyIt:'Dopo il controllo degli specchi, usa l’indicatore in tempo per far capire agli altri cosa stai per fare.',bodyEn:'After checking the mirrors, use the indicator in good time so others know what you intend to do.'},
+    {titleIt:'M = MANOEUVRE • MANOVRA',titleEn:'M = MANOEUVRE',bodyIt:'Solo dopo Specchio e Segnale esegui la manovra quando è sicura. MSM = Specchio → Segnale → Manovra.',bodyEn:'Only after Mirror and Signal carry out the manoeuvre when it is safe. MSM = Mirror → Signal → Manoeuvre.'}
+   ],
+   phaseMedia:[
+    null,
+    null,
+    {
+     video:'https://www.pexels.com/download/video/4565727/',
+     videoSources:["https://www.pexels.com/download/video/4565727/"],
+     poster:'https://images.pexels.com/videos/4565727/free-video-4565727.jpg?auto=compress&dpr=1&h=750&w=1260',
+     credit:'Pexels · ArtHouse Studio',
+     sourcePage:'https://www.pexels.com/video/close-up-video-of-a-steering-wheel-4565727/'
+    },
+    {
+     video:'https://www.pexels.com/download/video/3999415/',
+     videoSources:["https://www.pexels.com/download/video/3999415/"],
+     poster:'https://images.pexels.com/videos/3999415/free-video-3999415.jpg?auto=compress&dpr=1&h=750&w=1260',
+     credit:'Pexels · K',
+     sourcePage:'https://www.pexels.com/video/close-up-a-car-driving-on-the-road-3999415/'
+    }
+   ],
+   phaseOptions:[
+    {startRatio:0,autoplay:true,endRatio:.55},
+    {startRatio:.22,freeze:true},
+    {startRatio:0,autoplay:true,endRatio:.85},
+    {startRatio:0,autoplay:true,endRatio:.88}
+   ]
+  },
+  coach:{
+   missIt:'Cerca il primo passo della sequenza: prima di segnalare o muoverti devi controllare cosa succede attorno al veicolo.',
+   missEn:'Find the first step in the sequence: before signalling or moving, check what is happening around the vehicle.',
+   hitIt:'Esatto: il primo passo è Mirror. Poi Signal e infine Manoeuvre.',
+   hitEn:'Correct: the first step is Mirror. Then Signal and finally Manoeuvre.'
+  },
+  learning:{
+   correctIt:'MSM significa Specchio, Segnale, Manovra: controlla, comunica, poi esegui la manovra.',
+   correctEn:'MSM means Mirror, Signal, Manoeuvre: check, communicate, then carry out the manoeuvre.'
+  }
+ });
+
+
+ global.ReplayEngine.registerScene({
   id:'MT_BLIND_SPOT_DEFINITION_V1',category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
   sceneKey:'blindSpotDefinition',visualStatus:'real-footage-with-instructional-overlay',replayTemplate:'standard-video',
   title:'Blind spot: area not covered by mirrors',

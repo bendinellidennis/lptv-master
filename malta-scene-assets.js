@@ -6,6 +6,17 @@
  [
 
   {
+   sceneKey:'msmRoutine',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/4118586/',
+   videoSources:["https://www.pexels.com/download/video/4118586/"],
+   poster:'https://images.pexels.com/videos/4118586/free-video-4118586.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · WeStarMoney Rec',
+   sourcePage:'https://www.pexels.com/video/man-driving-a-car-and-looking-curious-4118586/',
+   tags:['driver','vehicle-moving','road-visible','side-mirror','mirror-check','signal','manoeuvre','ordered-sequence'],
+   note:'CARS1.7 strict-match sequence. Dedicated footage not used by any previously approved Replay: first observe/check mirrors, then show the turn signal, then show the manoeuvre.'
+  },
+
+  {
    sceneKey:'blindSpotDefinition',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/4607432/',
    videoSources:["https://www.pexels.com/download/video/4607432/"],

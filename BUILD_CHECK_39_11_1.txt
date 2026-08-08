@@ -1,0 +1,10 @@
+MALTA DRIVING MASTER — BUILD 39.11.1
+CARS1.7 MSM — Mirror / Signal / Manoeuvre
+Base: BUILD 39.11.0 (CARS1.3 approved)
+Runtime target: {"question":"CARS1.7","key":"msmRoutine","scene":"MT_MSM_ROUTINE_V1","timeline":4,"status":"ready","correct":[0]}
+Primary video: Pexels 4118586 — driver / mirror-awareness footage
+Phase 03 video: Pexels 4565727 — steering wheel / indicator / turn-signal footage
+Phase 04 video: Pexels 3999415 — real vehicle turning manoeuvre
+No previously approved Replay files modified.
+No approved main-scene video reused.
+All JS/CSS cache refs: 39111

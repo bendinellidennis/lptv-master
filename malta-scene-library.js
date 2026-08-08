@@ -6,6 +6,12 @@
  const entries=[
 
   {
+   key:'msmRoutine',category:'alertness',titleIt:'MSM: Specchio, Segnale, Manovra',titleEn:'MSM: Mirror, Signal, Manoeuvre',status:'ready',
+   questionIds:['CARS1.7'],expectedCorrect:[0],engineSceneId:'MT_MSM_ROUTINE_V1',countryPackId:'MT-LPTV',visualStatus:'real-footage-sequence',
+   required:['mirror-check','signal','manoeuvre','ordered-sequence'],prohibited:['generic-road','unrelated-scene','reused-approved-video']
+  },
+
+  {
    key:'blindSpotDefinition',category:'alertness',titleIt:'Angolo cieco: area fuori dagli specchi',titleEn:'Blind spot: area outside mirror coverage',status:'ready',
    questionIds:['CARS1.3'],expectedCorrect:[3],engineSceneId:'MT_BLIND_SPOT_DEFINITION_V1',countryPackId:'MT-LPTV',visualStatus:'real-footage-with-instructional-overlay',
    required:['side-mirror','traffic','mirror-coverage','blind-spot'],prohibited:['mechanic','parked-only','no-mirror']

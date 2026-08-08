@@ -990,6 +990,67 @@ global.ReplayEngine.registerScene({
 });
 
 global.ReplayEngine.registerScene({
+ id:'MT_UNDERINFLATED_STEERING_BRAKING_V1',
+ category:'vehicle-safety',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'underInflatedSteeringBraking',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Under-inflated tyres — steering and braking',
+ accessibilityLabel:'Real tyre pressure check followed by steering and braking examples to teach the two controls adversely affected by under-inflated tyres',
+ playbackRate:0.9,
+ media:{
+  video:'https://www.pexels.com/download/video/8470711/',
+  videoSources:['https://www.pexels.com/download/video/8470711/'],
+  poster:'https://images.pexels.com/videos/8470711/free-video-8470711.jpg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Anastasia Shuraeva',
+  sourcePage:'https://www.pexels.com/video/person-checking-tire-pressure-8470711/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Controlla la pressione: uno pneumatico sotto-gonfiato si deforma più del previsto',textEn:'Check tyre pressure: an under-inflated tyre deforms more than intended'},
+  {at:2.6,end:4.6,event:'hazard',textIt:'Con poca pressione il pneumatico risponde peggio alle richieste del conducente',textEn:'With low pressure the tyre responds less effectively to driver inputs'},
+  {at:4.8,end:6.8,event:'explain',textIt:'Le due funzioni da ricordare sono STERZO e FRENATA',textEn:'The two functions to remember are STEERING and BRAKING'},
+  {at:7.0,end:10.5,event:'correct',textIt:'Pressione corretta = risposta dello sterzo più precisa e frenata più efficace',textEn:'Correct pressure = more precise steering response and more effective braking'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:48,top:55,radiusX:30,radiusY:30,instructionIt:'TOCCA IL PNEUMATICO / MANOMETRO',instructionEn:'TAP THE TYRE / GAUGE',ariaIt:'Tocca il pneumatico o il manometro della pressione',ariaEn:'Tap the tyre or tyre-pressure gauge'},
+  phases:[
+   {},
+   {titleIt:'PRESSIONE TROPPO BASSA',titleEn:'PRESSURE TOO LOW',bodyIt:'Uno pneumatico sotto-gonfiato si flette e lavora fuori dalla pressione prevista: la risposta del veicolo peggiora.',bodyEn:'An under-inflated tyre flexes and operates below its intended pressure, reducing vehicle response.'},
+   {titleIt:'STERZO + FRENATA',titleEn:'STEERING + BRAKING',bodyIt:'Memorizza la coppia esatta richiesta dall’esame: la bassa pressione peggiora la risposta dello STERZO e le prestazioni di FRENATA.',bodyEn:'Remember the exact pair required by the test: low pressure impairs STEERING response and BRAKING performance.'},
+   {titleIt:'MANTIENI LA PRESSIONE CORRETTA',titleEn:'KEEP THE CORRECT PRESSURE',bodyIt:'Controlla regolarmente la pressione: pneumatici correttamente gonfiati aiutano il veicolo a sterzare e frenare come previsto.',bodyEn:'Check pressure regularly: correctly inflated tyres help the vehicle steer and brake as intended.'}
+  ],
+  phaseMedia:[null,null,{
+   video:'https://www.pexels.com/download/video/27445074/',
+   videoSources:['https://www.pexels.com/download/video/27445074/'],
+   poster:'https://images.pexels.com/videos/27445074/free-video-27445074.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Furkan Elveren',
+   sourcePage:'https://www.pexels.com/video/a-person-is-driving-a-car-with-their-hands-on-the-steering-wheel-27445074/'
+  },{
+   video:'https://www.pexels.com/download/video/15565206/',
+   videoSources:['https://www.pexels.com/download/video/15565206/'],
+   poster:'https://images.pexels.com/videos/15565206/free-video-15565206.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Martyn Day',
+   sourcePage:'https://www.pexels.com/video/cars-stopping-at-a-traffic-light-at-night-15565206/'
+  }],
+  phaseOptions:[
+   {startRatio:.18,freeze:true},
+   {startRatio:.42,freeze:true},
+   {startRatio:.28,freeze:true},
+   {startRatio:.10,autoplay:true,endRatio:.78}
+  ]
+ },
+ coach:{
+  missIt:'Non pensare a parcheggio o cambio marcia. Con pressione bassa peggiorano due funzioni direttamente legate al contatto pneumatico-strada: sterzo e frenata.',
+  missEn:'Do not choose parking or gear changing. Low pressure affects two functions directly linked to tyre-road contact: steering and braking.',
+  hitIt:'Esatto: STERZO e FRENATA. Sono le due risposte da associare immediatamente agli pneumatici sotto-gonfiati.',
+  hitEn:'Correct: STEERING and BRAKING. These are the two answers to associate immediately with under-inflated tyres.'
+ },
+ learning:{
+  correctIt:'Pneumatici sgonfi: peggiorano sterzo e frenata.',
+  correctEn:'Under-inflated tyres adversely affect steering and braking.'
+ }
+});
+
+global.ReplayEngine.registerScene({
  id:'MT_HORN_ALERT_PRESENCE_V1',
  category:'signals',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
  sceneKey:'hornAlertPresence',visualStatus:'final-real-footage',replayTemplate:'standard-video',

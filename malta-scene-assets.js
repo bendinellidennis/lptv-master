@@ -224,6 +224,17 @@
   },
 
   {
+   sceneKey:'underInflatedSteeringBraking',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock-sequence',
+   video:'https://www.pexels.com/download/video/8470711/',
+   videoSources:['https://www.pexels.com/download/video/8470711/'],
+   poster:'https://images.pexels.com/videos/8470711/free-video-8470711.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Anastasia Shuraeva',
+   sourcePage:'https://www.pexels.com/video/person-checking-tire-pressure-8470711/',
+   tags:['tyre-pressure','tyre-pressure-check','pressure-gauge','under-inflation','steering','steering-response','braking','braking-performance','vehicle-safety'],
+   note:'CARS3.4 strict-match sequence. Starts with a real tyre-pressure check, then isolates steering response and braking as the two vehicle-control functions adversely affected by under-inflation.'
+  },
+
+  {
    sceneKey:'hornAlertPresence',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/12365082/',
    videoSources:[

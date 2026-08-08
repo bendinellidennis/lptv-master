@@ -160,6 +160,12 @@
   },
 
   {
+   key:'underInflatedSteeringBraking',category:'vehicle-safety',titleIt:'Pneumatici sgonfi: sterzo e frenata',titleEn:'Under-inflated tyres: steering and braking',status:'ready',
+   questionIds:['CARS3.4'],expectedCorrect:[0,1],engineSceneId:'MT_UNDERINFLATED_STEERING_BRAKING_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['tyre-pressure-check','under-inflation','steering-response','braking-performance'],prohibited:['parking','gear-change','generic-tyre-only','reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

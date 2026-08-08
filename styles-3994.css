@@ -1962,7 +1962,5 @@ body.replay-fullscreen-open{
 .replay-engine-player .cinematic-action-video{opacity:0!important;transition:opacity .08s linear}
 .replay-engine-player .cinematic-action-video.replay-frame-ready{opacity:1!important}
 
-/* 39.11.18 — phase-to-phase visual handoff: keep current frame visible until next poster is preloaded */
-.replay-engine-player.replay-phase-hold{pointer-events:none}
-.replay-engine-player.replay-phase-hold .cinematic-action-video,
-.replay-engine-player.replay-phase-hold .replay-engine-poster{transition:none!important}
+/* 39.11.17A — preserve previous visible frame across phase DOM replacement */
+.replay-transition-hold{transition:opacity .08s linear!important}

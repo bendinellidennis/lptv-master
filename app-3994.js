@@ -2598,54 +2598,68 @@ function renderReplayStable(){
   if(Math.abs(delta)>.5)window.scrollBy(0,delta);
  });
 }
+let replayVisualHoldToken=0;
 
-let replayPhaseTransitionToken=0;
+function replayCaptureVisualHold(){
+ const player=screen.querySelector('[data-replay-engine-player]');
+ if(!player)return null;
+ const poster=player.querySelector('[data-replay-engine-poster]');
+ const video=player.querySelector('[data-replay-engine-video]');
+ const src=poster?.currentSrc||poster?.src||video?.poster||'';
+ const rect=player.getBoundingClientRect();
+ if(!src||rect.width<2||rect.height<2)return null;
 
-function replayPhaseMediaFor(question,targetPhase){
- const selection=replaySceneSelection(question);
- const scene=selection?.scene||null;
- if(!scene)return null;
- const phaseMedia=(scene.ui?.phaseMedia||[])[targetPhase]||null;
- return phaseMedia||scene.media||null;
-}
-
-function replayPreloadPhaseVisual(question,targetPhase){
- const media=replayPhaseMediaFor(question,targetPhase);
- const poster=media?.poster||'';
- if(!poster)return Promise.resolve(true);
-
- return new Promise(resolve=>{
-  const image=new Image();
-  let settled=false;
-  const finish=ok=>{
-   if(settled)return;
-   settled=true;
-   clearTimeout(timer);
-   resolve(ok);
-  };
-  const timer=setTimeout(()=>finish(false),1800);
-  image.onload=()=>finish(true);
-  image.onerror=()=>finish(false);
-  image.referrerPolicy='no-referrer';
-  image.src=poster;
-  if(image.complete&&image.naturalWidth>0)finish(true);
+ const token=++replayVisualHoldToken;
+ const layer=document.createElement('div');
+ layer.className='replay-transition-hold';
+ layer.dataset.replayTransitionHold=String(token);
+ Object.assign(layer.style,{
+  position:'fixed',left:`${rect.left}px`,top:`${rect.top}px`,width:`${rect.width}px`,height:`${rect.height}px`,
+  zIndex:'2147483000',pointerEvents:'none',overflow:'hidden',background:'#10212b'
  });
+ const image=document.createElement('img');
+ image.src=src;
+ image.alt='';
+ image.setAttribute('aria-hidden','true');
+ image.referrerPolicy='no-referrer';
+ Object.assign(image.style,{width:'100%',height:'100%',display:'block',objectFit:'cover'});
+ layer.appendChild(image);
+ document.body.appendChild(layer);
+ return {token,layer};
 }
 
-function replayTransitionToPhase(question,targetPhase,{clearCoach=true}={}){
+function replayReleaseVisualHold(hold){
+ if(!hold?.layer)return;
+ const remove=()=>{
+  if(!hold.layer?.isConnected)return;
+  hold.layer.style.opacity='0';
+  setTimeout(()=>hold.layer?.remove(),90);
+ };
+ const nextPoster=screen.querySelector('[data-replay-engine-poster]');
+ if(!nextPoster){setTimeout(remove,180);return;}
+ if(nextPoster.complete&&nextPoster.naturalWidth>0){requestAnimationFrame(()=>requestAnimationFrame(remove));return;}
+ let done=false;
+ const finish=()=>{
+  if(done)return;done=true;
+  nextPoster.removeEventListener('load',finish);
+  nextPoster.removeEventListener('error',finish);
+  requestAnimationFrame(()=>requestAnimationFrame(remove));
+ };
+ nextPoster.addEventListener('load',finish,{once:true});
+ nextPoster.addEventListener('error',finish,{once:true});
+ setTimeout(finish,2200);
+}
+
+function replayTransitionWithoutBlack(question,targetPhase,{clearCoach=true}={}){
  const safeTarget=Math.max(0,Math.min(3,Number(targetPhase)||0));
- const token=++replayPhaseTransitionToken;
- const currentPlayer=screen.querySelector('[data-replay-engine-player]');
- if(currentPlayer)currentPlayer.classList.add('replay-phase-hold');
-
- replayPreloadPhaseVisual(question,safeTarget).finally(()=>{
-  if(token!==replayPhaseTransitionToken)return;
-  errorReplayStep=safeTarget;
-  if(errorReplayStep>=3)errorReplayMarkCompleted(question?.id||'');
-  if(clearCoach)replayCoachFeedback=null;
-  renderReplayStable();
- });
+ const hold=replayCaptureVisualHold();
+ errorReplayStep=safeTarget;
+ if(errorReplayStep>=3)errorReplayMarkCompleted(question?.id||'');
+ if(clearCoach)replayCoachFeedback=null;
+ renderReplayStable();
+ replayReleaseVisualHold(hold);
 }
+
 function errorReplayNextStep(questionId){errorReplayStep=Math.min(3,errorReplayStep+1);if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);renderReplayStable()}
 function errorReplayPlay(questionId){
  if(errorReplayTimer){clearInterval(errorReplayTimer);errorReplayTimer=null}
@@ -2738,7 +2752,7 @@ function bindErrorReplay(){
     return;
    }
 
-   replayTransitionToPhase(question,requested,{clearCoach:false});
+   replayTransitionWithoutBlack(question,requested,{clearCoach:false});
   };
  });
 
@@ -2749,7 +2763,7 @@ function bindErrorReplay(){
    event.stopPropagation();
    const target=Number(phaseContinue.dataset.replayPhaseContinue);
    if(!Number.isFinite(target)||target!==errorReplayStep+1)return;
-   replayTransitionToPhase(question,target,{clearCoach:true});
+   replayTransitionWithoutBlack(question,target,{clearCoach:true});
   };
  }
 
@@ -2812,7 +2826,7 @@ function bindErrorReplay(){
     continueButton.onclick=continueEvent=>{
      continueEvent.preventDefault();
      continueEvent.stopPropagation();
-     replayTransitionToPhase(question,1,{clearCoach:false});
+     replayTransitionWithoutBlack(question,1,{clearCoach:false});
     };
    }
   };

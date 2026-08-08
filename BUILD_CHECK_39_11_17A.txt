@@ -1,0 +1,6 @@
+MALTA DRIVING MASTER — BUILD 39.11.17A
+BASE: 39.11.17 (first-frame fix retained; 39.11.18 rejected and not used)
+FIX: phase transition black flash.
+METHOD: preserve the already-loaded current poster as a temporary fixed visual layer across the normal DOM re-render; remove only after the next poster is loaded.
+No delayed phase preload and no change to Replay Engine timing.
+Scenes, database, mappings and approved media unchanged.

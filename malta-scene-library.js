@@ -148,6 +148,12 @@
   },
 
   {
+   key:'busRightSignalGiveWay',category:'buses',titleIt:'Autobus alla fermata con freccia destra',titleEn:'Bus at stop signalling right',status:'ready',
+   questionIds:['CARS2.32'],expectedCorrect:[1],engineSceneId:'MT_BUS_RIGHT_SIGNAL_GIVE_WAY_V2',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['bus-stop','bus-stationary','right-indicator','pulling-out','slow-down','give-way-if-safe','left-driving'],prohibited:['horn','flash-headlights','generic-bus-only','reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

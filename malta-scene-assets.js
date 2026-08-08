@@ -224,6 +224,20 @@
   },
 
   {
+   sceneKey:'busRightSignalGiveWay',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/2950082/2950082-uhd_3840_2160_30fps.mp4',
+   videoSources:[
+    'https://videos.pexels.com/video-files/2950082/2950082-uhd_3840_2160_30fps.mp4',
+    'https://www.pexels.com/download/video/2950082/'
+   ],
+   poster:'https://images.pexels.com/videos/2950082/free-video-2950082.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · George Morina / Rec Everywhere',
+   sourcePage:'https://www.pexels.com/video/passenger-bus-making-a-stop-on-designated-bus-stops-2950082/',
+   tags:['bus-stop','bus-stationary','right-indicator','pulling-out','slow-down','give-way-if-safe','left-driving','london-bus'],
+   note:'CARS2.32 strict teaching sequence. Primary real London footage establishes a bus stopped at a designated stop in left-driving traffic. Phase 2 isolates a real flashing amber turn indicator so the learner recognises the exact right-signal cue. Final phases return to the bus-stop scene and teach slowing down, holding back and giving way if safe.'
+  },
+
+  {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

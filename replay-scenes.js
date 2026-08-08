@@ -923,4 +923,70 @@
   }
  });
 
+
+global.ReplayEngine.registerScene({
+ id:'MT_BUS_RIGHT_SIGNAL_GIVE_WAY_V2',
+ category:'buses',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'busRightSignalGiveWay',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Bus at stop signalling right — slow down and give way if safe',
+ accessibilityLabel:'A bus stopped at a bus stop in left-driving traffic, followed by a close view of a flashing amber right indicator, teaching the driver to slow down and give way if safe when the bus signals to pull out',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/2950082/2950082-uhd_3840_2160_30fps.mp4',
+  videoSources:[
+   'https://videos.pexels.com/video-files/2950082/2950082-uhd_3840_2160_30fps.mp4',
+   'https://www.pexels.com/download/video/2950082/'
+  ],
+  poster:'https://images.pexels.com/videos/2950082/free-video-2950082.jpg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · George Morina',
+  sourcePage:'https://www.pexels.com/video/passenger-bus-making-a-stop-on-designated-bus-stops-2950082/'
+ },
+ timeline:[
+  {at:.4,end:2.6,event:'observe',textIt:'Individua l’autobus fermo alla fermata davanti a te',textEn:'Identify the bus stopped at the bus stop ahead'},
+  {at:2.8,end:5.0,event:'hazard',textIt:'La freccia destra significa che l’autobus vuole rientrare nel traffico',textEn:'The right indicator means the bus intends to pull back into traffic'},
+  {at:5.2,end:7.4,event:'explain',textIt:'Rallenta e non tentare di passarlo mentre sta iniziando la manovra',textEn:'Slow down and do not try to pass while it is beginning the manoeuvre'},
+  {at:7.6,end:10.5,event:'correct',textIt:'Se è sicuro, resta indietro e dagli precedenza per uscire dalla fermata',textEn:'If it is safe, hold back and give way so it can leave the stop'}
+ ],
+ ui:{
+  hotspot:{left:67,top:47,radiusX:30,radiusY:28,instructionIt:'TOCCA L’AUTOBUS / FRECCIA DESTRA',instructionEn:'TAP THE BUS / RIGHT INDICATOR',ariaIt:'Tocca l’autobus fermo che segnala a destra',ariaEn:'Tap the stopped bus signalling right'},
+  phases:[
+   {},
+   {titleIt:'FERMATA + FRECCIA DESTRA',titleEn:'BUS STOP + RIGHT INDICATOR',bodyIt:'Il segnale importante non è semplicemente “c’è un autobus”: è un autobus fermo alla fermata che aziona la freccia destra per rientrare nella corsia.',bodyEn:'The important cue is not simply “there is a bus”: it is a bus stopped at the stop using its right indicator to re-enter the lane.'},
+   {titleIt:'RALLENTA E LASCIA SPAZIO',titleEn:'SLOW DOWN AND LEAVE SPACE',bodyIt:'Riduci la velocità e non affiancarti mentre l’autobus sta iniziando a uscire. Devi mantenere una situazione prevedibile e controllata.',bodyEn:'Reduce speed and do not draw alongside as the bus begins to move out. Keep the situation predictable and controlled.'},
+   {titleIt:'DAI PRECEDENZA SE È SICURO',titleEn:'GIVE WAY IF SAFE',bodyIt:'La risposta corretta è rallentare e dare precedenza all’autobus se puoi farlo in sicurezza.',bodyEn:'The correct answer is to slow down and give way to the bus if it is safe to do so.'}
+  ],
+  phaseMedia:[
+   null,
+   {
+    video:'https://videos.pexels.com/video-files/32084102/13676479_3840_2160_60fps.mp4',
+    videoSources:[
+     'https://videos.pexels.com/video-files/32084102/13676479_3840_2160_60fps.mp4',
+     'https://www.pexels.com/download/video/32084102/'
+    ],
+    poster:'https://images.pexels.com/videos/32084102/free-video-32084102.jpg?auto=compress&dpr=1&h=750&w=1260',
+    credit:'Pexels · Rec Everywhere',
+    sourcePage:'https://www.pexels.com/video/automotive-turn-signal-demonstration-video-32084102/'
+   },
+   null,
+   null
+  ],
+  phaseOptions:[
+   {startRatio:0,autoplay:true,endRatio:.42},
+   {startRatio:0,autoplay:true,endRatio:.72},
+   {startRatio:.20,freeze:true},
+   {startRatio:.32,autoplay:false,endRatio:.88}
+  ]
+ },
+ coach:{
+  missIt:'Guarda la situazione completa: autobus fermo alla fermata + freccia destra. Quel segnale indica che sta per rientrare nel traffico.',
+  missEn:'Read the whole situation: bus stopped at the stop + right indicator. That signal means it is about to re-enter traffic.',
+  hitIt:'Esatto. Rallenta, resta indietro e dagli precedenza se è sicuro. Non suonare il clacson e non lampeggiare per forzare il passaggio.',
+  hitEn:'Correct. Slow down, hold back and give way if safe. Do not sound the horn or flash your headlights to force your way through.'
+ },
+ learning:{
+  correctIt:'Autobus alla fermata con freccia destra: rallenta e dagli precedenza se è sicuro.',
+  correctEn:'Bus at a stop signalling right: slow down and give way if it is safe.'
+ }
+});
+
 })(window);

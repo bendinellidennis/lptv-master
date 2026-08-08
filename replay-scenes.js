@@ -1050,6 +1050,55 @@ global.ReplayEngine.registerScene({
  }
 });
 
+
+global.ReplayEngine.registerScene({
+ id:'MT_TYRE_PRESSURE_WEEKLY_CHECK_V1',
+ category:'vehicle-safety',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'tyrePressureWeeklyCheck',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Tyre pressure — check at least once a week',
+ accessibilityLabel:'Real close-up of a tyre pressure gauge during a pressure measurement, teaching the minimum weekly tyre-pressure check',
+ playbackRate:0.9,
+ media:{
+  video:'https://www.pexels.com/download/video/5637839/',
+  videoSources:['https://www.pexels.com/download/video/5637839/'],
+  poster:'https://images.pexels.com/videos/5637839/free-video-5637839.jpg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Tima Miroshnichenko',
+  sourcePage:'https://www.pexels.com/video/close-up-of-a-tire-pressure-gauge-5637839/'
+ },
+ timeline:[
+  {at:.4,end:2.2,event:'observe',textIt:'Guarda il manometro: la pressione degli pneumatici va controllata regolarmente',textEn:'Look at the gauge: tyre pressures need regular checking'},
+  {at:2.4,end:4.4,event:'hazard',textIt:'Aspettare il tagliando o il VRT è troppo tardi per un controllo di sicurezza ordinario',textEn:'Waiting for a service or VRT is too long for a routine safety check'},
+  {at:4.6,end:6.8,event:'explain',textIt:'Per l’esame ricorda la frequenza minima: UNA VOLTA ALLA SETTIMANA',textEn:'For the test remember the minimum frequency: ONCE A WEEK'},
+  {at:7.0,end:10.5,event:'correct',textIt:'Controllo settimanale: misura la pressione e correggila secondo i valori previsti dal veicolo',textEn:'Weekly check: measure tyre pressure and correct it to the vehicle’s specified values'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:51,top:52,radiusX:30,radiusY:30,instructionIt:'TOCCA IL MANOMETRO',instructionEn:'TAP THE PRESSURE GAUGE',ariaIt:'Tocca il manometro della pressione',ariaEn:'Tap the tyre-pressure gauge'},
+  phases:[
+   {},
+   {titleIt:'NON ASPETTARE TROPPO',titleEn:'DO NOT WAIT TOO LONG',bodyIt:'La pressione può cambiare tra un tagliando e l’altro. Il controllo deve essere molto più frequente.',bodyEn:'Tyre pressure can change between services. The check must be much more frequent.'},
+   {titleIt:'UNA VOLTA ALLA SETTIMANA',titleEn:'ONCE A WEEK',bodyIt:'Memorizza la risposta esatta: la pressione degli pneumatici va controllata almeno una volta alla settimana.',bodyEn:'Remember the exact answer: tyre pressures should be checked at least once a week.'},
+   {titleIt:'CONTROLLO REGOLARE',titleEn:'REGULAR CHECK',bodyIt:'Usa un manometro e controlla regolarmente la pressione: aiuta sicurezza, comportamento del veicolo ed efficienza.',bodyEn:'Use a pressure gauge and check regularly: it supports safety, vehicle behaviour and efficiency.'}
+  ],
+  phaseOptions:[
+   {startRatio:.18,freeze:true},
+   {startRatio:.38,freeze:true},
+   {startRatio:.58,freeze:true},
+   {startRatio:.12,autoplay:true,endRatio:.82}
+  ]
+ },
+ coach:{
+  missIt:'Non aspettare VRT o tagliando. Per questa domanda la frequenza minima da ricordare è una volta alla settimana.',
+  missEn:'Do not wait for the VRT or a service. For this question the minimum frequency to remember is once a week.',
+  hitIt:'Esatto: almeno UNA VOLTA ALLA SETTIMANA. È la frequenza minima richiesta dalla domanda.',
+  hitEn:'Correct: at least ONCE A WEEK. That is the minimum frequency required by the question.'
+ },
+ learning:{
+  correctIt:'Pressione pneumatici: controllala almeno una volta alla settimana.',
+  correctEn:'Tyre pressures: check them at least once a week.'
+ }
+});
+
 global.ReplayEngine.registerScene({
  id:'MT_HORN_ALERT_PRESENCE_V1',
  category:'signals',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',

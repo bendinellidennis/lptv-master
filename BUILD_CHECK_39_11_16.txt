@@ -1,0 +1,8 @@
+MALTA DRIVING MASTER — BUILD 39.11.16
+BASE: 39.11.15 (approved stable base)
+NEW REPLAY: CARS3.8 — minimum tyre-pressure check frequency.
+SCENE: MT_TYRE_PRESSURE_WEEKLY_CHECK_V1.
+EXPECTED CORRECT: [1] = Once a week.
+STRICT VISUAL: real close-up tyre-pressure gauge during measurement; new video not reused from CARS3.4.
+TEACHING: pressure check -> do not wait for VRT/service -> ONCE A WEEK -> regular gauge check.
+UX fixes and all previously approved Replay content preserved.

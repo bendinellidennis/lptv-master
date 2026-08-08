@@ -262,6 +262,17 @@
   },
 
   {
+   sceneKey:'tyrePressureWeeklyCheck',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/5637839/',
+   videoSources:['https://www.pexels.com/download/video/5637839/'],
+   poster:'https://images.pexels.com/videos/5637839/free-video-5637839.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Tima Miroshnichenko',
+   sourcePage:'https://www.pexels.com/video/close-up-of-a-tire-pressure-gauge-5637839/',
+   tags:['tyre-pressure','pressure-gauge','weekly-check','regular-maintenance','vehicle-safety','pressure-measurement'],
+   note:'CARS3.8 strict-match. Real close-up of a tyre pressure gauge during measurement. Replay teaches the exact minimum interval required by the database: once a week.'
+  },
+
+  {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

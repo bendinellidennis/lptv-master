@@ -166,6 +166,12 @@
   },
 
   {
+   key:'tyrePressureWeeklyCheck',category:'vehicle-safety',titleIt:'Pressione pneumatici: controllo settimanale',titleEn:'Tyre pressure: weekly check',status:'ready',
+   questionIds:['CARS3.8'],expectedCorrect:[1],engineSceneId:'MT_TYRE_PRESSURE_WEEKLY_CHECK_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['tyre-pressure','pressure-gauge','weekly-check','regular-maintenance','vehicle-safety'],prohibited:['vrt-only','monthly-only','service-only','reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

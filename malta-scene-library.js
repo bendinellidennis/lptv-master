@@ -142,6 +142,12 @@
   },
 
   {
+   key:'ambulanceFollowingMakeWay',category:'emergency-vehicles',titleIt:'Ambulanza da dietro: lascia strada in sicurezza',titleEn:'Ambulance following: make way safely',status:'ready',
+   questionIds:['CARS2.31'],expectedCorrect:[0],engineSceneId:'MT_AMBULANCE_FOLLOWING_MAKE_WAY_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['ambulance','flashing-blue-light','vehicle-behind','make-way','pull-over-safely'],prohibited:['brake-harshly','accelerate-away','block-emergency-vehicle','reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

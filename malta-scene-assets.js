@@ -210,6 +210,20 @@
   },
 
   {
+   sceneKey:'ambulanceFollowingMakeWay',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/5514366/5514366-uhd_3840_2160_24fps.mp4',
+   videoSources:[
+    'https://videos.pexels.com/video-files/5514366/5514366-uhd_3840_2160_24fps.mp4',
+    'https://www.pexels.com/download/video/5514366/'
+   ],
+   poster:'',
+   credit:'Pexels · K',
+   sourcePage:'https://www.pexels.com/video/vehicle-stops-for-an-ambulance-passing-through-city-traffic-5514366/',
+   tags:['ambulance','flashing-blue-light','emergency-response','traffic','make-way','pull-over-safely','vehicle-behind'],
+   note:'CARS2.31 strict-match. Real traffic scene shows a vehicle stopping/making space for an ambulance passing through city traffic; Replay teaches to make way promptly but safely without harsh braking or accelerating away.'
+  },
+
+  {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

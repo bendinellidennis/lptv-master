@@ -872,4 +872,55 @@
   }
  });
 
+
+ global.ReplayEngine.registerScene({
+  id:'MT_AMBULANCE_FOLLOWING_MAKE_WAY_V1',
+  category:'emergency-vehicles',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'ambulanceFollowingMakeWay',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Ambulance following — make way safely',
+  accessibilityLabel:'An ambulance moving through traffic while other vehicles make space, teaching the driver to pull over safely and let it pass',
+  playbackRate:0.9,
+  media:{
+   video:'https://videos.pexels.com/video-files/5514366/5514366-uhd_3840_2160_24fps.mp4',
+   videoSources:[
+    'https://videos.pexels.com/video-files/5514366/5514366-uhd_3840_2160_24fps.mp4',
+    'https://www.pexels.com/download/video/5514366/'
+   ],
+   poster:'',
+   credit:'Pexels · K',
+   sourcePage:'https://www.pexels.com/video/vehicle-stops-for-an-ambulance-passing-through-city-traffic-5514366/'
+  },
+  timeline:[
+   {at:.4,end:2.4,event:'observe',textIt:'Osserva l’ambulanza che deve avanzare nel traffico',textEn:'Observe the ambulance needing to move through traffic'},
+   {at:2.6,end:4.8,event:'hazard',textIt:'Non frenare bruscamente: potresti creare un altro pericolo',textEn:'Do not brake harshly: you could create another hazard'},
+   {at:5.0,end:7.2,event:'explain',textIt:'Controlla intorno a te e cerca uno spazio sicuro per accostare',textEn:'Check around you and look for a safe place to pull over'},
+   {at:7.4,end:10.2,event:'correct',textIt:'Accosta appena è possibile in sicurezza e lascia passare l’ambulanza',textEn:'Pull over as soon as safely possible and let the ambulance pass'}
+  ],
+  ui:{
+   hotspot:{left:50,top:48,radiusX:40,radiusY:32,instructionIt:'TOCCA L’AMBULANZA',instructionEn:'TAP THE AMBULANCE',ariaIt:'Tocca l’ambulanza che deve passare',ariaEn:'Tap the ambulance that needs to pass'},
+   phases:[
+    {},
+    {titleIt:'NON CREARE UN SECONDO PERICOLO',titleEn:'DO NOT CREATE A SECOND HAZARD',bodyIt:'Evita frenate brusche o manovre improvvise. Prima controlla specchi e spazio disponibile.',bodyEn:'Avoid harsh braking or sudden manoeuvres. First check your mirrors and the available space.'},
+    {titleIt:'LASCIA STRADA, MA IN SICUREZZA',titleEn:'MAKE WAY, BUT SAFELY',bodyIt:'Un mezzo di emergenza deve poter passare, ma la tua manovra deve restare controllata e prevedibile.',bodyEn:'An emergency vehicle must be allowed through, but your manoeuvre must remain controlled and predictable.'},
+    {titleIt:'ACCOSTA APPENA È SICURO',titleEn:'PULL OVER WHEN SAFE',bodyIt:'La risposta corretta è accostare appena è possibile in sicurezza e lasciare passare l’ambulanza.',bodyEn:'The correct answer is to pull over as soon as safely possible and let the ambulance pass.'}
+   ],
+   phaseOptions:[
+    {startRatio:0,autoplay:true,endRatio:.42},
+    {startRatio:.18,freeze:true},
+    {startRatio:.28,autoplay:false,endRatio:.76},
+    {startRatio:.45,autoplay:false,endRatio:.95}
+   ]
+  },
+  coach:{
+   missIt:'Non concentrarti solo sul lampeggiante. La domanda chiede come liberare il passaggio senza causare un altro rischio.',
+   missEn:'Do not focus only on the flashing light. The question asks how to clear the way without causing another risk.',
+   hitIt:'Esatto. Controlla, accosta appena è sicuro e lascia passare l’ambulanza. Mai frenare bruscamente o accelerare per allontanarti.',
+   hitEn:'Correct. Check, pull over when safe and let the ambulance pass. Never brake harshly or accelerate away.'
+  },
+  learning:{
+   correctIt:'Quando un’ambulanza con lampeggiante blu ti segue, accosta appena è possibile in sicurezza per lasciarla passare.',
+   correctEn:'When an ambulance with a flashing blue light is following you, pull over as soon as safely possible to let it pass.'
+  }
+ });
+
 })(window);

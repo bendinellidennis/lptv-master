@@ -57,6 +57,11 @@
    required:['night-driving','driver-view','oncoming-vehicle','headlights','headlight-glare'],prohibited:['daylight','rear-headlights','cyclist','pedestrian']
   },
   {
+   key:'duskLightsVisibility',category:'alertness',titleIt:'Crepuscolo: luci per essere visibili',titleEn:'Dusk: lights to be seen',status:'ready',
+   questionIds:['CARS1.25'],expectedCorrect:[0,1],engineSceneId:'MT_DUSK_LIGHTS_VISIBILITY_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['dusk','moving-traffic','headlights-on','streetlights','visibility'],prohibited:['full-daylight','lights-off-only','reused-approved-video']
+  },
+  {
    key:'zebraWaitingStop',
    category:'pedestrian',
    titleIt:'Pedoni in attesa a un attraversamento zebra',

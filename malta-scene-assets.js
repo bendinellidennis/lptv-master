@@ -89,6 +89,16 @@
    tags:['night-driving','driver-view','oncoming-vehicle','headlights','headlight-glare','dark-road'],note:'CARS1.24 dedicated real footage: driver-view night road with approaching vehicle lights; used only for the oncoming-headlight dazzle rule.'
   },
   {
+   sceneKey:'duskLightsVisibility',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/4833483/4833483-hd_1920_1080_25fps.mp4',
+   videoSources:["https://videos.pexels.com/video-files/4833483/4833483-hd_1920_1080_25fps.mp4","https://www.pexels.com/download/video/4833483/"],
+   poster:'https://images.pexels.com/videos/4833483/pexels-photo-4833483.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · WeStarMoney Rec',
+   sourcePage:'https://www.pexels.com/video/sunset-driving-at-a-community-road-4833483/',
+   tags:['dusk','twilight','moving-traffic','headlights-on','streetlights','visibility','lit-street'],
+   note:'CARS1.25 strict-match: twilight traffic with headlights already visible while street lighting is present, directly teaching both correct answers — use lights so others can see you and use them even on lit streets.'
+  },
+  {
    sceneKey:'zebraWaitingStop',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

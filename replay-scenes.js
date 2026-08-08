@@ -490,4 +490,70 @@
   learning:{correctIt:'Rallenta o fermati finché riesci a vedere chiaramente.',correctEn:'Slow down or stop until you can see clearly.'}
  });
 
+
+ global.ReplayEngine.registerScene({
+  id:'MT_DUSK_LIGHTS_VISIBILITY_V1',
+  category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'duskLightsVisibility',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Dusk driving — switch on lights to be seen',
+  accessibilityLabel:'Twilight road traffic with vehicle headlights visible while street lighting is also present',
+  playbackRate:0.88,
+  media:{
+   video:'https://videos.pexels.com/video-files/4833483/4833483-hd_1920_1080_25fps.mp4',
+   videoSources:["https://videos.pexels.com/video-files/4833483/4833483-hd_1920_1080_25fps.mp4","https://www.pexels.com/download/video/4833483/"],
+   poster:'https://images.pexels.com/videos/4833483/pexels-photo-4833483.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · WeStarMoney Rec',
+   sourcePage:'https://www.pexels.com/video/sunset-driving-at-a-community-road-4833483/'
+  },
+  timeline:[
+   {at:.5,end:2.4,event:'observe',textIt:'È crepuscolo: la strada non è ancora completamente buia',textEn:'It is dusk: the road is not fully dark yet'},
+   {at:2.6,end:4.5,event:'visibility',textIt:'I fari rendono i veicoli molto più facili da vedere',textEn:'Headlights make vehicles much easier to see'},
+   {at:4.7,end:6.8,event:'streetlights',textIt:'I lampioni accesi non sostituiscono le luci del veicolo',textEn:'Street lighting does not replace the vehicle lights'},
+   {at:7.0,end:9.4,event:'correct',textIt:'Al crepuscolo: luci accese per essere visibili, anche su strade illuminate',textEn:'At dusk: lights on to be visible, even on lit streets'}
+  ],
+  ui:{
+   hotspot:{left:51,top:47,radiusX:27,radiusY:23,instructionIt:'TOCCA I FARI ACCESI',instructionEn:'TAP THE HEADLIGHTS',ariaIt:'Tocca i fari dei veicoli visibili al crepuscolo',ariaEn:'Tap the vehicle headlights visible at dusk'},
+   phases:[
+    {},
+    {titleIt:'AL CREPUSCOLO PUOI ESSERE DIFFICILE DA VEDERE',titleEn:'AT DUSK YOU CAN BE HARD TO SEE',bodyIt:'Anche se riesci ancora a vedere la strada, gli altri possono distinguere peggio il tuo veicolo.',bodyEn:'Even if you can still see the road, other road users may see your vehicle less clearly.'},
+    {titleIt:'ACCENDI LE LUCI ANCHE CON I LAMPIONI',titleEn:'USE YOUR LIGHTS EVEN WITH STREET LIGHTING',bodyIt:'L’illuminazione stradale illumina l’ambiente, ma le luci del veicolo servono anche a rendere visibile te.',bodyEn:'Street lighting illuminates the surroundings, but your vehicle lights also make you visible.'},
+    {titleIt:'FATTI VEDERE • LUCI ACCESE',titleEn:'BE SEEN • LIGHTS ON',bodyIt:'Le due risposte corrette sono: accendi le luci affinché gli altri possano vederti e usale anche quando i lampioni sono accesi.',bodyEn:'The two correct answers are: use your lights so others can see you, and use them even when street lights are lit.'}
+   ],
+   phaseMedia:[
+    null,
+    null,
+    {
+     video:'https://www.pexels.com/download/video/19016555/',
+     videoSources:["https://www.pexels.com/download/video/19016555/"],
+     poster:'https://images.pexels.com/videos/19016555/pexels-photo-19016555.jpeg?auto=compress&dpr=1&h=750&w=1260',
+     credit:'Pexels · Th2city Santana',
+     sourcePage:'https://www.pexels.com/video/a-city-street-at-sunset-with-cars-driving-down-the-road-19016555/'
+    },
+    {
+     video:'https://www.pexels.com/download/video/19016555/',
+     videoSources:["https://www.pexels.com/download/video/19016555/"],
+     poster:'https://images.pexels.com/videos/19016555/pexels-photo-19016555.jpeg?auto=compress&dpr=1&h=750&w=1260',
+     credit:'Pexels · Th2city Santana',
+     sourcePage:'https://www.pexels.com/video/a-city-street-at-sunset-with-cars-driving-down-the-road-19016555/'
+    }
+   ],
+   phaseOptions:[
+    {startRatio:0,autoplay:true,endRatio:.52},
+    {startRatio:.28,freeze:true},
+    {startRatio:0,autoplay:true,endRatio:.72},
+    {startRatio:.12,autoplay:false,endRatio:.90}
+   ]
+  },
+  coach:{
+   missIt:'Cerca i fari dei veicoli: al crepuscolo servono soprattutto a rendere il veicolo riconoscibile agli altri.',
+   missEn:'Look for the vehicle headlights: at dusk they are especially important for making the vehicle visible to others.',
+   hitIt:'Esatto: i fari accesi rendono il veicolo visibile già al crepuscolo, anche dove ci sono lampioni.',
+   hitEn:'Correct: headlights make the vehicle visible from dusk, even where street lights are present.'
+  },
+  learning:{
+   correctIt:'Al crepuscolo accendi le luci per farti vedere dagli altri, anche quando l’illuminazione stradale è accesa.',
+   correctEn:'At dusk, switch on your lights so others can see you, even when street lighting is on.'
+  }
+ });
+
 })(window);

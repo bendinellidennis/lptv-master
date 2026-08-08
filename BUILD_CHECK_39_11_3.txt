@@ -1,0 +1,17 @@
+MALTA DRIVING MASTER — BUILD 39.11.3
+CARS1.25 — DUSK LIGHTS VISIBILITY
+Base: BUILD 39.11.2 (CARS1.13 approved)
+Database order checked after CARS1.13:
+- CARS1.18 ready/approved — unchanged
+- CARS1.24 ready/approved — unchanged
+- CARS1.25 first unmapped question — completed here
+
+Question: You are driving at dusk. When should your lights be switched on? Select 2 answers.
+Correct answers: So that others can see you; Even when street lights are lit.
+Runtime target: {question:CARS1.25,key:duskLightsVisibility,scene:MT_DUSK_LIGHTS_VISIBILITY_V1,correct:[0,1]}
+Primary video: Pexels 4833483 HD — twilight road with glowing vehicle headlights and street lighting.
+Secondary phase video: Pexels 19016555 — city street at dusk with moving traffic, headlights and streetlights.
+Visual evidence: dusk + moving traffic + headlights on + street lighting.
+No previously approved Replay scene definitions modified.
+No approved Replay video reused.
+All JS/CSS cache refs: 39113

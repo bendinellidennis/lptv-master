@@ -324,14 +324,13 @@
    video.playbackRate=Number(options.playbackRate||scene.playbackRate||1);
    video.loop=false;
 
-   let frameRevealToken=0;
-   let frameRevealTimer=null;
-
-   const holdPosterUntilFrame=()=>{
-    if(!mounted||mounted.video!==video)return;
-    frameRevealToken+=1;
-    video.classList.remove('replay-frame-ready');
-    if(mounted.poster)mounted.poster.classList.remove('replay-poster-behind');
+   const applyInitialPosition=()=>{
+    if(!mounted||mounted.video!==video||mounted.initialPositionApplied||!Number.isFinite(video.duration)||video.duration<=0)return;
+    mounted.initialPositionApplied=true;
+    if(mounted.startRatio!==null)video.currentTime=Math.max(0,Math.min(video.duration-.05,video.duration*mounted.startRatio));
+    if(mounted.freeze){video.pause();sync();return;}
+    if(mounted.autoplay)play();
+    else sync();
    };
    const revealVideoFrame=()=>{
     if(!mounted||mounted.video!==video)return;
@@ -339,54 +338,14 @@
     if(mounted.poster)mounted.poster.classList.add('replay-poster-behind');
     if(mounted.fallback)mounted.fallback.hidden=true;
    };
-   const revealWhenFramePainted=()=>{
-    if(!mounted||mounted.video!==video)return;
-    const token=++frameRevealToken;
-    if(frameRevealTimer){clearTimeout(frameRevealTimer);frameRevealTimer=null;}
-
-    const commit=()=>{
-     if(!mounted||mounted.video!==video||token!==frameRevealToken)return;
-     revealVideoFrame();
-    };
-
-    if(typeof video.requestVideoFrameCallback==='function'){
-     try{
-      video.requestVideoFrameCallback(()=>requestAnimationFrame(commit));
-      return;
-     }catch(_){}
-    }
-
-    const waitForDecodedFrame=(attempt=0)=>{
-     if(!mounted||mounted.video!==video||token!==frameRevealToken)return;
-     if(video.readyState>=2){
-      requestAnimationFrame(()=>requestAnimationFrame(commit));
-      return;
-     }
-     if(attempt<12){
-      frameRevealTimer=setTimeout(()=>waitForDecodedFrame(attempt+1),40);
-      return;
-     }
-     commit();
-    };
-    waitForDecodedFrame();
-   };
-   const applyInitialPosition=()=>{
-    if(!mounted||mounted.video!==video||mounted.initialPositionApplied||!Number.isFinite(video.duration)||video.duration<=0)return;
-    mounted.initialPositionApplied=true;
-    holdPosterUntilFrame();
-    if(mounted.startRatio!==null)video.currentTime=Math.max(0,Math.min(video.duration-.05,video.duration*mounted.startRatio));
-    if(mounted.freeze){video.pause();sync();return;}
-    if(mounted.autoplay)play();
-    else sync();
-   };
    const onCanPlay=()=>{
     applyInitialPosition();
-    if(!mounted.freeze&&mounted.initialPositionApplied)revealWhenFramePainted();
+    if(!mounted.freeze)revealVideoFrame();
     sync();
    };
    const onLoadedData=()=>{
     applyInitialPosition();
-    if(!mounted.freeze&&mounted.initialPositionApplied)revealWhenFramePainted();
+    if(!mounted.freeze)revealVideoFrame();
     sync();
    };
    const onError=()=>{
@@ -398,7 +357,6 @@
     if(sources.length>current+1){
      mounted.sourceIndex=current+1;
      mounted.initialPositionApplied=false;
-     holdPosterUntilFrame();
      try{
       video.pause();
       video.src=sources[mounted.sourceIndex];
@@ -415,7 +373,7 @@
    };
    const onSeeked=()=>{
     if(mounted)mounted.lastEventIndex=-1;
-    revealWhenFramePainted();
+    revealVideoFrame();
     sync();
    };
    const onNativeFullscreenStart=()=>{
@@ -442,7 +400,6 @@
    video.addEventListener('webkitpresentationmodechanged',onPresentationModeChange);
 
    mounted.cleanup.push(
-    ()=>{if(frameRevealTimer){clearTimeout(frameRevealTimer);frameRevealTimer=null;}},
     ()=>video.removeEventListener('canplay',onCanPlay),
     ()=>video.removeEventListener('loadeddata',onLoadedData),
     ()=>video.removeEventListener('error',onError),
@@ -498,7 +455,7 @@
  }
 
  global.ReplayEngine=Object.freeze({
-  version:'2.1.2',
+  version:'2.1.1',
   registerScene,
   getScene,
   listScenes,

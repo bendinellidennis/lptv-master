@@ -2598,66 +2598,6 @@ function renderReplayStable(){
   if(Math.abs(delta)>.5)window.scrollBy(0,delta);
  });
 }
-
-let replayStageHoldToken=0;
-function replayHoldCurrentStage(){
- const stage=screen.querySelector('.standard-video-replay .wave-across-stage');
- if(!stage)return null;
- const rect=stage.getBoundingClientRect();
- if(rect.width<2||rect.height<2)return null;
- const holder=document.createElement('div');
- holder.className='replay-stage-transition-hold';
- holder.dataset.replayStageHold=String(++replayStageHoldToken);
- Object.assign(holder.style,{
-  position:'fixed',left:`${rect.left}px`,top:`${rect.top}px`,width:`${rect.width}px`,height:`${rect.height}px`,
-  zIndex:'2147482000',pointerEvents:'none',overflow:'hidden',borderRadius:getComputedStyle(stage).borderRadius||'28px'
- });
- holder.appendChild(stage);
- document.body.appendChild(holder);
- return holder;
-}
-function replayReleaseStageWhenReady(holder){
- if(!holder)return;
- let released=false;
- let observer=null;
- let timeout=null;
- const release=()=>{
-  if(released)return;released=true;
-  observer?.disconnect();
-  if(timeout)clearTimeout(timeout);
-  holder.classList.add('is-releasing');
-  setTimeout(()=>holder.remove(),90);
- };
- const player=screen.querySelector('[data-replay-engine-player]');
- const video=player?.querySelector('[data-replay-engine-video]');
- const poster=player?.querySelector('[data-replay-engine-poster]');
- if(video?.classList.contains('replay-frame-ready')){requestAnimationFrame(release);return;}
- if(video&&typeof MutationObserver!=='undefined'){
-  observer=new MutationObserver(()=>{
-   if(video.classList.contains('replay-frame-ready'))requestAnimationFrame(release);
-  });
-  observer.observe(video,{attributes:true,attributeFilter:['class']});
- }
- // If the decoded frame callback is unusually slow, a fully loaded poster is still safe.
- const posterReady=()=>{
-  if(poster?.complete&&poster.naturalWidth>0)requestAnimationFrame(()=>requestAnimationFrame(release));
- };
- if(poster){poster.addEventListener('load',posterReady,{once:true});posterReady();}
- timeout=setTimeout(()=>{
-  // Do not expose a black stage: only release on timeout when either frame or poster is demonstrably ready.
-  if(video?.classList.contains('replay-frame-ready')||(poster?.complete&&poster.naturalWidth>0))release();
- },1800);
-}
-function replayTransitionWithStageHold(question,target,{clearCoach=true}={}){
- const safeTarget=Math.max(0,Math.min(3,Number(target)||0));
- const holder=replayHoldCurrentStage();
- errorReplayStep=safeTarget;
- if(errorReplayStep>=3)errorReplayMarkCompleted(question?.id||'');
- if(clearCoach)replayCoachFeedback=null;
- renderReplayStable();
- requestAnimationFrame(()=>replayReleaseStageWhenReady(holder));
-}
-
 function errorReplayNextStep(questionId){errorReplayStep=Math.min(3,errorReplayStep+1);if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);renderReplayStable()}
 function errorReplayPlay(questionId){
  if(errorReplayTimer){clearInterval(errorReplayTimer);errorReplayTimer=null}
@@ -2750,7 +2690,9 @@ function bindErrorReplay(){
     return;
    }
 
-   replayTransitionWithStageHold(question,requested,{clearCoach:false});
+   errorReplayStep=requested;
+   if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);
+   renderReplayStable();
   };
  });
 
@@ -2761,7 +2703,10 @@ function bindErrorReplay(){
    event.stopPropagation();
    const target=Number(phaseContinue.dataset.replayPhaseContinue);
    if(!Number.isFinite(target)||target!==errorReplayStep+1)return;
-   replayTransitionWithStageHold(question,target,{clearCoach:true});
+   errorReplayStep=Math.min(3,target);
+   if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);
+   replayCoachFeedback=null;
+   renderReplayStable();
   };
  }
 
@@ -2824,7 +2769,8 @@ function bindErrorReplay(){
     continueButton.onclick=continueEvent=>{
      continueEvent.preventDefault();
      continueEvent.stopPropagation();
-     replayTransitionWithStageHold(question,1,{clearCoach:false});
+     errorReplayStep=1;
+     renderReplayStable();
     };
    }
   };

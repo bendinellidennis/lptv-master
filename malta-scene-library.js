@@ -104,6 +104,12 @@
    prohibited:['right-driving','unrelated-skyline']
   },
   {
+   key:'twoSecondRuleGap',category:'safety-margins',titleIt:'Regola dei due secondi: distanza di sicurezza',titleEn:'Two-second rule: safe following gap',status:'ready',
+   questionIds:['CARS2.9'],expectedCorrect:[1],engineSceneId:'MT_TWO_SECOND_RULE_GAP_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['pov-driving','vehicle-ahead','following-gap','two-second-rule','fixed-reference-point'],prohibited:['parked-only','pedestrian-only','reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

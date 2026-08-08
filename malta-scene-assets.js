@@ -140,6 +140,17 @@
    note:'CARS1.10 strict-match candidate: driver POV on a hilly curving road with forward visibility reduction. Multiple MP4 sources are tried automatically on Safari; final fallback is the last known working direct MP4.'
   },
   {
+   sceneKey:'twoSecondRuleGap',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/5786587/',
+   videoSources:["https://www.pexels.com/download/video/5786587/","https://videos.pexels.com/video-files/5786587/5786587-uhd_3840_2160_30fps.mp4"],
+   poster:'https://images.pexels.com/videos/5786587/pexels-photo-5786587.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Tom Fisk',
+   sourcePage:'https://www.pexels.com/video/vehicles-moving-on-a-highway-5786587/',
+   tags:['pov-driving','vehicle-ahead','traffic','following-gap','two-second-rule','fixed-reference-point','safe-distance'],
+   note:'CARS2.9 strict-match: driver-view road traffic with vehicles ahead. The replay uses a visible roadside reference point to teach the two-second following-gap method in normal conditions.'
+  },
+
+  {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

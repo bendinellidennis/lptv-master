@@ -1,0 +1,18 @@
+MALTA DRIVING MASTER — BUILD 39.11.4
+CARS2.9 — TWO-SECOND RULE SAFE GAP
+Base: BUILD 39.11.3 (CARS1.25 approved)
+Database order checked after CARS1.25:
+- CARS2.4 ready/approved — unchanged
+- CARS2.6 ready/approved — unchanged
+- CARS2.9 first unmapped question — completed here
+
+Question: When may you use the two-second rule?
+Correct answer: To keep a safe gap from the vehicle in front.
+Runtime target: {question:CARS2.9,key:twoSecondRuleGap,scene:MT_TWO_SECOND_RULE_GAP_V1,correct:[1]}
+Primary video: Pexels 5786587 — POV road traffic with vehicles ahead.
+Source page: https://www.pexels.com/video/vehicles-moving-on-a-highway-5786587/
+Visual evidence: POV driving + vehicle ahead + following gap + fixed roadside reference point.
+Teaching sequence: identify vehicle ahead → recognise too-small gap → choose fixed point and count 2 seconds → maintain at least 2 seconds in good conditions.
+No previously approved Replay scene definitions modified.
+No approved main-scene video reused.
+All JS/CSS cache refs: 39114

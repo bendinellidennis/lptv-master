@@ -556,4 +556,52 @@
   }
  });
 
+
+ global.ReplayEngine.registerScene({
+  id:'MT_TWO_SECOND_RULE_GAP_V1',
+  category:'safety-margins',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'twoSecondRuleGap',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Two-second rule — safe following gap',
+  accessibilityLabel:'Driver point of view following traffic with a vehicle ahead and roadside reference points',
+  playbackRate:0.82,
+  media:{
+   video:'https://www.pexels.com/download/video/5786587/',
+   videoSources:["https://www.pexels.com/download/video/5786587/","https://videos.pexels.com/video-files/5786587/5786587-uhd_3840_2160_30fps.mp4"],
+   poster:'https://images.pexels.com/videos/5786587/pexels-photo-5786587.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Tom Fisk',
+   sourcePage:'https://www.pexels.com/video/vehicles-moving-on-a-highway-5786587/'
+  },
+  timeline:[
+   {at:.5,end:2.3,event:'observe',textIt:'Osserva il veicolo davanti e scegli un punto fisso sul bordo strada',textEn:'Watch the vehicle ahead and choose a fixed roadside point'},
+   {at:2.5,end:4.2,event:'danger',textIt:'Se raggiungi quel punto troppo presto, la distanza è insufficiente',textEn:'If you reach that point too soon, the following gap is too small'},
+   {at:4.4,end:6.8,event:'rule',textIt:'Quando il veicolo davanti supera il punto, conta almeno due secondi',textEn:'When the vehicle ahead passes the point, count at least two seconds'},
+   {at:7.0,end:9.6,event:'correct',textIt:'Raggiungi il punto solo dopo due secondi: così mantieni una distanza sicura',textEn:'Reach the point only after two seconds to keep a safe following gap'}
+  ],
+  ui:{
+   hotspot:{left:50,top:45,radiusX:31,radiusY:26,instructionIt:'TOCCA IL VEICOLO DAVANTI',instructionEn:'TAP THE VEHICLE AHEAD',ariaIt:'Tocca il veicolo che stai seguendo',ariaEn:'Tap the vehicle you are following'},
+   phases:[
+    {},
+    {titleIt:'TROPPO VICINO = MENO TEMPO PER REAGIRE',titleEn:'TOO CLOSE = LESS TIME TO REACT',bodyIt:'La regola dei due secondi serve a controllare la distanza dal veicolo che precede, non a decidere quando immettersi o iniziare una manovra.',bodyEn:'The two-second rule checks the gap to the vehicle ahead; it is not for deciding when to emerge or begin a manoeuvre.'},
+    {titleIt:'USA UN PUNTO FISSO E CONTA DUE SECONDI',titleEn:'USE A FIXED POINT AND COUNT TWO SECONDS',bodyIt:'Scegli un cartello, un palo o un altro punto fisso. Quando il veicolo davanti lo supera, conta due secondi.',bodyEn:'Choose a sign, post or another fixed point. When the vehicle ahead passes it, count two seconds.'},
+    {titleIt:'MANTIENI ALMENO DUE SECONDI',titleEn:'KEEP AT LEAST TWO SECONDS',bodyIt:'In condizioni normali devi arrivare allo stesso punto non prima di due secondi dopo il veicolo davanti.',bodyEn:'In good conditions, you should reach the same point no sooner than two seconds after the vehicle ahead.'}
+   ],
+   phaseOptions:[
+    {startRatio:0,autoplay:true,endRatio:.48},
+    {startRatio:.30,freeze:true},
+    {startRatio:.18,autoplay:false,endRatio:.70},
+    {startRatio:.42,autoplay:false,endRatio:.94}
+   ]
+  },
+  coach:{
+   missIt:'Cerca il veicolo davanti: la regola dei due secondi misura proprio lo spazio che lasci tra voi.',
+   missEn:'Look for the vehicle ahead: the two-second rule measures the gap you leave behind it.',
+   hitIt:'Esatto. Ora usa un punto fisso e controlla che passino almeno due secondi prima che tu raggiunga lo stesso punto.',
+   hitEn:'Correct. Now use a fixed point and make sure at least two seconds pass before you reach the same point.'
+  },
+  learning:{
+   correctIt:'Usa la regola dei due secondi per mantenere una distanza di sicurezza dal veicolo davanti in condizioni normali.',
+   correctEn:'Use the two-second rule to keep a safe following gap from the vehicle ahead in good conditions.'
+  }
+ });
+
 })(window);

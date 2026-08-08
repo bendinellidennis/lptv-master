@@ -1,0 +1,8 @@
+MALTA DRIVING MASTER — BUILD 39.11.18
+BASE: 39.11.17 GLOBAL BLACK FRAME FIX.
+GLOBAL FIX: phase-to-phase black flash elimination.
+CAUSE: renderReplayStable rebuilt the complete Replay DOM immediately on Continue, removing the old visible frame before the next phase poster/frame was ready.
+FIX: before changing phase, preload the target phase poster while the current phase remains visible; only then commit errorReplayStep and rerender.
+APPLIES TO: hazard Continue, phase 02/03 Continue, and backward stage navigation.
+39.11.17 rendered-frame protection remains intact.
+No database, Replay scene, video, mapping or approved content modified.

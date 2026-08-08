@@ -2598,6 +2598,54 @@ function renderReplayStable(){
   if(Math.abs(delta)>.5)window.scrollBy(0,delta);
  });
 }
+
+let replayPhaseTransitionToken=0;
+
+function replayPhaseMediaFor(question,targetPhase){
+ const selection=replaySceneSelection(question);
+ const scene=selection?.scene||null;
+ if(!scene)return null;
+ const phaseMedia=(scene.ui?.phaseMedia||[])[targetPhase]||null;
+ return phaseMedia||scene.media||null;
+}
+
+function replayPreloadPhaseVisual(question,targetPhase){
+ const media=replayPhaseMediaFor(question,targetPhase);
+ const poster=media?.poster||'';
+ if(!poster)return Promise.resolve(true);
+
+ return new Promise(resolve=>{
+  const image=new Image();
+  let settled=false;
+  const finish=ok=>{
+   if(settled)return;
+   settled=true;
+   clearTimeout(timer);
+   resolve(ok);
+  };
+  const timer=setTimeout(()=>finish(false),1800);
+  image.onload=()=>finish(true);
+  image.onerror=()=>finish(false);
+  image.referrerPolicy='no-referrer';
+  image.src=poster;
+  if(image.complete&&image.naturalWidth>0)finish(true);
+ });
+}
+
+function replayTransitionToPhase(question,targetPhase,{clearCoach=true}={}){
+ const safeTarget=Math.max(0,Math.min(3,Number(targetPhase)||0));
+ const token=++replayPhaseTransitionToken;
+ const currentPlayer=screen.querySelector('[data-replay-engine-player]');
+ if(currentPlayer)currentPlayer.classList.add('replay-phase-hold');
+
+ replayPreloadPhaseVisual(question,safeTarget).finally(()=>{
+  if(token!==replayPhaseTransitionToken)return;
+  errorReplayStep=safeTarget;
+  if(errorReplayStep>=3)errorReplayMarkCompleted(question?.id||'');
+  if(clearCoach)replayCoachFeedback=null;
+  renderReplayStable();
+ });
+}
 function errorReplayNextStep(questionId){errorReplayStep=Math.min(3,errorReplayStep+1);if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);renderReplayStable()}
 function errorReplayPlay(questionId){
  if(errorReplayTimer){clearInterval(errorReplayTimer);errorReplayTimer=null}
@@ -2690,9 +2738,7 @@ function bindErrorReplay(){
     return;
    }
 
-   errorReplayStep=requested;
-   if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);
-   renderReplayStable();
+   replayTransitionToPhase(question,requested,{clearCoach:false});
   };
  });
 
@@ -2703,10 +2749,7 @@ function bindErrorReplay(){
    event.stopPropagation();
    const target=Number(phaseContinue.dataset.replayPhaseContinue);
    if(!Number.isFinite(target)||target!==errorReplayStep+1)return;
-   errorReplayStep=Math.min(3,target);
-   if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);
-   replayCoachFeedback=null;
-   renderReplayStable();
+   replayTransitionToPhase(question,target,{clearCoach:true});
   };
  }
 
@@ -2769,8 +2812,7 @@ function bindErrorReplay(){
     continueButton.onclick=continueEvent=>{
      continueEvent.preventDefault();
      continueEvent.stopPropagation();
-     errorReplayStep=1;
-     renderReplayStable();
+     replayTransitionToPhase(question,1,{clearCoach:false});
     };
    }
   };

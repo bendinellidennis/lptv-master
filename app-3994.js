@@ -5542,6 +5542,9 @@ function confirmAnswer(){
 function applyReview(q,a){if(!a)return;screen.querySelectorAll('[data-opt]').forEach(b=>{const i=Number(b.dataset.opt);if(q.correct.includes(i))b.classList.add('correct');else if(a.selected.includes(i))b.classList.add('wrong')});showExplanation(q,a)}
 function showExplanation(q,a){
  const box=$('#quizExplanation');
+ const replaySelection=replaySceneSelection(q);
+ const hasApprovedReplay=!!(replaySelection.entry?.status==='ready'&&replaySelection.asset?.status==='approved'&&replaySelection.scene?.media?.video);
+ const inlineApprovedReplay=hasApprovedReplay?`<div class="quiz-inline-approved-replay"><div class="quiz-inline-replay-head"><span>${esc(replayUi('REPLAY REALE · SUBITO VISIBILE','REAL REPLAY · IMMEDIATELY VISIBLE'))}</span><strong>${esc(q.id)}</strong></div>${errorReplayVisualHtml(q,0)}</div>`:'';
  const chosenEn=a?.selected?.map(i=>q.answers[i]).join(' • ')||'—';
  const chosenIt=a?.selected?.map(i=>(q.answers_it&&q.answers_it[i])||q.answers[i]).join(' • ')||'—';
  const rightEn=q.correct.map(i=>q.answers[i]).join(' • ');
@@ -5553,6 +5556,7 @@ function showExplanation(q,a){
  ${wrongSelected.length?`<div class="why-box wrong-reason"><b>${esc(t('wrong'))}</b><p>${esc(t('wrongChoiceReason'))}</p></div>`:''}
  <div class="why-box"><b>${esc(t('whyCorrect'))}</b><p>${esc(q.explanation||'')}</p><p>🇮🇹 ${esc(q.explanation_it||q.explanation||'')}</p></div>
  ${errorReasonHtml(q,a)}
+ ${inlineApprovedReplay}
  <div class="ai-context-launch"><button class="btn" id="quizAiInstructor">🧠 ${esc(t('aiInstructorAsk'))}</button><button class="btn secondary" id="quizAiUnderstand">🧩 ${esc(t('aiInstructorUnderstand'))}</button><button class="btn secondary" id="quizErrorReplay"><span class="replay-inline-icon" aria-hidden="true">R</span>${esc(t('errorReplayOpen'))}</button></div>`;
  box.classList.remove('hidden');
  box.querySelectorAll('[data-error-reason]').forEach(button=>button.onclick=()=>recordErrorReason(q,a,button.dataset.errorReason));

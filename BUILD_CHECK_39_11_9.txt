@@ -1,0 +1,9 @@
+MALTA DRIVING MASTER — BUILD 39.11.9
+GLOBAL INLINE REPLAY / GITHUB PRESENTATION FIX
+
+- Base: Build 39.11.8 approved content unchanged.
+- Approved real Replay is now rendered immediately inside the quiz explanation.
+- The user no longer needs to scroll and press “Apri replay” just to see the real media.
+- Technical/static simulation remains fallback only when no ready+approved real Replay exists.
+- Existing Replay scene mappings and approved content were not modified.
+- GitHub Pages cache-buster updated to 39119.

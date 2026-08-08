@@ -1,0 +1,6 @@
+MALTA DRIVING MASTER BUILD 39.11.8
+Replay added: CARS2.22 — maximum speed limit / AT NO TIME.
+Scene: MT_NEVER_EXCEED_SPEED_LIMIT_V1
+Source: Pexels video 5927764, unique versus approved replay video URLs.
+GitHub Pages: index.html at ZIP root; relative local assets; cache-buster 39118.
+Approved earlier replays left unchanged.

@@ -749,4 +749,52 @@
   }
  });
 
+
+ global.ReplayEngine.registerScene({
+  id:'MT_NEVER_EXCEED_SPEED_LIMIT_V1',
+  category:'attitude',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'neverExceedSpeedLimit',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Maximum speed limit — never exceed it',
+  accessibilityLabel:'Driver view on a highway with dashboard and speedometer visible, teaching that the maximum speed limit must never be exceeded, including while overtaking',
+  playbackRate:0.9,
+  media:{
+   video:'https://www.pexels.com/download/video/5927764/',
+   videoSources:["https://www.pexels.com/download/video/5927764/"],
+   poster:'',
+   credit:'Pexels · Christopher Schultz',
+   sourcePage:'https://www.pexels.com/video/driving-on-a-highway-5927764/'
+  },
+  timeline:[
+   {at:.4,end:2.2,event:'observe',textIt:'Osserva la strada e il tachimetro: il limite indicato è il massimo consentito',textEn:'Watch the road and speedometer: the posted limit is the maximum permitted speed'},
+   {at:2.4,end:4.4,event:'danger',textIt:'Strada libera o sorpasso non trasformano il limite massimo in un valore facoltativo',textEn:'A clear road or an overtake does not make the maximum speed limit optional'},
+   {at:4.6,end:6.8,event:'rule',textIt:'Durante un sorpasso devi pianificare la manovra senza superare il limite massimo',textEn:'When overtaking, plan the manoeuvre without exceeding the maximum speed limit'},
+   {at:7.0,end:9.8,event:'correct',textIt:'Risposta corretta: non è mai consentito superare il limite massimo di velocità',textEn:'Correct answer: you are never permitted to exceed the maximum speed limit'}
+  ],
+  ui:{
+   hotspot:{left:50,top:72,radiusX:29,radiusY:19,instructionIt:'TOCCA IL TACHIMETRO / LA STRADA',instructionEn:'TAP THE SPEEDOMETER / ROAD',ariaIt:'Tocca il tachimetro o la strada davanti',ariaEn:'Tap the speedometer or road ahead'},
+   phases:[
+    {},
+    {titleIt:'IL LIMITE È UN MASSIMO, NON UN OBIETTIVO',titleEn:'THE LIMIT IS A MAXIMUM, NOT A TARGET',bodyIt:'Puoi dover guidare più lentamente per traffico, visibilità o condizioni della strada, ma non più velocemente del limite massimo.',bodyEn:'You may need to drive slower for traffic, visibility or road conditions, but not faster than the maximum limit.'},
+    {titleIt:'NEANCHE DURANTE UN SORPASSO',titleEn:'NOT EVEN WHILE OVERTAKING',bodyIt:'Il sorpasso deve essere iniziato solo quando può essere completato in sicurezza restando entro il limite. Se serve superarlo, non è il momento giusto per sorpassare.',bodyEn:'Start an overtake only when it can be completed safely within the limit. If exceeding it would be necessary, it is not the right moment to overtake.'},
+    {titleIt:'RISPOSTA: MAI',titleEn:'ANSWER: AT NO TIME',bodyIt:'La risposta corretta è “Mai”. Strada libera, orario o sorpasso non autorizzano a superare il limite massimo.',bodyEn:'The correct answer is “At no time”. A clear road, time of day or overtaking does not permit exceeding the maximum speed limit.'}
+   ],
+   phaseOptions:[
+    {startRatio:0,autoplay:true,endRatio:.42},
+    {startRatio:.20,freeze:true},
+    {startRatio:.34,autoplay:false,endRatio:.72},
+    {startRatio:.50,autoplay:false,endRatio:.95}
+   ]
+  },
+  coach:{
+   missIt:'Guarda il tachimetro e pensa alla parola “massimo”: la domanda chiede se esiste un caso in cui puoi superare quel limite.',
+   missEn:'Look at the speedometer and focus on the word “maximum”: the question asks whether there is any situation in which you may exceed that limit.',
+   hitIt:'Esatto. Il limite massimo non si supera, neppure durante un sorpasso. Se non puoi completare la manovra entro il limite, aspetta.',
+   hitEn:'Correct. The maximum speed limit must not be exceeded, even while overtaking. If you cannot complete the manoeuvre within the limit, wait.'
+  },
+  learning:{
+   correctIt:'Non è mai consentito superare il limite massimo di velocità; anche un sorpasso deve essere completato restando entro il limite.',
+   correctEn:'You are never permitted to exceed the maximum speed limit; even an overtake must be completed while remaining within the limit.'
+  }
+ });
+
 })(window);

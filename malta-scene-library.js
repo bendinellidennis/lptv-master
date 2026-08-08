@@ -127,6 +127,13 @@
    required:['rear-view-mirror','vehicle-behind','overtaking','do-not-compete','allow-safe-pass'],prohibited:['horse-rider','brake-check','speed-up','block-overtake','reused-approved-video']
   },
 
+
+  {
+   key:'neverExceedSpeedLimit',category:'attitude',titleIt:'Limite massimo: non si supera',titleEn:'Maximum speed limit: never exceed it',status:'ready',
+   questionIds:['CARS2.22'],expectedCorrect:[1],engineSceneId:'MT_NEVER_EXCEED_SPEED_LIMIT_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['driver-pov','dashboard','speedometer','road','speed-limit-rule','overtaking-context'],prohibited:['speeding-encouragement','race','reused-approved-video']
+  },
+
   {
    key:'pedestrianHidden',
    category:'pedestrian',

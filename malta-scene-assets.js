@@ -183,6 +183,18 @@
    note:'CARS2.20 strict-match: rear/side-mirror traffic footage chosen to teach the correct response to a faster vehicle approaching from behind: do not compete, brake-check or block it; keep control and allow it to overtake when safe.'
   },
 
+
+  {
+   sceneKey:'neverExceedSpeedLimit',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/5927764/',
+   videoSources:["https://www.pexels.com/download/video/5927764/"],
+   poster:'',
+   credit:'Pexels · Christopher Schultz',
+   sourcePage:'https://www.pexels.com/video/driving-on-a-highway-5927764/',
+   tags:['driver-pov','dashboard','speedometer','highway','road-signs','speed-limit','overtaking-rule'],
+   note:'CARS2.22 strict-match: highway driving with dashboard/speed context. Replay teaches that the posted maximum speed limit is never permission to exceed it, including on a clear road or while overtaking.'
+  },
+
   {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',

@@ -989,4 +989,59 @@ global.ReplayEngine.registerScene({
  }
 });
 
+global.ReplayEngine.registerScene({
+ id:'MT_HORN_ALERT_PRESENCE_V1',
+ category:'signals',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'hornAlertPresence',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Horn — alert others to your presence',
+ accessibilityLabel:'Driver approaching a winding road with limited view, learning that the horn is used briefly to warn other road users of the vehicle presence',
+ playbackRate:0.9,
+ media:{
+  video:'https://www.pexels.com/download/video/12365082/',
+  videoSources:['https://www.pexels.com/download/video/12365082/'],
+  poster:'https://images.pexels.com/videos/12365082/free-video-12365082.jpg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Dimitri Baret',
+  sourcePage:'https://www.pexels.com/video/point-of-view-of-a-car-driving-on-a-mountain-road-12365082/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Osserva la strada davanti: la visuale oltre la curva è limitata',textEn:'Observe the road ahead: the view beyond the bend is limited'},
+  {at:2.6,end:4.6,event:'hazard',textIt:'Un altro utente potrebbe non sapere che stai arrivando',textEn:'Another road user may not know that you are approaching'},
+  {at:4.8,end:6.8,event:'explain',textIt:'Il clacson serve ad avvisare gli altri della tua presenza',textEn:'The horn is used to alert others to your presence'},
+  {at:7.0,end:10.5,event:'correct',textIt:'Usalo brevemente come avvertimento, non per rabbia, saluto o precedenza',textEn:'Use it briefly as a warning, not for anger, greeting, or claiming priority'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:52,top:46,radiusX:34,radiusY:30,instructionIt:'TOCCA LA ZONA A VISUALE LIMITATA',instructionEn:'TAP THE LIMITED-VIEW AREA',ariaIt:'Tocca la curva o la zona con visuale limitata',ariaEn:'Tap the bend or limited-view area'},
+  phases:[
+   {},
+   {titleIt:'PRESENZA NON VISIBILE',titleEn:'YOUR PRESENCE MAY BE UNSEEN',bodyIt:'Il pericolo non è “la curva” in sé: è che un altro utente possa non vederti o non sapere che stai arrivando.',bodyEn:'The hazard is not the bend itself: another road user may not see you or know you are approaching.'},
+   {titleIt:'IL CLACSON È UN AVVERTIMENTO',titleEn:'THE HORN IS A WARNING',bodyIt:'La funzione corretta del clacson è segnalare la tua presenza agli altri utenti quando serve per la sicurezza.',bodyEn:'The correct purpose of the horn is to alert other road users to your presence when safety requires it.'},
+   {titleIt:'AVVISA, NON IMPORRE',titleEn:'WARN, DO NOT DEMAND',bodyIt:'Un breve colpo di clacson può avvisare della tua presenza. Non usarlo per esprimere rabbia, salutare o pretendere la precedenza.',bodyEn:'A brief horn warning can alert others to your presence. Do not use it to show anger, greet someone, or demand priority.'}
+  ],
+  phaseMedia:[null,null,null,{
+   video:'https://www.pexels.com/download/video/4607429/',
+   videoSources:['https://www.pexels.com/download/video/4607429/'],
+   poster:'https://images.pexels.com/videos/4607429/free-video-4607429.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · cottonbro studio',
+   sourcePage:'https://www.pexels.com/video/a-man-is-driving-a-car-with-his-hands-on-the-steering-wheel-4607429/'
+  }],
+  phaseOptions:[
+   {startRatio:.20,freeze:true},
+   {startRatio:.38,freeze:true},
+   {startRatio:.52,freeze:true},
+   {startRatio:.15,autoplay:false,endRatio:.85}
+  ]
+ },
+ coach:{
+  missIt:'Guarda il motivo di sicurezza: il clacson serve a far sapere agli altri che sei presente quando potrebbero non vederti.',
+  missEn:'Focus on the safety purpose: the horn tells other road users you are there when they may not see you.',
+  hitIt:'Esatto. Il clacson è un avvertimento di presenza, non uno strumento per rabbia, saluti o per ottenere precedenza.',
+  hitEn:'Correct. The horn is a presence warning, not a tool for anger, greetings, or obtaining priority.'
+ },
+ learning:{
+  correctIt:'Usa il clacson per avvisare gli altri della tua presenza.',
+  correctEn:'Use the horn to alert others to your presence.'
+ }
+});
+
 })(window);

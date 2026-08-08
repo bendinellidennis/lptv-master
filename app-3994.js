@@ -2300,9 +2300,13 @@ function replayLibraryCardHtml(question){
 const REPLAY_ACTION_SCENE_ID='MT_OVERTAKE_LIMITED_VIEW_V1';
 const PEDESTRIAN_WAVE_SCENE_ID='MT_PEDESTRIAN_WAVE_ACROSS_V1';
 const ZEBRA_WAITING_SCENE_ID='MT_ZEBRA_WAITING_STOP_V1';
+function replayPhaseContinueHtml(phase){
+ if(phase!==1&&phase!==2)return '';
+ return `<button type="button" class="replay-phase-continue" data-replay-phase-continue="${phase+1}">${esc(replayUi('Continua','Continue'))}<span aria-hidden="true">→</span></button>`;
+}
 function replayZebraWaitingOverlay(phase){
- if(phase===1)return `<div class="wave-across-freeze danger"><strong>${esc(replayUi('PEDONI IN ATTESA: DEVI ESSERE PRONTO A FERMARTI','PEDESTRIANS WAITING: BE READY TO STOP'))}</strong><span>${esc(replayUi('Avvicinarti troppo velocemente riduce il tempo per reagire e può mettere i pedoni in pericolo.','Approaching too fast reduces reaction time and may endanger pedestrians.'))}</span></div>`;
- if(phase===2)return `<div class="wave-across-freeze explain"><strong>${esc(replayUi('RALLENTA E PREPARATI A FERMARTI','SLOW DOWN AND PREPARE TO STOP'))}</strong><span>${esc(replayUi('La risposta corretta della domanda è rallentare e prepararsi a fermarsi per i pedoni in attesa.','The correct answer is to slow down and prepare to stop for pedestrians waiting to cross.'))}</span></div>`;
+ if(phase===1)return `<div class="wave-across-freeze danger"><strong>${esc(replayUi('PEDONI IN ATTESA: DEVI ESSERE PRONTO A FERMARTI','PEDESTRIANS WAITING: BE READY TO STOP'))}</strong><span>${esc(replayUi('Avvicinarti troppo velocemente riduce il tempo per reagire e può mettere i pedoni in pericolo.','Approaching too fast reduces reaction time and may endanger pedestrians.'))}</span>${replayPhaseContinueHtml(phase)}</div>`;
+ if(phase===2)return `<div class="wave-across-freeze explain"><strong>${esc(replayUi('RALLENTA E PREPARATI A FERMARTI','SLOW DOWN AND PREPARE TO STOP'))}</strong><span>${esc(replayUi('La risposta corretta della domanda è rallentare e prepararsi a fermarsi per i pedoni in attesa.','The correct answer is to slow down and prepare to stop for pedestrians waiting to cross.'))}</span>${replayPhaseContinueHtml(phase)}</div>`;
  if(phase===3)return `<div class="wave-across-action"><strong>${esc(replayUi('RALLENTA • CONTROLLA • FERMATI SE NECESSARIO','SLOW DOWN • CHECK • STOP IF NECESSARY'))}</strong></div>`;
  return '';
 }
@@ -2317,7 +2321,7 @@ function replayZebraWaitingScene(question,phase){
   0:{startRatio:0,autoplay:true,endRatio:.48},
   1:{startRatio:.36,freeze:true},
   2:{startRatio:.36,freeze:true},
-  3:{startRatio:.48,autoplay:false,endRatio:.95}
+  3:{startRatio:.48,autoplay:true,endRatio:.95}
  }[phase];
  return `<section class="real-film-replay wave-across-replay zebra-waiting-replay phase-${phase}" data-zebra-waiting>
   <div class="wave-across-stage">
@@ -2328,14 +2332,14 @@ function replayZebraWaitingScene(question,phase){
   </div>
   ${replayCoachVisibleHtml()}
   <div class="real-film-controls four ${phase===0?'hazard-locked':''}">
-   ${['Trova','Pericolo','Spiega','Esegui'].map((name,i)=>`<button class="${phase===i?'active':''}" data-replay-stage="${i}" ${phase===0&&i>0?'disabled aria-disabled="true"':''}><span>0${i+1}</span><strong>${esc(replayUi(name,['Find','Hazard','Explain','Perform'][i]))}</strong></button>`).join('')}
+   ${['Trova','Pericolo','Spiega','Esegui'].map((name,i)=>`<button class="${phase===i?'active':''}" data-replay-stage="${i}" ${i>phase?'disabled aria-disabled="true"':''}><span>0${i+1}</span><strong>${esc(replayUi(name,['Find','Hazard','Explain','Perform'][i]))}</strong></button>`).join('')}
   </div>
   <template data-replay-phase-options>${esc(JSON.stringify(options))}</template>
  </section>`;
 }
 function replayWaveAcrossOverlay(phase){
- if(phase===1)return `<div class="wave-across-freeze danger"><div class="driver-wave-hand" aria-hidden="true">✋</div><strong>${esc(replayUi('NON DARE IL VIA CON UN GESTO','DO NOT WAVE THEM ACROSS'))}</strong><span>${esc(replayUi('Il pedone può interpretarlo come “puoi attraversare”.','The pedestrian may interpret it as permission to cross.'))}</span></div>`;
- if(phase===2)return `<div class="wave-across-freeze explain"><strong>${esc(replayUi('NON PUOI GARANTIRE LE ALTRE CORSIE','YOU CANNOT GUARANTEE THE OTHER LANES'))}</strong><span>${esc(replayUi('Un altro veicolo potrebbe arrivare da una direzione che il pedone non vede.','Another vehicle may approach from a direction the pedestrian cannot see.'))}</span><div class="cross-traffic-arrows">← ${esc(replayUi('TRAFFICO','TRAFFIC'))} →</div></div>`;
+ if(phase===1)return `<div class="wave-across-freeze danger"><div class="driver-wave-hand" aria-hidden="true">✋</div><strong>${esc(replayUi('NON DARE IL VIA CON UN GESTO','DO NOT WAVE THEM ACROSS'))}</strong><span>${esc(replayUi('Il pedone può interpretarlo come “puoi attraversare”.','The pedestrian may interpret it as permission to cross.'))}</span>${replayPhaseContinueHtml(phase)}</div>`;
+ if(phase===2)return `<div class="wave-across-freeze explain"><strong>${esc(replayUi('NON PUOI GARANTIRE LE ALTRE CORSIE','YOU CANNOT GUARANTEE THE OTHER LANES'))}</strong><span>${esc(replayUi('Un altro veicolo potrebbe arrivare da una direzione che il pedone non vede.','Another vehicle may approach from a direction the pedestrian cannot see.'))}</span><div class="cross-traffic-arrows">← ${esc(replayUi('TRAFFICO','TRAFFIC'))} →</div>${replayPhaseContinueHtml(phase)}</div>`;
  if(phase===3)return `<div class="wave-across-action"><strong>${esc(replayUi('RALLENTA • NON FARE CENNI • RESTA PRONTO A FERMARTI','SLOW DOWN • DO NOT WAVE • BE READY TO STOP'))}</strong></div>`;
  return '';
 }
@@ -2350,7 +2354,7 @@ function replayWaveAcrossScene(question,phase){
   0:{startRatio:0,autoplay:true,endRatio:.48},
   1:{startRatio:.36,freeze:true},
   2:{startRatio:.36,freeze:true},
-  3:{startRatio:.48,autoplay:false,endRatio:.95}
+  3:{startRatio:.48,autoplay:true,endRatio:.95}
  }[phase];
  return `<section class="real-film-replay wave-across-replay phase-${phase}" data-wave-across>
   <div class="wave-across-stage">
@@ -2361,7 +2365,7 @@ function replayWaveAcrossScene(question,phase){
   </div>
   ${replayCoachVisibleHtml()}
   <div class="real-film-controls four ${phase===0?'hazard-locked':''}">
-   ${['Trova','Pericolo','Spiega','Esegui'].map((name,i)=>`<button class="${phase===i?'active':''}" data-replay-stage="${i}" ${phase===0&&i>0?'disabled aria-disabled="true"':''}><span>0${i+1}</span><strong>${esc(replayUi(name,['Find','Hazard','Explain','Perform'][i]))}</strong></button>`).join('')}
+   ${['Trova','Pericolo','Spiega','Esegui'].map((name,i)=>`<button class="${phase===i?'active':''}" data-replay-stage="${i}" ${i>phase?'disabled aria-disabled="true"':''}><span>0${i+1}</span><strong>${esc(replayUi(name,['Find','Hazard','Explain','Perform'][i]))}</strong></button>`).join('')}
   </div>
   <template data-replay-phase-options>${esc(JSON.stringify(options))}</template>
  </section>`;
@@ -2453,12 +2457,38 @@ function replayStandardVideoOverlay(scene,phase){
  const tone=phase===1?'danger':phase===2?'explain':'action';
  const title=replayUi(phaseData.titleIt||'',phaseData.titleEn||'');
  const body=replayUi(phaseData.bodyIt||'',phaseData.bodyEn||'');
- return `<div class="wave-across-freeze ${tone}"><strong>${esc(title)}</strong>${body?`<span>${esc(body)}</span>`:''}</div>`;
+ return `<div class="wave-across-freeze ${tone}"><strong>${esc(title)}</strong>${body?`<span>${esc(body)}</span>`:''}${replayPhaseContinueHtml(phase)}</div>`;
+}
+function replayStandardBelowCaption(scene,phase){
+ const ui=scene?.ui||{};
+ const phaseData=(ui.phases||[])[phase]||{};
+ const title=replayUi(phaseData.titleIt||'',phaseData.titleEn||'');
+ const body=replayUi(phaseData.bodyIt||'',phaseData.bodyEn||'');
+ const learningIt=scene?.learning?.correctIt||'';
+ const learningEn=scene?.learning?.correctEn||'';
+ if(phase===0){
+  const text=replayUi(learningIt,learningEn);
+  return text?`<div class="replay-caption-below observe"><span>${esc(replayUi('OBIETTIVO','OBJECTIVE'))}</span><p>${esc(text)}</p></div>`:'';
+ }
+ if(!title&&!body)return '';
+ return `<div class="replay-caption-below ${phase===3?'action':phase===2?'explain':'danger'}"><span>${esc(phase===3?replayUi('AZIONE CORRETTA','CORRECT ACTION'):phase===2?replayUi('SPIEGAZIONE','EXPLANATION'):replayUi('PERICOLO','HAZARD'))}</span>${title?`<strong>${esc(title)}</strong>`:''}${body?`<p>${esc(body)}</p>`:''}</div>`;
+}
+function replayCaptionVttData(scene,phase){
+ const ui=scene?.ui||{};
+ const phaseData=(ui.phases||[])[phase]||{};
+ const title=replayUi(phaseData.titleIt||'',phaseData.titleEn||'');
+ const body=replayUi(phaseData.bodyIt||'',phaseData.bodyEn||'');
+ const text=[title,body].filter(Boolean).join(' — ');
+ if(!text)return '';
+ const safe=text.replace(/-->/g,'→').replace(/\r?\n/g,' ');
+ const vtt=`WEBVTT\n\n00:00:00.000 --> 00:10:00.000\n${safe}\n`;
+ return `data:text/vtt;charset=utf-8,${encodeURIComponent(vtt)}`;
 }
 function replayStandardVideoScene(question,phase,scene){
  const ui=scene?.ui||{};
  const hotspot=ui.hotspot||{};
- const options={...((ui.phaseOptions||[])[phase]||({0:{startRatio:0,autoplay:true,endRatio:.48},1:{startRatio:.36,freeze:true},2:{startRatio:.36,freeze:true},3:{startRatio:.48,autoplay:false,endRatio:.95}}[phase]))};
+ const options={...((ui.phaseOptions||[])[phase]||({0:{startRatio:0,autoplay:true,endRatio:.48},1:{startRatio:.36,freeze:true},2:{startRatio:.36,freeze:true},3:{startRatio:.48,autoplay:true,endRatio:.95}}[phase]))};
+ if(phase===3&&ui.staticUntilFinal){options.freeze=false;options.autoplay=true;}
  const phaseMedia=(ui.phaseMedia||[])[phase]||null;
  if(phaseMedia?.videoSources)options.videoSources=phaseMedia.videoSources;
  const labels=[
@@ -2468,16 +2498,17 @@ function replayStandardVideoScene(question,phase,scene){
   replayUi('AZIONE CORRETTA · IN MOVIMENTO','CORRECT ACTION · IN MOTION')
  ];
  const instruction=replayUi(hotspot.instructionIt||'TOCCA IL PERICOLO',hotspot.instructionEn||'TAP THE HAZARD');
- return `<section class="real-film-replay wave-across-replay standard-video-replay phase-${phase}" data-standard-video>
+ return `<section class="real-film-replay wave-across-replay standard-video-replay phase-${phase}${ui.staticUntilFinal?' static-until-final':''}" data-standard-video>
   <div class="wave-across-stage">
-   ${ReplayEngine.renderVideoMarkup(scene.id,{label:replayUi(scene.accessibilityLabel||scene.title,scene.accessibilityLabel||scene.title),mediaOverride:phaseMedia||undefined})}
+   ${ReplayEngine.renderVideoMarkup(scene.id,{label:replayUi(scene.accessibilityLabel||scene.title,scene.accessibilityLabel||scene.title),mediaOverride:phaseMedia||undefined,captionVtt:phase===3?replayCaptionVttData(scene,phase):'',language:settings.lang==='it'?'it':'en'})}
    <div class="real-film-top compact"><span class="real-film-badge"><i></i>${esc(labels[phase])}</span><span class="real-film-count">${String(phase+1).padStart(2,'0')} / 04</span></div>
    ${phase===0?`<div class="wave-across-instruction">${esc(instruction)}</div>${replayHazardSurfaceHtml({instructionIt:hotspot.instructionIt||'TOCCA IL PERICOLO',instructionEn:hotspot.instructionEn||'TAP THE HAZARD',ariaIt:hotspot.ariaIt||hotspot.instructionIt||'Tocca il pericolo',ariaEn:hotspot.ariaEn||hotspot.instructionEn||'Tap the hazard',left:Number(hotspot.left||50),top:Number(hotspot.top||50)})}`:''}
    ${replayStandardVideoOverlay(scene,phase)}
   </div>
+  ${replayStandardBelowCaption(scene,phase)}
   ${replayCoachVisibleHtml()}
   <div class="real-film-controls four ${phase===0?'hazard-locked':''}">
-   ${['Trova','Pericolo','Spiega','Esegui'].map((name,i)=>`<button class="${phase===i?'active':''}" data-replay-stage="${i}" ${phase===0&&i>0?'disabled aria-disabled="true"':''}><span>0${i+1}</span><strong>${esc(replayUi(name,['Find','Hazard','Explain','Perform'][i]))}</strong></button>`).join('')}
+   ${['Trova','Pericolo','Spiega','Esegui'].map((name,i)=>`<button class="${phase===i?'active':''}" data-replay-stage="${i}" ${i>phase?'disabled aria-disabled="true"':''}><span>0${i+1}</span><strong>${esc(replayUi(name,['Find','Hazard','Explain','Perform'][i]))}</strong></button>`).join('')}
   </div>
   <template data-replay-phase-options>${esc(JSON.stringify(options))}</template>
  </section>`;
@@ -2612,6 +2643,13 @@ function bindErrorReplay(){
     ));
     return;
    }
+   if(errorReplayStep===1||errorReplayStep===2){
+    toast(replayUi(
+     'Premi Continua nella scena.',
+     'Press Continue in the scene.'
+    ));
+    return;
+   }
    errorReplayNextStep(questionId);
   };
  }
@@ -2636,6 +2674,14 @@ function bindErrorReplay(){
 
    const requested=Number(button.dataset.replayStage)||0;
 
+   if(requested>errorReplayStep){
+    toast(replayUi(
+     'Usa Continua per passare alla fase successiva.',
+     'Use Continue to move to the next stage.'
+    ));
+    return;
+   }
+
    if(errorReplayStep===0&&requested>0){
     toast(replayUi(
      'Prima individua il pericolo nella scena.',
@@ -2649,6 +2695,20 @@ function bindErrorReplay(){
    renderReplayStable();
   };
  });
+
+ const phaseContinue=screen.querySelector('[data-replay-phase-continue]');
+ if(phaseContinue){
+  phaseContinue.onclick=event=>{
+   event.preventDefault();
+   event.stopPropagation();
+   const target=Number(phaseContinue.dataset.replayPhaseContinue);
+   if(!Number.isFinite(target)||target!==errorReplayStep+1)return;
+   errorReplayStep=Math.min(3,target);
+   if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);
+   replayCoachFeedback=null;
+   renderReplayStable();
+  };
+ }
 
  const replayPlayer=$('[data-replay-engine-player]');
  if(replayPlayer){

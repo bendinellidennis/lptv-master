@@ -1,0 +1,10 @@
+MALTA DRIVING MASTER — BUILD 39.11.14A
+GLOBAL FREEZE CONTINUE + CAPTION RESTORE
+
+FIX VERIFIED:
+- Freeze phases 02/04 and 03/04 keep in-scene Continue.
+- Future phase buttons remain locked; normal advance is Continue.
+- Standard Replay explanation is restored below the visual scene.
+- Phase 04 keeps video in motion plus persistent explanation below.
+- Existing scenes, database, mappings, media, and Replay Engine are unchanged from 39.11.14.
+- Cache buster: 39124a.

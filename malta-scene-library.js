@@ -154,6 +154,12 @@
   },
 
   {
+   key:'hornAlertPresence',category:'signals',titleIt:'Clacson: avvisa della tua presenza',titleEn:'Horn: alert others to your presence',status:'ready',
+   questionIds:['CARS2.34'],expectedCorrect:[0],engineSceneId:'MT_HORN_ALERT_PRESENCE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['driver-pov','blind-or-limited-view','horn-warning','alert-presence','safety-purpose'],prohibited:['anger','greeting','right-of-way','reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

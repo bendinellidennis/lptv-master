@@ -32,8 +32,8 @@
   return `<div class="replay-engine-player" data-replay-engine-player="${scene.id}">
    ${activeMedia.poster?`<img class="replay-engine-poster" data-replay-engine-poster src="${activeMedia.poster}" alt="" aria-hidden="true" referrerpolicy="no-referrer">`:''}
    <video class="cinematic-action-video" data-replay-engine-video
-    src="${(Array.isArray(activeMedia.videoSources)&&activeMedia.videoSources[0])||activeMedia.video||''}" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture
-    poster="${activeMedia.poster||''}" aria-label="${label}"></video>
+    src="${(Array.isArray(activeMedia.videoSources)&&activeMedia.videoSources[0])||activeMedia.video||''}" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback controlslist="nofullscreen noremoteplayback nodownload" x-webkit-airplay="deny"
+    poster="${activeMedia.poster||''}" aria-label="${label}">${options.captionVtt?`<track kind="captions" srclang="${options.language==='it'?'it':'en'}" label="Replay" src="${options.captionVtt}" default>`:''}</video>
 
    <div class="cinematic-video-fallback replay-neutral-loader" data-replay-engine-fallback>
     <div class="replay-loading-state"><i></i><span>${options.loadingText||'Loading video'}</span></div>
@@ -205,8 +205,17 @@
   if(!video)return;
   video.setAttribute('playsinline','');
   video.setAttribute('webkit-playsinline','');
+  video.setAttribute('muted','');
+  video.setAttribute('disablepictureinpicture','');
+  video.setAttribute('disableremoteplayback','');
+  video.setAttribute('controlslist','nofullscreen noremoteplayback nodownload');
+  video.setAttribute('x-webkit-airplay','deny');
   video.playsInline=true;
+  video.defaultMuted=true;
+  video.muted=true;
   video.controls=false;
+  try{video.disablePictureInPicture=true;}catch(_){}
+  try{video.disableRemotePlayback=true;}catch(_){}
  }
 
  function exitAppFullscreen(){
@@ -309,6 +318,9 @@
 
   if(video){
    setInlinePlayback(video);
+   video.autoplay=Boolean(options.autoplay);
+   if(video.autoplay)video.setAttribute('autoplay','');
+   else video.removeAttribute('autoplay');
    video.playbackRate=Number(options.playbackRate||scene.playbackRate||1);
    video.loop=false;
 

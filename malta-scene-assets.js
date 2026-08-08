@@ -224,6 +224,19 @@
   },
 
   {
+   sceneKey:'hornAlertPresence',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/12365082/',
+   videoSources:[
+    'https://www.pexels.com/download/video/12365082/'
+   ],
+   poster:'https://images.pexels.com/videos/12365082/free-video-12365082.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Dimitri Baret',
+   sourcePage:'https://www.pexels.com/video/point-of-view-of-a-car-driving-on-a-mountain-road-12365082/',
+   tags:['horn','alert-presence','blind-corner','winding-road','driver-pov','safety-warning'],
+   note:'CARS2.34 strict-match. Real POV winding-road scene creates the exact context in which the horn is a warning device: alert unseen or potentially unseen road users to your presence, never to show annoyance, greet someone, or claim priority.'
+  },
+
+  {
    sceneKey:'busRightSignalGiveWay',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://videos.pexels.com/video-files/2950082/2950082-uhd_3840_2160_30fps.mp4',
    videoSources:[

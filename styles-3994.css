@@ -1883,3 +1883,75 @@ body.replay-fullscreen-open{
 .quiz-inline-replay-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px;padding:8px 10px;border-radius:12px;background:rgba(7,43,56,.08);font-size:12px;font-weight:800;letter-spacing:.04em}
 .quiz-inline-approved-replay .real-film-replay{margin:0}
 .quiz-inline-approved-replay video{display:block;width:100%;max-height:62vh;background:#071821}
+
+/* Build 39.11.13 — static Replay frames stay images until final action */
+.standard-video-replay.static-until-final:not(.phase-3) .replay-big-play,
+.standard-video-replay.static-until-final:not(.phase-3) .replay-player-controls{display:none!important}
+.standard-video-replay.static-until-final:not(.phase-3) .cinematic-action-video{pointer-events:none!important}
+
+/* BUILD 39.11.14 — GLOBAL FREEZE CONTINUE UX */
+.wave-across-freeze .replay-phase-continue{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ gap:9px;
+ width:100%;
+ min-height:48px;
+ margin-top:14px;
+ padding:11px 15px;
+ border:1px solid rgba(255,255,255,.38);
+ border-radius:14px;
+ background:#fff;
+ color:#123548;
+ font-size:15px;
+ font-weight:950;
+ box-shadow:0 9px 22px rgba(0,0,0,.22);
+ touch-action:manipulation;
+ -webkit-user-select:none;
+ user-select:none;
+}
+.wave-across-freeze .replay-phase-continue span{
+ display:inline!important;
+ margin:0!important;
+ color:inherit!important;
+ font-size:19px!important;
+ line-height:1;
+}
+.wave-across-freeze .replay-phase-continue:active{transform:scale(.985)}
+.real-film-controls.four button[disabled],
+.replay-stage-nav.four button[disabled]{
+ opacity:.34;
+ filter:grayscale(.85);
+ pointer-events:none;
+}
+@media(max-width:620px){
+ .wave-across-freeze{max-width:min(88%,520px);padding:16px 18px!important}
+ .wave-across-freeze strong{font-size:20px!important;line-height:1.12}
+ .wave-across-freeze>span:not(.replay-phase-continue span){font-size:12px!important;line-height:1.35}
+ .wave-across-freeze .replay-phase-continue{min-height:52px;margin-top:12px;font-size:16px}
+}
+
+
+/* BUILD 39.11.14A — RESTORE PERSISTENT REPLAY EXPLANATION BELOW SCENE */
+.replay-caption-below{
+ display:grid;
+ gap:7px;
+ margin:0;
+ padding:15px 17px;
+ border-radius:18px;
+ background:#fff;
+ border:1px solid rgba(17,52,72,.15);
+ box-shadow:0 8px 22px rgba(18,53,72,.08);
+ color:#17384b;
+}
+.replay-caption-below>span{font-size:11px;font-weight:950;letter-spacing:.14em;color:#35718b}
+.replay-caption-below>strong{font-size:18px;line-height:1.15;color:#102f42}
+.replay-caption-below>p{margin:0;font-size:14px;line-height:1.42;color:#4a6170}
+.replay-caption-below.danger{border-left:4px solid #ff5168}
+.replay-caption-below.explain{border-left:4px solid #54e4ad}
+.replay-caption-below.action{border-left:4px solid #2fc6d6}
+@media(max-width:620px){
+ .replay-caption-below{padding:12px 14px;border-radius:15px}
+ .replay-caption-below>strong{font-size:16px}
+ .replay-caption-below>p{font-size:13px;line-height:1.36}
+}

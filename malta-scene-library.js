@@ -134,6 +134,13 @@
    required:['driver-pov','dashboard','speedometer','road','speed-limit-rule','overtaking-context'],prohibited:['speeding-encouragement','race','reused-approved-video']
   },
 
+
+  {
+   key:'blueFlashingBeacons',category:'emergency-vehicles',titleIt:'Lampeggianti blu: polizia e ambulanza',titleEn:'Blue flashing beacons: police and ambulance',status:'ready',
+   questionIds:['CARS2.30'],expectedCorrect:[1,2],engineSceneId:'MT_BLUE_FLASHING_BEACONS_V2',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['police-vehicle','ambulance','blue-flashing-beacons','emergency-response'],prohibited:['breakdown-recovery','road-maintenance','reused-approved-video']
+  },
+
   {
    key:'pedestrianHidden',
    category:'pedestrian',

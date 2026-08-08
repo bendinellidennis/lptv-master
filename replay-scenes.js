@@ -797,4 +797,79 @@
   }
  });
 
+
+ global.ReplayEngine.registerScene({
+  id:'MT_BLUE_FLASHING_BEACONS_V2',
+  category:'emergency-vehicles',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'blueFlashingBeacons',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Blue flashing beacons — police and ambulance',
+  accessibilityLabel:'Police and emergency vehicles with blue flashing lights, followed by an ambulance, teaching the two correct answers',
+  playbackRate:0.9,
+  media:{
+   video:'https://videos.pexels.com/video-files/27974835/12279630_3840_2160_60fps.mp4',
+   videoSources:[
+    'https://videos.pexels.com/video-files/27974835/12279630_3840_2160_60fps.mp4',
+    'https://www.pexels.com/download/video/27974835/'
+   ],
+   poster:'',
+   credit:'Pexels · Bubble Media',
+   sourcePage:'https://www.pexels.com/video/police-27974835/'
+  },
+  timeline:[
+   {at:.4,end:2.2,event:'observe',textIt:'Osserva i lampeggianti blu sui veicoli di emergenza',textEn:'Observe the blue flashing lights on the emergency vehicles'},
+   {at:2.4,end:4.4,event:'identify',textIt:'Prima risposta corretta: Pattuglia di polizia',textEn:'First correct answer: Police patrol'},
+   {at:4.6,end:6.8,event:'identify',textIt:'Seconda risposta corretta: Ambulanza',textEn:'Second correct answer: Ambulance'},
+   {at:7.0,end:9.8,event:'correct',textIt:'Ricorda: POLIZIA + AMBULANZA',textEn:'Remember: POLICE + AMBULANCE'}
+  ],
+  ui:{
+   hotspot:{left:50,top:45,radiusX:38,radiusY:30,instructionIt:'TOCCA I LAMPEGGIANTI BLU',instructionEn:'TAP THE BLUE FLASHING LIGHTS',ariaIt:'Tocca i lampeggianti blu dei veicoli di emergenza',ariaEn:'Tap the emergency vehicle blue flashing lights'},
+   phases:[
+    {},
+    {titleIt:'1ª RISPOSTA: PATTUGLIA DI POLIZIA',titleEn:'1st ANSWER: POLICE PATROL',bodyIt:'I veicoli della polizia impegnati in un intervento possono utilizzare lampeggianti blu.',bodyEn:'Police vehicles responding to an incident may use blue flashing beacons.'},
+    {titleIt:'2ª RISPOSTA: AMBULANZA',titleEn:'2nd ANSWER: AMBULANCE',bodyIt:'Anche l’ambulanza in servizio di emergenza usa lampeggianti blu.',bodyEn:'An ambulance on emergency response also uses blue flashing beacons.'},
+    {titleIt:'SELEZIONA: POLIZIA + AMBULANZA',titleEn:'SELECT: POLICE + AMBULANCE',bodyIt:'La domanda richiede due risposte: Pattuglia di polizia e Ambulanza.',bodyEn:'The question requires two answers: Police patrol and Ambulance.'}
+   ],
+   phaseMedia:[
+    null,
+    null,
+    {
+     video:'https://videos.pexels.com/video-files/15285348/15285348-uhd_3840_2160_24fps.mp4',
+     videoSources:[
+      'https://videos.pexels.com/video-files/15285348/15285348-uhd_3840_2160_24fps.mp4',
+      'https://www.pexels.com/download/video/15285348/'
+     ],
+     poster:'',
+     credit:'Pexels · Bubble Media',
+     sourcePage:'https://www.pexels.com/video/ambulance-emergency-services-15285348/'
+    },
+    {
+     video:'https://videos.pexels.com/video-files/15285348/15285348-uhd_3840_2160_24fps.mp4',
+     videoSources:[
+      'https://videos.pexels.com/video-files/15285348/15285348-uhd_3840_2160_24fps.mp4',
+      'https://www.pexels.com/download/video/15285348/'
+     ],
+     poster:'',
+     credit:'Pexels · Bubble Media',
+     sourcePage:'https://www.pexels.com/video/ambulance-emergency-services-15285348/'
+    }
+   ],
+   phaseOptions:[
+    {startRatio:0,autoplay:true,endRatio:.45},
+    {startRatio:.18,freeze:true},
+    {startRatio:0,autoplay:true,endRatio:.72},
+    {startRatio:.28,autoplay:false,endRatio:.88}
+   ]
+  },
+  coach:{
+   missIt:'Concentrati sul tipo di veicolo e sul lampeggiante: devi riconoscere due servizi di emergenza.',
+   missEn:'Focus on the vehicle type and flashing light: you must identify two emergency services.',
+   hitIt:'Esatto. Le due risposte sono Pattuglia di polizia e Ambulanza.',
+   hitEn:'Correct. The two answers are Police patrol and Ambulance.'
+  },
+  learning:{
+   correctIt:'Per questa domanda seleziona Pattuglia di polizia e Ambulanza.',
+   correctEn:'For this question select Police patrol and Ambulance.'
+  }
+ });
+
 })(window);

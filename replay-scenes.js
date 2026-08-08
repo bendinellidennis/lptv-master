@@ -189,6 +189,47 @@
 
 
  global.ReplayEngine.registerScene({
+  id:'MT_HANDS_FREE_DISTRACTION_V1',
+  category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+  sceneKey:'handsFreeDistraction',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+  title:'Hands-free phone distraction while driving',
+  accessibilityLabel:'Driver actively driving with wireless earbuds, illustrating hands-free communication while the vehicle is moving',
+  playbackRate:0.9,
+  media:{
+   video:'https://videos.pexels.com/video-files/5520095/5520095-hd_1920_1080_30fps.mp4',
+   videoSources:["https://videos.pexels.com/video-files/5520095/5520095-hd_1920_1080_30fps.mp4","https://www.pexels.com/download/video/5520095/"],
+   poster:'https://images.pexels.com/videos/5520095/boss-business-businessman-communication-5520095.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Pavel Danilyuk',
+   sourcePage:'https://www.pexels.com/video/a-man-driving-his-car-5520095/'
+  },
+  timeline:[
+   {at:.5,end:2.0,event:'observe',textIt:'Osserva il conducente: guida con auricolari wireless',textEn:'Observe the driver: he is driving with wireless earbuds'},
+   {at:2.2,end:4.0,event:'hands-free',textIt:'Le mani sono libere, ma la conversazione richiede attenzione',textEn:'Your hands are free, but the conversation still uses attention'},
+   {at:4.2,end:6.2,event:'hazard',textIt:'Anche senza tenere il telefono puoi perdere concentrazione sulla strada',textEn:'Even without holding the phone, you can lose concentration on the road'},
+   {at:6.4,end:9.0,event:'correct',textIt:'Vivavoce non significa assenza di distrazione',textEn:'Hands-free does not mean distraction-free'}
+  ],
+  ui:{
+   hotspot:{left:30,top:36,radiusX:28,radiusY:34,instructionIt:'TOCCA L’AURICOLARE / CONDUCENTE',instructionEn:'TAP THE EARBUD / DRIVER',ariaIt:'Tocca il conducente con auricolare wireless',ariaEn:'Tap the driver wearing a wireless earbud'},
+   phases:[
+    {},
+    {titleIt:'LE MANI SONO LIBERE, LA MENTE NO',titleEn:'HANDS FREE, MIND STILL BUSY',bodyIt:'Il conducente non tiene il telefono in mano, ma sta comunque gestendo una comunicazione mentre guida.',bodyEn:'The driver is not holding a phone, but is still handling communication while driving.'},
+    {titleIt:'LA CONVERSAZIONE USA ATTENZIONE',titleEn:'THE CONVERSATION USES ATTENTION',bodyIt:'Seguire e rispondere a una conversazione può sottrarre attenzione mentale a ciò che accade sulla strada.',bodyEn:'Following and responding to a conversation can take mental attention away from what is happening on the road.'},
+    {titleIt:'VIVAVOCE ≠ GUIDA SENZA DISTRAZIONI',titleEn:'HANDS-FREE ≠ DISTRACTION-FREE',bodyIt:'La risposta corretta è: anche il vivavoce può distrarre la tua attenzione dalla strada.',bodyEn:'The correct answer is: hands-free phone use can still distract your attention from the road.'}
+   ],
+   phaseOptions:[{startRatio:0,autoplay:true,endRatio:.45},{startRatio:.28,freeze:true},{startRatio:.28,freeze:true},{startRatio:.45,autoplay:false,endRatio:.95}]
+  },
+  coach:{
+   missIt:'Guarda l’auricolare e il conducente in movimento: non sta tenendo il telefono, ma la sua attenzione può essere divisa.',missEn:'Look at the earbud and the moving driver: he is not holding the phone, but his attention can still be divided.',
+   hitIt:'Esatto: è una comunicazione hands-free, ma può comunque distrarre la mente dalla strada.',hitEn:'Correct: it is hands-free communication, but it can still distract the mind from the road.'
+  },
+  learning:{
+   correctIt:'Usare il vivavoce durante la guida può comunque distrarre la tua attenzione dalla strada.',
+   correctEn:'Using a hands-free phone while driving can still distract your attention from the road.'
+  }
+ });
+
+
+ global.ReplayEngine.registerScene({
   id:'MT_PHONE_STOP_SAFE_V1',
   category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
   sceneKey:'phoneStopSafe',visualStatus:'final-real-footage',replayTemplate:'standard-video',

@@ -30,6 +30,12 @@
   },
 
   {
+   key:'handsFreeDistraction',category:'alertness',titleIt:'Vivavoce: distrazione mentale alla guida',titleEn:'Hands-free: mental distraction while driving',status:'ready',
+   questionIds:['CARS1.13'],expectedCorrect:[1],engineSceneId:'MT_HANDS_FREE_DISTRACTION_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['driver','wireless-earphones','hands-free','vehicle-moving','road-visible','mental-distraction'],prohibited:['handheld-phone','parked-only','reused-approved-video']
+  },
+
+  {
    key:'phoneStopSafe',category:'alertness',titleIt:'Telefono: fermati prima di rispondere',titleEn:'Phone call: stop safely first',status:'ready',
    questionIds:['CARS1.19'],expectedCorrect:[1],engineSceneId:'MT_PHONE_STOP_SAFE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
    required:['parked-car','driver-seat','mobile-phone','vehicle-stationary','safe-stop'],prohibited:['vehicle-moving','phone-while-driving']

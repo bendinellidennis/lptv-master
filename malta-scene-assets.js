@@ -49,6 +49,17 @@
   },
 
   {
+   sceneKey:'handsFreeDistraction',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/5520095/5520095-hd_1920_1080_30fps.mp4',
+   videoSources:["https://videos.pexels.com/video-files/5520095/5520095-hd_1920_1080_30fps.mp4","https://www.pexels.com/download/video/5520095/"],
+   poster:'https://images.pexels.com/videos/5520095/boss-business-businessman-communication-5520095.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Pavel Danilyuk',
+   sourcePage:'https://www.pexels.com/video/a-man-driving-his-car-5520095/',
+   tags:['driver','wireless-earphones','hands-free','vehicle-moving','road-visible','mental-distraction','communication'],
+   note:'CARS1.13 strict-match: moving driver wears wireless earbuds while driving. The visual distinguishes hands-free communication from handheld-phone use and supports the rule that the conversation can still create mental distraction.'
+  },
+
+  {
    sceneKey:'phoneStopSafe',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/3048166/',
    videoSources:["https://www.pexels.com/download/video/3048166/","https://videos.pexels.com/video-files/3048166/3048166-hd_1920_1080_25fps.mp4","https://www.pexels.com/download/video/4281368/"],

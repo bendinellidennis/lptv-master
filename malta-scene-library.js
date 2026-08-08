@@ -172,6 +172,12 @@
   },
 
   {
+   key:'dippedHeadlightsPoorVisibility',category:'vehicle-lighting',titleIt:'Anabbaglianti di giorno con scarsa visibilità',titleEn:'Dipped headlights in daytime poor visibility',status:'ready',
+   questionIds:['CARS3.18'],expectedCorrect:[2],engineSceneId:'MT_DIPPED_HEADLIGHTS_POOR_VISIBILITY_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['daytime','poor-visibility','fog','dipped-headlights','driver-view'],prohibited:['parking-only','narrow-street-only','clear-weather','high-beam','reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

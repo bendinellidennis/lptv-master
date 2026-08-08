@@ -1,0 +1,7 @@
+MALTA DRIVING MASTER — BUILD 39.11.22A
+BASE: 39.11.22 GLOBAL MEDIA RENDER FIX
+FIX: frozen phase 02/03 frame decode on Safari/WKWebView.
+CAUSE: requestVideoFrameCallback may not fire after a seek while the video is paused.
+SOLUTION: for freeze phases only, decode one muted hidden frame after seek, immediately pause, then reveal the confirmed frame.
+PHASE 04: excluded from freeze-decode logic; video playback remains normal.
+No changes to questions, answers, scenes, Coach, mapping, Continue flow or previously approved content.

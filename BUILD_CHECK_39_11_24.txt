@@ -1,0 +1,14 @@
+MALTA DRIVING MASTER — BUILD 39.11.24 INLINE FREEZE IMAGES
+BASE: 39.11.23 LOCAL FREEZE FRAMES
+ROOT CAUSE CONFIRMED: JPG files were valid, but Koder did not resolve assets/replay-freeze/*.jpg reliably from the Replay renderer, causing broken-image ? icons.
+FIX:
+- 22 approved Replay freeze images embedded directly in replay-freeze-inline.js as data:image/jpeg;base64 URIs.
+- 01/02/03 use embedded images only: no network, no video seek, no filesystem path.
+- Internal embedded fallback prevents any broken-image icon on unmapped/older scenes.
+- 04 remains the original video.
+VALIDATION:
+- all 22 source JPGs decode successfully;
+- CARS3.4 / CARS3.8 / CARS3.18 embedded images are 1280x720;
+- no assets/replay-freeze/${sceneKey}.jpg path remains in app renderer;
+- JavaScript syntax checks PASS.
+No database, questions, answers, Coach, mappings, Replay scenes or videos changed.

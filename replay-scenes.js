@@ -1099,6 +1099,55 @@ global.ReplayEngine.registerScene({
  }
 });
 
+
+global.ReplayEngine.registerScene({
+ id:'MT_DIPPED_HEADLIGHTS_POOR_VISIBILITY_V1',
+ category:'vehicle-lighting',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'dippedHeadlightsPoorVisibility',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Dipped headlights — poor visibility during the day',
+ accessibilityLabel:'Driver point of view through dense daytime fog with severely reduced road visibility',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/27861399/12246686_1920_1080_30fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/27861399/12246686_1920_1080_30fps.mp4'],
+  poster:'https://images.pexels.com/videos/27861399/pexels-photo-27861399.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Nothing Ahead',
+  sourcePage:'https://www.pexels.com/video/a-man-driving-a-car-through-a-foggy-city-27861399/'
+ },
+ timeline:[
+  {at:.5,end:2.4,event:'observe',textIt:'Guarda attraverso il parabrezza: è giorno, ma la nebbia riduce fortemente la visibilità',textEn:'Look through the windscreen: it is daytime, but fog severely reduces visibility'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Con scarsa visibilità gli altri utenti possono vederti troppo tardi',textEn:'In poor visibility other road users may see you too late'},
+  {at:5.0,end:7.4,event:'explain',textIt:'Durante il giorno usa gli ANABBAGLIANTI quando la visibilità è scarsa',textEn:'During the day use DIPPED HEADLIGHTS when visibility is poor'},
+  {at:7.6,end:11.5,event:'correct',textIt:'Nebbia, pioggia intensa o condizioni simili: renditi visibile con gli anabbaglianti senza abbagliare',textEn:'Fog, heavy rain or similar conditions: use dipped headlights to be seen without dazzling'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:52,top:46,radiusX:36,radiusY:31,instructionIt:'TOCCA LA STRADA NELLA NEBBIA',instructionEn:'TAP THE FOGGY ROAD',ariaIt:'Tocca la zona di scarsa visibilità davanti al veicolo',ariaEn:'Tap the area of poor visibility ahead'},
+  phases:[
+   {},
+   {titleIt:'VISIBILITÀ RIDOTTA',titleEn:'REDUCED VISIBILITY',bodyIt:'Anche di giorno, nebbia e condizioni simili possono rendere difficile vedere ed essere visti.',bodyEn:'Even during daylight, fog and similar conditions can make it difficult to see and be seen.'},
+   {titleIt:'USA GLI ANABBAGLIANTI',titleEn:'USE DIPPED HEADLIGHTS',bodyIt:'La risposta da ricordare è precisa: durante il giorno gli anabbaglianti vanno usati in condizioni di scarsa visibilità.',bodyEn:'Remember the exact answer: during the day dipped headlights must be used in poor visibility.'},
+   {titleIt:'VEDERE ED ESSERE VISTI',titleEn:'SEE AND BE SEEN',bodyIt:'Gli anabbaglianti migliorano la tua visibilità agli altri senza l’abbagliamento causato dalle luci più intense.',bodyEn:'Dipped headlights improve your visibility to others without the glare caused by stronger lights.'}
+  ],
+  phaseOptions:[
+   {startRatio:.16,freeze:true},
+   {startRatio:.36,freeze:true},
+   {startRatio:.56,freeze:true},
+   {startRatio:.10,autoplay:true,endRatio:.84}
+  ]
+ },
+ coach:{
+  missIt:'Non sempre e non solo nelle strade strette. La situazione chiave è la scarsa visibilità.',
+  missEn:'Not all the time and not just on narrow streets. The key situation is poor visibility.',
+  hitIt:'Esatto: durante il giorno usa gli anabbaglianti quando la visibilità è scarsa.',
+  hitEn:'Correct: during the day use dipped headlights when visibility is poor.'
+ },
+ learning:{
+  correctIt:'Di giorno: anabbaglianti in condizioni di scarsa visibilità.',
+  correctEn:'During the day: dipped headlights in poor visibility.'
+ }
+});
+
 global.ReplayEngine.registerScene({
  id:'MT_HORN_ALERT_PRESENCE_V1',
  category:'signals',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',

@@ -273,6 +273,17 @@
   },
 
   {
+   sceneKey:'dippedHeadlightsPoorVisibility',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/27861399/12246686_1920_1080_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/27861399/12246686_1920_1080_30fps.mp4'],
+   poster:'https://images.pexels.com/videos/27861399/pexels-photo-27861399.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Nothing Ahead',
+   sourcePage:'https://www.pexels.com/video/a-man-driving-a-car-through-a-foggy-city-27861399/',
+   tags:['daytime','fog','poor-visibility','dipped-headlights','driver-view','windshield'],
+   note:'CARS3.18 strict-match. Driver POV through dense daytime fog. Replay teaches the exact database condition: dipped headlights during the day in poor visibility.'
+  },
+
+  {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

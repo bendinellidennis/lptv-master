@@ -28,12 +28,16 @@
   const media=scene.media||{};
   const activeMedia=options.mediaOverride||media;
   const label=options.label||scene.accessibilityLabel||scene.title||scene.id;
+  // 39.11.22: remote posters are deliberately disabled by default.
+  // Koder/GitHub/iOS may refuse or delay Pexels hotlinked images. The player now
+  // keeps its local loader visible until the real video frame is confirmed painted.
+  const usePoster=options.usePoster===true&&Boolean(activeMedia.poster);
 
   return `<div class="replay-engine-player" data-replay-engine-player="${scene.id}">
-   ${activeMedia.poster?`<img class="replay-engine-poster" data-replay-engine-poster src="${activeMedia.poster}" alt="" aria-hidden="true" referrerpolicy="no-referrer">`:''}
+   ${usePoster?`<img class="replay-engine-poster" data-replay-engine-poster src="${activeMedia.poster}" alt="" aria-hidden="true" referrerpolicy="no-referrer">`:''}
    <video class="cinematic-action-video" data-replay-engine-video
     src="${(Array.isArray(activeMedia.videoSources)&&activeMedia.videoSources[0])||activeMedia.video||''}" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback controlslist="nofullscreen noremoteplayback nodownload" x-webkit-airplay="deny"
-    poster="${activeMedia.poster||''}" aria-label="${label}">${options.captionVtt?`<track kind="captions" srclang="${options.language==='it'?'it':'en'}" label="Replay" src="${options.captionVtt}" default>`:''}</video>
+    ${usePoster?`poster="${activeMedia.poster}"`:''} aria-label="${label}">${options.captionVtt?`<track kind="captions" srclang="${options.language==='it'?'it':'en'}" label="Replay" src="${options.captionVtt}" default>`:''}</video>
 
    <div class="cinematic-video-fallback replay-neutral-loader" data-replay-engine-fallback>
     <div class="replay-loading-state"><i></i><span>${options.loadingText||'Loading video'}</span></div>
@@ -308,6 +312,7 @@
    placeholder:null,
    sourceIndex:0,
    initialPositionApplied:false,
+   frameRevealToken:0,
    startRatio:Number.isFinite(options.startRatio)?options.startRatio:null,
    endRatio:Number.isFinite(options.endRatio)?options.endRatio:null,
    autoplay:Boolean(options.autoplay),
@@ -338,14 +343,69 @@
     if(mounted.poster)mounted.poster.classList.add('replay-poster-behind');
     if(mounted.fallback)mounted.fallback.hidden=true;
    };
+   const revealAfterPaint=()=>{
+    if(!mounted||mounted.video!==video)return;
+    const token=++mounted.frameRevealToken;
+    const finish=()=>{
+     if(!mounted||mounted.video!==video||mounted.frameRevealToken!==token)return;
+     revealVideoFrame();
+     sync();
+    };
+    // Safari/iOS can fire seeked before the requested frame is actually painted.
+    // requestVideoFrameCallback fires only when a frame is ready for composition.
+    if(typeof video.requestVideoFrameCallback==='function'){
+     try{video.requestVideoFrameCallback(()=>finish());return;}catch(_){}
+    }
+    // Conservative fallback for older WebViews: keep the local loader for two paints.
+    requestAnimationFrame(()=>requestAnimationFrame(finish));
+   };
    const onCanPlay=()=>{
     applyInitialPosition();
-    if(!mounted.freeze)revealVideoFrame();
+    if(!mounted.freeze)revealAfterPaint();
     sync();
+   };
+   const revealFrozenFrame=()=>{
+    if(!mounted||mounted.video!==video||!mounted.freeze)return;
+    const token=++mounted.frameRevealToken;
+    const wasMuted=video.muted;
+    let settled=false;
+    let timer=0;
+    const finish=()=>{
+     if(settled)return;
+     settled=true;
+     if(timer)clearTimeout(timer);
+     if(!mounted||mounted.video!==video||mounted.frameRevealToken!==token)return;
+     try{video.pause();}catch(_){}
+     video.muted=wasMuted;
+     if(!wasMuted)video.removeAttribute('muted');
+     revealVideoFrame();
+     sync();
+    };
+    const armFrame=()=>{
+     if(typeof video.requestVideoFrameCallback==='function'){
+      try{video.requestVideoFrameCallback(()=>finish());return;}catch(_){}
+     }
+     requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(finish,40)));
+    };
+    // Safari/WKWebView may not decode a new seeked frame while paused.
+    // Decode exactly one hidden, muted frame, then pause again before revealing it.
+    try{
+     video.muted=true;
+     video.setAttribute('muted','');
+     const promise=video.play();
+     armFrame();
+     if(promise&&typeof promise.catch==='function')promise.catch(()=>{
+      requestAnimationFrame(()=>requestAnimationFrame(finish));
+     });
+    }catch(_){
+     requestAnimationFrame(()=>requestAnimationFrame(finish));
+    }
+    timer=setTimeout(finish,700);
    };
    const onLoadedData=()=>{
     applyInitialPosition();
-    if(!mounted.freeze)revealVideoFrame();
+    if(!mounted.freeze)revealAfterPaint();
+    else if(mounted.startRatio===null)revealFrozenFrame();
     sync();
    };
    const onError=()=>{
@@ -373,8 +433,8 @@
    };
    const onSeeked=()=>{
     if(mounted)mounted.lastEventIndex=-1;
-    revealVideoFrame();
-    sync();
+    if(mounted?.freeze)revealFrozenFrame();
+    else revealAfterPaint();
    };
    const onNativeFullscreenStart=()=>{
     if(!mounted||mounted.video!==video)return;

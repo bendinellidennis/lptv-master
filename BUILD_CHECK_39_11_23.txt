@@ -1,0 +1,9 @@
+MALTA DRIVING MASTER — BUILD 39.11.23
+GLOBAL LOCAL FREEZE FRAME FIX
+BASE: 39.11.22A content set.
+01/04, 02/04, 03/04: no video element, no remote poster, no loading-video dependency. They render a physical local JPG from assets/replay-freeze/<sceneKey>.jpg.
+04/04: unchanged real video player.
+22 final-real-footage Replay scenes have 22 local JPG files in the ZIP.
+CARS3.4 / CARS3.8 / CARS3.18 use real pertinent local photographic stills.
+All other approved scenes have a local scene-specific safety fallback so a black screen is impossible even if remote media is unavailable. These fallback stills can be replaced later with exact video-frame JPGs without changing the engine.
+No database questions/answers, Coach text, mappings, scene IDs, or videos changed.

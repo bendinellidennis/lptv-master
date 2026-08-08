@@ -2484,6 +2484,62 @@ function replayCaptionVttData(scene,phase){
  const vtt=`WEBVTT\n\n00:00:00.000 --> 00:10:00.000\n${safe}\n`;
  return `data:text/vtt;charset=utf-8,${encodeURIComponent(vtt)}`;
 }
+function replayPosterForMedia(active,base){
+ const media=active||base||{};
+ if(media.poster)return media.poster;
+ const source=String(media.sourcePage||base?.sourcePage||'');
+ const match=source.match(/(?:video|videos)\/[^/?#]*?(\d{5,})\/?(?:[?#]|$)/i)||source.match(/\/(\d{5,})\/?(?:[?#]|$)/);
+ if(match?.[1])return `https://images.pexels.com/videos/${match[1]}/free-video-${match[1]}.jpg?auto=compress&dpr=1&h=750&w=1260`;
+ return base?.poster||'';
+}
+function replayPreloadStandardMedia(scene){
+ const ui=scene?.ui||{};
+ const media=scene?.media||{};
+ const posters=[];
+ for(let phase=0;phase<4;phase++){
+  const active=(ui.phaseMedia||[])[phase]||media;
+  const poster=replayPosterForMedia(active,media);
+  if(poster&&!posters.includes(poster))posters.push(poster);
+ }
+ if(!window.__replayPreloadedImages)window.__replayPreloadedImages=new Set();
+ posters.forEach(src=>{
+  if(window.__replayPreloadedImages.has(src))return;
+  window.__replayPreloadedImages.add(src);
+  const image=new Image();
+  image.decoding='async';
+  image.src=src;
+ });
+ const finalMedia=(ui.phaseMedia||[])[3]||media;
+ const finalVideo=(Array.isArray(finalMedia?.videoSources)&&finalMedia.videoSources[0])||finalMedia?.video||'';
+ if(finalVideo){
+  if(!window.__replayPreloadedVideos)window.__replayPreloadedVideos=new Map();
+  if(!window.__replayPreloadedVideos.has(finalVideo)){
+   const video=document.createElement('video');
+   video.preload='auto';
+   video.muted=true;
+   video.defaultMuted=true;
+   video.playsInline=true;
+   video.setAttribute('playsinline','');
+   video.setAttribute('webkit-playsinline','');
+   video.src=finalVideo;
+   try{video.load();}catch(_){}
+   window.__replayPreloadedVideos.set(finalVideo,video);
+  }
+ }
+}
+function replayStaticFrameMarkup(scene,phaseMedia){
+ const media=scene?.media||{};
+ const active=phaseMedia||media;
+ const poster=replayPosterForMedia(active,media);
+ const fallback=replayPosterForMedia(media,media)||poster;
+ const credit=active?.credit||media?.credit||'';
+ if(!poster)return `<div class="replay-static-frame replay-static-frame-missing"></div>`;
+ return `<div class="replay-static-frame" data-replay-static-frame>
+  ${fallback?`<img class="replay-static-frame-fallback" src="${fallback}" alt="" aria-hidden="true" referrerpolicy="no-referrer">`:''}
+  <img class="replay-static-frame-image" src="${poster}" alt="" aria-hidden="true" referrerpolicy="no-referrer" decoding="async">
+  ${credit?`<div class="cinematic-video-source">${esc(credit)}</div>`:''}
+ </div>`;
+}
 function replayStandardVideoScene(question,phase,scene){
  const ui=scene?.ui||{};
  const hotspot=ui.hotspot||{};
@@ -2498,9 +2554,13 @@ function replayStandardVideoScene(question,phase,scene){
   replayUi('AZIONE CORRETTA · IN MOVIMENTO','CORRECT ACTION · IN MOTION')
  ];
  const instruction=replayUi(hotspot.instructionIt||'TOCCA IL PERICOLO',hotspot.instructionEn||'TAP THE HAZARD');
+ replayPreloadStandardMedia(scene);
+ const mediaMarkup=phase===3
+  ?ReplayEngine.renderVideoMarkup(scene.id,{label:replayUi(scene.accessibilityLabel||scene.title,scene.accessibilityLabel||scene.title),mediaOverride:phaseMedia||undefined,captionVtt:replayCaptionVttData(scene,phase),language:settings.lang==='it'?'it':'en'})
+  :replayStaticFrameMarkup(scene,phaseMedia);
  return `<section class="real-film-replay wave-across-replay standard-video-replay phase-${phase}${ui.staticUntilFinal?' static-until-final':''}" data-standard-video>
   <div class="wave-across-stage">
-   ${ReplayEngine.renderVideoMarkup(scene.id,{label:replayUi(scene.accessibilityLabel||scene.title,scene.accessibilityLabel||scene.title),mediaOverride:phaseMedia||undefined,captionVtt:phase===3?replayCaptionVttData(scene,phase):'',language:settings.lang==='it'?'it':'en'})}
+   ${mediaMarkup}
    <div class="real-film-top compact"><span class="real-film-badge"><i></i>${esc(labels[phase])}</span><span class="real-film-count">${String(phase+1).padStart(2,'0')} / 04</span></div>
    ${phase===0?`<div class="wave-across-instruction">${esc(instruction)}</div>${replayHazardSurfaceHtml({instructionIt:hotspot.instructionIt||'TOCCA IL PERICOLO',instructionEn:hotspot.instructionEn||'TAP THE HAZARD',ariaIt:hotspot.ariaIt||hotspot.instructionIt||'Tocca il pericolo',ariaEn:hotspot.ariaEn||hotspot.instructionEn||'Tap the hazard',left:Number(hotspot.left||50),top:Number(hotspot.top||50)})}`:''}
    ${replayStandardVideoOverlay(scene,phase)}
@@ -2711,6 +2771,9 @@ function bindErrorReplay(){
  }
 
  const replayPlayer=$('[data-replay-engine-player]');
+ if(!replayPlayer){
+  ReplayEngine.stop();
+ }
  if(replayPlayer){
   const sceneId=replayPlayer.dataset.replayEnginePlayer||REPLAY_ACTION_SCENE_ID;
   let phaseOptions={};

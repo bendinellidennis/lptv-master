@@ -1,0 +1,7 @@
+MALTA DRIVING MASTER — BUILD 39.11.20
+BASE: 39.11.16 approved stable base.
+ISOLATED MEDIA FIX ONLY.
+PHASES 01-03: true static <img> frames using approved real-scene posters; no video seek/freeze.
+PHASE 04: original Replay Engine/video path unchanged from 39.11.16.
+PRELOAD: static posters + final action video warmed in background.
+NO changes to database, replay-scenes, scene catalog/assets, Coach, Continue flow or approved content.

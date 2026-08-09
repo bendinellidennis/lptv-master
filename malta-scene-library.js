@@ -300,6 +300,37 @@
    required:['flood-water','vehicle-through-water','brake-test','reduced-brake-effect'],prohibited:['tyre-check-first','wipers-first','dry-brakes-by-stopping','reused-approved-video']
   },
 
+
+  {
+   key:'overtakeCheckFollowingTraffic',category:'overtaking',titleIt:'Sorpasso: controlla traffico dietro',titleEn:'Overtaking: check following traffic',status:'ready',
+   questionIds:['CARS1.26'],expectedCorrect:[0],engineSceneId:'MT_OVERTAKE_CHECK_FOLLOWING_TRAFFIC_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['side-mirror','following-traffic','overtaking-check','speed-position'],prohibited:['sharp-steer','close-follow','cut-in','reused-approved-video']
+  },
+
+  {
+   key:'zebraKeepClearQueues',category:'pedestrian-crossings',titleIt:'Zebra: lascialo sempre libero',titleEn:'Zebra crossing: always keep it clear',status:'ready',
+   questionIds:['CARS2.7'],expectedCorrect:[2],engineSceneId:'MT_ZEBRA_KEEP_CLEAR_QUEUES_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['zebra-crossing','vehicle-stopped-before-crossing','pedestrians','crossing-clear'],prohibited:['blocked-crossing','park-zigzag','wave-across','reused-approved-video']
+  },
+
+  {
+   key:'zebraPatientWait',category:'pedestrian-crossings',titleIt:'Zebra: sii paziente e aspetta',titleEn:'Zebra crossing: be patient and wait',status:'ready',
+   questionIds:['CARS2.8'],expectedCorrect:[0],engineSceneId:'MT_ZEBRA_PATIENT_WAIT_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['pedestrians-waiting','crossing','patience','remain-stopped'],prohibited:['wave-across','sound-horn','drive-on','reused-approved-video']
+  },
+
+  {
+   key:'lorryOvertakingSlowDown',category:'overtaking',titleIt:'Camion in sorpasso: rallenta',titleEn:'Lorry overtaking: slow down',status:'ready',
+   questionIds:['CARS2.26'],expectedCorrect:[1],engineSceneId:'MT_LORRY_OVERTAKING_SLOW_DOWN_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['heavy-lorry','overtaking','moving-vehicles','slow-down'],prohibited:['speed-up','hold-speed','change-direction','reused-approved-video']
+  },
+
+  {
+   key:'twoSecondSafeGap',category:'safety-margins',titleIt:'Regola dei due secondi: distanza sicura',titleEn:'Two-second rule: safe following gap',status:'ready',
+   questionIds:['CARS4.10'],expectedCorrect:[0],engineSceneId:'MT_TWO_SECOND_SAFE_GAP_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['vehicle-ahead','fixed-reference','two-second-rule','safe-gap'],prohibited:['kerb-distance','blind-spot','mirror-only','reused-approved-video']
+  },
+
   {
    key:'pedestrianHidden',
    category:'pedestrian',

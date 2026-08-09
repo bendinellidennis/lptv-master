@@ -2015,4 +2015,103 @@ global.ReplayEngine.registerScene({
  learning:{correctIt:'Dopo aver attraversato un allagamento, prova delicatamente i freni perché potrebbero essere meno efficaci.',correctEn:'After driving through flood water, test the brakes gently because they may be less effective.'}
 });
 
+
+global.ReplayEngine.registerScene({
+ id:'MT_OVERTAKE_CHECK_FOLLOWING_TRAFFIC_V1',
+ category:'overtaking',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'overtakeCheckFollowingTraffic',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Before overtaking — check following traffic',
+ accessibilityLabel:'Traffic clearly visible in the side mirror of a moving car',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/27551715/12165642_2160_3840_30fps.mp4',videoSources:['https://videos.pexels.com/video-files/27551715/12165642_2160_3840_30fps.mp4','https://www.pexels.com/download/video/27551715/'],poster:'https://images.pexels.com/videos/27551715/pexels-photo-27551715.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Ольга Шилова',sourcePage:'https://www.pexels.com/video/a-car-is-driving-down-the-road-with-traffic-27551715/'},
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Prima di uscire per il sorpasso, controlla cosa arriva da dietro',textEn:'Before moving out to overtake, check what is coming from behind'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Un veicolo dietro può essere vicino o già in fase di sorpasso',textEn:'A following vehicle may be close or already starting to overtake'},
+  {at:5.0,end:7.4,event:'explain',textIt:'Controlla negli specchi velocità e posizione del traffico che segue',textEn:'Use the mirrors to check the speed and position of following traffic'},
+  {at:7.6,end:11.2,event:'correct',textIt:'Solo dopo il controllo decidi se il sorpasso è sicuro',textEn:'Only after that check decide whether it is safe to overtake'}
+ ],
+ ui:{staticUntilFinal:true,phaseFreezeKeys:['overtakeCheckFollowingTraffic','overtakeCheckFollowingTraffic_p2','overtakeCheckFollowingTraffic_p3'],hotspot:{left:49,top:49,radiusX:34,radiusY:34,instructionIt:'TOCCA LO SPECCHIO CON IL TRAFFICO DIETRO',instructionEn:'TAP THE MIRROR SHOWING FOLLOWING TRAFFIC',ariaIt:'Tocca lo specchio laterale che mostra il traffico dietro',ariaEn:'Tap the side mirror showing following traffic'},phases:[{},
+  {titleIt:'CONTROLLA DIETRO PRIMA DI USCIRE',titleEn:'CHECK BEHIND BEFORE MOVING OUT',bodyIt:'Il traffico che segue può essere più vicino o più veloce di quanto pensi.',bodyEn:'Following traffic may be closer or faster than you expect.'},
+  {titleIt:'VELOCITÀ + POSIZIONE',titleEn:'SPEED + POSITION',bodyIt:'Prima del sorpasso devi valutare nello specchio sia la velocità sia la posizione dei veicoli dietro.',bodyEn:'Before overtaking, use the mirror to judge both the speed and position of vehicles behind.'},
+  {titleIt:'POI DECIDI SE SORPASSARE',titleEn:'THEN DECIDE IF IT IS SAFE',bodyIt:'La risposta corretta è controllare velocità e posizione del traffico che segue.',bodyEn:'The correct answer is to check the speed and position of following traffic.'}
+ ],phaseOptions:[{startRatio:.08,freeze:true},{startRatio:.30,freeze:true},{startRatio:.55,freeze:true},{startRatio:.08,autoplay:true,endRatio:.88}]},
+ coach:{missIt:'Prima di spostarti per sorpassare, guarda nello specchio: chi sta arrivando da dietro e a quale velocità?',missEn:'Before moving out to overtake, use the mirror: who is coming from behind and at what speed?',hitIt:'Esatto: prima del sorpasso controlla velocità e posizione del traffico che segue.',hitEn:'Correct: before overtaking, check the speed and position of following traffic.'},
+ learning:{correctIt:'Per sorpassare in sicurezza, controlla prima negli specchi velocità e posizione del traffico che segue.',correctEn:'To overtake safely, first check the speed and position of following traffic in your mirrors.'}
+});
+
+global.ReplayEngine.registerScene({
+ id:'MT_ZEBRA_KEEP_CLEAR_QUEUES_V1',category:'pedestrian-crossings',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'zebraKeepClearQueues',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Zebra crossing — keep it clear in queues',accessibilityLabel:'Vehicle stopped before a pedestrian crossing while pedestrians cross',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/5834617/5834617-uhd_3840_2160_24fps.mp4',videoSources:['https://videos.pexels.com/video-files/5834617/5834617-uhd_3840_2160_24fps.mp4','https://www.pexels.com/download/video/5834617/'],poster:'https://images.pexels.com/videos/5834617/pexels-photo-5834617.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Tim Samuel',sourcePage:'https://www.pexels.com/video/pedestrians-crossing-while-the-yellow-cab-is-in-full-stop-5834617/'},
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Il veicolo si ferma prima delle strisce e lascia libero l’attraversamento',textEn:'The vehicle stops before the crossing and leaves it clear'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Se entri sulle strisce in coda, puoi bloccare il passaggio dei pedoni',textEn:'If you enter the crossing in a queue, you may block pedestrians'},
+  {at:5.0,end:7.4,event:'explain',textIt:'Avanza solo se c’è spazio sufficiente oltre l’attraversamento',textEn:'Move forward only if there is enough space beyond the crossing'},
+  {at:7.6,end:11.2,event:'correct',textIt:'In coda, lascia sempre libera la zebra',textEn:'In queues, always keep the zebra crossing clear'}
+ ],
+ ui:{staticUntilFinal:true,phaseFreezeKeys:['zebraKeepClearQueues','zebraKeepClearQueues_p2','zebraKeepClearQueues_p3'],hotspot:{left:48,top:66,radiusX:37,radiusY:22,instructionIt:'TOCCA LE STRISCE LASCIATE LIBERE',instructionEn:'TAP THE CLEAR CROSSING',ariaIt:'Tocca l’attraversamento lasciato libero dal veicolo',ariaEn:'Tap the crossing left clear by the vehicle'},phases:[{},
+  {titleIt:'FERMATI PRIMA DELLE STRISCE',titleEn:'STOP BEFORE THE CROSSING',bodyIt:'Quando il traffico è in coda, non occupare l’area destinata ai pedoni.',bodyEn:'When traffic is queued, do not occupy the area reserved for pedestrians.'},
+  {titleIt:'DEVE RESTARE LIBERA',titleEn:'KEEP IT CLEAR',bodyIt:'Se non hai spazio dopo la zebra, resta prima dell’attraversamento.',bodyEn:'If there is no space beyond the zebra crossing, remain before it.'},
+  {titleIt:'SEMPRE LIBERA IN CODA',titleEn:'ALWAYS CLEAR IN A QUEUE',bodyIt:'La risposta corretta è lasciare sempre libero l’attraversamento pedonale nelle code.',bodyEn:'The correct answer is to always keep the pedestrian crossing clear in traffic queues.'}
+ ],phaseOptions:[{startRatio:.10,freeze:true},{startRatio:.34,freeze:true},{startRatio:.58,freeze:true},{startRatio:.05,autoplay:true,endRatio:.85}]},
+ coach:{missIt:'Guarda dove si è fermato il veicolo rispetto alle strisce: la zebra non deve diventare parte della coda.',missEn:'Look where the vehicle has stopped relative to the crossing: the zebra must not become part of the queue.',hitIt:'Esatto: nelle code lascia sempre libero l’attraversamento.',hitEn:'Correct: in traffic queues always keep the crossing clear.'},
+ learning:{correctIt:'A una zebra crossing, nelle code devi sempre fermarti in modo da lasciare libero l’attraversamento.',correctEn:'At a zebra crossing, in traffic queues you must always stop so the crossing remains clear.'}
+});
+
+global.ReplayEngine.registerScene({
+ id:'MT_ZEBRA_PATIENT_WAIT_V1',category:'pedestrian-crossings',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'zebraPatientWait',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Zebra crossing — be patient and wait',accessibilityLabel:'Pedestrians standing and waiting at a London crossing',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/3657621/3657621-hd_1280_720_30fps.mp4',videoSources:['https://videos.pexels.com/video-files/3657621/3657621-hd_1280_720_30fps.mp4','https://www.pexels.com/download/video/3657621/'],poster:'https://images.pexels.com/videos/3657621/free-video-3657621.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · George Morina',sourcePage:'https://www.pexels.com/video/group-of-people-standing-on-sidewalk-waiting-to-cross-the-street-3657621/'},
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'I pedoni sono al bordo e stanno ancora aspettando',textEn:'The pedestrians are at the edge and are still waiting'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Non fare cenni, non suonare e non metterli sotto pressione',textEn:'Do not wave, sound the horn or pressure them'},
+  {at:5.0,end:7.4,event:'explain',textIt:'Se ti sei fermato per loro, resta paziente e lascia che decidano quando attraversare',textEn:'If you stopped for them, stay patient and let them decide when to cross'},
+  {at:7.6,end:11.2,event:'correct',textIt:'Sii paziente e aspetta',textEn:'Be patient and wait'}
+ ],
+ ui:{staticUntilFinal:true,phaseFreezeKeys:['zebraPatientWait','zebraPatientWait_p2','zebraPatientWait_p3'],hotspot:{left:47,top:69,radiusX:35,radiusY:23,instructionIt:'TOCCA I PEDONI IN ATTESA',instructionEn:'TAP THE WAITING PEDESTRIANS',ariaIt:'Tocca i pedoni che aspettano al bordo della strada',ariaEn:'Tap the pedestrians waiting at the roadside'},phases:[{},
+  {titleIt:'STANNO ANCORA ASPETTANDO',titleEn:'THEY ARE STILL WAITING',bodyIt:'Non tutti i pedoni iniziano subito ad attraversare quando un’auto si ferma.',bodyEn:'Not every pedestrian starts crossing immediately when a car stops.'},
+  {titleIt:'NON METTERE PRESSIONE',titleEn:'DO NOT PRESSURE THEM',bodyIt:'Niente gesti, clacson o avanzamenti: lascia che valutino la situazione da soli.',bodyEn:'No waving, horn or edging forward: let them assess the situation themselves.'},
+  {titleIt:'PAZIENZA: ASPETTA',titleEn:'BE PATIENT: WAIT',bodyIt:'La risposta corretta è restare paziente e aspettare.',bodyEn:'The correct answer is to remain patient and wait.'}
+ ],phaseOptions:[{startRatio:.08,freeze:true},{startRatio:.35,freeze:true},{startRatio:.62,freeze:true},{startRatio:.06,autoplay:true,endRatio:.88}]},
+ coach:{missIt:'I pedoni non sono ancora partiti: non invitarli e non avere fretta.',missEn:'The pedestrians have not started crossing: do not urge them and do not rush them.',hitIt:'Esatto: resta paziente e aspetta che siano loro a decidere quando attraversare.',hitEn:'Correct: be patient and let them decide when to cross.'},
+ learning:{correctIt:'Se ti sei fermato per pedoni che poi esitano, sii paziente e aspetta senza fare gesti o suonare.',correctEn:'If you stop for pedestrians who then hesitate, be patient and wait without waving or sounding the horn.'}
+});
+
+global.ReplayEngine.registerScene({
+ id:'MT_LORRY_OVERTAKING_SLOW_DOWN_V1',category:'overtaking',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'lorryOvertakingSlowDown',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Heavy lorry overtaking — slow down',accessibilityLabel:'Heavy lorry passing the camera vehicle on a British road',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/8371306/8371306-uhd_3840_2160_25fps.mp4',videoSources:['https://videos.pexels.com/video-files/8371306/8371306-uhd_3840_2160_25fps.mp4','https://www.pexels.com/download/video/8371306/'],poster:'https://images.pexels.com/videos/8371306/busy-road-car-dash-cam-driving-8371306.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · mark bennis',sourcePage:'https://www.pexels.com/video/fast-moving-cars-on-a-highway-8371306/'},
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Un camion pesante è accanto a te e sta completando il sorpasso',textEn:'A heavy lorry is alongside and completing its overtake'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Accelerare o mantenere una velocità alta prolunga il tempo affiancati',textEn:'Accelerating or holding a high speed keeps both vehicles alongside for longer'},
+  {at:5.0,end:7.4,event:'explain',textIt:'Riduci dolcemente la velocità per aiutarlo a rientrare prima',textEn:'Ease off gently to help the lorry complete the pass sooner'},
+  {at:7.6,end:11.2,event:'correct',textIt:'Quando il camion impiega molto a sorpassarti, rallenta',textEn:'When the lorry is taking a long time to overtake, slow down'}
+ ],
+ ui:{staticUntilFinal:true,phaseFreezeKeys:['lorryOvertakingSlowDown','lorryOvertakingSlowDown_p2','lorryOvertakingSlowDown_p3'],hotspot:{left:30,top:49,radiusX:30,radiusY:34,instructionIt:'TOCCA IL CAMION CHE STA SORPASSANDO',instructionEn:'TAP THE OVERTAKING LORRY',ariaIt:'Tocca il camion pesante che sta sorpassando',ariaEn:'Tap the heavy lorry that is overtaking'},phases:[{},
+  {titleIt:'IL CAMION È ANCORA AFFIANCATO',titleEn:'THE LORRY IS STILL ALONGSIDE',bodyIt:'Un mezzo pesante può richiedere più tempo per completare il sorpasso.',bodyEn:'A heavy vehicle may need more time to complete an overtake.'},
+  {titleIt:'AIUTALO A COMPLETARE LA MANOVRA',titleEn:'HELP IT COMPLETE THE PASS',bodyIt:'Rallentando dolcemente riduci il tempo in cui restate affiancati.',bodyEn:'By easing off gently, you reduce the time both vehicles remain alongside.'},
+  {titleIt:'RALLENTA',titleEn:'SLOW DOWN',bodyIt:'La risposta corretta è rallentare per facilitare il completamento del sorpasso.',bodyEn:'The correct answer is to slow down so the lorry can complete the overtake.'}
+ ],phaseOptions:[{startRatio:.08,freeze:true},{startRatio:.32,freeze:true},{startRatio:.58,freeze:true},{startRatio:.04,autoplay:true,endRatio:.90}]},
+ coach:{missIt:'Il camion è già in sorpasso e impiega tempo: cosa puoi fare per ridurre il tempo affiancati?',missEn:'The lorry is already overtaking and taking time: what can you do to reduce the time alongside?',hitIt:'Esatto: rallenta dolcemente e aiutalo a completare il sorpasso.',hitEn:'Correct: ease off and help it complete the overtake.'},
+ learning:{correctIt:'Se un camion pesante impiega molto tempo a sorpassarti, rallenta per facilitargli il completamento della manovra.',correctEn:'If a heavy lorry is taking a long time to overtake you, slow down to help it complete the manoeuvre.'}
+});
+
+global.ReplayEngine.registerScene({
+ id:'MT_TWO_SECOND_SAFE_GAP_V1',category:'safety-margins',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'twoSecondSafeGap',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Two-second rule — safe following gap',accessibilityLabel:'Driver view of a vehicle ahead with fixed roadside traffic-cone reference points',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/35186910/14907392_1920_1080_60fps.mp4',videoSources:['https://videos.pexels.com/video-files/35186910/14907392_1920_1080_60fps.mp4','https://www.pexels.com/download/video/35186910/'],poster:'https://images.pexels.com/videos/35186910/pexels-photo-35186910.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Nothing Ahead',sourcePage:'https://www.pexels.com/video/highway-traffic-view-from-inside-car-35186910/'},
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Scegli un punto fisso: per esempio un cono o un segnale',textEn:'Choose a fixed point, such as a cone or road sign'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Quando il veicolo davanti supera quel punto, inizia a contare',textEn:'When the vehicle ahead passes that point, start counting'},
+  {at:5.0,end:7.4,event:'explain',textIt:'Devi raggiungere lo stesso punto almeno due secondi dopo',textEn:'You should reach the same point at least two seconds later'},
+  {at:7.6,end:11.2,event:'correct',textIt:'La regola dei due secondi serve a mantenere una distanza sicura',textEn:'The two-second rule helps maintain a safe following distance'}
+ ],
+ ui:{staticUntilFinal:true,phaseFreezeKeys:['twoSecondSafeGap','twoSecondSafeGap_p2','twoSecondSafeGap_p3'],hotspot:{left:77,top:51,radiusX:20,radiusY:25,instructionIt:'TOCCA IL VEICOLO DAVANTI',instructionEn:'TAP THE VEHICLE AHEAD',ariaIt:'Tocca il veicolo davanti usato per misurare la distanza',ariaEn:'Tap the vehicle ahead used to measure the following gap'},phases:[{},
+  {titleIt:'SCEGLI UN RIFERIMENTO FISSO',titleEn:'CHOOSE A FIXED REFERENCE',bodyIt:'Usa un cono, un palo o un segnale visibile lungo la strada.',bodyEn:'Use a cone, pole or sign visible beside the road.'},
+  {titleIt:'CONTA DUE SECONDI',titleEn:'COUNT TWO SECONDS',bodyIt:'Quando l’auto davanti supera il riferimento, conta: devi arrivarci almeno due secondi dopo.',bodyEn:'When the vehicle ahead passes the reference, count: you should reach it at least two seconds later.'},
+  {titleIt:'MANTIENI UNA DISTANZA SICURA',titleEn:'KEEP A SAFE GAP',bodyIt:'La risposta corretta è che la regola dei due secondi serve a mantenere una distanza sicura dal veicolo davanti.',bodyEn:'The correct answer is that the two-second rule helps you keep a safe distance from the vehicle ahead.'}
+ ],phaseOptions:[{startRatio:.08,freeze:true},{startRatio:.35,freeze:true},{startRatio:.60,freeze:true},{startRatio:.05,autoplay:true,endRatio:.90}]},
+ coach:{missIt:'Guarda l’auto davanti e un punto fisso sulla strada: la regola misura il tempo che separa i due veicoli.',missEn:'Look at the vehicle ahead and a fixed point: the rule measures the time gap between the vehicles.',hitIt:'Esatto: i due secondi servono a mantenere una distanza sicura dal veicolo davanti.',hitEn:'Correct: the two-second rule helps maintain a safe following distance.'},
+ learning:{correctIt:'La regola dei due secondi serve a mantenere una distanza di sicurezza dal veicolo davanti.',correctEn:'The two-second rule is used to maintain a safe following distance from the vehicle ahead.'}
+});
+
 })(window);

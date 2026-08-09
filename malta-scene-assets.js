@@ -506,6 +506,57 @@
    note:'CARS4.15 corrected phase 04: driver-perspective real footage shows the vehicle travelling through rain and standing water, placing the learner directly in the just-driven-through-water scenario before the brake-test instruction.'
   },
 
+
+  {
+   sceneKey:'overtakeCheckFollowingTraffic',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/27551715/12165642_2160_3840_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/27551715/12165642_2160_3840_30fps.mp4','https://www.pexels.com/download/video/27551715/'],
+   poster:'https://images.pexels.com/videos/27551715/pexels-photo-27551715.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Ольга Шилова',sourcePage:'https://www.pexels.com/video/a-car-is-driving-down-the-road-with-traffic-27551715/',
+   tags:['side-mirror','following-traffic','overtaking-check','speed-position','moving-car'],
+   note:'CARS1.26 strict-match. Real moving-car footage keeps following traffic visible in the side mirror, directly supporting the pre-overtake mirror check for traffic speed and position.'
+  },
+
+  {
+   sceneKey:'zebraKeepClearQueues',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/5834617/5834617-uhd_3840_2160_24fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/5834617/5834617-uhd_3840_2160_24fps.mp4','https://www.pexels.com/download/video/5834617/'],
+   poster:'https://images.pexels.com/videos/5834617/pexels-photo-5834617.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Tim Samuel',sourcePage:'https://www.pexels.com/video/pedestrians-crossing-while-the-yellow-cab-is-in-full-stop-5834617/',
+   tags:['zebra-crossing','vehicle-stopped-before-crossing','pedestrians','crossing-clear','road-safety'],
+   note:'CARS2.7 strict-match. A real taxi is fully stopped before the pedestrian crossing while people use it, visibly demonstrating that the crossing itself must remain clear.'
+  },
+
+  {
+   sceneKey:'zebraPatientWait',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/3657621/3657621-hd_1280_720_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/3657621/3657621-hd_1280_720_30fps.mp4','https://www.pexels.com/download/video/3657621/'],
+   poster:'https://images.pexels.com/videos/3657621/free-video-3657621.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · George Morina',sourcePage:'https://www.pexels.com/video/group-of-people-standing-on-sidewalk-waiting-to-cross-the-street-3657621/',
+   tags:['pedestrians-waiting','crossing','patience','remain-stopped','london','uk'],
+   note:'CARS2.8 strict-match. Real pedestrians are visibly waiting at a London crossing; the Replay teaches the driver to stay patient and not wave, horn or pressure them.'
+  },
+
+  {
+   sceneKey:'lorryOvertakingSlowDown',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/8371306/8371306-uhd_3840_2160_25fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/8371306/8371306-uhd_3840_2160_25fps.mp4','https://www.pexels.com/download/video/8371306/'],
+   poster:'https://images.pexels.com/videos/8371306/busy-road-car-dash-cam-driving-8371306.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · mark bennis',sourcePage:'https://www.pexels.com/video/fast-moving-cars-on-a-highway-8371306/',
+   tags:['heavy-lorry','overtaking','moving-vehicles','slow-down','british-road'],
+   note:'CARS2.26 strict-match. Real British-road footage shows a heavy milk lorry passing the camera vehicle, making the overtaking relationship unmistakable before teaching the driver to ease off.'
+  },
+
+  {
+   sceneKey:'twoSecondSafeGap',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/35186910/14907392_1920_1080_60fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/35186910/14907392_1920_1080_60fps.mp4','https://www.pexels.com/download/video/35186910/'],
+   poster:'https://images.pexels.com/videos/35186910/pexels-photo-35186910.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Nothing Ahead',sourcePage:'https://www.pexels.com/video/highway-traffic-view-from-inside-car-35186910/',
+   tags:['vehicle-ahead','fixed-reference','two-second-rule','safe-gap','pov-driving','traffic-cones'],
+   note:'CARS4.10 strict-match. Driver POV shows a vehicle ahead plus fixed traffic-cone reference points, allowing the Replay to demonstrate exactly how the two-second following-gap check is applied.'
+  },
+
   {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',

@@ -1,3 +1,4 @@
+/* 39.12.15 Replay70 — five new strict real-media replays. */
 /* 39.12.13 Replay60 — five new strict sign/signal replays. */
 
 (function(global){
@@ -420,6 +421,33 @@
    key:'wheelchairZebraPrepareStop',category:'vulnerable-road-users',titleIt:'Sedia a rotelle alla zebra: preparati a fermarti',titleEn:'Wheelchair at zebra: be prepared to stop',status:'ready',
    questionIds:['CARS6.23'],expectedCorrect:[3],engineSceneId:'MT_WHEELCHAIR_ZEBRA_PREPARE_STOP_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
    required:['wheelchair','pedestrian-crossing','zebra-crossing','prepare-stop'],prohibited:['wave-across','continue','reused-approved-video']
+  },
+
+
+  {
+   key:'whiteStickBlindPedestrian',category:'vulnerable-road-users',titleIt:'Bastone bianco: pedone non vedente',titleEn:'White stick: blind pedestrian',status:'ready',
+   questionIds:['CARS6.22'],expectedCorrect:[3],engineSceneId:'MT_WHITE_STICK_BLIND_PEDESTRIAN_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['white-stick','blind-pedestrian','visual-impairment','pedestrian'],prohibited:['deaf-only','elderly-only','reused-approved-video']
+  },
+  {
+   key:'correctiveGlassesAlwaysDriving',category:'eyesight',titleIt:'Occhiali correttivi: indossali sempre alla guida',titleEn:'Corrective glasses: wear them whenever driving',status:'ready',
+   questionIds:['CARS5.3'],expectedCorrect:[0],engineSceneId:'MT_CORRECTIVE_GLASSES_ALWAYS_DRIVING_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['driver','glasses','driving','corrective-lenses'],prohibited:['poor-visibility-only','long-journey-only','reused-approved-video']
+  },
+  {
+   key:'eyesightStandardCorrectiveLenses',category:'eyesight',titleIt:'Standard visivo: occhiali o lenti se necessari',titleEn:'Eyesight standard: glasses or lenses when required',status:'ready',
+   questionIds:['CARS5.5'],expectedCorrect:[3],engineSceneId:'MT_EYESIGHT_STANDARD_CORRECTIVE_LENSES_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['driver','glasses','eyesight-standard','corrective-lenses'],prohibited:['family-history','optional-eyewear','reused-approved-video']
+  },
+  {
+   key:'hardShoulderEmergencyOnly',category:'dual-carriageways',titleIt:'Corsia di emergenza: solo per emergenze',titleEn:'Hard shoulder: emergencies only',status:'ready',
+   questionIds:['CARS9.7'],expectedCorrect:[0],engineSceneId:'MT_HARD_SHOULDER_EMERGENCY_ONLY_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['highway','roadside','emergency-stop','breakdown'],prohibited:['rest-stop','normal-parking','reused-approved-video']
+  },
+  {
+   key:'doNotFollowTooClosely',category:'following-distance',titleIt:'Distanza: non seguire troppo da vicino',titleEn:'Following distance: do not follow too closely',status:'ready',
+   questionIds:['CARS2.12'],expectedCorrect:[2],engineSceneId:'MT_DO_NOT_FOLLOW_TOO_CLOSELY_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['vehicle-ahead','following-distance','safe-gap','traffic'],prohibited:['tailgating-as-correct','reused-approved-video']
   },
 
   {

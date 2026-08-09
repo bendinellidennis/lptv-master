@@ -1,3 +1,4 @@
+/* 39.12.15 Replay70 — five new strict real-media assets. */
 /* 39.12.13 Replay60 — five new strict sign/signal assets. */
 
 (function(global){
@@ -696,6 +697,48 @@
    poster:'https://images.pexels.com/videos/3206945/free-video-3206945.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · George Morina',sourcePage:'https://www.pexels.com/video/traveling-a-street-in-central-london-3206945/',
    tags:['wheelchair','crosswalk','pedestrian-crossing','traffic','prepare-stop'],
    note:'CARS6.23 strict-match. Real London street footage is explicitly tagged with wheelchair, pedestrian crossing, traffic lights and vehicles, providing the exact vulnerable-road-user context.'
+  },
+
+
+  {
+   sceneKey:'whiteStickBlindPedestrian',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/8322535/8322535-uhd_2160_4096_25fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/8322535/8322535-uhd_2160_4096_25fps.mp4','https://www.pexels.com/download/video/8322535/'],
+   poster:'https://images.pexels.com/videos/8322535/pexels-photo-8322535.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · MART PRODUCTION',sourcePage:'https://www.pexels.com/video/person-using-a-walking-stick-8322535/',
+   tags:['white-stick','blind-pedestrian','visual-impairment','pedestrian','walking-stick'],
+   note:'CARS6.22 strict-match. The real scene visibly shows a visually impaired pedestrian using a white mobility cane; the correct answer is that the person is blind.'
+  },
+  {
+   sceneKey:'correctiveGlassesAlwaysDriving',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/5834804/5834804-uhd_3840_2160_24fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/5834804/5834804-uhd_3840_2160_24fps.mp4','https://www.pexels.com/download/video/5834804/'],
+   poster:'https://images.pexels.com/videos/5834804/pexels-photo-5834804.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Tim Samuel',sourcePage:'https://www.pexels.com/video/a-cab-driver-on-his-way-5834804/',
+   tags:['driver','glasses','driving','corrective-lenses','road-visible'],
+   note:'CARS5.3 strict-match. Phase 01-03 use a separate real close-up photo where corrective glasses are unmistakably visible on a driver; phase 04 uses real driving footage explicitly tagged with eyeglasses and driving.'
+  },
+  {
+   sceneKey:'eyesightStandardCorrectiveLenses',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/3704118/3704118-hd_1920_1080_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/3704118/3704118-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/3704118/'],
+   poster:'https://images.pexels.com/videos/3704118/driving-glasses-look-up-stop-3704118.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Rholdan Ortiz',sourcePage:'https://www.pexels.com/video/footage-of-a-woman-waiting-at-the-traffic-light-3704118/',
+   tags:['driver','glasses','eyesight-standard','corrective-lenses','traffic'],
+   note:'CARS5.5 strict-match. The stills clearly show a driver wearing glasses; phase 04 shows a real female driver with glasses in live traffic, reinforcing that required corrective lenses must be worn while driving.'
+  },
+  {
+   sceneKey:'hardShoulderEmergencyOnly',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/2881486/2881486-uhd_3840_2160_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/2881486/2881486-uhd_3840_2160_30fps.mp4','https://www.pexels.com/download/video/2881486/'],
+   poster:'https://images.pexels.com/videos/2881486/free-video-2881486.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Suraphat Nuea-on',sourcePage:'https://www.pexels.com/video/men-changing-a-flat-tire-assisted-by-highway-police-2881486/',
+   tags:['highway','roadside','emergency-stop','breakdown','flat-tyre','roadside-assistance'],
+   note:'CARS9.7 strict-match. A vehicle is stopped at the edge of a highway because of a flat-tyre emergency and receives roadside/highway-police assistance; this is the exact emergency-use context for a hard shoulder.'
+  },
+  {
+   sceneKey:'doNotFollowTooClosely',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/5786587/5786587-uhd_3840_2160_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/5786587/5786587-uhd_3840_2160_30fps.mp4','https://www.pexels.com/download/video/5786587/'],
+   poster:'https://images.pexels.com/videos/5786587/pexels-photo-5786587.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Tom Fisk',sourcePage:'https://www.pexels.com/video/vehicles-moving-on-a-highway-5786587/',
+   tags:['vehicle-ahead','following-distance','safe-gap','traffic','pov'],
+   note:'CARS2.12 strict-match. Phase 01-03 use a real driver-view photograph showing substantial space to vehicles ahead; phase 04 uses real POV traffic footage so the learner sees the correct alternative to following too closely.'
   },
 
   {

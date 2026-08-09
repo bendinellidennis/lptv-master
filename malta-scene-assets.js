@@ -539,12 +539,12 @@
 
   {
    sceneKey:'lorryOvertakingSlowDown',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
-   video:'https://videos.pexels.com/video-files/8371306/8371306-uhd_3840_2160_25fps.mp4',
-   videoSources:['https://videos.pexels.com/video-files/8371306/8371306-uhd_3840_2160_25fps.mp4','https://www.pexels.com/download/video/8371306/'],
-   poster:'https://images.pexels.com/videos/8371306/busy-road-car-dash-cam-driving-8371306.jpeg?auto=compress&dpr=1&h=750&w=1260',
-   credit:'Pexels · mark bennis',sourcePage:'https://www.pexels.com/video/fast-moving-cars-on-a-highway-8371306/',
+   video:'https://videos.pexels.com/video-files/3010208/3010208-hd_1920_1080_24fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/3010208/3010208-hd_1920_1080_24fps.mp4','https://www.pexels.com/download/video/3010208/'],
+   poster:'https://images.pexels.com/videos/3010208/free-video-3010208.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Athena Sandrini',sourcePage:'https://www.pexels.com/video/road-travel-footage-on-a-highway-from-inside-a-car-3010208/',
    tags:['heavy-lorry','overtaking','moving-vehicles','slow-down','british-road'],
-   note:'CARS2.26 strict-match. Real British-road footage shows a heavy milk lorry passing the camera vehicle, making the overtaking relationship unmistakable before teaching the driver to ease off.'
+   note:'CARS2.26 corrected strict-match. Real footage is filmed from inside a heavy truck while it overtakes other vehicles, removing the previous ambiguity where the camera car appeared to be overtaking the lorry. The replay teaches the overtaken driver to ease off and let the lorry complete the pass.'
   },
 
   {

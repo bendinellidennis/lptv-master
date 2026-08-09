@@ -2078,8 +2078,8 @@ global.ReplayEngine.registerScene({
 
 global.ReplayEngine.registerScene({
  id:'MT_LORRY_OVERTAKING_SLOW_DOWN_V1',category:'overtaking',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
- sceneKey:'lorryOvertakingSlowDown',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Heavy lorry overtaking — slow down',accessibilityLabel:'Heavy lorry passing the camera vehicle on a British road',playbackRate:0.9,
- media:{video:'https://videos.pexels.com/video-files/8371306/8371306-uhd_3840_2160_25fps.mp4',videoSources:['https://videos.pexels.com/video-files/8371306/8371306-uhd_3840_2160_25fps.mp4','https://www.pexels.com/download/video/8371306/'],poster:'https://images.pexels.com/videos/8371306/busy-road-car-dash-cam-driving-8371306.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · mark bennis',sourcePage:'https://www.pexels.com/video/fast-moving-cars-on-a-highway-8371306/'},
+ sceneKey:'lorryOvertakingSlowDown',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Heavy lorry overtaking — slow down',accessibilityLabel:'Real view from a heavy truck while it overtakes other vehicles on a highway',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/3010208/3010208-hd_1920_1080_24fps.mp4',videoSources:['https://videos.pexels.com/video-files/3010208/3010208-hd_1920_1080_24fps.mp4','https://www.pexels.com/download/video/3010208/'],poster:'https://images.pexels.com/videos/3010208/free-video-3010208.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Athena Sandrini',sourcePage:'https://www.pexels.com/video/road-travel-footage-on-a-highway-from-inside-a-car-3010208/'},
  timeline:[
   {at:.4,end:2.4,event:'observe',textIt:'Un camion pesante è accanto a te e sta completando il sorpasso',textEn:'A heavy lorry is alongside and completing its overtake'},
   {at:2.6,end:4.8,event:'hazard',textIt:'Accelerare o mantenere una velocità alta prolunga il tempo affiancati',textEn:'Accelerating or holding a high speed keeps both vehicles alongside for longer'},

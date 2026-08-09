@@ -1,0 +1,13 @@
+MALTA DRIVING MASTER — QA 39.11.30
+Scope: deployment/cache correction only.
+
+PASS — app-3994.js is byte-identical to Build 39.11.29.
+PASS — index.html references app-3994.js?v=391130.
+PASS — old app cache key app-3994.js?v=391128 no longer appears in index.html.
+PASS — CARS2.4 special phase 01-03 uses embedded zebraWaitingStop freeze.
+PASS — CARS2.6 special phase 01-03 uses embedded pedestrianWaveAcross freeze.
+PASS — phase 04 remains ReplayEngine video markup for both special Replay scenes.
+PASS — JavaScript syntax check.
+PASS — ZIP integrity test.
+
+No visual assets or Replay content changed from the already-approved photographic set.

@@ -1,0 +1,16 @@
+MALTA DRIVING MASTER — BUILD CHECK 39.11.30
+Purpose: GitHub/Safari cache-bust for app-3994.js after the 39.11.29 special Replay loading fix.
+
+CHANGE
+- index.html now loads app-3994.js?v=391130 instead of app-3994.js?v=391128.
+- app-3994.js itself is byte-identical to Build 39.11.29.
+- No questions, answers, Coach, mappings, freeze images, video scenes, Replay flow, CSS, or other runtime code changed.
+
+WHY
+Build 39.11.29 contained the corrected CARS2.4/CARS2.6 phase 01-03 inline-freeze logic, but index.html retained the 39.11.28 cache key. A browser/CDN cache could therefore keep serving the previous JavaScript on GitHub Pages even though the new file had been uploaded.
+
+EXPECTED
+- CARS2.6 phases 01-03 show the embedded pedestrian photographic freeze immediately.
+- CARS2.4 phases 01-03 show the embedded zebra photographic freeze immediately.
+- Phase 04 remains the approved video.
+- No "Loading video" dependency before phases 01-03.

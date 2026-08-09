@@ -1,3 +1,4 @@
+/* 39.12.12 Replay55 visual-loading correction; mappings unchanged. */
 
 (function(global){
  'use strict';

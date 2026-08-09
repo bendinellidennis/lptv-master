@@ -1,3 +1,4 @@
+/* 39.12.12: Replay55 phases 01-03 forced to photographic stills; video reserved for 04. */
 
 (function(global){
  'use strict';

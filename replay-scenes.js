@@ -2210,4 +2210,100 @@ global.ReplayEngine.registerScene({
  learning:{correctIt:'Quando aspetti di uscire da una strada laterale, controlla attentamente le moto perché sono piccole e difficili da vedere.',correctEn:'When waiting to emerge from a side road, watch carefully for motorcycles because they are small and hard to see.'}
 });
 
+
+global.ReplayEngine.registerScene({
+ id:'MT_NO_ENTRY_SIGN_MEANING_V1',category:'road-signs',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'noEntrySignMeaning',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'No-entry sign — vehicles must not enter',accessibilityLabel:'Real no-entry road sign with red circle and white horizontal bar',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/34633268/14679167_3840_2160_50fps.mp4',videoSources:['https://videos.pexels.com/video-files/34633268/14679167_3840_2160_50fps.mp4','https://www.pexels.com/download/video/34633268/'],poster:'https://images.pexels.com/videos/34633268/pexels-photo-34633268.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Salim Da',sourcePage:'https://www.pexels.com/video/no-entry-and-turn-prohibition-signs-in-forest-34633268/'},
+ timeline:[
+  {at:.3,end:2.1,event:'observe',textIt:'Osserva il segnale rosso con la barra bianca orizzontale',textEn:'Observe the red sign with the white horizontal bar'},
+  {at:2.2,end:4.2,event:'hazard',textIt:'Questo segnale vieta ai veicoli di entrare da questa direzione',textEn:'This sign prohibits vehicles from entering from this direction'},
+  {at:4.3,end:6.5,event:'explain',textIt:'Non significa strada senza uscita e non è un divieto di sosta',textEn:'It does not mean no through road and it is not a no-parking sign'},
+  {at:6.6,end:9.5,event:'correct',textIt:'Significa: divieto di accesso',textEn:'It means: no entry'}
+ ],
+ ui:{staticUntilFinal:true,useVideoFreezeFrames:false,phaseImages:['https://images.pexels.com/videos/34633268/pexels-photo-34633268.jpeg?auto=compress&dpr=1&h=750&w=1260','https://images.pexels.com/videos/34633268/pexels-photo-34633268.jpeg?auto=compress&dpr=1&h=750&w=1260','https://images.pexels.com/videos/34633268/pexels-photo-34633268.jpeg?auto=compress&dpr=1&h=750&w=1260'],hotspot:{left:67,top:61,radiusX:28,radiusY:26,instructionIt:'TOCCA IL SEGNALE DI DIVIETO DI ACCESSO',instructionEn:'TAP THE NO-ENTRY SIGN',ariaIt:'Tocca il segnale rosso con la barra bianca',ariaEn:'Tap the red sign with the white bar'},phases:[{},
+  {titleIt:'DIVIETO DI ACCESSO',titleEn:'NO ENTRY',bodyIt:'Il cerchio rosso con barra bianca orizzontale vieta l’ingresso ai veicoli da questa direzione.',bodyEn:'The red circle with a horizontal white bar prohibits vehicles from entering from this direction.'},
+  {titleIt:'NON CONFONDERLO CON ALTRI DIVIETI',titleEn:'DO NOT CONFUSE IT',bodyIt:'Non indica una strada senza uscita e non significa divieto di sosta.',bodyEn:'It does not mean no through road and it does not mean no parking.'},
+  {titleIt:'NESSUN ACCESSO',titleEn:'NO ENTRY',bodyIt:'La risposta corretta è: divieto di accesso.',bodyEn:'The correct answer is: no entry.'}
+ ],phaseOptions:[{startRatio:.10,freeze:true},{startRatio:.35,freeze:true},{startRatio:.62,freeze:true},{startRatio:.05,autoplay:true,endRatio:.92}]},
+ coach:{missIt:'Concentrati sul simbolo: cerchio rosso e barra bianca orizzontale.',missEn:'Focus on the symbol: red circle and horizontal white bar.',hitIt:'Esatto: significa divieto di accesso.',hitEn:'Correct: it means no entry.'},
+ learning:{correctIt:'Il segnale di divieto di accesso indica che i veicoli non devono entrare da quella direzione.',correctEn:'A no-entry sign means vehicles must not enter from that direction.'}
+});
+
+global.ReplayEngine.registerScene({
+ id:'MT_TRIANGULAR_SIGNS_WARNINGS_V1',category:'road-signs',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'triangularSignsWarnings',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Triangular road signs — warnings',accessibilityLabel:'Real triangular winding-road warning sign beside a road',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/12950315/12950315-hd_1080_1920_30fps.mp4',videoSources:['https://videos.pexels.com/video-files/12950315/12950315-hd_1080_1920_30fps.mp4','https://www.pexels.com/download/video/12950315/'],poster:'https://images.pexels.com/videos/12950315/pexels-photo-12950315.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Nothing Ahead',sourcePage:'https://www.pexels.com/video/motorcycles-passing-by-road-signs-12950315/'},
+ timeline:[
+  {at:.3,end:2.1,event:'observe',textIt:'Osserva la forma triangolare del segnale',textEn:'Observe the triangular shape of the sign'},
+  {at:2.2,end:4.2,event:'hazard',textIt:'Il simbolo all’interno avverte del tipo di pericolo davanti',textEn:'The symbol inside warns you of the type of hazard ahead'},
+  {at:4.3,end:6.5,event:'explain',textIt:'I segnali triangolari servono principalmente ad avvertire',textEn:'Triangular signs are primarily used to give warnings'},
+  {at:6.6,end:9.5,event:'correct',textIt:'Risposta corretta: segnalare pericoli',textEn:'Correct answer: to give warnings'}
+ ],
+ ui:{staticUntilFinal:true,useVideoFreezeFrames:false,phaseImages:['https://images.pexels.com/videos/12950315/pexels-photo-12950315.jpeg?auto=compress&dpr=1&h=750&w=1260','https://images.pexels.com/videos/12950315/pexels-photo-12950315.jpeg?auto=compress&dpr=1&h=750&w=1260','https://images.pexels.com/videos/12950315/pexels-photo-12950315.jpeg?auto=compress&dpr=1&h=750&w=1260'],hotspot:{left:50,top:34,radiusX:30,radiusY:25,instructionIt:'TOCCA IL SEGNALE TRIANGOLARE',instructionEn:'TAP THE TRIANGULAR SIGN',ariaIt:'Tocca il segnale triangolare di pericolo',ariaEn:'Tap the triangular warning sign'},phases:[{},
+  {titleIt:'FORMA TRIANGOLARE = AVVISO',titleEn:'TRIANGLE = WARNING',bodyIt:'La forma triangolare richiama l’attenzione su un pericolo o una situazione da anticipare.',bodyEn:'The triangular shape draws attention to a hazard or situation ahead.'},
+  {titleIt:'QUI AVVERTE DI CURVE',titleEn:'HERE IT WARNS OF BENDS',bodyIt:'Il simbolo della strada sinuosa mostra concretamente il pericolo per cui devi prepararti.',bodyEn:'The winding-road symbol shows the specific hazard you must prepare for.'},
+  {titleIt:'SERVONO A DARE AVVERTIMENTI',titleEn:'THEY GIVE WARNINGS',bodyIt:'La risposta corretta è: a segnalare pericoli.',bodyEn:'The correct answer is: to give warnings.'}
+ ],phaseOptions:[{startRatio:.10,freeze:true},{startRatio:.38,freeze:true},{startRatio:.66,freeze:true},{startRatio:.05,autoplay:true,endRatio:.92}]},
+ coach:{missIt:'Guarda la forma del segnale e il pericolo rappresentato al suo interno.',missEn:'Look at the sign shape and the hazard shown inside it.',hitIt:'Esatto: i segnali triangolari danno avvertimenti.',hitEn:'Correct: triangular signs give warnings.'},
+ learning:{correctIt:'I segnali stradali triangolari servono generalmente a segnalare pericoli.',correctEn:'Triangular road signs are generally used to give warnings.'}
+});
+
+global.ReplayEngine.registerScene({
+ id:'MT_TRAFFIC_LIGHT_RED_AMBER_GREEN_SEQUENCE_V1',category:'traffic-signals',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'trafficLightRedAmberGreenSequence',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Traffic-light sequence — red, red and amber, green',accessibilityLabel:'Real UK traffic lights changing through the red, red-and-amber and green sequence',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/30787610/13168508_3840_2160_25fps.mp4',videoSources:['https://videos.pexels.com/video-files/30787610/13168508_3840_2160_25fps.mp4','https://www.pexels.com/download/video/30787610/'],poster:'https://images.pexels.com/videos/30787610/amber-building-bus-car-30787610.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Media Hopper Studio',sourcePage:'https://www.pexels.com/video/traffic-light-transition-in-edinburgh-cityscape-30787610/'},
+ timeline:[
+  {at:.3,end:2.1,event:'observe',textIt:'Il segnale è rosso: resta fermo',textEn:'The signal is red: remain stopped'},
+  {at:2.2,end:4.2,event:'hazard',textIt:'Prima del verde si accendono insieme rosso e giallo',textEn:'Before green, red and amber show together'},
+  {at:4.3,end:6.5,event:'explain',textIt:'Poi arriva il verde',textEn:'Then green follows'},
+  {at:6.6,end:10.0,event:'correct',textIt:'Sequenza: rosso → rosso e giallo → verde',textEn:'Sequence: red → red and amber → green'}
+ ],
+ ui:{staticUntilFinal:true,useVideoFreezeFrames:false,phaseImages:['https://upload.wikimedia.org/wikipedia/commons/5/58/UK_Red_Traffic_Light_Signal_-_geograph.org.uk_-_5118612.jpg?utm_campaign=index&utm_content=original&utm_source=commons.wikimedia.org','https://upload.wikimedia.org/wikipedia/commons/e/ed/UK_Red_And_Amber_Traffic_Light_Signal_-_geograph.org.uk_-_5107784.jpg?utm_campaign=index&utm_content=original&utm_source=commons.wikimedia.org','https://upload.wikimedia.org/wikipedia/commons/0/0c/UK_Green_Traffic_Light_Signal_-_geograph.org.uk_-_5094598.jpg?utm_campaign=index&utm_content=original&utm_source=commons.wikimedia.org'],phaseImageCredits:['Wikimedia Commons · Gary / Geograph · CC BY-SA 2.0','Wikimedia Commons · Gary / Geograph · CC BY-SA 2.0','Wikimedia Commons · Gary / Geograph · CC BY-SA 2.0'],hotspot:{left:46,top:46,radiusX:26,radiusY:39,instructionIt:'TOCCA IL SEMAFORO',instructionEn:'TAP THE TRAFFIC LIGHT',ariaIt:'Tocca il semaforo',ariaEn:'Tap the traffic light'},phases:[{},
+  {titleIt:'1 · ROSSO',titleEn:'1 · RED',bodyIt:'Con il rosso devi restare fermo.',bodyEn:'At red you must remain stopped.'},
+  {titleIt:'2 · ROSSO E GIALLO',titleEn:'2 · RED AND AMBER',bodyIt:'Il passaggio successivo è rosso e giallo accesi insieme: preparati, ma non partire ancora.',bodyEn:'Next, red and amber show together: prepare, but do not move yet.'},
+  {titleIt:'3 · VERDE',titleEn:'3 · GREEN',bodyIt:'La sequenza corretta è rosso, rosso e giallo, poi verde.',bodyEn:'The correct sequence is red, red and amber, then green.'}
+ ],phaseOptions:[{startRatio:.08,freeze:true},{startRatio:.38,freeze:true},{startRatio:.68,freeze:true},{startRatio:.03,autoplay:true,endRatio:.95}]},
+ coach:{missIt:'Segui l’ordine delle tre fotografie: rosso, poi due luci insieme, poi verde.',missEn:'Follow the order of the three photographs: red, then two lights together, then green.',hitIt:'Esatto: rosso, rosso e giallo, poi verde.',hitEn:'Correct: red, red and amber, then green.'},
+ learning:{correctIt:'Il semaforo passa da rosso a rosso e giallo insieme, quindi a verde.',correctEn:'The traffic light changes from red to red and amber together, then to green.'}
+});
+
+global.ReplayEngine.registerScene({
+ id:'MT_RED_LIGHT_STOP_BEHIND_LINE_V1',category:'traffic-signals',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'redLightStopBehindLine',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Red traffic light — stop and wait',accessibilityLabel:'Real vehicles stopped at a red traffic light at an urban intersection',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/3552475/3552475-hd_1920_1080_30fps.mp4',videoSources:['https://videos.pexels.com/video-files/3552475/3552475-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/3552475/'],poster:'https://images.pexels.com/videos/3552475/free-video-3552475.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Marc Van den Broeck',sourcePage:'https://www.pexels.com/video/motor-vehicles-stopping-on-a-red-light-of-the-traffic-lights-3552475/'},
+ timeline:[
+  {at:.3,end:2.1,event:'observe',textIt:'Il semaforo è rosso e i veicoli si fermano',textEn:'The light is red and vehicles stop'},
+  {at:2.2,end:4.2,event:'hazard',textIt:'Superare la linea di arresto con il rosso significa entrare nell’area controllata dal segnale',textEn:'Crossing the stop line on red means entering the area controlled by the signal'},
+  {at:4.3,end:6.5,event:'explain',textIt:'Fermati prima della linea e aspetta',textEn:'Stop before the line and wait'},
+  {at:6.6,end:9.5,event:'correct',textIt:'Rosso: devi fermarti e attendere dietro la linea',textEn:'Red: you must stop and wait behind the stop line'}
+ ],
+ ui:{staticUntilFinal:true,useVideoFreezeFrames:false,phaseImages:['https://images.pexels.com/videos/3552475/free-video-3552475.jpg?auto=compress&dpr=1&h=750&w=1260','https://images.pexels.com/videos/3552475/free-video-3552475.jpg?auto=compress&dpr=1&h=750&w=1260','https://images.pexels.com/videos/3552475/free-video-3552475.jpg?auto=compress&dpr=1&h=750&w=1260'],hotspot:{left:54,top:63,radiusX:43,radiusY:27,instructionIt:'TOCCA I VEICOLI FERMI AL ROSSO',instructionEn:'TAP THE VEHICLES STOPPED AT RED',ariaIt:'Tocca i veicoli fermi al semaforo rosso',ariaEn:'Tap the vehicles stopped at the red light'},phases:[{},
+  {titleIt:'ROSSO = STOP',titleEn:'RED = STOP',bodyIt:'Con il semaforo rosso non devi procedere.',bodyEn:'At a red traffic light you must not proceed.'},
+  {titleIt:'RESTA DIETRO LA LINEA',titleEn:'STAY BEHIND THE STOP LINE',bodyIt:'Arresta il veicolo prima della linea di arresto e resta lì in attesa.',bodyEn:'Stop before the stop line and remain there waiting.'},
+  {titleIt:'FERMATI E ASPETTA',titleEn:'STOP AND WAIT',bodyIt:'La risposta corretta è: devi fermarti e attendere dietro la linea di arresto.',bodyEn:'The correct answer is: you must stop and wait behind the stop line.'}
+ ],phaseOptions:[{startRatio:.08,freeze:true},{startRatio:.38,freeze:true},{startRatio:.66,freeze:true},{startRatio:.03,autoplay:true,endRatio:.92}]},
+ coach:{missIt:'Concentrati sul rosso e sulla posizione in cui i veicoli devono arrestarsi.',missEn:'Focus on the red signal and where vehicles must stop.',hitIt:'Esatto: fermati e aspetta dietro la linea di arresto.',hitEn:'Correct: stop and wait behind the stop line.'},
+ learning:{correctIt:'Un semaforo rosso impone di fermarsi e attendere dietro la linea di arresto.',correctEn:'A red traffic light means you must stop and wait behind the stop line.'}
+});
+
+global.ReplayEngine.registerScene({
+ id:'MT_AMBER_LIGHT_PREPARE_STOP_V1',category:'traffic-signals',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'amberLightPrepareStop',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Amber traffic light — prepare to stop',accessibilityLabel:'Real close-up of an amber traffic light changing toward red',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/3999410/3999410-hd_1920_1080_24fps.mp4',videoSources:['https://videos.pexels.com/video-files/3999410/3999410-hd_1920_1080_24fps.mp4','https://www.pexels.com/download/video/3999410/'],poster:'https://images.pexels.com/videos/3999410/pexels-photo-3999410.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · K',sourcePage:'https://www.pexels.com/video/traffic-light-with-yellow-light-turning-to-red-3999410/'},
+ timeline:[
+  {at:.3,end:2.1,event:'observe',textIt:'È accesa soltanto la luce gialla',textEn:'Only the amber light is illuminated'},
+  {at:2.2,end:4.2,event:'hazard',textIt:'Il segnale sta passando verso lo stop',textEn:'The signal is changing toward stop'},
+  {at:4.3,end:6.5,event:'explain',textIt:'Preparati a fermarti alla linea di arresto',textEn:'Prepare to stop at the stop line'},
+  {at:6.6,end:9.5,event:'correct',textIt:'Giallo da solo: preparati a fermarti',textEn:'Amber alone: prepare to stop'}
+ ],
+ ui:{staticUntilFinal:true,useVideoFreezeFrames:false,phaseImages:['https://images.pexels.com/videos/3999410/pexels-photo-3999410.jpeg?auto=compress&dpr=1&h=750&w=1260','https://images.pexels.com/videos/3999410/pexels-photo-3999410.jpeg?auto=compress&dpr=1&h=750&w=1260','https://images.pexels.com/videos/3999410/pexels-photo-3999410.jpeg?auto=compress&dpr=1&h=750&w=1260'],hotspot:{left:39,top:48,radiusX:25,radiusY:32,instructionIt:'TOCCA LA LUCE GIALLA',instructionEn:'TAP THE AMBER LIGHT',ariaIt:'Tocca la luce gialla accesa',ariaEn:'Tap the illuminated amber light'},phases:[{},
+  {titleIt:'GIALLO DA SOLO',titleEn:'AMBER ALONE',bodyIt:'Quando è acceso solo il giallo, non è un segnale per accelerare o partire.',bodyEn:'When amber is shown alone, it is not a signal to accelerate or go.'},
+  {titleIt:'PREPARATI ALLO STOP',titleEn:'PREPARE TO STOP',bodyIt:'Rallenta e preparati a fermarti alla linea di arresto.',bodyEn:'Slow down and prepare to stop at the stop line.'},
+  {titleIt:'PREPARATI A FERMARTI',titleEn:'PREPARE TO STOP',bodyIt:'La risposta corretta è: preparati a fermarti alla linea di arresto.',bodyEn:'The correct answer is: prepare to stop at the stop line.'}
+ ],phaseOptions:[{startRatio:.08,freeze:true},{startRatio:.38,freeze:true},{startRatio:.66,freeze:true},{startRatio:.03,autoplay:true,endRatio:.92}]},
+ coach:{missIt:'Guarda quale luce è accesa da sola: il giallo ti avvisa di prepararti allo stop.',missEn:'Look at which light is showing alone: amber warns you to prepare to stop.',hitIt:'Esatto: con il giallo da solo preparati a fermarti.',hitEn:'Correct: amber alone means prepare to stop.'},
+ learning:{correctIt:'Al semaforo, la luce gialla da sola significa prepararsi a fermarsi alla linea di arresto, salvo che fermarsi non sia sicuro perché sei già troppo vicino.',correctEn:'At traffic lights, amber alone means prepare to stop at the stop line, unless stopping would be unsafe because you are already too close.'}
+});
+
 })(window);

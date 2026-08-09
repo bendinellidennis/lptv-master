@@ -1,4 +1,4 @@
-/* build 39.12.12 static 01-03 photo fix for replay55 */
+/* build 39.12.13 Replay Library 60 */
 /* BUILD 39.12.11 — REPLAY LIBRARY 55 READY — STRICT REAL FREEZE FRAMES */
 /* build 39.12.10 CARS2.26 phase04 correction */
 /* BUILD 39.12.9 — REPLAY LIBRARY 50 READY — STRICT VISUAL MATCH */

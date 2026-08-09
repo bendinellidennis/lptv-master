@@ -1,4 +1,4 @@
-/* 39.12.12 Replay55 visual-loading correction; mappings unchanged. */
+/* 39.12.13 Replay60 — five new strict sign/signal replays. */
 
 (function(global){
  'use strict';
@@ -361,6 +361,37 @@
    key:'sideRoadWatchMotorcycles',category:'vulnerable-road-users',titleIt:'Uscita da strada laterale: cerca bene i motocicli',titleEn:'Emerging from side road: watch carefully for motorcycles',status:'ready',
    questionIds:['CARS6.37'],expectedCorrect:[2],engineSceneId:'MT_SIDE_ROAD_WATCH_MOTORCYCLES_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
    required:['crossroad','side-road','motorcycles','small-hard-to-see'],prohibited:['motorcycle-always-priority','police-only','reused-approved-video']
+  },
+
+
+  {
+   key:'noEntrySignMeaning',category:'road-signs',titleIt:'Divieto di accesso: nessun veicolo può entrare',titleEn:'No entry: vehicles must not enter',status:'ready',
+   questionIds:['CARS11.9'],expectedCorrect:[3],engineSceneId:'MT_NO_ENTRY_SIGN_MEANING_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['no-entry-sign','regulatory-sign','vehicles-must-not-enter'],prohibited:['no-through-road','no-parking','reused-approved-video']
+  },
+
+  {
+   key:'triangularSignsWarnings',category:'road-signs',titleIt:'Segnali triangolari: avvertono dei pericoli',titleEn:'Triangular signs: warnings',status:'ready',
+   questionIds:['CARS11.30'],expectedCorrect:[0],engineSceneId:'MT_TRIANGULAR_SIGNS_WARNINGS_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['triangular-warning-sign','warning','road-sign'],prohibited:['directions','orders-only','information-only','reused-approved-video']
+  },
+
+  {
+   key:'trafficLightRedAmberGreenSequence',category:'traffic-signals',titleIt:'Semaforo: rosso → rosso e giallo → verde',titleEn:'Traffic lights: red → red and amber → green',status:'ready',
+   questionIds:['CARS11.55'],expectedCorrect:[0],engineSceneId:'MT_TRAFFIC_LIGHT_RED_AMBER_GREEN_SEQUENCE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['red-light','red-amber','green-light','signal-sequence'],prohibited:['red-direct-green','amber-only-transition','reused-approved-video']
+  },
+
+  {
+   key:'redLightStopBehindLine',category:'traffic-signals',titleIt:'Semaforo rosso: fermati dietro la linea',titleEn:'Red light: stop behind the line',status:'ready',
+   questionIds:['CARS11.56'],expectedCorrect:[2],engineSceneId:'MT_RED_LIGHT_STOP_BEHIND_LINE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['red-light','vehicles-stopped','stop-line','wait'],prohibited:['proceed-cautiously','turn-left','reused-approved-video']
+  },
+
+  {
+   key:'amberLightPrepareStop',category:'traffic-signals',titleIt:'Giallo da solo: preparati a fermarti',titleEn:'Amber alone: prepare to stop',status:'ready',
+   questionIds:['CARS11.57'],expectedCorrect:[3],engineSceneId:'MT_AMBER_LIGHT_PREPARE_STOP_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['amber-light','prepare-stop','stop-line'],prohibited:['prepare-go','go-if-clear','reused-approved-video']
   },
 
   {

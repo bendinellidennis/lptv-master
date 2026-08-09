@@ -1,4 +1,4 @@
-/* 39.12.12: Replay55 phases 01-03 forced to photographic stills; video reserved for 04. */
+/* 39.12.13 Replay60 — five new strict sign/signal assets. */
 
 (function(global){
  'use strict';
@@ -607,6 +607,52 @@
    credit:'Pexels · NGUYỄN THÀNH NHƠN',sourcePage:'https://www.pexels.com/video/busy-rural-road-with-motorbikes-and-cars-29469397/',
    tags:['crossroad','side-road','motorbikes','motorcycles','cars','traffic-flow','small-road-user'],
    note:'CARS6.37 strict-match. A real crossroad/side-road scene contains motorcycles mixed with cars, making their small visual profile clear when checking before emerging. Phases 01-03 use distinct frozen real moments and phase 04 runs the live traffic.'
+  },
+
+
+  {
+   sceneKey:'noEntrySignMeaning',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/34633268/14679167_3840_2160_50fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/34633268/14679167_3840_2160_50fps.mp4','https://www.pexels.com/download/video/34633268/'],
+   poster:'https://images.pexels.com/videos/34633268/pexels-photo-34633268.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Salim Da',sourcePage:'https://www.pexels.com/video/no-entry-and-turn-prohibition-signs-in-forest-34633268/',
+   tags:['no-entry-sign','prohibition','regulatory-sign','road-safety'],
+   note:'CARS11.9 strict-match. Real no-entry sign is unmistakably visible in 01-03; phase 04 uses dedicated real footage of entry/turn prohibition signs.'
+  },
+
+  {
+   sceneKey:'triangularSignsWarnings',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/12950315/12950315-hd_1080_1920_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/12950315/12950315-hd_1080_1920_30fps.mp4','https://www.pexels.com/download/video/12950315/'],
+   poster:'https://images.pexels.com/videos/12950315/pexels-photo-12950315.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Nothing Ahead',sourcePage:'https://www.pexels.com/video/motorcycles-passing-by-road-signs-12950315/',
+   tags:['triangular-sign','warning-sign','winding-road','road-hazard'],
+   note:'CARS11.30 strict-match. A real triangular winding-road warning sign dominates the photographic phases; phase 04 shows the same real warning sign in a live road scene.'
+  },
+
+  {
+   sceneKey:'trafficLightRedAmberGreenSequence',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/30787610/13168508_3840_2160_25fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/30787610/13168508_3840_2160_25fps.mp4','https://www.pexels.com/download/video/30787610/'],
+   poster:'https://images.pexels.com/videos/30787610/amber-building-bus-car-30787610.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Media Hopper Studio',sourcePage:'https://www.pexels.com/video/traffic-light-transition-in-edinburgh-cityscape-30787610/',
+   tags:['traffic-light','red','red-amber','green','uk-sequence'],
+   note:'CARS11.55 strict-match. 01-03 use real UK photographs showing red, red+amber and green in the exact taught order; phase 04 is real Edinburgh footage of a traffic-light transition. Still-photo attribution: Gary / Geograph, Wikimedia Commons, CC BY-SA 2.0.'
+  },
+
+  {
+   sceneKey:'redLightStopBehindLine',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/3552475/3552475-hd_1920_1080_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/3552475/3552475-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/3552475/'],
+   poster:'https://images.pexels.com/videos/3552475/free-video-3552475.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Marc Van den Broeck',sourcePage:'https://www.pexels.com/video/motor-vehicles-stopping-on-a-red-light-of-the-traffic-lights-3552475/',
+   tags:['red-light','cars-stopping','intersection','stop','traffic-signal'],
+   note:'CARS11.56 strict-match. 01-03 show a real red-light stopping scene; phase 04 shows motor vehicles stopping at a red traffic signal.'
+  },
+
+  {
+   sceneKey:'amberLightPrepareStop',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/3999410/3999410-hd_1920_1080_24fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/3999410/3999410-hd_1920_1080_24fps.mp4','https://www.pexels.com/download/video/3999410/'],
+   poster:'https://images.pexels.com/videos/3999410/pexels-photo-3999410.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · K',sourcePage:'https://www.pexels.com/video/traffic-light-with-yellow-light-turning-to-red-3999410/',
+   tags:['amber-light','yellow-signal','prepare-stop','traffic-light'],
+   note:'CARS11.57 strict-match. 01-03 clearly show an amber signal on its own; phase 04 is a real close-up of the amber signal changing to red, reinforcing preparation to stop.'
   },
 
   {

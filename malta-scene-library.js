@@ -178,6 +178,36 @@
   },
 
   {
+   key:'tyrePressureColdCheck',category:'vehicle-safety',titleIt:"Pressione pneumatici: controllo a freddo",titleEn:"Tyre pressure: check when cold",status:'ready',
+   questionIds:['CARS3.7'],expectedCorrect:[3],engineSceneId:'MT_TYRE_PRESSURE_COLD_CHECK_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['tyre-pressure','pressure-gauge','cold-tyres','maintenance-check'],prohibited:['hot-tyres','reused-approved-video']
+  },
+
+  {
+   key:'underInflatedBrakingFuel',category:'vehicle-safety',titleIt:"Pneumatici sgonfi: frenata e consumo",titleEn:"Under-inflated tyres: braking and fuel use",status:'ready',
+   questionIds:['CARS3.9'],expectedCorrect:[1,2],engineSceneId:'MT_UNDERINFLATED_BRAKING_FUEL_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['under-inflation','tyre-pressure','braking','fuel-consumption'],prohibited:['oil-pressure','engine-temperature','reused-approved-video']
+  },
+
+  {
+   key:'unevenTyreWearFaults',category:'vehicle-safety',titleIt:"Usura irregolare: sospensioni, allineamento e freni",titleEn:"Uneven tyre wear: suspension, alignment and brakes",status:'ready',
+   questionIds:['CARS3.31'],expectedCorrect:[1,4,5],engineSceneId:'MT_UNEVEN_TYRE_WEAR_FAULTS_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['tyre-wear','suspension','wheel-alignment','braking-system'],prohibited:['exhaust-system','accelerator','gearbox','reused-approved-video']
+  },
+
+  {
+   key:'hornBuiltUpNightRestriction',category:'horn',titleIt:"Clacson in zona abitata: divieto notturno",titleEn:"Horn in built-up areas: night restriction",status:'ready',
+   questionIds:['CARS3.38'],expectedCorrect:[3],engineSceneId:'MT_HORN_BUILT_UP_NIGHT_RESTRICTION_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['built-up-area','night-driving','horn-restriction','23-to-06'],prohibited:['daytime-only','unrestricted-horn','reused-approved-video']
+  },
+
+  {
+   key:'walkCycleEnvironment',category:'eco-driving',titleIt:"Ambiente: cammina o usa la bicicletta quando puoi",titleEn:"Environment: walk or cycle when you can",status:'ready',
+   questionIds:['CARS3.29'],expectedCorrect:[3],engineSceneId:'MT_WALK_CYCLE_ENVIRONMENT_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['walking-or-cycling','cycling','urban','environment','lower-emissions'],prohibited:['sharp-acceleration','low-tyre-pressure','full-choke','reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

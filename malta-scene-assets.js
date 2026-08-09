@@ -71,17 +71,17 @@
 
   {
    sceneKey:'cyclistSafePass',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
-   video:'https://videos.pexels.com/video-files/30601919/30601919-hd_1920_1080_30fps.mp4',
-   videoSources:["https://videos.pexels.com/video-files/30601919/30601919-hd_1920_1080_30fps.mp4", "https://videos.pexels.com/video-files/30601919/30601919-hd_1920_1080_25fps.mp4", "https://www.pexels.com/download/video/30601919/", "https://videos.pexels.com/video-files/6656000/6656000-hd_1920_1080_25fps.mp4", "https://www.pexels.com/download/video/6656000/"],poster:'https://images.pexels.com/videos/30601919/free-video-30601919.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · David Pickup',
-   sourcePage:'https://www.pexels.com/video/rural-road-with-passing-cars-and-cyclists-30601919/',
-   tags:['country-road','rural-road','cars','cyclists','passing','safe-passing','wide-gap'],note:'CARS1.18 strict-match candidate: rural road with cars and cyclists, selected to show the exact passing context rather than a generic cyclist clip.'
+   video:'https://www.pexels.com/download/video/34633207/',
+   videoSources:['https://www.pexels.com/download/video/34633207/','https://videos.pexels.com/video-files/34633207/34633207-hd_1920_1080_30fps.mp4','https://videos.pexels.com/video-files/34633207/34633207-hd_1920_1080_25fps.mp4'],poster:'https://images.pexels.com/videos/34633207/free-video-34633207.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · BJ Zurc',
+   sourcePage:'https://www.pexels.com/video/cyclists-passing-by-in-car-side-mirror-view-34633207/',
+   tags:['car-view','cyclist-clearly-visible','real-road','passing-context','cyclists','safe-passing','wide-gap'],note:'CARS1.18 metadata synchronized with the already-approved Replay video. Real car/mirror view with cyclists supports slow passing with plenty of room.'
   },
   {
    sceneKey:'largeVehicleFollowing',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/4608275/',
    videoSources:["https://www.pexels.com/download/video/4608275/", "https://videos.pexels.com/video-files/4608275/4608275-hd_1920_1080_25fps.mp4", "https://videos.pexels.com/video-files/4608275/4608275-hd_1920_1080_30fps.mp4", "https://www.pexels.com/download/video/35408009/"],poster:'https://images.pexels.com/videos/4608275/free-video-4608275.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · K',
    sourcePage:'https://www.pexels.com/video/moving-cars-on-expressway-4608275/',
-   tags:['pov','following','large-truck','expressway','following-gap','mirror-visibility'],note:'CARS1.9 strict-match: driver POV following large trucks, selected so the learner can judge the following gap and understand why staying back keeps the car visible to the truck driver.'
+   tags:['pov','following','truck','large-truck','expressway','following-gap','mirror-visibility','visibility'],note:'CARS1.9 strict-match: driver POV following large trucks, selected so the learner can judge the following gap and understand why staying back keeps the car visible to the truck driver.'
   },
   {
    sceneKey:'dazzledHeadlights',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
@@ -136,7 +136,7 @@
    poster:'https://images.pexels.com/videos/19201236/pexels-photo-19201236.jpeg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · Mehmet Eray',
    sourcePage:'https://www.pexels.com/video/a-view-from-the-driver-s-seat-of-a-car-on-a-road-19201236/',
-   tags:['pov-driving','hilly-road','curvy-road','limited-visibility','rural-road','dip-risk'],
+   tags:['pov-driving','hilly-road','curvy-road','limited-visibility','rural-road','dip-risk','left-driving','two-way-road'],
    note:'CARS1.10 strict-match candidate: driver POV on a hilly curving road with forward visibility reduction. Multiple MP4 sources are tried automatically on Safari; final fallback is the last known working direct MP4.'
   },
   {
@@ -176,10 +176,10 @@
    sceneKey:'rearFlashingAllowOvertake',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/5446333/',
    videoSources:["https://www.pexels.com/download/video/5446333/"],
-   poster:'',
+   poster:'https://images.pexels.com/videos/5446333/pexels-photo-5446333.jpeg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · Martina Tomšič',
    sourcePage:'https://www.pexels.com/video/over-taking-cars-view-through-rear-view-mirror-5446333/',
-   tags:['rear-view-mirror','car-behind','headlights','overtaking','traffic','allow-pass','attitude'],
+   tags:['rear-view-mirror','car-behind','vehicle-behind','headlights','overtaking','traffic','allow-pass','allow-safe-pass','do-not-compete','attitude'],
    note:'CARS2.20 strict-match: rear/side-mirror traffic footage chosen to teach the correct response to a faster vehicle approaching from behind: do not compete, brake-check or block it; keep control and allow it to overtake when safe.'
   },
 
@@ -188,10 +188,10 @@
    sceneKey:'neverExceedSpeedLimit',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/5927764/',
    videoSources:["https://www.pexels.com/download/video/5927764/"],
-   poster:'',
+   poster:'https://images.pexels.com/videos/5927764/airport-automobile-car-car-interior-5927764.jpeg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · Christopher Schultz',
    sourcePage:'https://www.pexels.com/video/driving-on-a-highway-5927764/',
-   tags:['driver-pov','dashboard','speedometer','highway','road-signs','speed-limit','overtaking-rule'],
+   tags:['driver-pov','dashboard','speedometer','highway','road','road-signs','speed-limit','speed-limit-rule','overtaking-rule','overtaking-context'],
    note:'CARS2.22 strict-match: highway driving with dashboard/speed context. Replay teaches that the posted maximum speed limit is never permission to exceed it, including on a clear road or while overtaking.'
   },
 
@@ -216,7 +216,7 @@
     'https://videos.pexels.com/video-files/5514366/5514366-uhd_3840_2160_24fps.mp4',
     'https://www.pexels.com/download/video/5514366/'
    ],
-   poster:'',
+   poster:'https://images.pexels.com/videos/5514366/pexels-photo-5514366.jpeg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · K',
    sourcePage:'https://www.pexels.com/video/vehicle-stops-for-an-ambulance-passing-through-city-traffic-5514366/',
    tags:['ambulance','flashing-blue-light','emergency-response','traffic','make-way','pull-over-safely','vehicle-behind'],
@@ -243,7 +243,7 @@
    poster:'https://images.pexels.com/videos/12365082/free-video-12365082.jpg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · Dimitri Baret',
    sourcePage:'https://www.pexels.com/video/point-of-view-of-a-car-driving-on-a-mountain-road-12365082/',
-   tags:['horn','alert-presence','blind-corner','winding-road','driver-pov','safety-warning'],
+   tags:['horn','horn-warning','alert-presence','blind-corner','blind-or-limited-view','winding-road','driver-pov','safety-warning','safety-purpose'],
    note:'CARS2.34 strict-match. Real POV winding-road scene creates the exact context in which the horn is a warning device: alert unseen or potentially unseen road users to your presence, never to show annoyance, greet someone, or claim priority.'
   },
 
@@ -281,6 +281,61 @@
    sourcePage:'https://www.pexels.com/video/a-man-driving-a-car-through-a-foggy-city-27861399/',
    tags:['daytime','fog','poor-visibility','dipped-headlights','driver-view','windshield'],
    note:'CARS3.18 strict-match. Driver POV through dense daytime fog. Replay teaches the exact database condition: dipped headlights during the day in poor visibility.'
+  },
+
+  {
+   sceneKey:'tyrePressureColdCheck',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/9738025/9738025-uhd_3840_2160_24fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/9738025/9738025-uhd_3840_2160_24fps.mp4','https://www.pexels.com/download/video/9738025/'],
+   poster:'https://images.pexels.com/videos/9738025/pexels-photo-9738025.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:"Pexels · K",
+   sourcePage:'https://www.pexels.com/video/man-measuring-air-pressure-in-tires-9738025/',
+   tags:['tyre-pressure','pressure-gauge','cold-tyres','maintenance-check','tire-care','measurement'],
+   note:"CARS3.7 strict-match. Real tyre-pressure measurement with a gauge; Replay teaches the exact database condition: measure pressure when the tyres are cold."
+  },
+
+  {
+   sceneKey:'underInflatedBrakingFuel',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/9737844/9737844-uhd_3840_2160_24fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/9737844/9737844-uhd_3840_2160_24fps.mp4','https://www.pexels.com/download/video/9737844/'],
+   poster:'https://images.pexels.com/videos/9737844/air-gauge-mechanic-racing-tire-9737844.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:"Pexels · K",
+   sourcePage:'https://www.pexels.com/video/a-mechanic-inflating-a-tire-9737844/',
+   tags:['under-inflation','tyre-pressure','braking','fuel-consumption','pressure-check','tire-maintenance'],
+   note:"CARS3.9 strict-match. Dedicated tyre-pressure footage; Replay teaches the two database effects of under-inflation: poorer braking and higher fuel consumption."
+  },
+
+  {
+   sceneKey:'unevenTyreWearFaults',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/5302693/5302693-hd_1920_1080_25fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/5302693/5302693-hd_1920_1080_25fps.mp4','https://www.pexels.com/download/video/5302693/'],
+   poster:'https://images.pexels.com/videos/5302693/pexels-photo-5302693.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:"Pexels · Enis Yavuz",
+   sourcePage:'https://www.pexels.com/video/close-up-video-of-a-tire-tread-5302693/',
+   tags:['tyre-wear','suspension','wheel-alignment','braking-system','tire-tread','vehicle-maintenance'],
+   note:"CARS3.31 strict-match. Real tyre/alignment inspection freeze plus dedicated tread video; Replay binds the three correct causes from the database: suspension, wheel alignment and braking faults."
+  },
+
+  {
+   sceneKey:'hornBuiltUpNightRestriction',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/3554563/3554563-hd_1920_1080_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/3554563/3554563-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/3554563/'],
+   poster:'https://images.pexels.com/videos/3554563/free-video-3554563.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:"Pexels · Rholdan Ortiz",
+   sourcePage:'https://www.pexels.com/video/man-driving-a-car-at-night-3554563/',
+   tags:['built-up-area','night-driving','horn-restriction','23-to-06','urban-road','streetlights'],
+   note:"CARS3.38 strict-match. Real night urban driving. Replay teaches the current database wording: no horn in a built-up area from 23:00 to 06:00, except where necessary to avoid danger."
+  },
+
+  {
+   sceneKey:'walkCycleEnvironment',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/6580998/6580998-uhd_3840_2160_24fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/6580998/6580998-uhd_3840_2160_24fps.mp4','https://www.pexels.com/download/video/6580998/'],
+   poster:'https://images.pexels.com/videos/6580998/pexels-photo-6580998.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:"Pexels · K",
+   sourcePage:'https://www.pexels.com/video/cyclist-in-the-city-6580998/',
+   tags:['walking-or-cycling','cycling','urban','environment','lower-emissions','green-transport'],
+   note:"CARS3.29 strict-match. Real urban cycling. Replay teaches the exact database answer: walk or cycle when you can to avoid unnecessary emissions."
   },
 
   {

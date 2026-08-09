@@ -712,7 +712,7 @@
   media:{
    video:'https://www.pexels.com/download/video/5446333/',
    videoSources:["https://www.pexels.com/download/video/5446333/"],
-   poster:'',
+   poster:'https://images.pexels.com/videos/5446333/pexels-photo-5446333.jpeg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · Martina Tomšič',
    sourcePage:'https://www.pexels.com/video/over-taking-cars-view-through-rear-view-mirror-5446333/'
   },
@@ -760,7 +760,7 @@
   media:{
    video:'https://www.pexels.com/download/video/5927764/',
    videoSources:["https://www.pexels.com/download/video/5927764/"],
-   poster:'',
+   poster:'https://images.pexels.com/videos/5927764/airport-automobile-car-car-interior-5927764.jpeg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · Christopher Schultz',
    sourcePage:'https://www.pexels.com/video/driving-on-a-highway-5927764/'
   },
@@ -886,7 +886,7 @@
     'https://videos.pexels.com/video-files/5514366/5514366-uhd_3840_2160_24fps.mp4',
     'https://www.pexels.com/download/video/5514366/'
    ],
-   poster:'',
+   poster:'https://images.pexels.com/videos/5514366/pexels-photo-5514366.jpeg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · K',
    sourcePage:'https://www.pexels.com/video/vehicle-stops-for-an-ambulance-passing-through-city-traffic-5514366/'
   },
@@ -1201,6 +1201,216 @@ global.ReplayEngine.registerScene({
   correctIt:'Usa il clacson per avvisare gli altri della tua presenza.',
   correctEn:'Use the horn to alert others to your presence.'
  }
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_TYRE_PRESSURE_COLD_CHECK_V1',
+ category:'vehicle-safety',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'tyrePressureColdCheck',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Tyre pressure — check when tyres are cold',
+ accessibilityLabel:'Close-up of a tyre pressure gauge connected to a vehicle tyre',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/9738025/9738025-uhd_3840_2160_24fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/9738025/9738025-uhd_3840_2160_24fps.mp4','https://www.pexels.com/download/video/9738025/'],
+  poster:'https://images.pexels.com/videos/9738025/pexels-photo-9738025.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · K',sourcePage:'https://www.pexels.com/video/man-measuring-air-pressure-in-tires-9738025/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Osserva il controllo della pressione sullo pneumatico',textEn:'Observe the tyre-pressure check'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Dopo la guida gli pneumatici possono essere caldi',textEn:'After driving, the tyres may be hot'},
+  {at:5.0,end:7.2,event:'explain',textIt:'La pressione deve essere misurata quando gli pneumatici sono FREDDI',textEn:'Tyre pressure should be measured when the tyres are COLD'},
+  {at:7.4,end:11.0,event:'correct',textIt:'Controlla la pressione a freddo con un manometro',textEn:'Check tyre pressure when cold using a pressure gauge'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:47,top:55,radiusX:30,radiusY:28,instructionIt:'TOCCA IL MANOMETRO',instructionEn:'TAP THE PRESSURE GAUGE',ariaIt:'Tocca il manometro usato per controllare la pressione dello pneumatico',ariaEn:'Tap the gauge used to check tyre pressure'},
+  phases:[
+   {},
+   {titleIt:'NON DOPO AVER SCALDATO LE GOMME',titleEn:'NOT AFTER THE TYRES HAVE HEATED UP',bodyIt:'La domanda chiede quando misurare la pressione: non dopo alta velocità o un lungo viaggio.',bodyEn:'The question asks when to measure pressure: not after high-speed driving or a long journey.'},
+   {titleIt:'MISURA A FREDDO',titleEn:'MEASURE WHEN COLD',bodyIt:'La risposta corretta è precisa: la pressione degli pneumatici deve essere controllata quando gli pneumatici sono freddi.',bodyEn:'The exact correct answer is: tyre pressure should be checked when the tyres are cold.'},
+   {titleIt:'CONTROLLO CORRETTO',titleEn:'CORRECT CHECK',bodyIt:'Usa un manometro e controlla la pressione prima che la guida abbia riscaldato gli pneumatici.',bodyEn:'Use a pressure gauge and check before driving has warmed the tyres.'}
+  ],
+  phaseOptions:[
+   {startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}
+  ]
+ },
+ coach:{
+  missIt:'Concentrati sulla temperatura degli pneumatici: la misura corretta si fa a freddo.',
+  missEn:'Focus on tyre temperature: the correct pressure check is made when the tyres are cold.',
+  hitIt:'Esatto: controlla la pressione quando gli pneumatici sono FREDDI.',
+  hitEn:'Correct: check tyre pressure when the tyres are COLD.'
+ },
+ learning:{correctIt:'La pressione degli pneumatici va misurata a freddo.',correctEn:'Tyre pressure should be measured when the tyres are cold.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_UNDERINFLATED_BRAKING_FUEL_V1',
+ category:'vehicle-safety',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'underInflatedBrakingFuel',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Under-inflated tyres — braking and fuel consumption',
+ accessibilityLabel:'Close-up of a tyre showing severe wear associated with under-inflation',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/9737844/9737844-uhd_3840_2160_24fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/9737844/9737844-uhd_3840_2160_24fps.mp4','https://www.pexels.com/download/video/9737844/'],
+  poster:'https://images.pexels.com/videos/9737844/air-gauge-mechanic-racing-tire-9737844.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · K',sourcePage:'https://www.pexels.com/video/a-mechanic-inflating-a-tire-9737844/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Osserva lo pneumatico e pensa agli effetti della pressione insufficiente',textEn:'Observe the tyre and consider the effects of insufficient pressure'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Uno pneumatico sgonfio peggiora il comportamento del veicolo',textEn:'An under-inflated tyre worsens vehicle performance'},
+  {at:5.0,end:7.3,event:'explain',textIt:'Le due risposte corrette sono FRENATA e CONSUMO DI CARBURANTE',textEn:'The two correct answers are BRAKING and FUEL CONSUMPTION'},
+  {at:7.5,end:11.2,event:'correct',textIt:'Mantieni la pressione corretta per una frenata migliore e per evitare consumo inutile',textEn:'Maintain correct pressure for better braking and to avoid unnecessary fuel use'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:52,top:47,radiusX:38,radiusY:32,instructionIt:'TOCCA LO PNEUMATICO',instructionEn:'TAP THE TYRE',ariaIt:'Tocca lo pneumatico che mostra gli effetti della pressione insufficiente',ariaEn:'Tap the tyre showing effects associated with insufficient pressure'},
+  phases:[
+   {},
+   {titleIt:'PRESSIONE INSUFFICIENTE',titleEn:'UNDER-INFLATION',bodyIt:'La pressione insufficiente non riguarda la pressione dell’olio o la temperatura del motore.',bodyEn:'Under-inflation does not refer to oil pressure or engine temperature.'},
+   {titleIt:'DUE EFFETTI DA RICORDARE',titleEn:'TWO EFFECTS TO REMEMBER',bodyIt:'Pneumatici sgonfi peggiorano la FRENATA e aumentano il CONSUMO DI CARBURANTE.',bodyEn:'Under-inflated tyres worsen BRAKING and increase FUEL CONSUMPTION.'},
+   {titleIt:'MANTIENI LA PRESSIONE CORRETTA',titleEn:'KEEP THE CORRECT PRESSURE',bodyIt:'Controllare e correggere la pressione protegge la sicurezza di frenata e l’efficienza.',bodyEn:'Checking and correcting tyre pressure supports braking safety and efficiency.'}
+  ],
+  phaseOptions:[
+   {startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}
+  ]
+ },
+ coach:{
+  missIt:'Sono due risposte: FRENATA e CONSUMO DI CARBURANTE.',
+  missEn:'There are two answers: BRAKING and FUEL CONSUMPTION.',
+  hitIt:'Esatto: gli pneumatici sgonfi peggiorano la frenata e aumentano il consumo di carburante.',
+  hitEn:'Correct: under-inflated tyres worsen braking and increase fuel consumption.'
+ },
+ learning:{correctIt:'Pneumatici sgonfi: frenata peggiore e maggiore consumo di carburante.',correctEn:'Under-inflated tyres: worse braking and higher fuel consumption.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_UNEVEN_TYRE_WEAR_FAULTS_V1',
+ category:'vehicle-safety',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'unevenTyreWearFaults',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Uneven tyre wear — suspension, alignment and braking faults',
+ accessibilityLabel:'Mechanic checking a wheel and tyre during an alignment inspection',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/5302693/5302693-hd_1920_1080_25fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/5302693/5302693-hd_1920_1080_25fps.mp4','https://www.pexels.com/download/video/5302693/'],
+  poster:'https://images.pexels.com/videos/5302693/pexels-photo-5302693.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Enis Yavuz',sourcePage:'https://www.pexels.com/video/close-up-video-of-a-tire-tread-5302693/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Osserva lo pneumatico durante il controllo dell’assetto',textEn:'Observe the tyre during the wheel/alignment inspection'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Usura eccessiva o irregolare può indicare un problema del veicolo',textEn:'Excessive or uneven wear can indicate a vehicle fault'},
+  {at:5.0,end:7.5,event:'explain',textIt:'Ricorda tre cause: SOSPENSIONI, ALLINEAMENTO RUOTE e IMPIANTO FRENANTE',textEn:'Remember three causes: SUSPENSION, WHEEL ALIGNMENT and BRAKING SYSTEM'},
+  {at:7.7,end:11.3,event:'correct',textIt:'Se l’usura è irregolare, controlla pneumatici, assetto, sospensioni e freni',textEn:'If wear is uneven, inspect the tyres, alignment, suspension and brakes'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:31,top:58,radiusX:29,radiusY:31,instructionIt:'TOCCA RUOTA E PNEUMATICO',instructionEn:'TAP THE WHEEL AND TYRE',ariaIt:'Tocca la ruota e lo pneumatico sottoposti al controllo',ariaEn:'Tap the wheel and tyre being inspected'},
+  phases:[
+   {},
+   {titleIt:'USURA IRREGOLARE = CONTROLLA IL VEICOLO',titleEn:'UNEVEN WEAR = CHECK THE VEHICLE',bodyIt:'L’usura irregolare può essere collegata a guasti che alterano il comportamento della ruota o della frenata.',bodyEn:'Uneven wear can be linked to faults affecting the wheel or braking behaviour.'},
+   {titleIt:'LE TRE RISPOSTE',titleEn:'THE THREE ANSWERS',bodyIt:'SOSPENSIONI + ALLINEAMENTO RUOTE + IMPIANTO FRENANTE. Non scarico, acceleratore o cambio.',bodyEn:'SUSPENSION + WHEEL ALIGNMENT + BRAKING SYSTEM. Not exhaust, accelerator or gearbox.'},
+   {titleIt:'CONTROLLA IL BATTISTRADA',titleEn:'INSPECT THE TREAD',bodyIt:'L’usura anomala dello pneumatico è un segnale da non ignorare: individua e correggi la causa.',bodyEn:'Abnormal tyre wear is a warning sign: identify and correct the cause.'}
+  ],
+  phaseOptions:[
+   {startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}
+  ]
+ },
+ coach:{
+  missIt:'Devi selezionarne tre: SOSPENSIONI, ALLINEAMENTO RUOTE e IMPIANTO FRENANTE.',
+  missEn:'Select three: SUSPENSION, WHEEL ALIGNMENT and BRAKING SYSTEM.',
+  hitIt:'Esatto: sospensioni, allineamento delle ruote e impianto frenante.',
+  hitEn:'Correct: suspension, wheel alignment and braking system.'
+ },
+ learning:{correctIt:'Usura irregolare: controlla sospensioni, allineamento ruote e freni.',correctEn:'Uneven wear: check suspension, wheel alignment and brakes.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_HORN_BUILT_UP_NIGHT_RESTRICTION_V1',
+ category:'horn',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'hornBuiltUpNightRestriction',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Horn restriction in built-up areas — 23:00 to 06:00',
+ accessibilityLabel:'Driver view of a built-up urban road at night under street lighting',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/3554563/3554563-hd_1920_1080_30fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/3554563/3554563-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/3554563/'],
+  poster:'https://images.pexels.com/videos/3554563/free-video-3554563.jpg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Rholdan Ortiz',sourcePage:'https://www.pexels.com/video/man-driving-a-car-at-night-3554563/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Osserva la strada urbana: è notte e siamo in una zona abitata',textEn:'Observe the urban road: it is night in a built-up area'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'In zona abitata il clacson è soggetto a una restrizione notturna',textEn:'In a built-up area the horn is subject to a night restriction'},
+  {at:5.0,end:7.4,event:'explain',textIt:'La banca domande indica il divieto dalle 23:00 alle 06:00',textEn:'The question bank states the restriction from 11:00 pm to 6:00 am'},
+  {at:7.6,end:11.4,event:'correct',textIt:'Non suonare il clacson in quell’orario, salvo necessità per evitare un pericolo',textEn:'Do not sound the horn during that period, except where necessary to avoid danger'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:54,top:51,radiusX:37,radiusY:31,instructionIt:'TOCCA LA STRADA URBANA DI NOTTE',instructionEn:'TAP THE URBAN ROAD AT NIGHT',ariaIt:'Tocca la strada in zona abitata durante la notte',ariaEn:'Tap the built-up road during the night'},
+  phases:[
+   {},
+   {titleIt:'ZONA ABITATA + NOTTE',titleEn:'BUILT-UP AREA + NIGHT',bodyIt:'La domanda riguarda una fascia oraria precisa per l’uso del clacson in una zona abitata.',bodyEn:'The question concerns a specific time period for horn use in a built-up area.'},
+   {titleIt:'23:00 → 06:00',titleEn:'11:00 PM → 6:00 AM',bodyIt:'La risposta corretta della banca domande è: tra le 23:00 e le 06:00.',bodyEn:'The correct question-bank answer is: between 11:00 pm and 6:00 am.'},
+   {titleIt:'ECCEZIONE: EVITARE UN PERICOLO',titleEn:'EXCEPTION: AVOIDING DANGER',bodyIt:'In quella fascia non usare il clacson in zona abitata, salvo quando è necessario per evitare un pericolo.',bodyEn:'During that period, do not use the horn in a built-up area except when necessary to avoid danger.'}
+  ],
+  phaseOptions:[
+   {startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}
+  ]
+ },
+ coach:{
+  missIt:'Ricorda la fascia esatta indicata dalla domanda: 23:00–06:00.',
+  missEn:'Remember the exact period in the question: 11:00 pm–6:00 am.',
+  hitIt:'Esatto: in zona abitata, 23:00–06:00, salvo necessità per evitare un pericolo.',
+  hitEn:'Correct: in a built-up area, 11:00 pm–6:00 am, except where necessary to avoid danger.'
+ },
+ learning:{correctIt:'Clacson in zona abitata: non usarlo tra le 23:00 e le 06:00, salvo per evitare un pericolo.',correctEn:'Horn in a built-up area: do not use it between 11:00 pm and 6:00 am, except to avoid danger.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_WALK_CYCLE_ENVIRONMENT_V1',
+ category:'eco-driving',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'walkCycleEnvironment',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Help the environment — walk or cycle when you can',
+ accessibilityLabel:'People cycling through a busy urban street',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/6580998/6580998-uhd_3840_2160_24fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/6580998/6580998-uhd_3840_2160_24fps.mp4','https://www.pexels.com/download/video/6580998/'],
+  poster:'https://images.pexels.com/videos/6580998/pexels-photo-6580998.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · K',sourcePage:'https://www.pexels.com/video/cyclist-in-the-city-6580998/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Osserva gli spostamenti in bicicletta in città',textEn:'Observe people travelling by bicycle in the city'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Non tutti gli spostamenti richiedono necessariamente l’auto',textEn:'Not every journey necessarily requires a car'},
+  {at:5.0,end:7.3,event:'explain',textIt:'Camminare o andare in bicicletta quando puoi evita emissioni inutili',textEn:'Walking or cycling when you can avoids unnecessary emissions'},
+  {at:7.5,end:11.2,event:'correct',textIt:'Per aiutare l’ambiente, scegli di camminare o pedalare quando è possibile',textEn:'To help the environment, choose to walk or cycle when possible'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:49,top:55,radiusX:39,radiusY:32,instructionIt:'TOCCA I CICLISTI',instructionEn:'TAP THE CYCLISTS',ariaIt:'Tocca i ciclisti che si spostano in città',ariaEn:'Tap the cyclists travelling through the city'},
+  phases:[
+   {},
+   {titleIt:'EVITA GLI SPOSTAMENTI INUTILI IN AUTO',titleEn:'AVOID UNNECESSARY CAR JOURNEYS',bodyIt:'Tra le risposte proposte, accelerare/frenare bruscamente, ridurre la pressione e usare lo starter non aiutano l’ambiente.',bodyEn:'Among the options, sharp acceleration/braking, reducing tyre pressure and using full choke do not help the environment.'},
+   {titleIt:'CAMMINA O PEDALA',titleEn:'WALK OR CYCLE',bodyIt:'La risposta corretta è: cammina o usa la bicicletta quando puoi.',bodyEn:'The correct answer is: walk or cycle when you can.'},
+   {titleIt:'MENO EMISSIONI INUTILI',titleEn:'FEWER UNNECESSARY EMISSIONS',bodyIt:'Quando il tragitto lo permette, camminare o pedalare evita emissioni che un viaggio in auto avrebbe prodotto.',bodyEn:'When the journey allows it, walking or cycling avoids emissions that a car journey would have produced.'}
+  ],
+  phaseOptions:[
+   {startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}
+  ]
+ },
+ coach:{
+  missIt:'Guarda l’opzione che evita direttamente emissioni inutili: camminare o usare la bicicletta quando puoi.',
+  missEn:'Look for the option that directly avoids unnecessary emissions: walk or cycle when you can.',
+  hitIt:'Esatto: camminare o andare in bicicletta quando puoi aiuta l’ambiente.',
+  hitEn:'Correct: walking or cycling when you can helps the environment.'
+ },
+ learning:{correctIt:'Aiuta l’ambiente: cammina o usa la bicicletta quando puoi.',correctEn:'Help the environment: walk or cycle when you can.'}
 });
 
 })(window);

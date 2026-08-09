@@ -238,6 +238,68 @@
    required:['vehicle-start','cold-engine','short-journey','fuel-use','pollution'],prohibited:['long-trip-only','walking-is-wrong','reused-approved-video']
   },
 
+
+  {
+   key:'fuelConsumptionPlanSpeed',category:'eco-driving',titleIt:"Consumo carburante: pianifica e riduci la velocità",titleEn:"Fuel consumption: plan ahead and reduce speed",status:'ready',
+   questionIds:['CARS3.33'],expectedCorrect:[0,1],engineSceneId:'MT_FUEL_CONSUMPTION_PLAN_SPEED_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['plan-ahead','reduced-speed','smooth-driving','fuel-efficiency'],prohibited:['rapid-acceleration','late-harsh-braking','lower-gears-only','reused-approved-video']
+  },
+
+  {
+   key:'trafficCalmingMeasures',category:'traffic-calming',titleIt:"Dossi, chicane e restringimenti: moderazione del traffico",titleEn:"Humps, chicanes and narrowing: traffic calming",status:'ready',
+   questionIds:['CARS3.46'],expectedCorrect:[3],engineSceneId:'MT_TRAFFIC_CALMING_MEASURES_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['road-humps','chicane','road-narrowing','traffic-calming'],prohibited:['roadworks','toll-bridge','speed-increase','reused-approved-video']
+  },
+
+  {
+   key:'roadHumpsReducedSpeed',category:'traffic-calming',titleIt:"Dossi: mantieni una velocità ridotta",titleEn:"Road humps: maintain a reduced speed",status:'ready',
+   questionIds:['CARS3.47'],expectedCorrect:[0],engineSceneId:'MT_ROAD_HUMPS_REDUCED_SPEED_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['road-humps','reduced-speed','residential-area','steady-speed'],prohibited:['accelerate-between-humps','maximum-speed','school-times-only','reused-approved-video']
+  },
+
+  {
+   key:'fogSafeDriving',category:'weather',titleIt:"Nebbia: anabbaglianti, rallenta e più tempo",titleEn:"Fog: dipped headlights, slow down and allow more time",status:'ready',
+   questionIds:['CARS4.7'],expectedCorrect:[1,3,5],engineSceneId:'MT_FOG_DIP_SLOW_TIME_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['fog','dipped-headlights','reduced-speed','more-time'],prohibited:['full-beam','close-following','sidelights-only','reused-approved-video']
+  },
+
+  {
+   key:'aquaplaningHeavyRain',category:'weather',titleIt:"Aquaplaning: rilascia dolcemente l'acceleratore",titleEn:"Aquaplaning: ease off the accelerator",status:'ready',
+   questionIds:['CARS4.14'],expectedCorrect:[3],engineSceneId:'MT_AQUAPLANING_EASE_ACCELERATOR_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['heavy-rain','light-steering','aquaplaning','ease-accelerator'],prohibited:['hard-braking','accelerate','steer-side','reused-approved-video']
+  },
+
+
+  {
+   key:'mobilePhoneDrivingDistraction',category:'alertness',titleIt:'Telefono alla guida: distrazione dalla strada',titleEn:'Mobile phone while driving: road distraction',status:'ready',
+   questionIds:['CARS1.15'],expectedCorrect:[2],engineSceneId:'MT_MOBILE_PHONE_DRIVING_DISTRACTION_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['mobile-phone','driver','driving-distraction','attention-from-road'],prohibited:['parked-only','hands-free-only','reused-approved-video']
+  },
+
+  {
+   key:'mobilePhoneParkedControl',category:'alertness',titleIt:'Telefono: usalo solo da parcheggiato',titleEn:'Mobile phone: use it only when parked',status:'ready',
+   questionIds:['CARS1.23'],expectedCorrect:[1],engineSceneId:'MT_MOBILE_PHONE_PARKED_CONTROL_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['mobile-phone','parked-vehicle','vehicle-control','safe-stop'],prohibited:['moving-vehicle-phone-use','hands-free-only','reused-approved-video']
+  },
+
+  {
+   key:'zebraWaitUntilCrossed',category:'pedestrian-crossings',titleIt:'Zebra: attendi che i pedoni abbiano attraversato',titleEn:'Zebra crossing: wait until pedestrians have crossed',status:'ready',
+   questionIds:['CARS2.5'],expectedCorrect:[0],engineSceneId:'MT_ZEBRA_WAIT_UNTIL_CROSSED_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['zebra-crossing','pedestrians-crossing','remain-stopped','patient-wait'],prohibited:['wave-across','creep-forward','rev-engine','reused-approved-video']
+  },
+
+  {
+   key:'rainLongerStoppingDistance',category:'stopping-distance',titleIt:'Pioggia: distanza d’arresto più lunga',titleEn:'Rain: longer stopping distance',status:'ready',
+   questionIds:['CARS4.11'],expectedCorrect:[0],engineSceneId:'MT_RAIN_LONGER_STOPPING_DISTANCE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['rain','wet-road','reduced-grip','longer-stopping-distance'],prohibited:['dry-road-only','fog-only','night-only','reused-approved-video']
+  },
+
+  {
+   key:'floodTestBrakes',category:'braking',titleIt:'Dopo un allagamento: prova i freni',titleEn:'After flood water: test the brakes',status:'ready',
+   questionIds:['CARS4.15'],expectedCorrect:[3],engineSceneId:'MT_FLOOD_TEST_BRAKES_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['flood-water','vehicle-through-water','brake-test','reduced-brake-effect'],prohibited:['tyre-check-first','wipers-first','dry-brakes-by-stopping','reused-approved-video']
+  },
+
   {
    key:'pedestrianHidden',
    category:'pedestrian',

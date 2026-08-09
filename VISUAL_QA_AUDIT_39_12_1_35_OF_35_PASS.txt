@@ -1,0 +1,26 @@
+MALTA DRIVING MASTER — VISUAL QA AUDIT
+Build audited: 39.12.1
+
+SUMMARY
+Ready Replay scenes: 35
+PASS photographic freeze: 35
+FAIL technical placeholder: 0
+FAIL generic fallback among ready scenes: 0
+Missing freeze among ready scenes: 0
+
+NEW REPLAYS VISUALLY REVIEWED
+- CARS3.1  brakeFluidLowLevel — real brake-fluid reservoir with MIN/MAX visible — PASS
+- CARS3.23 ecoDrivingHelpEnvironment — real driver/steering road scene — PASS
+- CARS3.27 vehicleEnvironmentalDamage — real dense city under visible smog — PASS
+- CARS3.28 reduceEnvironmentalDamageDriving — real multi-lane driving scene with traffic ahead — PASS
+- CARS3.30 avoidVeryShortJourneys — real dashboard/vehicle-start context — PASS
+
+GLOBAL CHECK
+- 35/35 ready Replay keys have an embedded photographic freeze.
+- Existing 30 approved freeze payloads are byte-identical to BUILD 39.12.0.
+- 5/5 new freeze images are 1280x720 JPEG with no black bars.
+- Phase 01-03 of the five new Replay scenes are configured static/freeze.
+- Phase 04 of the five new Replay scenes is configured as real video/autoplay.
+- 35/35 ready Replay primary video URLs are unique.
+
+RESULT: 35/35 PASS

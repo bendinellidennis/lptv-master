@@ -1,0 +1,65 @@
+MALTA DRIVING MASTER — VISUAL QA AUDIT
+Build audited: 39.12.0
+Base: 39.11.30 (approved on Koder + GitHub by user)
+
+SUMMARY
+Ready Replay scenes: 30
+Previously approved Replay scenes preserved: 25
+New Replay scenes added: 5
+PASS photographic freeze registry: 30/30 ready scenes
+Fallback used by ready scenes: 0
+Embedded freeze duplicate images: 0
+Embedded freeze dimensions: 1280x720 for all 30 ready scenes
+Catalog audit errors: 0
+Catalog audit warnings: 0
+Duplicate phase-04 main videos: 0
+
+NEW REPLAYS — PASS
+- CARS3.7 — tyrePressureColdCheck — PASS — correct: [3] (When tyres are cold)
+- CARS3.9 — underInflatedBrakingFuel — PASS — correct: [1, 2] (Braking; Fuel consumption)
+- CARS3.31 — unevenTyreWearFaults — PASS — correct: [1, 4, 5] (Suspension; Wheel alignment; Braking system)
+- CARS3.38 — hornBuiltUpNightRestriction — PASS — correct: [3] (Between 11:00 pm and 6:00 am)
+- CARS3.29 — walkCycleEnvironment — PASS — correct: [3] (Walk or cycle when you can)
+
+GLOBAL FREEZE AUDIT
+- Existing 25 embedded freeze data URIs are byte-identical to BUILD 39.11.30.
+- Five new freeze keys were added; no existing freeze key was removed or replaced.
+- All 31 registry entries (30 ready + internal fallback) decode as valid 1280x720 JPEG.
+- All registry image SHA-256 values are unique.
+- Every ready SceneCatalog key has its own embedded photographic freeze key; no ready scene resolves to __fallback.
+
+NEW 5 FLOW AUDIT
+- 01/04: embedded photographic freeze = PASS
+- 02/04: embedded photographic freeze = PASS
+- 03/04: embedded photographic freeze = PASS
+- 04/04: unique real video, autoplay phase configured = PASS
+- staticUntilFinal = true for all 5 new scenes
+- Coach hit/miss copy present in Italian and English for all 5 new scenes
+
+LEGACY REGRESSION AUDIT
+- Existing 25 question IDs/correct answers remain unchanged.
+- Existing 25 freeze images remain byte-identical.
+- Existing Replay video URLs, timelines, Coach and UI/phase configuration remain unchanged.
+- Only three legacy scene objects gained missing poster metadata (rearFlashingAllowOvertake, neverExceedSpeedLimit, ambulanceFollowingMakeWay); replay-engine keeps remote posters disabled by default, so approved Replay playback behavior is unchanged.
+- Legacy asset evidence metadata was synchronized where required so SceneCatalog.audit is now clean.
+- Executable application suffix in app-3994.js (from (() => { onward) is byte-identical to BUILD 39.11.30; only the embedded freeze registry/header changed.
+
+STATIC / JAVASCRIPT AUDIT
+- node --check PASS: app-3994.js
+- node --check PASS: malta-scene-library.js
+- node --check PASS: malta-scene-assets.js
+- node --check PASS: replay-scenes.js
+- SceneCatalog runtime audit: ready=30, ok=true, errors=0, warnings=0.
+- All local index.html resources returned HTTP 200 in root-path simulation (Koder-like).
+- All local index.html resources returned HTTP 200 in repository-subpath simulation (GitHub Pages-like).
+- Cache-bust 391200 applied to the four modified JS entry points loaded by index.html.
+
+VISUAL REVIEW
+- 30-scene contact sheet generated directly from the embedded freeze registry and visually inspected.
+- New 5 freezes are photographic, pertinent, full-stage 16:9 and have no black bands or technical-placeholder cards.
+- No new freeze image is reused by another ready Replay.
+
+NOTE
+- Browser automation against localhost is blocked by the execution environment policy; therefore no claim is made of a real Safari/Chromium end-to-end run here. Static HTTP path checks and runtime JavaScript/catalog audits passed. Final Koder/GitHub visual confirmation remains the device-level acceptance test.
+
+RESULT: 30/30 READY REPLAY VISUAL QA = PASS

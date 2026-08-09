@@ -1,0 +1,30 @@
+MALTA DRIVING MASTER — BUILD CHECK 39.12.1
+
+Base: BUILD 39.12.0 (confirmed by user on Koder + GitHub Pages)
+Purpose: Replay Library expansion 30 -> 35 ready scenes
+
+NEW READY REPLAYS
+- CARS3.1  — brakeFluidLowLevel
+- CARS3.23 — ecoDrivingHelpEnvironment
+- CARS3.27 — vehicleEnvironmentalDamage
+- CARS3.28 — reduceEnvironmentalDamageDriving
+- CARS3.30 — avoidVeryShortJourneys
+
+PATCH FILES (exactly 5)
+- index.html
+- app-3994.js
+- malta-scene-library.js
+- malta-scene-assets.js
+- replay-scenes.js
+
+TECHNICAL RESULT
+- JavaScript syntax: PASS
+- Ready catalogue: 35/35 mapped to a registered Replay scene
+- Database expected-correct mapping: 35/35 PASS
+- Ready scenes with asset metadata: 35/35 PASS
+- Ready phase-04 primary video URLs unique: 35/35 PASS
+- Freeze registry: all 35 ready scene keys present
+- New freezes: 5/5 valid JPEG, 1280x720
+- Existing 30 freeze values preserved byte-for-byte from BUILD 39.12.0
+- app-3994.js executable body preserved from BUILD 39.12.0; only build header/freeze registry changed
+- index cache-bust for all four modified JS resources: v=391201

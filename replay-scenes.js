@@ -1613,4 +1613,405 @@ global.ReplayEngine.registerScene({
  learning:{correctIt:'Per l’ambiente, evita l’auto per tragitti molto brevi quando esiste un’alternativa pratica.',correctEn:'For the environment, avoid the car for very short journeys when a practical alternative exists.'}
 });
 
+
+global.ReplayEngine.registerScene({
+ id:'MT_FUEL_CONSUMPTION_PLAN_SPEED_V1',
+ category:'eco-driving',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'fuelConsumptionPlanSpeed',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Fuel consumption — plan ahead and reduce road speed',
+ accessibilityLabel:'Driver view along a real road, encouraging observation well ahead and controlled speed',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/15330792/15330792-uhd_3840_1620_24fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/15330792/15330792-uhd_3840_1620_24fps.mp4','https://www.pexels.com/download/video/15330792/'],
+  poster:'https://images.pexels.com/videos/15330792/videographie-0153-15330792.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Dimitri Baret',sourcePage:'https://www.pexels.com/video/point-of-view-of-a-car-driving-along-the-road-15330792/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Guarda lontano lungo la strada e pianifica in anticipo',textEn:'Look well ahead along the road and plan in advance'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Accelerazioni, frenate tardive e velocità elevata aumentano il consumo',textEn:'Harsh acceleration, late braking and higher speed increase fuel use'},
+  {at:5.0,end:7.4,event:'explain',textIt:'Le due risposte corrette sono pianificare in anticipo e ridurre la velocità',textEn:'The two correct answers are planning well ahead and reducing road speed'},
+  {at:7.6,end:11.2,event:'correct',textIt:'Guida fluida e velocità ridotta aiutano a consumare meno carburante',textEn:'Smooth driving and lower speed help reduce fuel consumption'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:57,top:43,radiusX:39,radiusY:30,instructionIt:'TOCCA LA STRADA DAVANTI',instructionEn:'TAP THE ROAD AHEAD',ariaIt:'Tocca la strada davanti per pianificare in anticipo',ariaEn:'Tap the road ahead to plan well in advance'},
+  phases:[
+   {},
+   {titleIt:'PIANIFICA IN ANTICIPO',titleEn:'PLAN WELL AHEAD',bodyIt:'Osservare lontano permette una guida più fluida e riduce accelerazioni e frenate inutili.',bodyEn:'Looking well ahead allows smoother driving and reduces unnecessary acceleration and braking.'},
+   {titleIt:'RIDUCI LA VELOCITÀ',titleEn:'REDUCE ROAD SPEED',bodyIt:'Una velocità più moderata riduce il consumo di carburante.',bodyEn:'A more moderate road speed reduces fuel consumption.'},
+   {titleIt:'DUE RISPOSTE',titleEn:'TWO ANSWERS',bodyIt:'PIANIFICARE IN ANTICIPO + RIDURRE LA VELOCITÀ.',bodyEn:'PLAN WELL AHEAD + REDUCE ROAD SPEED.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'Cerca le due azioni che rendono la guida più fluida ed efficiente.',
+  missEn:'Look for the two actions that make driving smoother and more efficient.',
+  hitIt:'Esatto: pianifica in anticipo e riduci la velocità.',
+  hitEn:'Correct: plan well ahead and reduce road speed.'
+ },
+ learning:{correctIt:'Per ridurre il consumo: pianifica in anticipo e mantieni una velocità più moderata.',correctEn:'To reduce fuel consumption: plan well ahead and keep a more moderate road speed.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_TRAFFIC_CALMING_MEASURES_V1',
+ category:'traffic-calming',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'trafficCalmingMeasures',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Traffic calming — humps, chicanes and road narrowing',
+ accessibilityLabel:'Driver-view on a genuinely narrow road where reduced width naturally moderates traffic speed',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/4832678/4832678-uhd_3840_2160_30fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/4832678/4832678-uhd_3840_2160_30fps.mp4','https://www.pexels.com/download/video/4832678/'],
+  poster:'https://images.pexels.com/videos/4832678/pexels-photo-4832678.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Tom Fisk',sourcePage:'https://www.pexels.com/video/driving-on-a-narrow-rural-road-4832678/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Osserva il restringimento e la deviazione della traiettoria',textEn:'Observe the narrowing and the deflected traffic path'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Questi elementi obbligano i veicoli a ridurre la velocità',textEn:'These features make vehicles reduce speed'},
+  {at:5.0,end:7.4,event:'explain',textIt:'Dossi, chicane e restringimenti sono misure di moderazione del traffico',textEn:'Road humps, chicanes and narrowing are traffic-calming measures'},
+  {at:7.6,end:11.2,event:'correct',textIt:'Servono a rallentare e rendere più sicura la zona',textEn:'They are designed to slow traffic and make the area safer'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:53,top:58,radiusX:40,radiusY:29,instructionIt:'TOCCA IL RESTRINGIMENTO',instructionEn:'TAP THE ROAD NARROWING',ariaIt:'Tocca la chicane e il restringimento che moderano il traffico',ariaEn:'Tap the chicane and narrowing used for traffic calming'},
+  phases:[
+   {},
+   {titleIt:'RESTRINGIMENTO',titleEn:'ROAD NARROWING',bodyIt:'Lo spazio ridotto costringe il traffico a moderare la velocità.',bodyEn:'Reduced road width forces traffic to moderate speed.'},
+   {titleIt:'CHICANE E DOSSI',titleEn:'CHICANES AND HUMPS',bodyIt:'Anche chicane e dossi vengono usati per rallentare i veicoli.',bodyEn:'Chicanes and road humps are also used to slow vehicles.'},
+   {titleIt:'TRAFFIC CALMING',titleEn:'TRAFFIC CALMING',bodyIt:'La risposta corretta è MISURE DI MODERAZIONE DEL TRAFFICO.',bodyEn:'The correct answer is TRAFFIC-CALMING MEASURES.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'Guarda cosa fanno dossi, chicane e restringimenti: fanno rallentare.',
+  missEn:'Think about what humps, chicanes and narrowing do: they slow traffic.',
+  hitIt:'Esatto: sono misure di moderazione del traffico.',
+  hitEn:'Correct: they are traffic-calming measures.'
+ },
+ learning:{correctIt:'Dossi, chicane e restringimenti sono progettati per ridurre la velocità del traffico.',correctEn:'Road humps, chicanes and road narrowing are designed to reduce traffic speed.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_ROAD_HUMPS_REDUCED_SPEED_V1',
+ category:'traffic-calming',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'roadHumpsReducedSpeed',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Road humps — maintain a reduced speed throughout',
+ accessibilityLabel:'Real residential street with speed-hump markings ahead',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/3736929/3736929-hd_1080_1920_30fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/3736929/3736929-hd_1080_1920_30fps.mp4','https://www.pexels.com/download/video/3736929/'],
+  poster:'https://images.pexels.com/videos/3736929/driving-luxembourg-morning-rida-road-3736929.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Jack Kazanjyan',sourcePage:'https://www.pexels.com/video/driving-on-a-two-way-asphalt-road-3736929/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Individua i dossi e le marcature sulla strada',textEn:'Identify the road humps and their markings'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Accelerare tra un dosso e l’altro annulla lo scopo della zona',textEn:'Accelerating between humps defeats the purpose of the area'},
+  {at:5.0,end:7.4,event:'explain',textIt:'Mantieni una velocità ridotta per tutto il tratto',textEn:'Maintain a reduced speed throughout the traffic-calmed section'},
+  {at:7.6,end:11.2,event:'correct',textIt:'Velocità bassa e costante: niente accelerazioni tra i dossi',textEn:'Keep a low, steady speed: do not accelerate between humps'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:51,top:68,radiusX:42,radiusY:25,instructionIt:'TOCCA IL DOSSO',instructionEn:'TAP THE ROAD HUMP',ariaIt:'Tocca le marcature del dosso sulla carreggiata',ariaEn:'Tap the speed-hump road markings'},
+  phases:[
+   {},
+   {titleIt:'ENTRA GIÀ PIANO',titleEn:'ENTER SLOWLY',bodyIt:'Riduci la velocità prima del primo dosso.',bodyEn:'Reduce speed before the first hump.'},
+   {titleIt:'RESTA A VELOCITÀ RIDOTTA',titleEn:'KEEP SPEED REDUCED',bodyIt:'Non accelerare tra un dosso e l’altro.',bodyEn:'Do not accelerate between one hump and the next.'},
+   {titleIt:'PER TUTTO IL TRATTO',titleEn:'THROUGHOUT THE AREA',bodyIt:'Mantieni una velocità ridotta e costante per tutta la zona.',bodyEn:'Maintain a consistently reduced speed throughout the area.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'Non basta rallentare solo sul dosso: mantieni la velocità ridotta per tutta la zona.',
+  missEn:'Do not slow only at each hump: keep speed reduced throughout the area.',
+  hitIt:'Esatto: mantieni una velocità ridotta per tutto il tratto.',
+  hitEn:'Correct: maintain a reduced speed throughout.'
+ },
+ learning:{correctIt:'In una zona con dossi, mantieni una velocità ridotta e costante per tutto il tratto.',correctEn:'On a road with humps, maintain a reduced, steady speed throughout the section.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_FOG_DIP_SLOW_TIME_V1',
+ category:'weather',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'fogSafeDriving',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Fog — dipped headlights, lower speed and more journey time',
+ accessibilityLabel:'Vehicles travelling cautiously on a highway with severely reduced visibility in dense fog',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/36480477/15468883_3840_2160_25fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/36480477/15468883_3840_2160_25fps.mp4','https://www.pexels.com/download/video/36480477/'],
+  poster:'https://images.pexels.com/videos/36480477/pexels-photo-36480477.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Grigoriy Bunkov',sourcePage:'https://www.pexels.com/video/foggy-highway-traffic-and-low-visibility-scene-36480477/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'La visibilità nella nebbia è fortemente ridotta',textEn:'Visibility is severely reduced in fog'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Abbaglianti e distanza troppo corta peggiorano il rischio',textEn:'Full beam and following too closely increase the risk'},
+  {at:5.0,end:7.5,event:'explain',textIt:'Tre misure corrette: anabbaglianti, rallenta, prevedi più tempo',textEn:'Three correct measures: dipped headlights, slow down, allow more time'},
+  {at:7.7,end:11.4,event:'correct',textIt:'Adatta luci, velocità e tempo di viaggio alla visibilità',textEn:'Adapt lights, speed and journey time to the visibility'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:50,top:54,radiusX:43,radiusY:32,instructionIt:'TOCCA LA STRADA NELLA NEBBIA',instructionEn:'TAP THE FOGGY ROAD',ariaIt:'Tocca la strada dove la visibilità è ridotta dalla nebbia',ariaEn:'Tap the road where visibility is reduced by fog'},
+  phases:[
+   {},
+   {titleIt:'ANABBAGLIANTI',titleEn:'DIPPED HEADLIGHTS',bodyIt:'Usa gli ANABBAGLIANTI: gli abbaglianti possono riflettersi nella nebbia.',bodyEn:'Use DIPPED HEADLIGHTS: full beam can reflect back in fog.'},
+   {titleIt:'RALLENTA',titleEn:'SLOW DOWN',bodyIt:'Riduci la velocità per avere più tempo e spazio per reagire.',bodyEn:'Reduce speed to give yourself more time and space to react.'},
+   {titleIt:'PREVEDI PIÙ TEMPO',titleEn:'ALLOW MORE TIME',bodyIt:'Anabbaglianti + rallenta + prevedi più tempo per il viaggio.',bodyEn:'Dipped headlights + slow down + allow more time for the journey.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'Sono tre: anabbaglianti, velocità ridotta e più tempo per il viaggio.',
+  missEn:'There are three: dipped headlights, reduced speed and more journey time.',
+  hitIt:'Esatto: anabbaglianti, rallenta e prevedi più tempo.',
+  hitEn:'Correct: use dipped headlights, slow down and allow more time.'
+ },
+ learning:{correctIt:'Nella nebbia usa gli anabbaglianti, rallenta e prevedi più tempo per il viaggio.',correctEn:'In fog, use dipped headlights, slow down and allow more time for the journey.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_AQUAPLANING_EASE_ACCELERATOR_V1',
+ category:'weather',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'aquaplaningHeavyRain',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Heavy rain — light steering and aquaplaning',
+ accessibilityLabel:'Real driver view through a windscreen in heavy rain with wipers operating',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/1350979/1350979-hd_1920_1080_30fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/1350979/1350979-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/1350979/'],
+  poster:'https://images.pexels.com/videos/1350979/free-video-1350979.jpg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Asif Khan',sourcePage:'https://www.pexels.com/video/a-rainy-day-1350979/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Pioggia intensa e molta acqua sulla strada riducono l’aderenza',textEn:'Heavy rain and standing water reduce tyre grip'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Se lo sterzo diventa improvvisamente leggero potresti stare aquaplanando',textEn:'If the steering suddenly becomes light, the vehicle may be aquaplaning'},
+  {at:5.0,end:7.4,event:'explain',textIt:'Non frenare bruscamente: rilascia dolcemente l’acceleratore',textEn:'Do not brake hard: ease off the accelerator smoothly'},
+  {at:7.6,end:11.2,event:'correct',textIt:'Lascia diminuire la velocità gradualmente finché torna l’aderenza',textEn:'Allow speed to reduce gradually until grip returns'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:50,top:54,radiusX:44,radiusY:34,instructionIt:'TOCCA LA PIOGGIA SUL PARABREZZA',instructionEn:'TAP THE RAIN ON THE WINDSCREEN',ariaIt:'Tocca la zona di forte pioggia davanti al veicolo',ariaEn:'Tap the heavy rain visible ahead through the windscreen'},
+  phases:[
+   {},
+   {titleIt:'STERZO MOLTO LEGGERO',titleEn:'VERY LIGHT STEERING',bodyIt:'È un segnale possibile di AQUAPLANING: gli pneumatici stanno perdendo contatto efficace con la strada.',bodyEn:'This can indicate AQUAPLANING: the tyres are losing effective contact with the road.'},
+   {titleIt:'NIENTE MANOVRE BRUSCHE',titleEn:'NO SUDDEN INPUTS',bodyIt:'Evita frenate forti, accelerazioni e sterzate improvvise.',bodyEn:'Avoid hard braking, acceleration and sudden steering inputs.'},
+   {titleIt:'RILASCIA L’ACCELERATORE',titleEn:'EASE OFF THE ACCELERATOR',bodyIt:'Rilascia dolcemente l’acceleratore e lascia ridurre la velocità gradualmente.',bodyEn:'Ease off the accelerator smoothly and allow speed to reduce gradually.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'Sterzo improvvisamente leggero nella pioggia intensa: pensa all’aquaplaning.',
+  missEn:'Suddenly light steering in heavy rain: think aquaplaning.',
+  hitIt:'Esatto: rilascia dolcemente l’acceleratore.',
+  hitEn:'Correct: ease off the accelerator smoothly.'
+ },
+ learning:{correctIt:'Se sospetti aquaplaning, rilascia dolcemente l’acceleratore ed evita manovre brusche.',correctEn:'If you suspect aquaplaning, ease off the accelerator and avoid sudden inputs.'}
+});
+
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_MOBILE_PHONE_DRIVING_DISTRACTION_V1',
+ category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'mobilePhoneDrivingDistraction',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Mobile phone while driving — distraction from the road',
+ accessibilityLabel:'Real driver holding a mobile phone while at the steering wheel',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/6637301/6637301-uhd_3840_2160_30fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/6637301/6637301-uhd_3840_2160_30fps.mp4','https://www.pexels.com/download/video/6637301/'],
+  poster:'https://images.pexels.com/videos/6637301/pexels-photo-6637301.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Gustavo Fring',sourcePage:'https://www.pexels.com/video/a-man-talking-on-the-cell-phone-inside-the-vehicle-6637301/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Il conducente sta usando il telefono mentre è al volante',textEn:'The driver is using a phone while at the wheel'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Occhi e attenzione possono allontanarsi dalla strada',textEn:'Eyes and attention can be drawn away from the road'},
+  {at:5.0,end:7.4,event:'explain',textIt:'La distrazione riduce osservazione, reazione e controllo',textEn:'Distraction reduces observation, reaction and control'},
+  {at:7.6,end:11.2,event:'correct',textIt:'Il telefono può distrarre la tua attenzione dalla strada',textEn:'The phone could distract your attention from the road'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:72,top:34,radiusX:23,radiusY:27,instructionIt:'TOCCA IL TELEFONO',instructionEn:'TAP THE PHONE',ariaIt:'Tocca il telefono usato dal conducente',ariaEn:'Tap the phone being used by the driver'},
+  phases:[
+   {},
+   {titleIt:'ATTENZIONE DIVISA',titleEn:'DIVIDED ATTENTION',bodyIt:'Il telefono porta parte dell’attenzione fuori dalla guida.',bodyEn:'The phone takes part of your attention away from driving.'},
+   {titleIt:'REAZIONE E CONTROLLO',titleEn:'REACTION AND CONTROL',bodyIt:'Una distrazione può farti vedere tardi un pericolo e reagire peggio.',bodyEn:'A distraction can make you notice a hazard late and react less effectively.'},
+   {titleIt:'PUÒ DISTRARTI',titleEn:'IT CAN DISTRACT YOU',bodyIt:'La risposta corretta è che il telefono può distrarre la tua attenzione dalla strada.',bodyEn:'The correct answer is that mobile-phone use could distract your attention from the road.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'Guarda cosa sta facendo il conducente: il rischio principale è la distrazione dalla strada.',
+  missEn:'Look at what the driver is doing: the main risk is distraction from the road.',
+  hitIt:'Esatto: il telefono può distrarre l’attenzione dalla strada.',
+  hitEn:'Correct: the phone can distract attention from the road.'
+ },
+ learning:{correctIt:'Usare il telefono mentre guidi può distrarre la tua attenzione dalla strada.',correctEn:'Using a mobile phone while driving can distract your attention from the road.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_MOBILE_PHONE_PARKED_CONTROL_V1',
+ category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'mobilePhoneParkedControl',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Mobile phone — be parked before using it',
+ accessibilityLabel:'Person using a smartphone while seated in a stationary parked vehicle',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/5834191/5834191-uhd_2160_3840_24fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/5834191/5834191-uhd_2160_3840_24fps.mp4','https://www.pexels.com/download/video/5834191/'],
+  poster:'https://images.pexels.com/videos/5834191/pexels-photo-5834191.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Tim Samuel',sourcePage:'https://www.pexels.com/video/cab-driver-sitting-in-car-and-busy-with-phone-5834191/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Il telefono viene usato con il veicolo fermo e parcheggiato',textEn:'The phone is being used with the vehicle stopped and parked'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Usarlo mentre il veicolo è in movimento può compromettere il controllo',textEn:'Using it while the vehicle is moving can affect vehicle control'},
+  {at:5.0,end:7.4,event:'explain',textIt:'Prima parcheggia in sicurezza, poi usa il telefono',textEn:'Park safely first, then use the phone'},
+  {at:7.6,end:11.2,event:'correct',textIt:'Così il controllo del veicolo non viene compromesso',textEn:'This prevents phone use from affecting control of the vehicle'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:67,top:65,radiusX:25,radiusY:25,instructionIt:'TOCCA IL TELEFONO NELL’AUTO FERMA',instructionEn:'TAP THE PHONE IN THE PARKED CAR',ariaIt:'Tocca il telefono usato nella vettura parcheggiata',ariaEn:'Tap the phone being used in the parked vehicle'},
+  phases:[
+   {},
+   {titleIt:'PRIMA PARCHEGGIA',titleEn:'PARK FIRST',bodyIt:'Il momento corretto per usare il telefono è quando sei parcheggiato in sicurezza.',bodyEn:'The correct time to use the phone is when you are safely parked.'},
+   {titleIt:'PROTEGGI IL CONTROLLO',titleEn:'PROTECT CONTROL',bodyIt:'Se lo usi in movimento, attenzione e controllo del veicolo possono risentirne.',bodyEn:'If you use it while moving, your attention and vehicle control can be affected.'},
+   {titleIt:'VEICOLO SOTTO CONTROLLO',titleEn:'KEEP VEHICLE CONTROL',bodyIt:'Essere parcheggiato evita che l’uso del telefono comprometta il controllo del veicolo.',bodyEn:'Being parked prevents phone use from affecting control of the vehicle.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'La domanda riguarda il controllo del veicolo: usa il telefono solo dopo esserti parcheggiato.',
+  missEn:'The question is about vehicle control: use the phone only after parking.',
+  hitIt:'Esatto: parcheggiati prima, così il controllo del veicolo non viene compromesso.',
+  hitEn:'Correct: park first so vehicle control is not affected.'
+ },
+ learning:{correctIt:'Devi essere parcheggiato prima di usare il telefono per non compromettere il controllo del veicolo.',correctEn:'You should be parked before using a mobile phone so control of the vehicle is not affected.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_ZEBRA_WAIT_UNTIL_CROSSED_V1',
+ category:'pedestrian-crossings',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'zebraWaitUntilCrossed',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Zebra crossing — wait until pedestrians have crossed',
+ accessibilityLabel:'Real pedestrian actively crossing a zebra crossing',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/13308165/13308165-hd_1920_1080_50fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/13308165/13308165-hd_1920_1080_50fps.mp4','https://www.pexels.com/download/video/13308165/'],
+  poster:'https://images.pexels.com/videos/13308165/asia-bus-car-city-13308165.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Levi Wedge',sourcePage:'https://www.pexels.com/video/people-walking-on-the-street-while-crossing-the-pedestrian-13308165/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Un pedone sta ancora attraversando sulle strisce',textEn:'A pedestrian is still crossing on the zebra crossing'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Avanzare, accelerare il motore o fare cenni mette pressione sul pedone',textEn:'Edging forward, revving or waving puts pressure on the pedestrian'},
+  {at:5.0,end:7.4,event:'explain',textIt:'Rimani fermo e paziente finché l’attraversamento è completato',textEn:'Remain stopped and patient until the crossing is complete'},
+  {at:7.6,end:11.2,event:'correct',textIt:'Attendi finché i pedoni hanno attraversato',textEn:'Wait until the pedestrians have crossed'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:58,top:67,radiusX:24,radiusY:30,instructionIt:'TOCCA IL PEDONE SULLE STRISCE',instructionEn:'TAP THE PEDESTRIAN ON THE CROSSING',ariaIt:'Tocca il pedone che sta attraversando sulle strisce',ariaEn:'Tap the pedestrian who is crossing on the zebra crossing'},
+  phases:[
+   {},
+   {titleIt:'È ANCORA SULLE STRISCE',titleEn:'STILL ON THE CROSSING',bodyIt:'Il pedone non ha ancora completato l’attraversamento.',bodyEn:'The pedestrian has not yet completed the crossing.'},
+   {titleIt:'RESTA FERMO',titleEn:'REMAIN STOPPED',bodyIt:'Non avanzare e non mettergli fretta con gesti o col motore.',bodyEn:'Do not edge forward or hurry the pedestrian with gestures or engine revs.'},
+   {titleIt:'ATTENDI CHE ABBIA ATTRAVERSATO',titleEn:'WAIT UNTIL THEY HAVE CROSSED',bodyIt:'Riparti solo quando il pedone ha completato l’attraversamento in sicurezza.',bodyEn:'Move off only when the pedestrian has safely completed the crossing.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'Il pedone sta ancora attraversando: resta fermo e aspetta.',
+  missEn:'The pedestrian is still crossing: remain stopped and wait.',
+  hitIt:'Esatto: attendi finché i pedoni hanno completato l’attraversamento.',
+  hitEn:'Correct: wait until the pedestrians have completed the crossing.'
+ },
+ learning:{correctIt:'Dopo esserti fermato a uno zebra crossing, attendi finché i pedoni hanno attraversato.',correctEn:'After stopping at a zebra crossing, wait until the pedestrians have crossed.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_RAIN_LONGER_STOPPING_DISTANCE_V1',
+ category:'stopping-distance',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'rainLongerStoppingDistance',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Rain — longer overall stopping distance',
+ accessibilityLabel:'Real view through a rain-covered windscreen onto a wet road',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/15442191/15442191-uhd_2158_3840_60fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/15442191/15442191-uhd_2158_3840_60fps.mp4','https://www.pexels.com/download/video/15442191/'],
+  poster:'https://images.pexels.com/videos/15442191/4k-video-amazing-car-day-video-15442191.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Rebaz Geo',sourcePage:'https://www.pexels.com/video/a-car-parked-on-a-wet-road-on-a-rainy-day-15442191/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Pioggia e carreggiata bagnata riducono l’aderenza',textEn:'Rain and a wet road reduce tyre grip'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Con meno aderenza serve più spazio per rallentare e fermarsi',textEn:'With less grip, more distance is needed to slow and stop'},
+  {at:5.0,end:7.4,event:'explain',textIt:'La distanza totale di arresto aumenta sulla strada bagnata',textEn:'Overall stopping distance increases on a wet road'},
+  {at:7.6,end:11.2,event:'correct',textIt:'La risposta corretta è: sotto la pioggia',textEn:'The correct answer is: in the rain'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:49,top:53,radiusX:43,radiusY:34,instructionIt:'TOCCA LA STRADA BAGNATA',instructionEn:'TAP THE WET ROAD',ariaIt:'Tocca la carreggiata bagnata visibile attraverso il parabrezza',ariaEn:'Tap the wet road visible through the windscreen'},
+  phases:[
+   {},
+   {titleIt:'ADERENZA RIDOTTA',titleEn:'REDUCED GRIP',bodyIt:'L’acqua tra pneumatici e asfalto riduce l’aderenza disponibile.',bodyEn:'Water between tyres and road reduces available grip.'},
+   {titleIt:'SERVE PIÙ SPAZIO',titleEn:'MORE SPACE NEEDED',bodyIt:'Con meno aderenza il veicolo impiega più distanza per fermarsi.',bodyEn:'With less grip, the vehicle needs more distance to stop.'},
+   {titleIt:'SOTTO LA PIOGGIA',titleEn:'IN THE RAIN',bodyIt:'La distanza totale di arresto è maggiore quando guidi sotto la pioggia.',bodyEn:'Your overall stopping distance is longer when driving in the rain.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'Guarda l’asfalto bagnato: meno aderenza significa più spazio per fermarsi.',
+  missEn:'Look at the wet road: less grip means more space is needed to stop.',
+  hitIt:'Esatto: sotto la pioggia la distanza totale di arresto aumenta.',
+  hitEn:'Correct: overall stopping distance increases in the rain.'
+ },
+ learning:{correctIt:'La strada bagnata riduce l’aderenza e aumenta la distanza totale di arresto.',correctEn:'Wet roads reduce tyre grip and increase overall stopping distance.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_FLOOD_TEST_BRAKES_V1',
+ category:'braking',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'floodTestBrakes',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'After flood water — test the brakes',
+ accessibilityLabel:'Real vehicles driving through flood water across a road',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/18640859/18640859-hd_1920_1080_60fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/18640859/18640859-hd_1920_1080_60fps.mp4','https://www.pexels.com/download/video/18640859/'],
+  poster:'https://images.pexels.com/videos/18640859/california-floods-flooding-heavy-rains-speeding-18640859.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · D Goug',sourcePage:'https://www.pexels.com/video/street-flooding-18640859/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Il veicolo ha appena attraversato acqua profonda sulla carreggiata',textEn:'The vehicle has just passed through deep water on the road'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'L’acqua può rendere temporaneamente meno efficaci i freni',textEn:'Water can temporarily make the brakes less effective'},
+  {at:5.0,end:7.4,event:'explain',textIt:'Appena fuori dall’acqua, controlla delicatamente la risposta dei freni',textEn:'Once clear of the water, gently check the brake response'},
+  {at:7.6,end:11.2,event:'correct',textIt:'La prima cosa da fare è provare i freni',textEn:'The first thing to do is test your brakes'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:52,top:68,radiusX:42,radiusY:25,instructionIt:'TOCCA L’ACQUA ATTRAVERSATA DAI VEICOLI',instructionEn:'TAP THE FLOOD WATER',ariaIt:'Tocca l’acqua sulla carreggiata attraversata dai veicoli',ariaEn:'Tap the flood water being crossed by the vehicles'},
+  phases:[
+   {},
+   {titleIt:'FRENI BAGNATI',titleEn:'WET BRAKES',bodyIt:'Dopo l’acqua i freni possono rispondere meno efficacemente.',bodyEn:'After passing through water, the brakes may respond less effectively.'},
+   {titleIt:'CONTROLLALI SUBITO',titleEn:'CHECK THEM PROMPTLY',bodyIt:'Quando sei fuori dall’acqua e in sicurezza, prova delicatamente i freni.',bodyEn:'When clear of the water and safe, gently test the brakes.'},
+   {titleIt:'PROVA I FRENI',titleEn:'TEST THE BRAKES',bodyIt:'La prima cosa da fare dopo aver attraversato un allagamento è verificare che i freni rispondano.',bodyEn:'The first thing after driving through flood water is to check that the brakes respond.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'Dopo l’acqua pensa ai freni: potrebbero essere meno efficaci.',
+  missEn:'After driving through water, think about the brakes: they may be less effective.',
+  hitIt:'Esatto: dopo l’allagamento prova delicatamente i freni.',
+  hitEn:'Correct: after flood water, gently test the brakes.'
+ },
+ learning:{correctIt:'Dopo aver attraversato un allagamento, prova delicatamente i freni perché potrebbero essere meno efficaci.',correctEn:'After driving through flood water, test the brakes gently because they may be less effective.'}
+});
+
 })(window);

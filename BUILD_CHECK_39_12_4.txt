@@ -1,0 +1,4 @@
+MALTA DRIVING MASTER BUILD 39.12.4
+CARS3.46: phase 04 video replaced with a more pertinent narrow-road driving scene.
+CARS4.7: phase 04 video replaced with verified current dense-fog traffic footage.
+01-03 freeze imagery unchanged. Other 38 Replay scenes unchanged.

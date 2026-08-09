@@ -1,0 +1,62 @@
+MALTA DRIVING MASTER — REPLAY FREEZE SOURCE CREDITS — BUILD 39.11.28
+
+Pexels (free-to-use stock photos; source pages checked during QA)
+- msmRoutine — Ksenia Kartasheva — male driver reflected in side mirror
+- blindSpotDefinition — Jonathan Cooper — side mirror with following vehicle
+- uTurnShoulderCheck — Deybson Mallony — driver looking over shoulder
+- phoneDistractionDriving — Nazila Azimzada — handheld phone while driving in heavy rain
+- handsFreeDistraction — Ron Lach — professional driver wearing AirPods
+- phoneStopSafe — Artem Podrez — smartphone use inside stationary/parked vehicle
+- zebraWaitingStop — David Hinostroza — pedestrians on zebra crossing with vehicle waiting
+- largeVehicleTooClose — Juliana Polizel — close following view behind large goods vehicle
+- wetRoadFourSecondGap — Vladimír Sládek — vehicle ahead through rain-soaked windshield
+- rearFlashingAllowOvertake — Erik Mclean — headlights of following traffic reflected in car mirror
+- neverExceedSpeedLimit — Mykola Stepaniuk — European metric-style speed-limit sign on real road
+
+Wikimedia Commons / freely licensed photographic sources
+- cyclistSafePass — Hallgrimsson
+- largeVehicleFollowing — Steve Barnes
+- dazzledHeadlights — Chris Downer
+- duskLightsVisibility — Nabeel Syed
+- pedestrianWaveAcross — Mike Petrucci
+- overtakeLimitedView — Row17
+- twoSecondRuleGap — JoeNomi 1961
+- blueFlashingBeacons — Mattes
+- ambulanceFollowingMakeWay — Yvon Gallant — ambulance seen from behind in urban traffic
+- busRightSignalGiveWay — Basher Eyre
+- hornAlertPresence — Stephen McCulloch
+
+Existing approved photographic freezes preserved from 39.11.27
+- underInflatedSteeringBraking
+- tyrePressureWeeklyCheck
+- dippedHeadlightsPoorVisibility
+
+NEW PHOTOGRAPHIC FREEZES ADDED IN BUILD 39.12.0
+- tyrePressureColdCheck / CARS3.7 — JEG14 — ReifendruckPruefen.jpg — Wikimedia Commons — Public Domain (PD-self)
+  Source: https://commons.wikimedia.org/wiki/File:ReifendruckPruefen.jpg
+  Crop/resize for Replay: 1280x720 JPEG embedded in app-3994.js.
+- underInflatedBrakingFuel / CARS3.9 — Christopher Ziemnowicz (CZmarlin) — Tire Severe Under Inflation Wear.jpg — Wikimedia Commons — Public Domain
+  Source: https://commons.wikimedia.org/wiki/File:Tire_Severe_Under_Inflation_Wear.jpg
+  Crop/resize for Replay: 1280x720 JPEG embedded in app-3994.js.
+- unevenTyreWearFaults / CARS3.31 — Dennis G. Jarvis (archer10) — DSC00452 - Work is never done....... (7614907236).jpg — Wikimedia Commons — CC BY-SA 2.0
+  Source: https://commons.wikimedia.org/wiki/File:DSC00452_-_Work_is_never_done......._(7614907236).jpg
+  License: https://creativecommons.org/licenses/by-sa/2.0/
+  Crop/resize for Replay: 1280x720 JPEG embedded in app-3994.js; derivative distributed under the same/compatible CC BY-SA terms.
+- hornBuiltUpNightRestriction / CARS3.38 — Patrick Tomasso — Inside a car at night-time in Williamsburg (Unsplash).jpg — Wikimedia Commons — CC0 1.0
+  Source: https://commons.wikimedia.org/wiki/File:Inside_a_car_at_night-time_in_Williamsburg_(Unsplash).jpg
+  Crop/resize for Replay: 1280x720 JPEG embedded in app-3994.js.
+- walkCycleEnvironment / CARS3.29 — Apoikola — Cycling in amsterdam.JPG — Wikimedia Commons — CC0 1.0
+  Source: https://commons.wikimedia.org/wiki/File:Cycling_in_amsterdam.JPG
+  Crop/resize for Replay: 1280x720 JPEG embedded in app-3994.js.
+
+NEW PHASE-04 VIDEO SOURCES ADDED IN BUILD 39.12.0
+- CARS3.7 — Pexels · K — Man measuring air pressure in tires — video 9738025
+  https://www.pexels.com/video/man-measuring-air-pressure-in-tires-9738025/
+- CARS3.9 — Pexels · K — Mechanic inflating/checking a tire — video 9737844
+  https://www.pexels.com/video/a-mechanic-inflating-a-tire-9737844/
+- CARS3.31 — Pexels · Enis Yavuz — Close-up of a tire tread — video 5302693
+  https://www.pexels.com/video/close-up-video-of-a-tire-tread-5302693/
+- CARS3.38 — Pexels · Rholdan Ortiz — Man driving a car at night — video 3554563
+  https://www.pexels.com/video/man-driving-a-car-at-night-3554563/
+- CARS3.29 — Pexels · K — Cyclist in the city — video 6580998
+  https://www.pexels.com/video/cyclist-in-the-city-6580998/

@@ -394,6 +394,118 @@
    note:'CARS3.30 phase 04 shows a clear practical alternative to a very short car journey: urban cycling.'
   },
 
+
+  {
+   sceneKey:'fuelConsumptionPlanSpeed',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/15330792/15330792-uhd_3840_1620_24fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/15330792/15330792-uhd_3840_1620_24fps.mp4','https://www.pexels.com/download/video/15330792/'],
+   poster:'https://images.pexels.com/videos/15330792/videographie-0153-15330792.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Dimitri Baret',
+   sourcePage:'https://www.pexels.com/video/point-of-view-of-a-car-driving-along-the-road-15330792/',
+   tags:['fuel-consumption','plan-ahead','reduced-speed','smooth-driving','eco-driving'],
+   note:'CARS3.33 strict-match. Embedded real driving freeze supports planning ahead and controlled road speed; phase 04 uses dedicated driver-view road footage.'
+  },
+
+  {
+   sceneKey:'trafficCalmingMeasures',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/4832678/4832678-uhd_3840_2160_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/4832678/4832678-uhd_3840_2160_30fps.mp4','https://www.pexels.com/download/video/4832678/'],
+   poster:'https://images.pexels.com/videos/4832678/pexels-photo-4832678.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Tom Fisk',
+   sourcePage:'https://www.pexels.com/video/driving-on-a-narrow-rural-road-4832678/',
+   tags:['traffic-calming','speed-bump','chicane','road-narrowing','residential'],
+   note:'CARS3.46 strict-match. Embedded photographic freeze shows a real traffic-calming chicane/narrowing; phase 04 now uses a driver-view journey on a genuinely narrow road, making the road-narrowing traffic-calming idea visually immediate.'
+  },
+
+  {
+   sceneKey:'roadHumpsReducedSpeed',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/3736929/3736929-hd_1080_1920_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/3736929/3736929-hd_1080_1920_30fps.mp4','https://www.pexels.com/download/video/3736929/'],
+   poster:'https://images.pexels.com/videos/3736929/driving-luxembourg-morning-rida-road-3736929.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Jack Kazanjyan',
+   sourcePage:'https://www.pexels.com/video/driving-on-a-two-way-asphalt-road-3736929/',
+   tags:['road-humps','reduced-speed','residential-road','steady-speed','traffic-calming'],
+   note:'CARS3.47 strict-match. Embedded freeze clearly shows speed-hump road markings in a residential street; phase 04 continues with a real neighbourhood drive.'
+  },
+
+  {
+   sceneKey:'fogSafeDriving',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/36480477/15468883_3840_2160_25fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/36480477/15468883_3840_2160_25fps.mp4','https://www.pexels.com/download/video/36480477/'],
+   poster:'https://images.pexels.com/videos/36480477/pexels-photo-36480477.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Grigoriy Bunkov',
+   sourcePage:'https://www.pexels.com/video/foggy-highway-traffic-and-low-visibility-scene-36480477/',
+   tags:['fog','limited-visibility','dipped-headlights','slow-down','journey-time'],
+   note:'CARS4.7 strict-match. Embedded freeze shows a real car and oncoming lights in dense fog; phase 04 now uses verified current footage of vehicles moving through dense fog and low visibility.'
+  },
+
+  {
+   sceneKey:'aquaplaningHeavyRain',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/1350979/1350979-hd_1920_1080_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/1350979/1350979-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/1350979/'],
+   poster:'https://images.pexels.com/videos/1350979/free-video-1350979.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Asif Khan',
+   sourcePage:'https://www.pexels.com/video/a-rainy-day-1350979/',
+   tags:['heavy-rain','aquaplaning','light-steering','ease-accelerator','wet-road'],
+   note:'CARS4.14 strict-match. Embedded freeze shows severe rain through the windscreen with wipers active; phase 04 uses dedicated heavy-rain driving footage.'
+  },
+
+
+  {
+   sceneKey:'mobilePhoneDrivingDistraction',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/6637301/6637301-uhd_3840_2160_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/6637301/6637301-uhd_3840_2160_30fps.mp4','https://www.pexels.com/download/video/6637301/'],
+   poster:'https://images.pexels.com/videos/6637301/pexels-photo-6637301.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Gustavo Fring',
+   sourcePage:'https://www.pexels.com/video/a-man-talking-on-the-cell-phone-inside-the-vehicle-6637301/',
+   tags:['mobile-phone','driver','driving-distraction','attention-from-road','vehicle-control'],
+   note:'CARS1.15 strict-match. Embedded photographic freeze clearly shows a driver using a phone at the wheel; phase 04 uses dedicated real footage of mobile-phone use while driving.'
+  },
+
+  {
+   sceneKey:'mobilePhoneParkedControl',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/5834191/5834191-uhd_2160_3840_24fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/5834191/5834191-uhd_2160_3840_24fps.mp4','https://www.pexels.com/download/video/5834191/'],
+   poster:'https://images.pexels.com/videos/5834191/pexels-photo-5834191.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Tim Samuel',
+   sourcePage:'https://www.pexels.com/video/cab-driver-sitting-in-car-and-busy-with-phone-5834191/',
+   tags:['mobile-phone','parked-vehicle','vehicle-control','safe-stop','stationary-car'],
+   note:'CARS1.23 strict-match. Embedded photographic freeze shows a person using a smartphone inside a parked vehicle; phase 04 uses real stationary-car phone footage.'
+  },
+
+  {
+   sceneKey:'zebraWaitUntilCrossed',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/13308165/13308165-hd_1920_1080_50fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/13308165/13308165-hd_1920_1080_50fps.mp4','https://www.pexels.com/download/video/13308165/'],
+   poster:'https://images.pexels.com/videos/13308165/asia-bus-car-city-13308165.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Levi Wedge',
+   sourcePage:'https://www.pexels.com/video/people-walking-on-the-street-while-crossing-the-pedestrian-13308165/',
+   tags:['zebra-crossing','pedestrians-crossing','remain-stopped','patient-wait','crosswalk'],
+   note:'CARS2.5 strict-match. Embedded photographic freeze shows a pedestrian actively crossing a zebra crossing; phase 04 uses real crosswalk footage with pedestrians and traffic.'
+  },
+
+  {
+   sceneKey:'rainLongerStoppingDistance',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/15442191/15442191-uhd_2158_3840_60fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/15442191/15442191-uhd_2158_3840_60fps.mp4','https://www.pexels.com/download/video/15442191/'],
+   poster:'https://images.pexels.com/videos/15442191/4k-video-amazing-car-day-video-15442191.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Rebaz Geo',
+   sourcePage:'https://www.pexels.com/video/a-car-parked-on-a-wet-road-on-a-rainy-day-15442191/',
+   tags:['rain','wet-road','reduced-grip','longer-stopping-distance','wet-weather-driving'],
+   note:'CARS4.11 strict-match. Embedded photographic freeze is a real driver view through a rain-covered windscreen onto a wet road; phase 04 uses dedicated real rainy-road footage.'
+  },
+
+  {
+   sceneKey:'floodTestBrakes',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/18640859/18640859-hd_1920_1080_60fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/18640859/18640859-hd_1920_1080_60fps.mp4','https://www.pexels.com/download/video/18640859/'],
+   poster:'https://images.pexels.com/videos/18640859/california-floods-flooding-heavy-rains-speeding-18640859.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · D Goug',
+   sourcePage:'https://www.pexels.com/video/street-flooding-18640859/',
+   tags:['flood-water','vehicle-through-water','brake-test','reduced-brake-effect','wet-brakes'],
+   note:'CARS4.15 strict-match. Embedded photographic freeze shows vehicles driving through flood water; phase 04 shows a real car passing through a flooded road, immediately framing the need to test the brakes afterwards.'
+  },
+
   {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',

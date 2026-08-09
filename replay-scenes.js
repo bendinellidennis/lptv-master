@@ -1820,11 +1820,11 @@ global.ReplayEngine.registerScene({
  category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
  sceneKey:'mobilePhoneDrivingDistraction',visualStatus:'final-real-footage',replayTemplate:'standard-video',
  title:'Mobile phone while driving — distraction from the road',
- accessibilityLabel:'Real driver holding a mobile phone while at the steering wheel',
+ accessibilityLabel:'Real driver inside a moving car using a mobile phone while steering',
  playbackRate:0.9,
  media:{
-  video:'https://videos.pexels.com/video-files/6637301/6637301-uhd_3840_2160_30fps.mp4',
-  videoSources:['https://videos.pexels.com/video-files/6637301/6637301-uhd_3840_2160_30fps.mp4','https://www.pexels.com/download/video/6637301/'],
+  video:'https://videos.pexels.com/video-files/6637301/6637301-hd_1920_1080_25fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/6637301/6637301-hd_1920_1080_25fps.mp4','https://www.pexels.com/download/video/6637301/'],
   poster:'https://images.pexels.com/videos/6637301/pexels-photo-6637301.jpeg?auto=compress&dpr=1&h=750&w=1260',
   credit:'Pexels · Gustavo Fring',sourcePage:'https://www.pexels.com/video/a-man-talking-on-the-cell-phone-inside-the-vehicle-6637301/'
  },
@@ -1836,6 +1836,7 @@ global.ReplayEngine.registerScene({
  ],
  ui:{
   staticUntilFinal:true,
+  phaseFreezeKeys:['mobilePhoneDrivingDistraction','mobilePhoneDrivingDistraction_p2','mobilePhoneDrivingDistraction_p3'],
   hotspot:{left:72,top:34,radiusX:23,radiusY:27,instructionIt:'TOCCA IL TELEFONO',instructionEn:'TAP THE PHONE',ariaIt:'Tocca il telefono usato dal conducente',ariaEn:'Tap the phone being used by the driver'},
   phases:[
    {},
@@ -1983,10 +1984,10 @@ global.ReplayEngine.registerScene({
  accessibilityLabel:'Real vehicles driving through flood water across a road',
  playbackRate:0.9,
  media:{
-  video:'https://videos.pexels.com/video-files/18640859/18640859-hd_1920_1080_60fps.mp4',
-  videoSources:['https://videos.pexels.com/video-files/18640859/18640859-hd_1920_1080_60fps.mp4','https://www.pexels.com/download/video/18640859/'],
-  poster:'https://images.pexels.com/videos/18640859/california-floods-flooding-heavy-rains-speeding-18640859.jpeg?auto=compress&dpr=1&h=750&w=1260',
-  credit:'Pexels · D Goug',sourcePage:'https://www.pexels.com/video/street-flooding-18640859/'
+  video:'https://videos.pexels.com/video-files/15814789/15814789-hd_1920_1080_30fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/15814789/15814789-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/15814789/'],
+  poster:'https://images.pexels.com/videos/15814789/pexels-photo-15814789.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Nothing Ahead',sourcePage:'https://www.pexels.com/video/a-view-from-inside-a-car-on-a-rainy-day-15814789/'
  },
  timeline:[
   {at:.4,end:2.4,event:'observe',textIt:'Il veicolo ha appena attraversato acqua profonda sulla carreggiata',textEn:'The vehicle has just passed through deep water on the road'},

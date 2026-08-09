@@ -453,13 +453,13 @@
 
   {
    sceneKey:'mobilePhoneDrivingDistraction',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
-   video:'https://videos.pexels.com/video-files/6637301/6637301-uhd_3840_2160_30fps.mp4',
-   videoSources:['https://videos.pexels.com/video-files/6637301/6637301-uhd_3840_2160_30fps.mp4','https://www.pexels.com/download/video/6637301/'],
+   video:'https://videos.pexels.com/video-files/6637301/6637301-hd_1920_1080_25fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/6637301/6637301-hd_1920_1080_25fps.mp4','https://www.pexels.com/download/video/6637301/'],
    poster:'https://images.pexels.com/videos/6637301/pexels-photo-6637301.jpeg?auto=compress&dpr=1&h=750&w=1260',
    credit:'Pexels · Gustavo Fring',
    sourcePage:'https://www.pexels.com/video/a-man-talking-on-the-cell-phone-inside-the-vehicle-6637301/',
    tags:['mobile-phone','driver','driving-distraction','attention-from-road','vehicle-control'],
-   note:'CARS1.15 strict-match. Embedded photographic freeze clearly shows a driver using a phone at the wheel; phase 04 uses dedicated real footage of mobile-phone use while driving.'
+   note:'CARS1.15 corrected strict-match: phases 01-03 use three distinct real photographs clearly showing mobile-phone use at the steering wheel; phase 04 uses dedicated real footage explicitly described as a man inside a car using a mobile phone while driving.'
   },
 
   {
@@ -497,13 +497,13 @@
 
   {
    sceneKey:'floodTestBrakes',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
-   video:'https://videos.pexels.com/video-files/18640859/18640859-hd_1920_1080_60fps.mp4',
-   videoSources:['https://videos.pexels.com/video-files/18640859/18640859-hd_1920_1080_60fps.mp4','https://www.pexels.com/download/video/18640859/'],
-   poster:'https://images.pexels.com/videos/18640859/california-floods-flooding-heavy-rains-speeding-18640859.jpeg?auto=compress&dpr=1&h=750&w=1260',
-   credit:'Pexels · D Goug',
-   sourcePage:'https://www.pexels.com/video/street-flooding-18640859/',
+   video:'https://videos.pexels.com/video-files/15814789/15814789-hd_1920_1080_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/15814789/15814789-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/15814789/'],
+   poster:'https://images.pexels.com/videos/15814789/pexels-photo-15814789.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Nothing Ahead',
+   sourcePage:'https://www.pexels.com/video/a-view-from-inside-a-car-on-a-rainy-day-15814789/',
    tags:['flood-water','vehicle-through-water','brake-test','reduced-brake-effect','wet-brakes'],
-   note:'CARS4.15 strict-match. Embedded photographic freeze shows vehicles driving through flood water; phase 04 shows a real car passing through a flooded road, immediately framing the need to test the brakes afterwards.'
+   note:'CARS4.15 corrected phase 04: driver-perspective real footage shows the vehicle travelling through rain and standing water, placing the learner directly in the just-driven-through-water scenario before the brake-test instruction.'
   },
 
   {

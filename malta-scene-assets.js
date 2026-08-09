@@ -557,6 +557,57 @@
    note:'CARS4.10 strict-match. Driver POV shows a vehicle ahead plus fixed traffic-cone reference points, allowing the Replay to demonstrate exactly how the two-second following-gap check is applied.'
   },
 
+
+  {
+   sceneKey:'engineBrakingLowerGear',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/4707185/4707185-hd_1920_1080_24fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/4707185/4707185-hd_1920_1080_24fps.mp4','https://www.pexels.com/download/video/4707185/'],
+   poster:'https://images.pexels.com/videos/4707185/pexels-photo-4707185.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Ricky Esquivel',sourcePage:'https://www.pexels.com/video/shifting-gears-of-a-car-4707185/',
+   tags:['manual-gear-lever','manual-transmission','shifting','lower-gear','engine-braking','vehicle-control'],
+   note:'CARS4.25 strict-match. Real close-up footage of a manual gear lever makes the required action unambiguous: select a lower gear to obtain engine braking. Phases 01-03 use separate frozen real frames from this same dedicated footage; phase 04 shows the live gear-change action.'
+  },
+
+  {
+   sceneKey:'elderlyCrossingPatience',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/5970642/5970642-uhd_4096_2160_25fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/5970642/5970642-uhd_4096_2160_25fps.mp4','https://www.pexels.com/download/video/5970642/'],
+   poster:'https://images.pexels.com/videos/5970642/pexels-photo-5970642.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · cottonbro studio',sourcePage:'https://www.pexels.com/video/an-elderly-woman-crossing-the-street-5970642/',
+   tags:['elderly-pedestrian','senior-woman','crossing','crosswalk','walking','patience'],
+   note:'CARS6.24 strict-match. Real footage shows an elderly woman crossing a street; the lesson is to remain patient and allow an older pedestrian to cross in her own time. Phases 01-03 are real frozen frames from the dedicated clip and phase 04 is the live crossing.'
+  },
+
+  {
+   sceneKey:'sideRoadPedestriansWait',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/4791721/4791721-hd_1920_1080_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/4791721/4791721-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/4791721/'],
+   poster:'https://images.pexels.com/videos/4791721/canada-cars-city-footage-4791721.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · German Korb',sourcePage:'https://www.pexels.com/video/cars-stopping-on-a-t-road-4791721/',
+   tags:['t-road','junction','turns','pedestrians','people-crossing','crosswalk','yield','road-safety'],
+   note:'CARS6.4 strict-match. Real T-road footage combines turning traffic, a junction and pedestrians/people crossing; the Replay teaches the turning driver to wait rather than proceed through the pedestrian path. Phases 01-03 are real frozen frames from the clip and phase 04 is the live scene.'
+  },
+
+  {
+   sceneKey:'junctionSmallRidersVisibility',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/20408588/20408588-hd_1920_1080_50fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/20408588/20408588-hd_1920_1080_50fps.mp4','https://www.pexels.com/download/video/20408588/'],
+   poster:'https://images.pexels.com/videos/20408588/pexels-photo-20408588.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · David Channel',sourcePage:'https://www.pexels.com/video/a-city-street-with-motorcycles-and-cars-driving-down-it-20408588/',
+   tags:['intersection','motorcycles','motorcyclists','cars','mixed-traffic','busy-road','small-road-user'],
+   note:'CARS6.36 strict-match. The real mixed-traffic scene visibly places smaller motorcycles among cars near an urban junction, directly illustrating why riders are easier to miss. Phases 01-03 freeze three different real moments; phase 04 shows the traffic in motion.'
+  },
+
+  {
+   sceneKey:'sideRoadWatchMotorcycles',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/29469397/12685256_1920_1080_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/29469397/12685256_1920_1080_30fps.mp4','https://www.pexels.com/download/video/29469397/'],
+   poster:'https://images.pexels.com/videos/29469397/pexels-photo-29469397.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · NGUYỄN THÀNH NHƠN',sourcePage:'https://www.pexels.com/video/busy-rural-road-with-motorbikes-and-cars-29469397/',
+   tags:['crossroad','side-road','motorbikes','motorcycles','cars','traffic-flow','small-road-user'],
+   note:'CARS6.37 strict-match. A real crossroad/side-road scene contains motorcycles mixed with cars, making their small visual profile clear when checking before emerging. Phases 01-03 use distinct frozen real moments and phase 04 runs the live traffic.'
+  },
+
   {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',

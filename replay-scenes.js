@@ -2114,4 +2114,100 @@ global.ReplayEngine.registerScene({
  learning:{correctIt:'La regola dei due secondi serve a mantenere una distanza di sicurezza dal veicolo davanti.',correctEn:'The two-second rule is used to maintain a safe following distance from the vehicle ahead.'}
 });
 
+
+global.ReplayEngine.registerScene({
+ id:'MT_ENGINE_BRAKING_LOWER_GEAR_V1',category:'vehicle-control',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'engineBrakingLowerGear',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Engine braking — select a lower gear',accessibilityLabel:'Real close-up of a manual gear lever being shifted',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/4707185/4707185-hd_1920_1080_24fps.mp4',videoSources:['https://videos.pexels.com/video-files/4707185/4707185-hd_1920_1080_24fps.mp4','https://www.pexels.com/download/video/4707185/'],poster:'https://images.pexels.com/videos/4707185/pexels-photo-4707185.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Ricky Esquivel',sourcePage:'https://www.pexels.com/video/shifting-gears-of-a-car-4707185/'},
+ timeline:[
+  {at:.3,end:2.0,event:'observe',textIt:'Osserva la leva del cambio e la selezione della marcia',textEn:'Watch the gear lever and the gear selection'},
+  {at:2.1,end:4.0,event:'hazard',textIt:'Una marcia più alta riduce l’effetto del freno motore',textEn:'A higher gear gives less engine-braking effect'},
+  {at:4.1,end:6.2,event:'explain',textIt:'Seleziona una marcia più bassa per aumentare il freno motore',textEn:'Select a lower gear to increase engine braking'},
+  {at:6.3,end:9.5,event:'correct',textIt:'Freno motore: passa a una marcia più bassa',textEn:'Engine braking: change to a lower gear'}
+ ],
+ ui:{staticUntilFinal:true,useVideoFreezeFrames:true,hotspot:{left:50,top:67,radiusX:31,radiusY:24,instructionIt:'TOCCA LA LEVA DEL CAMBIO',instructionEn:'TAP THE GEAR LEVER',ariaIt:'Tocca la leva del cambio',ariaEn:'Tap the gear lever'},phases:[{},
+  {titleIt:'USA UNA MARCIA PIÙ BASSA',titleEn:'SELECT A LOWER GEAR',bodyIt:'Per ottenere freno motore devi scalare, non mettere in folle e non inserire una marcia più alta.',bodyEn:'To obtain engine braking, change down; do not select neutral or a higher gear.'},
+  {titleIt:'IL MOTORE AIUTA A RALLENTARE',titleEn:'THE ENGINE HELPS SLOW THE VEHICLE',bodyIt:'Con una marcia più bassa la resistenza del motore contribuisce a ridurre la velocità.',bodyEn:'In a lower gear, engine resistance helps reduce the vehicle speed.'},
+  {titleIt:'SCALA DI MARCIA',titleEn:'CHANGE DOWN',bodyIt:'La risposta corretta è inserire una marcia più bassa.',bodyEn:'The correct answer is to change to a lower gear.'}
+ ],phaseOptions:[{startRatio:.12,freeze:true},{startRatio:.38,freeze:true},{startRatio:.68,freeze:true},{startRatio:.06,autoplay:true,endRatio:.92}]},
+ coach:{missIt:'Guarda la leva del cambio: per usare il motore come freno devi aumentare o ridurre la marcia?',missEn:'Look at the gear lever: to use the engine as a brake, should you change up or down?',hitIt:'Esatto: una marcia più bassa produce freno motore.',hitEn:'Correct: a lower gear provides engine braking.'},
+ learning:{correctIt:'Per usare il motore come freno, inserisci una marcia più bassa.',correctEn:'To use the engine as a brake, select a lower gear.'}
+});
+
+global.ReplayEngine.registerScene({
+ id:'MT_ELDERLY_CROSSING_PATIENCE_V1',category:'vulnerable-road-users',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'elderlyCrossingPatience',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Elderly pedestrian crossing — be patient',accessibilityLabel:'Real elderly woman crossing a street at a pedestrian crossing',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/5970642/5970642-uhd_4096_2160_25fps.mp4',videoSources:['https://videos.pexels.com/video-files/5970642/5970642-uhd_4096_2160_25fps.mp4','https://www.pexels.com/download/video/5970642/'],poster:'https://images.pexels.com/videos/5970642/pexels-photo-5970642.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · cottonbro studio',sourcePage:'https://www.pexels.com/video/an-elderly-woman-crossing-the-street-5970642/'},
+ timeline:[
+  {at:.3,end:2.2,event:'observe',textIt:'Una persona anziana sta attraversando la strada',textEn:'An elderly person is crossing the road'},
+  {at:2.3,end:4.3,event:'hazard',textIt:'Può aver bisogno di più tempo per completare l’attraversamento',textEn:'She may need more time to complete the crossing'},
+  {at:4.4,end:6.6,event:'explain',textIt:'Non metterle fretta con clacson, motore o gesti',textEn:'Do not pressure her with the horn, engine or gestures'},
+  {at:6.7,end:10.0,event:'correct',textIt:'Sii paziente e lasciala attraversare con i suoi tempi',textEn:'Be patient and let her cross in her own time'}
+ ],
+ ui:{staticUntilFinal:true,useVideoFreezeFrames:true,hotspot:{left:38,top:50,radiusX:24,radiusY:38,instructionIt:'TOCCA LA PERSONA ANZIANA',instructionEn:'TAP THE ELDERLY PEDESTRIAN',ariaIt:'Tocca la persona anziana che sta attraversando',ariaEn:'Tap the elderly pedestrian who is crossing'},phases:[{},
+  {titleIt:'PUÒ AVERE BISOGNO DI PIÙ TEMPO',titleEn:'SHE MAY NEED MORE TIME',bodyIt:'Le persone anziane possono camminare più lentamente: non creare pressione.',bodyEn:'Older pedestrians may walk more slowly: do not put them under pressure.'},
+  {titleIt:'PAZIENZA, SENZA SOLLECITARLA',titleEn:'BE PATIENT — DO NOT RUSH HER',bodyIt:'Resta fermo e lascia che completi l’attraversamento in sicurezza con i suoi tempi.',bodyEn:'Remain stopped and let her complete the crossing safely in her own time.'},
+  {titleIt:'LASCIALA ATTRAVERSARE',titleEn:'ALLOW HER TO CROSS',bodyIt:'La risposta corretta è essere paziente e lasciarla attraversare con i suoi tempi.',bodyEn:'The correct answer is to be patient and allow her to cross in her own time.'}
+ ],phaseOptions:[{startRatio:.08,freeze:true},{startRatio:.40,freeze:true},{startRatio:.72,freeze:true},{startRatio:.05,autoplay:true,endRatio:.92}]},
+ coach:{missIt:'Concentrati sulla persona anziana: non devi sollecitarla, ma darle il tempo necessario.',missEn:'Focus on the elderly pedestrian: do not rush her; give her the time she needs.',hitIt:'Esatto: sii paziente e lascia che attraversi con i suoi tempi.',hitEn:'Correct: be patient and let her cross in her own time.'},
+ learning:{correctIt:'Quando persone anziane attraversano, sii paziente e lasciale attraversare con i loro tempi.',correctEn:'When elderly people are crossing, be patient and allow them to cross in their own time.'}
+});
+
+global.ReplayEngine.registerScene({
+ id:'MT_SIDE_ROAD_PEDESTRIANS_WAIT_V1',category:'pedestrian',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'sideRoadPedestriansWait',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Turning into a side road — wait for pedestrians',accessibilityLabel:'Real T-road junction with vehicles, a pedestrian crossing and people crossing',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/4791721/4791721-hd_1920_1080_30fps.mp4',videoSources:['https://videos.pexels.com/video-files/4791721/4791721-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/4791721/'],poster:'https://images.pexels.com/videos/4791721/canada-cars-city-footage-4791721.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · German Korb',sourcePage:'https://www.pexels.com/video/cars-stopping-on-a-t-road-4791721/'},
+ timeline:[
+  {at:.3,end:2.2,event:'observe',textIt:'Alla svolta, il percorso del veicolo incontra quello dei pedoni',textEn:'At the turn, the vehicle path crosses the pedestrians’ path'},
+  {at:2.3,end:4.4,event:'hazard',textIt:'Proseguire durante l’attraversamento mette i pedoni in pericolo',textEn:'Continuing while they cross puts pedestrians at risk'},
+  {at:4.5,end:6.8,event:'explain',textIt:'Prima completa la precedenza ai pedoni, poi termina la svolta',textEn:'First give way to pedestrians, then complete the turn'},
+  {at:6.9,end:10.0,event:'correct',textIt:'Aspetta che i pedoni abbiano attraversato',textEn:'Wait for the pedestrians to cross'}
+ ],
+ ui:{staticUntilFinal:true,useVideoFreezeFrames:true,hotspot:{left:50,top:64,radiusX:38,radiusY:24,instructionIt:'TOCCA L’AREA DI ATTRAVERSAMENTO',instructionEn:'TAP THE PEDESTRIAN PATH',ariaIt:'Tocca l’area dove i pedoni attraversano alla svolta',ariaEn:'Tap the area where pedestrians cross at the turn'},phases:[{},
+  {titleIt:'LA SVOLTA INCROCIA I PEDONI',titleEn:'THE TURN CROSSES THEIR PATH',bodyIt:'Se i pedoni stanno attraversando la strada laterale, non puoi completare la svolta davanti a loro.',bodyEn:'If pedestrians are crossing the side road, do not complete the turn across their path.'},
+  {titleIt:'FERMATI E ASPETTA',titleEn:'STOP AND WAIT',bodyIt:'Lascia che terminino l’attraversamento in sicurezza prima di proseguire.',bodyEn:'Let them finish crossing safely before you continue.'},
+  {titleIt:'ASPETTA CHE ATTRAVERSINO',titleEn:'WAIT FOR THEM TO CROSS',bodyIt:'La risposta corretta è aspettare che i pedoni abbiano attraversato.',bodyEn:'The correct answer is to wait for the pedestrians to cross.'}
+ ],phaseOptions:[{startRatio:.10,freeze:true},{startRatio:.36,freeze:true},{startRatio:.64,freeze:true},{startRatio:.05,autoplay:true,endRatio:.90}]},
+ coach:{missIt:'Guarda il percorso dei pedoni alla strada laterale: prima della svolta devi lasciarli passare.',missEn:'Look at the pedestrians’ path across the side road: before turning, you must let them pass.',hitIt:'Esatto: aspetta che abbiano attraversato e poi completa la svolta.',hitEn:'Correct: wait until they have crossed, then complete the turn.'},
+ learning:{correctIt:'Se stai svoltando a sinistra in una strada laterale e i pedoni stanno attraversando, aspetta che abbiano attraversato.',correctEn:'If you are turning left into a side road and pedestrians are crossing, wait for them to cross.'}
+});
+
+global.ReplayEngine.registerScene({
+ id:'MT_JUNCTION_SMALL_RIDERS_VISIBILITY_V1',category:'vulnerable-road-users',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'junctionSmallRidersVisibility',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Junction — motorcycles and cyclists are harder to see',accessibilityLabel:'Real mixed urban traffic with motorcycles among larger cars near a junction',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/20408588/20408588-hd_1920_1080_50fps.mp4',videoSources:['https://videos.pexels.com/video-files/20408588/20408588-hd_1920_1080_50fps.mp4','https://www.pexels.com/download/video/20408588/'],poster:'https://images.pexels.com/videos/20408588/pexels-photo-20408588.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · David Channel',sourcePage:'https://www.pexels.com/video/a-city-street-with-motorcycles-and-cars-driving-down-it-20408588/'},
+ timeline:[
+  {at:.3,end:2.2,event:'observe',textIt:'Cerca i motocicli tra le auto più grandi',textEn:'Look for the motorcycles among the larger cars'},
+  {at:2.3,end:4.4,event:'hazard',textIt:'La loro sagoma più piccola può confondersi nel traffico',textEn:'Their smaller profile can be lost in the traffic'},
+  {at:4.5,end:6.8,event:'explain',textIt:'Agli incroci controlla con attenzione proprio perché sono più difficili da vedere',textEn:'At junctions look carefully because they are harder to see'},
+  {at:6.9,end:10.0,event:'correct',textIt:'Motociclisti e ciclisti sono più difficili da vedere',textEn:'Motorcyclists and cyclists are harder to see'}
+ ],
+ ui:{staticUntilFinal:true,useVideoFreezeFrames:true,hotspot:{left:58,top:58,radiusX:34,radiusY:30,instructionIt:'TOCCA UN MOTOCICLO NEL TRAFFICO',instructionEn:'TAP A MOTORCYCLE IN THE TRAFFIC',ariaIt:'Tocca uno dei motocicli più piccoli tra le auto',ariaEn:'Tap one of the smaller motorcycles among the cars'},phases:[{},
+  {titleIt:'PIÙ PICCOLI NEL TRAFFICO',titleEn:'SMALLER IN THE TRAFFIC',bodyIt:'Moto e biciclette occupano meno spazio visivo rispetto a un’auto e possono essere nascoste più facilmente.',bodyEn:'Motorcycles and bicycles have a smaller visual profile than cars and can be hidden more easily.'},
+  {titleIt:'CERCALE ESPLICITAMENTE',titleEn:'LOOK SPECIFICALLY FOR THEM',bodyIt:'Prima di entrare o svoltare a un incrocio, controlla di nuovo per moto e biciclette.',bodyEn:'Before entering or turning at a junction, check again specifically for motorcycles and bicycles.'},
+  {titleIt:'SONO PIÙ DIFFICILI DA VEDERE',titleEn:'THEY ARE HARDER TO SEE',bodyIt:'La risposta corretta è che motociclisti e ciclisti sono più difficili da vedere.',bodyEn:'The correct answer is that motorcyclists and cyclists are harder to see.'}
+ ],phaseOptions:[{startRatio:.08,freeze:true},{startRatio:.34,freeze:true},{startRatio:.62,freeze:true},{startRatio:.04,autoplay:true,endRatio:.90}]},
+ coach:{missIt:'Confronta la dimensione visiva delle moto con le auto: agli incroci possono sfuggire più facilmente.',missEn:'Compare the visual size of motorcycles with cars: at junctions they are easier to miss.',hitIt:'Esatto: moto e biciclette sono più difficili da vedere.',hitEn:'Correct: motorcycles and bicycles are harder to see.'},
+ learning:{correctIt:'Agli incroci presta particolare attenzione a motociclisti e ciclisti perché sono più difficili da vedere.',correctEn:'At junctions, look particularly for motorcyclists and cyclists because they are harder to see.'}
+});
+
+global.ReplayEngine.registerScene({
+ id:'MT_SIDE_ROAD_WATCH_MOTORCYCLES_V1',category:'vulnerable-road-users',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'sideRoadWatchMotorcycles',visualStatus:'final-real-footage',replayTemplate:'standard-video',title:'Emerging from a side road — watch for motorcycles',accessibilityLabel:'Real crossroad with motorcycles and cars moving through the junction area',playbackRate:0.9,
+ media:{video:'https://videos.pexels.com/video-files/29469397/12685256_1920_1080_30fps.mp4',videoSources:['https://videos.pexels.com/video-files/29469397/12685256_1920_1080_30fps.mp4','https://www.pexels.com/download/video/29469397/'],poster:'https://images.pexels.com/videos/29469397/pexels-photo-29469397.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · NGUYỄN THÀNH NHƠN',sourcePage:'https://www.pexels.com/video/busy-rural-road-with-motorbikes-and-cars-29469397/'},
+ timeline:[
+  {at:.3,end:2.2,event:'observe',textIt:'Prima di uscire dalla strada laterale, cerca le moto nel traffico',textEn:'Before emerging from the side road, look for motorcycles in the traffic'},
+  {at:2.3,end:4.4,event:'hazard',textIt:'Una moto occupa poco spazio visivo e può essere nascosta da altri veicoli o oggetti',textEn:'A motorcycle has a small visual profile and can be hidden by vehicles or roadside objects'},
+  {at:4.5,end:6.8,event:'explain',textIt:'Controlla bene entrambi i lati e guarda una seconda volta prima di uscire',textEn:'Check both directions carefully and look again before emerging'},
+  {at:6.9,end:10.0,event:'correct',textIt:'Le moto sono piccole e difficili da vedere',textEn:'Motorcycles are small and hard to see'}
+ ],
+ ui:{staticUntilFinal:true,useVideoFreezeFrames:true,hotspot:{left:55,top:53,radiusX:40,radiusY:28,instructionIt:'TOCCA UN MOTOCICLO VICINO ALL’INCROCIO',instructionEn:'TAP A MOTORCYCLE NEAR THE CROSSROAD',ariaIt:'Tocca un motociclo nel traffico vicino alla strada laterale',ariaEn:'Tap a motorcycle in traffic near the side road'},phases:[{},
+  {titleIt:'PICCOLE E FACILI DA NASCONDERE',titleEn:'SMALL AND EASY TO HIDE',bodyIt:'Una moto può restare nascosta dietro un’auto, un albero, un palo o altri elementi mentre aspetti di uscire.',bodyEn:'A motorcycle can be hidden by a car, tree, pole or other objects while you wait to emerge.'},
+  {titleIt:'GUARDA, POI CONTROLLA DI NUOVO',titleEn:'LOOK — THEN CHECK AGAIN',bodyIt:'Prima di immetterti, fai una ricerca attenta delle moto in entrambe le direzioni.',bodyEn:'Before emerging, make a careful search for motorcycles in both directions.'},
+  {titleIt:'SONO PICCOLE E DIFFICILI DA VEDERE',titleEn:'THEY ARE SMALL AND HARD TO SEE',bodyIt:'La risposta corretta è che i motocicli sono piccoli e possono essere difficili da vedere.',bodyEn:'The correct answer is that motorcycles are small and can be hard to see.'}
+ ],phaseOptions:[{startRatio:.10,freeze:true},{startRatio:.38,freeze:true},{startRatio:.68,freeze:true},{startRatio:.05,autoplay:true,endRatio:.92}]},
+ coach:{missIt:'Quando aspetti di uscire da una strada laterale, pensa alle dimensioni della moto e a quanto facilmente può restare nascosta.',missEn:'When waiting to emerge from a side road, think about a motorcycle’s small size and how easily it can be hidden.',hitIt:'Esatto: le moto sono piccole e difficili da vedere, quindi devi cercarle con attenzione.',hitEn:'Correct: motorcycles are small and hard to see, so you must look carefully for them.'},
+ learning:{correctIt:'Quando aspetti di uscire da una strada laterale, controlla attentamente le moto perché sono piccole e difficili da vedere.',correctEn:'When waiting to emerge from a side road, watch carefully for motorcycles because they are small and hard to see.'}
+});
+
 })(window);

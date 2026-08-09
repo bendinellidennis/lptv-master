@@ -331,6 +331,37 @@
    required:['vehicle-ahead','fixed-reference','two-second-rule','safe-gap'],prohibited:['kerb-distance','blind-spot','mirror-only','reused-approved-video']
   },
 
+
+  {
+   key:'engineBrakingLowerGear',category:'vehicle-control',titleIt:'Freno motore: inserisci una marcia più bassa',titleEn:'Engine braking: select a lower gear',status:'ready',
+   questionIds:['CARS4.25'],expectedCorrect:[3],engineSceneId:'MT_ENGINE_BRAKING_LOWER_GEAR_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['manual-gear-lever','lower-gear','engine-braking','vehicle-control'],prohibited:['neutral','higher-gear','reverse','reused-approved-video']
+  },
+
+  {
+   key:'elderlyCrossingPatience',category:'vulnerable-road-users',titleIt:'Anziani che attraversano: pazienza',titleEn:'Elderly pedestrians crossing: be patient',status:'ready',
+   questionIds:['CARS6.24'],expectedCorrect:[1],engineSceneId:'MT_ELDERLY_CROSSING_PATIENCE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['elderly-pedestrian','crossing','patience','allow-time'],prohibited:['horn','rev-engine','wave-across','reused-approved-video']
+  },
+
+  {
+   key:'sideRoadPedestriansWait',category:'pedestrian',titleIt:'Svolta in strada laterale: aspetta i pedoni',titleEn:'Turning into side road: wait for pedestrians',status:'ready',
+   questionIds:['CARS6.4'],expectedCorrect:[3],engineSceneId:'MT_SIDE_ROAD_PEDESTRIANS_WAIT_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['junction','side-road','pedestrians-crossing','vehicle-waiting'],prohibited:['horn','wave-on','force-through','reused-approved-video']
+  },
+
+  {
+   key:'junctionSmallRidersVisibility',category:'vulnerable-road-users',titleIt:'Incrocio: motociclisti e ciclisti sono più difficili da vedere',titleEn:'Junction: riders are harder to see',status:'ready',
+   questionIds:['CARS6.36'],expectedCorrect:[2],engineSceneId:'MT_JUNCTION_SMALL_RIDERS_VISIBILITY_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['junction','motorcycles','mixed-traffic','small-road-user'],prohibited:['motorcycle-priority-always','empty-road','reused-approved-video']
+  },
+
+  {
+   key:'sideRoadWatchMotorcycles',category:'vulnerable-road-users',titleIt:'Uscita da strada laterale: cerca bene i motocicli',titleEn:'Emerging from side road: watch carefully for motorcycles',status:'ready',
+   questionIds:['CARS6.37'],expectedCorrect:[2],engineSceneId:'MT_SIDE_ROAD_WATCH_MOTORCYCLES_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['crossroad','side-road','motorcycles','small-hard-to-see'],prohibited:['motorcycle-always-priority','police-only','reused-approved-video']
+  },
+
   {
    key:'pedestrianHidden',
    category:'pedestrian',

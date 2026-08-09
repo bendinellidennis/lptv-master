@@ -655,6 +655,49 @@
    note:'CARS11.57 strict-match. 01-03 clearly show an amber signal on its own; phase 04 is a real close-up of the amber signal changing to red, reinforcing preparation to stop.'
   },
 
+
+
+  {
+   sceneKey:'noRightTurnSignMeaning',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/35672646/15116891_1080_1920_60fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/35672646/15116891_1080_1920_60fps.mp4','https://www.pexels.com/download/video/35672646/'],
+   poster:'https://images.pexels.com/videos/35672646/pexels-photo-35672646.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Ebahir',sourcePage:'https://www.pexels.com/video/snowy-winter-road-with-no-right-turn-sign-35672646/',
+   tags:['no-right-turn','prohibition-sign','road','car'],
+   note:'CARS11.10 strict-match. Real no-right-turn sign is clearly visible; phase 04 shows a car on the road with that exact prohibition sign.'
+  },
+  {
+   sceneKey:'redTrafficLightMeaning',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/4524964/4524964-hd_1920_1080_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/4524964/4524964-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/4524964/'],
+   poster:'https://images.pexels.com/videos/4524964/red-signal-red-traffic-light-red-traffic-signal-traffic-light-4524964.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Ashok kumar Shah',sourcePage:'https://www.pexels.com/video/red-traffic-light-4524964/',
+   tags:['red-light','traffic-signal','stop','road-safety'],
+   note:'CARS11.58 strict-match. Real red traffic signal fills the scene; the taught action is to stop behind the white stop line.'
+  },
+  {
+   sceneKey:'maximumSpeedLimitMeaning',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/12950311/12950311-hd_1080_1920_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/12950311/12950311-hd_1080_1920_30fps.mp4','https://www.pexels.com/download/video/12950311/'],
+   poster:'https://images.pexels.com/videos/12950311/pexels-photo-12950311.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Nothing Ahead',sourcePage:'https://www.pexels.com/video/car-passing-by-road-signs-12950311/',
+   tags:['maximum-speed-limit','40-kph','road-sign','legal-maximum'],
+   note:'CARS10.6 strict-match. A real MAX 40 KPH sign is clearly visible; the exact principle is that the displayed number is the maximum and must not be exceeded.'
+  },
+  {
+   sceneKey:'ballIntoRoadChildren',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/16436835/16436835-hd_1920_1080_24fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/16436835/16436835-hd_1920_1080_24fps.mp4','https://www.pexels.com/download/video/16436835/'],
+   poster:'https://images.pexels.com/videos/16436835/pexels-photo-16436835.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Ali Alcántara',sourcePage:'https://www.pexels.com/video/a-red-and-white-soccer-ball-rolling-on-the-street-16436835/',
+   tags:['ball','street','child-hazard','slow-down','prepare-stop'],
+   note:'CARS6.18 strict-match. The real video shows the exact hazard cue: a football rolling into the street. Replay teaching links that cue to a child possibly following it.'
+  },
+  {
+   sceneKey:'wheelchairZebraPrepareStop',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/3206945/3206945-uhd_3840_2160_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/3206945/3206945-uhd_3840_2160_30fps.mp4','https://www.pexels.com/download/video/3206945/'],
+   poster:'https://images.pexels.com/videos/3206945/free-video-3206945.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · George Morina',sourcePage:'https://www.pexels.com/video/traveling-a-street-in-central-london-3206945/',
+   tags:['wheelchair','crosswalk','pedestrian-crossing','traffic','prepare-stop'],
+   note:'CARS6.23 strict-match. Real London street footage is explicitly tagged with wheelchair, pedestrian crossing, traffic lights and vehicles, providing the exact vulnerable-road-user context.'
+  },
+
   {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',

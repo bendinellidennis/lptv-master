@@ -394,6 +394,34 @@
    required:['amber-light','prepare-stop','stop-line'],prohibited:['prepare-go','go-if-clear','reused-approved-video']
   },
 
+
+
+  {
+   key:'noRightTurnSignMeaning',category:'road-signs',titleIt:'Divieto di svolta a destra',titleEn:'No right turn',status:'ready',
+   questionIds:['CARS11.10'],expectedCorrect:[3],engineSceneId:'MT_NO_RIGHT_TURN_SIGN_MEANING_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['no-right-turn-sign','prohibition','right-turn'],prohibited:['right-bend','road-closed','reused-approved-video']
+  },
+  {
+   key:'redTrafficLightMeaning',category:'traffic-signals',titleIt:'Semaforo rosso: fermati dietro la linea',titleEn:'Red light: stop behind the line',status:'ready',
+   questionIds:['CARS11.58'],expectedCorrect:[0],engineSceneId:'MT_RED_TRAFFIC_LIGHT_MEANING_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['red-light','stop','stop-line'],prohibited:['go-if-clear','turn-left','reused-approved-video']
+  },
+  {
+   key:'maximumSpeedLimitMeaning',category:'speed-limits',titleIt:'Limite massimo: non superare il numero indicato',titleEn:'Maximum speed: do not exceed the number shown',status:'ready',
+   questionIds:['CARS10.6'],expectedCorrect:[3],engineSceneId:'MT_MAXIMUM_SPEED_LIMIT_MEANING_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['maximum-speed-limit-sign','number','legal-maximum'],prohibited:['advisory-speed','target-speed','reused-approved-video']
+  },
+  {
+   key:'ballIntoRoadChildren',category:'vulnerable-road-users',titleIt:'Palla in strada: aspettati un bambino',titleEn:'Ball in road: expect a child',status:'ready',
+   questionIds:['CARS6.18'],expectedCorrect:[2],engineSceneId:'MT_BALL_INTO_ROAD_CHILDREN_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['ball','road','children-risk','slow-ready-stop'],prohibited:['continue-speed','horn-only','reused-approved-video']
+  },
+  {
+   key:'wheelchairZebraPrepareStop',category:'vulnerable-road-users',titleIt:'Sedia a rotelle alla zebra: preparati a fermarti',titleEn:'Wheelchair at zebra: be prepared to stop',status:'ready',
+   questionIds:['CARS6.23'],expectedCorrect:[3],engineSceneId:'MT_WHEELCHAIR_ZEBRA_PREPARE_STOP_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['wheelchair','pedestrian-crossing','zebra-crossing','prepare-stop'],prohibited:['wave-across','continue','reused-approved-video']
+  },
+
   {
    key:'pedestrianHidden',
    category:'pedestrian',

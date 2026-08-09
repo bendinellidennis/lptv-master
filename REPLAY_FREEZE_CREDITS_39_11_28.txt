@@ -1,0 +1,32 @@
+MALTA DRIVING MASTER — REPLAY FREEZE SOURCE CREDITS — BUILD 39.11.28
+
+Pexels (free-to-use stock photos; source pages checked during QA)
+- msmRoutine — Ksenia Kartasheva — male driver reflected in side mirror
+- blindSpotDefinition — Jonathan Cooper — side mirror with following vehicle
+- uTurnShoulderCheck — Deybson Mallony — driver looking over shoulder
+- phoneDistractionDriving — Nazila Azimzada — handheld phone while driving in heavy rain
+- handsFreeDistraction — Ron Lach — professional driver wearing AirPods
+- phoneStopSafe — Artem Podrez — smartphone use inside stationary/parked vehicle
+- zebraWaitingStop — David Hinostroza — pedestrians on zebra crossing with vehicle waiting
+- largeVehicleTooClose — Juliana Polizel — close following view behind large goods vehicle
+- wetRoadFourSecondGap — Vladimír Sládek — vehicle ahead through rain-soaked windshield
+- rearFlashingAllowOvertake — Erik Mclean — headlights of following traffic reflected in car mirror
+- neverExceedSpeedLimit — Mykola Stepaniuk — European metric-style speed-limit sign on real road
+
+Wikimedia Commons / freely licensed photographic sources
+- cyclistSafePass — Hallgrimsson
+- largeVehicleFollowing — Steve Barnes
+- dazzledHeadlights — Chris Downer
+- duskLightsVisibility — Nabeel Syed
+- pedestrianWaveAcross — Mike Petrucci
+- overtakeLimitedView — Row17
+- twoSecondRuleGap — JoeNomi 1961
+- blueFlashingBeacons — Mattes
+- ambulanceFollowingMakeWay — Yvon Gallant — ambulance seen from behind in urban traffic
+- busRightSignalGiveWay — Basher Eyre
+- hornAlertPresence — Stephen McCulloch
+
+Existing approved photographic freezes preserved from 39.11.27
+- underInflatedSteeringBraking
+- tyrePressureWeeklyCheck
+- dippedHeadlightsPoorVisibility

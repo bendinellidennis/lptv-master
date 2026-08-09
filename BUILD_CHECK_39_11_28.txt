@@ -1,0 +1,36 @@
+MALTA DRIVING MASTER — BUILD CHECK 39.11.28
+
+BASE
+- Working base: 39.11.27
+- Stable reference: 39.11.26
+
+SCOPE COMPLETED
+- Global visual remediation of all 25 ready Replay scenes.
+- 22 defective Replay freezes replaced with pertinent real photographic images.
+- 3 already-approved photographic freezes preserved byte-for-byte.
+- 3 legacy Replay keys now have dedicated embedded images; no ready Replay uses the generic fallback.
+
+UNCHANGED / REGRESSION GUARD
+- Questions and answers: unchanged
+- Correct-answer mapping: unchanged
+- Replay scene mapping: unchanged
+- Coach logic/content: unchanged
+- Replay Engine flow / Continua behavior: unchanged
+- Approved phase-04 video definitions: unchanged
+- Executable app body after the embedded freeze registry: byte-identical to stable 39.11.26
+
+TECHNICAL RESULT — PASS
+- Freeze images embedded directly inside app-3994.js as data:image/jpeg;base64
+- No replay-freeze-inline.js
+- No external freeze URLs or fragile local runtime paths
+- No ready Replay mapped to generic fallback
+- Replaced images normalized to full-stage 16:9; approved PASS images preserved byte-for-byte
+- JavaScript syntax checks: PASS
+- Static dependency checks: PASS
+- Static HTTP root test: PASS
+- GitHub Pages repository-subpath emulation: PASS
+- Global automated audit: 246/246 PASS
+- Global visual audit: 25/25 PASS
+
+DELIVERY GATE
+STATUS: PASS — build approved for delivery as the completed Replay visual-remediation build.

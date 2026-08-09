@@ -1,0 +1,98 @@
+MALTA DRIVING MASTER — VISUAL QA AUDIT
+Build audited: 39.11.28
+
+BASELINE 39.11.27
+- Ready Replay scenes: 25
+- PASS photographic freeze: 3
+- FAIL technical placeholder: 19
+- FAIL generic fallback: 3
+
+RESULT 39.11.28
+- Ready Replay scenes audited: 25
+- PASS: 25
+- FAIL: 0
+- Technical placeholder: 0
+- Ready Replay using generic fallback: 0
+- Missing freeze: 0
+- Exact duplicate freeze among the 25 ready Replay: 0
+
+VISUAL AUDIT — 25/25 PASS
+01. CARS1.7 — msmRoutine — PASS
+    Fotografia reale con il volto del conducente chiaramente visibile nello specchio: controllo specchi coerente con MSM.
+02. CARS1.3 — blindSpotDefinition — PASS
+    Fotografia reale dello specchietto laterale con un veicolo presente: rende visivamente la zona non coperta dalla visione diretta.
+03. CARS1.2 — uTurnShoulderCheck — PASS
+    Fotografia reale del conducente che ruota la testa oltre la spalla: controllo finale prima della manovra.
+04. CARS1.12 — phoneDistractionDriving — PASS
+    Fotografia reale dall’abitacolo: smartphone visibile in mano, volante e carreggiata bagnata davanti.
+05. CARS1.13 — handsFreeDistraction — PASS
+    Fotografia reale con auricolare wireless chiaramente visibile: pertinente alla distrazione hands-free.
+06. CARS1.19 — phoneStopSafe — PASS
+    Fotografia reale del conducente che usa lo smartphone all’interno del veicolo fermo.
+07. CARS1.18 — cyclistSafePass — PASS
+    Fotografia reale di ciclista immerso nel traffico: il rischio di spazio laterale durante il sorpasso è chiaramente contestualizzato.
+08. CARS1.9 — largeVehicleFollowing — PASS
+    Fotografia reale da veicolo in marcia con camion davanti e distanza di seguito leggibile.
+09. CARS1.24 — dazzledHeadlights — PASS
+    Fotografia reale notturna con forte abbagliamento da fari in arrivo.
+10. CARS1.25 — duskLightsVisibility — PASS
+    Fotografia reale al crepuscolo con veicoli e fari accesi, coerente con visibilità ridotta.
+11. CARS2.4 — zebraWaitingStop — PASS
+    Fotografia reale di pedoni sulle strisce con veicolo in attesa: obbligo di fermarsi reso evidente.
+12. CARS2.6 — pedestrianWaveAcross — PASS
+    Fotografia reale di pedoni che attraversano in ambiente con più veicoli: rappresenta il pericolo di invitare ad attraversare senza poter garantire tutte le corsie.
+13. CARS1.10 — overtakeLimitedView — PASS
+    Fotografia reale di curva con visuale limitata: pertinente al divieto/rischio di sorpasso senza visibilità.
+14. CARS2.9 — twoSecondRuleGap — PASS
+    Fotografia reale POV di veicolo seguito sulla stessa corsia: distanza di sicurezza immediatamente valutabile.
+15. CARS2.14 — largeVehicleTooClose — PASS
+    Fotografia reale di grande veicolo molto vicino davanti, con visuale ostruita.
+16. CARS2.17 — wetRoadFourSecondGap — PASS
+    Fotografia reale attraverso parabrezza con pioggia, strada bagnata e veicolo davanti: distanza maggiore su bagnato contestualizzata.
+17. CARS2.20 — rearFlashingAllowOvertake — PASS
+    Fotografia reale con veicolo/fari provenienti da dietro e contesto specchio-strada, pertinente al veicolo che chiede spazio.
+18. CARS2.22 — neverExceedSpeedLimit — PASS
+    Fotografia reale di segnale circolare europeo di limite di velocità in contesto stradale.
+19. CARS2.30 — blueFlashingBeacons — PASS
+    Fotografia reale di mezzo di emergenza con lampeggianti blu chiaramente visibili.
+20. CARS2.31 — ambulanceFollowingMakeWay — PASS
+    Fotografia reale del retro di un’ambulanza inserita nel traffico urbano congestionato: mezzo di emergenza inequivocabile.
+21. CARS2.32 — busRightSignalGiveWay — PASS
+    Fotografia reale di autobus in traffico su strada a circolazione a sinistra, coerente con la manovra di rientro/uscita dalla fermata.
+22. CARS2.34 — hornAlertPresence — PASS
+    Fotografia reale di strada stretta/curva cieca tra siepi: uso del clacson per segnalare la propria presenza contestualizzato.
+23. CARS3.4 — underInflatedSteeringBraking — PASS
+    Freeze fotografico già approvato nella 39.11.27; preservato byte-per-byte.
+24. CARS3.8 — tyrePressureWeeklyCheck — PASS
+    Freeze fotografico già approvato nella 39.11.27; preservato byte-per-byte.
+25. CARS3.18 — dippedHeadlightsPoorVisibility — PASS
+    Freeze fotografico già approvato nella 39.11.27; preservato byte-per-byte.
+
+TECHNICAL / REGRESSION AUDIT
+- Automated audit: 246/246 PASS.
+- All local JavaScript files pass syntax validation.
+- 22 defective 39.11.27 freezes replaced; the 3 already-approved freezes are byte-identical.
+- All 25 ready Replay keys have a dedicated embedded JPEG freeze.
+- No ready Replay key resolves to __fallback.
+- Embedded image bytes match their packaged photographic assets.
+- app-3994.js executable body after the embedded registry is byte-identical to stable 39.11.26.
+- Questions, answers, correct-answer mapping, Coach, Replay Engine flow, Continua behavior and replay-scene mapping are unchanged.
+- All 25 approved phase-04 video definitions remain unchanged and present.
+- replay-freeze-inline.js is absent and not referenced.
+- Freeze runtime uses embedded data:image/jpeg;base64 entries; no external freeze URL/path is used.
+- Static HTTP dependency test from site root: PASS.
+- GitHub Pages repository-subpath emulation: PASS (all local index/CSS/JS dependencies resolve under a subdirectory).
+- Live deployment to the user’s GitHub account was not performed; compatibility was tested locally with static root + repository-subpath serving.
+
+FINAL DELIVERY GATE
+25/25 PASS
+0 placeholder
+0 ready generic fallback
+0 missing images
+01–03 photographic and pertinent for every ready Replay
+04 approved video definitions unchanged
+JavaScript PASS
+Static/GitHub-subpath compatibility PASS
+Core Replay/Coach/Continua regression guard PASS
+
+STATUS: APPROVED FOR DELIVERY

@@ -207,6 +207,37 @@
    required:['walking-or-cycling','cycling','urban','environment','lower-emissions'],prohibited:['sharp-acceleration','low-tyre-pressure','full-choke','reused-approved-video']
   },
 
+
+  {
+   key:'brakeFluidLowLevel',category:'vehicle-safety',titleIt:"Liquido freni: livello basso pericoloso",titleEn:"Brake fluid: dangerously low level",status:'ready',
+   questionIds:['CARS3.1'],expectedCorrect:[1],engineSceneId:'MT_BRAKE_FLUID_LOW_LEVEL_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['brake-fluid','fluid-reservoir','low-level','braking-system'],prohibited:['coolant-only','battery-water','antifreeze-only','reused-approved-video']
+  },
+
+  {
+   key:'ecoDrivingHelpEnvironment',category:'eco-driving',titleIt:"Ambiente: manutenzione, accelerazione dolce e velocità ridotta",titleEn:"Environment: maintenance, gentle acceleration and lower speed",status:'ready',
+   questionIds:['CARS3.23'],expectedCorrect:[0,1,4],engineSceneId:'MT_ECO_DRIVING_SERVICE_GENTLE_SPEED_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['driver-control','smooth-driving','gentle-acceleration','reduced-speed','vehicle-maintenance'],prohibited:['harsh-acceleration','speeding','leaded-fuel','reused-approved-video']
+  },
+
+  {
+   key:'vehicleEnvironmentalDamage',category:'environment',titleIt:"Veicoli: risorse, edifici e inquinamento atmosferico",titleEn:"Vehicles: resources, buildings and air pollution",status:'ready',
+   questionIds:['CARS3.27'],expectedCorrect:[0,1,5],engineSceneId:'MT_VEHICLE_ENVIRONMENTAL_HARM_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['urban-traffic','air-pollution','buildings','natural-resources','environmental-impact'],prohibited:['clean-air-only','empty-landscape','reused-approved-video']
+  },
+
+  {
+   key:'reduceEnvironmentalDamageDriving',category:'eco-driving',titleIt:"Guida ecologica: pianifica, frena per tempo, accelera dolcemente",titleEn:"Eco driving: plan, brake early, accelerate gently",status:'ready',
+   questionIds:['CARS3.28'],expectedCorrect:[1,2,3],engineSceneId:'MT_ECO_PLAN_BRAKE_ACCELERATE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['driver-view','plan-ahead','early-braking','gentle-acceleration','smooth-driving'],prohibited:['busy-route','harsh-acceleration','late-braking','reused-approved-video']
+  },
+
+  {
+   key:'avoidVeryShortJourneys',category:'eco-driving',titleIt:"Ambiente: evita tragitti molto brevi in auto",titleEn:"Environment: avoid very short car journeys",status:'ready',
+   questionIds:['CARS3.30'],expectedCorrect:[1],engineSceneId:'MT_AVOID_VERY_SHORT_CAR_JOURNEYS_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['vehicle-start','cold-engine','short-journey','fuel-use','pollution'],prohibited:['long-trip-only','walking-is-wrong','reused-approved-video']
+  },
+
   {
    key:'pedestrianHidden',
    category:'pedestrian',

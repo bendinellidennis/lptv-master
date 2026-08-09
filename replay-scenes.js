@@ -1413,4 +1413,204 @@ global.ReplayEngine.registerScene({
  learning:{correctIt:'Aiuta l’ambiente: cammina o usa la bicicletta quando puoi.',correctEn:'Help the environment: walk or cycle when you can.'}
 });
 
+
+global.ReplayEngine.registerScene({
+ id:'MT_BRAKE_FLUID_LOW_LEVEL_V1',
+ category:'vehicle-safety',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'brakeFluidLowLevel',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Brake fluid — low level is dangerous',
+ accessibilityLabel:'Real brake-fluid reservoir showing MIN and MAX level markings',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/6870344/6870344-uhd_3840_2160_30fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/6870344/6870344-uhd_3840_2160_30fps.mp4','https://www.pexels.com/download/video/6870344/'],
+  poster:'https://images.pexels.com/videos/6870344/pexels-photo-6870344.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Gustavo Fring',sourcePage:'https://www.pexels.com/video/a-mechanic-working-on-a-car-s-disc-brake-6870344/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Osserva il serbatoio del liquido freni e i riferimenti MIN e MAX',textEn:'Observe the brake-fluid reservoir and the MIN/MAX markings'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Un livello troppo basso può indicare un guasto',textEn:'A very low level can indicate a fault'},
+  {at:5.0,end:7.3,event:'explain',textIt:'Tra le opzioni, il liquido pericoloso se scende troppo è il LIQUIDO FRENI',textEn:'Among the options, the dangerous fluid if allowed to get too low is BRAKE FLUID'},
+  {at:7.5,end:11.2,event:'correct',textIt:'Un problema al liquido freni può compromettere seriamente la frenata',textEn:'A brake-fluid problem can seriously affect braking'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:39,top:45,radiusX:33,radiusY:28,instructionIt:'TOCCA IL SERBATOIO DEL LIQUIDO FRENI',instructionEn:'TAP THE BRAKE-FLUID RESERVOIR',ariaIt:'Tocca il serbatoio con i riferimenti MIN e MAX',ariaEn:'Tap the reservoir with MIN and MAX markings'},
+  phases:[
+   {},
+   {titleIt:'GUARDA MIN E MAX',titleEn:'LOOK AT MIN AND MAX',bodyIt:'Il livello del liquido freni deve rimanere nel campo previsto. Un calo anomalo richiede un controllo.',bodyEn:'Brake-fluid level must remain within its specified range. An abnormal drop requires checking.'},
+   {titleIt:'RISPOSTA: LIQUIDO FRENI',titleEn:'ANSWER: BRAKE FLUID',bodyIt:'Tra refrigerante, liquido freni, acqua batteria e antigelo, la risposta della domanda è LIQUIDO FRENI.',bodyEn:'Among coolant, brake fluid, battery water and antifreeze, the answer is BRAKE FLUID.'},
+   {titleIt:'PROTEGGI LA FRENATA',titleEn:'PROTECT BRAKING',bodyIt:'Se il livello è troppo basso, non ignorarlo: può indicare un problema capace di compromettere la frenata.',bodyEn:'If the level is too low, do not ignore it: it may indicate a problem that can compromise braking.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'Cerca il fluido direttamente collegato al sistema frenante.',
+  missEn:'Look for the fluid directly connected to the braking system.',
+  hitIt:'Esatto: un livello troppo basso del LIQUIDO FRENI è pericoloso.',
+  hitEn:'Correct: a very low BRAKE FLUID level is dangerous.'
+ },
+ learning:{correctIt:'Liquido freni basso: possibile guasto e frenata seriamente compromessa.',correctEn:'Low brake fluid: possible fault and seriously impaired braking.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_ECO_DRIVING_SERVICE_GENTLE_SPEED_V1',
+ category:'eco-driving',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'ecoDrivingHelpEnvironment',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Eco driving — service, gentle acceleration and lower speed',
+ accessibilityLabel:'Real driver holding the steering wheel while travelling on the road',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/31901316/13588857_3840_2160_30fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/31901316/13588857_3840_2160_30fps.mp4','https://www.pexels.com/download/video/31901316/'],
+  poster:'https://images.pexels.com/videos/31901316/pexels-photo-31901316.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Jabriel',sourcePage:'https://www.pexels.com/video/scenic-city-drive-at-sunset-from-car-dashboard-31901316/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Osserva una guida regolare e controllata',textEn:'Observe smooth, controlled driving'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Accelerazioni brusche e velocità maggiore fanno consumare di più',textEn:'Harsh acceleration and higher speed increase fuel use'},
+  {at:5.0,end:7.5,event:'explain',textIt:'Tre risposte: manutenzione corretta, accelerazione dolce e velocità ridotta',textEn:'Three answers: proper maintenance, gentle acceleration and lower speed'},
+  {at:7.7,end:11.3,event:'correct',textIt:'Una guida efficiente riduce consumo ed emissioni',textEn:'Efficient driving reduces fuel use and emissions'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:53,top:48,radiusX:38,radiusY:32,instructionIt:'TOCCA IL VOLANTE E IL CONTROLLO DELLA GUIDA',instructionEn:'TAP THE STEERING CONTROL',ariaIt:'Tocca il volante usato per una guida regolare',ariaEn:'Tap the steering wheel used for controlled driving'},
+  phases:[
+   {},
+   {titleIt:'AUTO IN ORDINE',titleEn:'KEEP THE VEHICLE SERVICED',bodyIt:'La corretta manutenzione aiuta il veicolo a funzionare in modo efficiente.',bodyEn:'Proper servicing helps the vehicle operate efficiently.'},
+   {titleIt:'DOLCE + PIÙ LENTO',titleEn:'GENTLE + SLOWER',bodyIt:'ACCELERAZIONE DOLCE e RIDUZIONE DELLA VELOCITÀ sono le altre due risposte corrette.',bodyEn:'GENTLE ACCELERATION and LOWER SPEED are the other two correct answers.'},
+   {titleIt:'TRE AZIONI INSIEME',titleEn:'THREE ACTIONS TOGETHER',bodyIt:'Manutenzione corretta + accelerazione dolce + velocità ridotta = meno consumo ed emissioni.',bodyEn:'Proper servicing + gentle acceleration + lower speed = less fuel use and emissions.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'Sono tre: manutenzione corretta, accelerazione dolce e riduzione della velocità.',
+  missEn:'There are three: proper servicing, gentle acceleration and lower speed.',
+  hitIt:'Esatto: manutenzione, accelerazione dolce e velocità ridotta.',
+  hitEn:'Correct: servicing, gentle acceleration and lower speed.'
+ },
+ learning:{correctIt:'Per aiutare l’ambiente: manutenzione corretta, accelera dolcemente e riduci la velocità.',correctEn:'To help the environment: service properly, accelerate gently and reduce speed.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_VEHICLE_ENVIRONMENTAL_HARM_V1',
+ category:'environment',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'vehicleEnvironmentalDamage',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Vehicle environmental harm — resources, buildings and air pollution',
+ accessibilityLabel:'Dense city buildings visible through heavy smog caused in part by urban traffic',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/14389224/14389224-uhd_3840_2160_30fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/14389224/14389224-uhd_3840_2160_30fps.mp4','https://www.pexels.com/download/video/14389224/'],
+  poster:'https://images.pexels.com/videos/14389224/active-life-air-pollution-bangladesh-busy-street-14389224.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Ferdous Hasan',sourcePage:'https://www.pexels.com/video/environmental-pollution-in-the-city-14389224/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Osserva la città avvolta dallo smog',textEn:'Observe the city covered by smog'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Il traffico stradale ha un costo ambientale',textEn:'Road traffic has an environmental cost'},
+  {at:5.0,end:7.5,event:'explain',textIt:'Tre effetti: consumo di risorse, danni agli edifici e inquinamento atmosferico',textEn:'Three effects: resource use, damage to buildings and air pollution'},
+  {at:7.7,end:11.4,event:'correct',textIt:'Ricorda le tre conseguenze negative richieste dalla domanda',textEn:'Remember the three negative consequences required by the question'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:51,top:46,radiusX:41,radiusY:34,instructionIt:'TOCCA LA CITTÀ NELLO SMOG',instructionEn:'TAP THE SMOGGY CITY',ariaIt:'Tocca gli edifici visibili attraverso l’inquinamento atmosferico',ariaEn:'Tap the buildings visible through air pollution'},
+  phases:[
+   {},
+   {titleIt:'RISORSE NATURALI',titleEn:'NATURAL RESOURCES',bodyIt:'I veicoli consumano carburanti, materiali ed energia: quindi utilizzano risorse naturali.',bodyEn:'Vehicles consume fuel, materials and energy, so they use natural resources.'},
+   {titleIt:'EDIFICI + ARIA',titleEn:'BUILDINGS + AIR',bodyIt:'Le altre risposte corrette sono DANNI AGLI EDIFICI e INQUINAMENTO ATMOSFERICO.',bodyEn:'The other correct answers are DAMAGE TO BUILDINGS and AIR POLLUTION.'},
+   {titleIt:'TRE IMPATTI',titleEn:'THREE IMPACTS',bodyIt:'Risorse naturali + edifici + aria: sono i tre effetti da selezionare.',bodyEn:'Natural resources + buildings + air are the three effects to select.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'Seleziona tre effetti negativi reali: risorse naturali, edifici e aria.',
+  missEn:'Select three real negative effects: natural resources, buildings and air.',
+  hitIt:'Esatto: consumo di risorse, danni agli edifici e inquinamento atmosferico.',
+  hitEn:'Correct: resource use, damage to buildings and air pollution.'
+ },
+ learning:{correctIt:'I veicoli consumano risorse, possono danneggiare edifici e contribuiscono all’inquinamento atmosferico.',correctEn:'Vehicles use resources, can damage buildings and contribute to air pollution.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_ECO_PLAN_BRAKE_ACCELERATE_V1',
+ category:'eco-driving',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'reduceEnvironmentalDamageDriving',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Eco driving — plan ahead, brake early, avoid harsh acceleration',
+ accessibilityLabel:'Real multi-lane road with traffic visible ahead for planning and smooth progress',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/5873175/5873175-uhd_3840_2160_24fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/5873175/5873175-uhd_3840_2160_24fps.mp4','https://www.pexels.com/download/video/5873175/'],
+  poster:'https://images.pexels.com/videos/5873175/pexels-photo-5873175.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Marta Wave',sourcePage:'https://www.pexels.com/video/video-of-a-person-driving-and-holding-the-steering-wheel-5873175/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Guarda lontano e pianifica quello che succede davanti',textEn:'Look well ahead and plan for what is happening in front'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Guidare senza pianificare porta più facilmente a frenate e accelerazioni brusche',textEn:'Failing to plan makes harsh braking and acceleration more likely'},
+  {at:5.0,end:7.5,event:'explain',textIt:'Tre azioni: pianifica, frena per tempo, evita accelerazioni brusche',textEn:'Three actions: plan ahead, brake in good time, avoid harsh acceleration'},
+  {at:7.7,end:11.4,event:'correct',textIt:'Mantieni una guida fluida per ridurre consumo ed emissioni',textEn:'Keep driving smooth to reduce fuel use and emissions'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:49,top:52,radiusX:42,radiusY:34,instructionIt:'TOCCA IL TRAFFICO DAVANTI',instructionEn:'TAP THE TRAFFIC AHEAD',ariaIt:'Tocca la strada e il traffico che devi osservare in anticipo',ariaEn:'Tap the road and traffic you should observe ahead'},
+  phases:[
+   {},
+   {titleIt:'PIANIFICA IN ANTICIPO',titleEn:'PLAN WELL AHEAD',bodyIt:'Leggere la strada prima permette di evitare correzioni improvvise.',bodyEn:'Reading the road early helps avoid sudden corrections.'},
+   {titleIt:'FRENA PER TEMPO',titleEn:'BRAKE IN GOOD TIME',bodyIt:'Rilascia e rallenta per tempo invece di arrivare a una frenata tardiva e brusca.',bodyEn:'Ease off and slow in good time instead of relying on late harsh braking.'},
+   {titleIt:'NIENTE ACCELERAZIONI BRUSCHE',titleEn:'AVOID HARSH ACCELERATION',bodyIt:'Le tre risposte corrette formano una guida fluida: pianifica, frena per tempo, accelera dolcemente.',bodyEn:'The three correct answers form smooth driving: plan, brake early and accelerate gently.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'Sono tre: pianifica in anticipo, frena per tempo ed evita accelerazioni brusche.',
+  missEn:'There are three: plan ahead, brake in good time and avoid harsh acceleration.',
+  hitIt:'Esatto: pianifica, frena per tempo ed evita accelerazioni brusche.',
+  hitEn:'Correct: plan ahead, brake in good time and avoid harsh acceleration.'
+ },
+ learning:{correctIt:'Guida fluida: pianifica in anticipo, frena per tempo ed evita accelerazioni brusche.',correctEn:'Smooth driving: plan ahead, brake in good time and avoid harsh acceleration.'}
+});
+
+
+global.ReplayEngine.registerScene({
+ id:'MT_AVOID_VERY_SHORT_CAR_JOURNEYS_V1',
+ category:'eco-driving',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
+ sceneKey:'avoidVeryShortJourneys',visualStatus:'final-real-footage',replayTemplate:'standard-video',
+ title:'Environment — avoid very short car journeys',
+ accessibilityLabel:'Cyclists commuting through the city as an alternative to a very short car journey',
+ playbackRate:0.9,
+ media:{
+  video:'https://videos.pexels.com/video-files/37898712/16079864_3840_2160_30fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/37898712/16079864_3840_2160_30fps.mp4','https://www.pexels.com/download/video/37898712/'],
+  poster:'https://images.pexels.com/videos/37898712/pexels-photo-37898712.jpeg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · Yura Forrat',sourcePage:'https://www.pexels.com/video/urban-cycling-on-a-busy-city-bridge-37898712/'
+ },
+ timeline:[
+  {at:.4,end:2.4,event:'observe',textIt:'Osserva i ciclisti: per un tragitto breve l’auto non è sempre necessaria',textEn:'Observe the cyclists: for a short journey the car is not always necessary'},
+  {at:2.6,end:4.8,event:'hazard',textIt:'Per tragitti molto brevi, usare l’auto aumenta inutilmente consumi ed emissioni',textEn:'For very short journeys, using the car unnecessarily increases fuel use and emissions'},
+  {at:5.0,end:7.3,event:'explain',textIt:'Per aiutare l’ambiente NON usare l’auto per tragitti molto brevi quando puoi evitarlo',textEn:'To help the environment, do NOT use the car for very short journeys when you can avoid it'},
+  {at:7.5,end:11.2,event:'correct',textIt:'Meglio camminare, pedalare o usare il trasporto pubblico quando è pratico',textEn:'Walk, cycle or use public transport when practical'}
+ ],
+ ui:{
+  staticUntilFinal:true,
+  hotspot:{left:50,top:48,radiusX:40,radiusY:31,instructionIt:'TOCCA IL QUADRO STRUMENTI ALL’AVVIAMENTO',instructionEn:'TAP THE DASHBOARD AT STARTUP',ariaIt:'Tocca il quadro strumenti dell’auto appena avviata',ariaEn:'Tap the instrument cluster as the car starts'},
+  phases:[
+   {},
+   {titleIt:'PARTENZA A MOTORE FREDDO',titleEn:'COLD-ENGINE START',bodyIt:'Un tragitto molto breve richiede comunque avviamento e riscaldamento del motore.',bodyEn:'A very short journey still requires starting and warming the engine.'},
+   {titleIt:'EVITA IL VIAGGIO IN AUTO',titleEn:'AVOID THE CAR JOURNEY',bodyIt:'La risposta da NON fare è usare il veicolo per tragitti molto brevi.',bodyEn:'The action you should NOT do is use the vehicle for very short journeys.'},
+   {titleIt:'SCEGLI UN’ALTERNATIVA',titleEn:'CHOOSE AN ALTERNATIVE',bodyIt:'Quando è pratico, cammina, pedala o usa il trasporto pubblico per i tragitti brevi.',bodyEn:'When practical, walk, cycle or use public transport for short journeys.'}
+  ],
+  phaseOptions:[{startRatio:.18,freeze:true},{startRatio:.38,freeze:true},{startRatio:.58,freeze:true},{startRatio:.12,autoplay:true,endRatio:.82}]
+ },
+ coach:{
+  missIt:'La domanda chiede cosa NON fare: usare l’auto per tragitti molto brevi.',
+  missEn:'The question asks what NOT to do: use the car for very short journeys.',
+  hitIt:'Esatto: evita di usare l’auto per tragitti molto brevi quando puoi.',
+  hitEn:'Correct: avoid using the car for very short journeys when you can.'
+ },
+ learning:{correctIt:'Per l’ambiente, evita l’auto per tragitti molto brevi quando esiste un’alternativa pratica.',correctEn:'For the environment, avoid the car for very short journeys when a practical alternative exists.'}
+});
+
 })(window);

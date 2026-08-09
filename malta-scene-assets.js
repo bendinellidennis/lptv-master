@@ -338,6 +338,62 @@
    note:"CARS3.29 strict-match. Real urban cycling. Replay teaches the exact database answer: walk or cycle when you can to avoid unnecessary emissions."
   },
 
+
+  {
+   sceneKey:'brakeFluidLowLevel',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/6870344/6870344-uhd_3840_2160_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/6870344/6870344-uhd_3840_2160_30fps.mp4','https://www.pexels.com/download/video/6870344/'],
+   poster:'https://images.pexels.com/videos/6870344/pexels-photo-6870344.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Gustavo Fring',
+   sourcePage:'https://www.pexels.com/video/a-mechanic-working-on-a-car-s-disc-brake-6870344/',
+   tags:['brake-fluid','braking-system','brake-maintenance','fluid-level','vehicle-safety'],
+   note:'CARS3.1 strict-match. Embedded photographic freeze shows the real brake-fluid reservoir and level markings; phase 04 uses dedicated real brake-service footage.'
+  },
+
+  {
+   sceneKey:'ecoDrivingHelpEnvironment',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/31901316/13588857_3840_2160_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/31901316/13588857_3840_2160_30fps.mp4','https://www.pexels.com/download/video/31901316/'],
+   poster:'https://images.pexels.com/videos/31901316/pexels-photo-31901316.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Jabriel',
+   sourcePage:'https://www.pexels.com/video/scenic-city-drive-at-sunset-from-car-dashboard-31901316/',
+   tags:['eco-driving','smooth-driving','gentle-acceleration','reduced-speed','driver-control'],
+   note:'CARS3.23 strict-match teaching sequence. Real driver-control freeze and smooth-drive video support the three correct habits: proper maintenance, gentle acceleration and lower speed.'
+  },
+
+  {
+   sceneKey:'vehicleEnvironmentalDamage',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/14389224/14389224-uhd_3840_2160_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/14389224/14389224-uhd_3840_2160_30fps.mp4','https://www.pexels.com/download/video/14389224/'],
+   poster:'https://images.pexels.com/videos/14389224/active-life-air-pollution-bangladesh-busy-street-14389224.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Ferdous Hasan',
+   sourcePage:'https://www.pexels.com/video/environmental-pollution-in-the-city-14389224/',
+   tags:['traffic','air-pollution','urban-buildings','environmental-damage','resources'],
+   note:'CARS3.27 strict-match. Smog over dense urban buildings makes the transport-related environmental impact visible; Replay teaches resources, building damage and air pollution.'
+  },
+
+  {
+   sceneKey:'reduceEnvironmentalDamageDriving',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/5873175/5873175-uhd_3840_2160_24fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/5873175/5873175-uhd_3840_2160_24fps.mp4','https://www.pexels.com/download/video/5873175/'],
+   poster:'https://images.pexels.com/videos/5873175/pexels-photo-5873175.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Marta Wave',
+   sourcePage:'https://www.pexels.com/video/video-of-a-person-driving-and-holding-the-steering-wheel-5873175/',
+   tags:['eco-driving','plan-ahead','early-braking','gentle-acceleration','smooth-driving'],
+   note:'CARS3.28 strict-match teaching sequence. Real road/driver visuals support planned, smooth progress: plan ahead, brake in good time and avoid harsh acceleration.'
+  },
+
+  {
+   sceneKey:'avoidVeryShortJourneys',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/37898712/16079864_3840_2160_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/37898712/16079864_3840_2160_30fps.mp4','https://www.pexels.com/download/video/37898712/'],
+   poster:'https://images.pexels.com/videos/37898712/pexels-photo-37898712.jpeg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · Yura Forrat',
+   sourcePage:'https://www.pexels.com/video/urban-cycling-on-a-busy-city-bridge-37898712/',
+   tags:['short-journey','alternative-travel','bicycle','cycling','eco-friendly-travel'],
+   note:'CARS3.30 phase 04 shows a clear practical alternative to a very short car journey: urban cycling.'
+  },
+
   {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',

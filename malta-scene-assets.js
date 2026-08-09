@@ -821,6 +821,42 @@
   },
 
   {
+   sceneKey:'rightBendImproveView',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/37630187/15950521_2160_3840_60fps.mp4',videoSources:['https://videos.pexels.com/video-files/37630187/15950521_2160_3840_60fps.mp4','https://www.pexels.com/download/video/37630187/'],
+   poster:'https://images.pexels.com/videos/37630187/pexels-photo-37630187.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Piotr Wojnowski',sourcePage:'https://www.pexels.com/video/aerial-view-of-scenic-countryside-road-37630187/',
+   tags:['right-hand-bend','keep-left','better-view','uk-road','winding-road','cars'],
+   note:'CARS4.28 strict-match. Real UK countryside road footage visibly shows a pronounced bend and traffic; the Replay highlights the left-side road position because keeping left improves the view around a right-hand bend.'
+  },
+  {
+   sceneKey:'rightBendKeepLeft',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/29353529/12650032_3840_2160_30fps.mp4',videoSources:['https://videos.pexels.com/video-files/29353529/12650032_3840_2160_30fps.mp4','https://www.pexels.com/download/video/29353529/'],
+   poster:'https://images.pexels.com/videos/29353529/pexels-photo-29353529.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · David Pickup | Advertising & Marketing 🇬🇧',sourcePage:'https://www.pexels.com/video/car-on-winding-countryside-road-on-overcast-day-29353529/',
+   tags:['right-hand-bend','keep-left','better-view','british-countryside','winding-road','car'],
+   note:'CARS4.29 strict-match. A real car approaches and travels through a winding British countryside road; the scene is used only to teach keeping left for the better view, not to make the bend faster.'
+  },
+  {
+   sceneKey:'dualCarriagewayKeepLeft',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/26617954/11975399_3840_2160_30fps.mp4',videoSources:['https://videos.pexels.com/video-files/26617954/11975399_3840_2160_30fps.mp4','https://www.pexels.com/download/video/26617954/'],
+   poster:'https://images.pexels.com/videos/26617954/fast-fast-cars-fast-moving-vehicles-m1-26617954.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · David Pickup | Advertising & Marketing 🇬🇧',sourcePage:'https://www.pexels.com/video/fast-cars-on-motorway-26617954/',
+   tags:['dual-carriageway','keep-left','overtaking-rule','uk-motorway','multiple-lanes','traffic'],
+   note:'CARS9.3 strict-match. Real UK motorway traffic provides left-driving, multi-lane context; Replay explicitly marks the normal left lane and explains that other lanes are for overtaking.'
+  },
+  {
+   sceneKey:'twoSecondMinimumGap',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/26616229/11974836_3840_2160_30fps.mp4',videoSources:['https://videos.pexels.com/video-files/26616229/11974836_3840_2160_30fps.mp4','https://www.pexels.com/download/video/26616229/'],
+   poster:'https://images.pexels.com/videos/26616229/a1-motorway-motorway-traffic-in-the-uk-three-lane-motorway-26616229.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · David Pickup | Advertising & Marketing 🇬🇧',sourcePage:'https://www.pexels.com/video/motorway-traffic-in-the-uk-26616229/',
+   tags:['vehicle-ahead','safe-gap','two-second-rule','uk-motorway','good-conditions','traffic'],
+   note:'CARS9.9 strict-match. Clear daytime UK motorway traffic shows vehicles travelling with visible space between them; Replay turns that visible gap into the minimum two-second rule in good conditions.'
+  },
+  {
+   sceneKey:'collisionStopAtScene',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/12901485/12901485-uhd_3840_2160_24fps.mp4',videoSources:['https://videos.pexels.com/video-files/12901485/12901485-uhd_3840_2160_24fps.mp4','https://www.pexels.com/download/video/12901485/'],
+   poster:'https://images.pexels.com/videos/12901485/pexels-photo-12901485.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · K',sourcePage:'https://www.pexels.com/video/accident-on-highway-12901485/',
+   tags:['collision','crash-scene','stop-at-scene','vehicle-damage','road-incident','stopped-traffic'],
+   note:'CARS6.59 strict-match. Real collision aftermath clearly shows a damaged vehicle stopped at the incident scene, directly supporting the first required action after a collision: stop at the scene.'
+  },
+
+  {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

@@ -505,6 +505,32 @@
   },
 
   {
+   key:'rightBendImproveView',category:'bends',titleIt:'Curva a destra: tieni la sinistra per vedere meglio',titleEn:'Right-hand bend: keep left to improve the view',status:'ready',
+   questionIds:['CARS4.28'],expectedCorrect:[3],engineSceneId:'MT_RIGHT_BEND_IMPROVE_VIEW_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['right-hand-bend','keep-left','better-view','uk-road'],prohibited:['keep-right','overtake','reused-approved-video']
+  },
+  {
+   key:'rightBendKeepLeft',category:'bends',titleIt:'Curva a destra: mantieni la sinistra',titleEn:'Right-hand bend: keep left',status:'ready',
+   questionIds:['CARS4.29'],expectedCorrect:[1],engineSceneId:'MT_RIGHT_BEND_KEEP_LEFT_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['right-hand-bend','keep-left','better-view','british-countryside'],prohibited:['keep-right','faster-bend','reused-approved-video']
+  },
+  {
+   key:'dualCarriagewayKeepLeft',category:'dual-carriageways',titleIt:'Doppia carreggiata: tieni la sinistra salvo sorpasso',titleEn:'Dual carriageway: keep left unless overtaking',status:'ready',
+   questionIds:['CARS9.3'],expectedCorrect:[1],engineSceneId:'MT_DUAL_CARRIAGEWAY_KEEP_LEFT_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['dual-carriageway','keep-left','overtaking-rule','uk-motorway'],prohibited:['keep-middle','undertake','reused-approved-video']
+  },
+  {
+   key:'twoSecondMinimumGap',category:'following-distance',titleIt:'Distanza minima: almeno due secondi',titleEn:'Minimum following gap: at least two seconds',status:'ready',
+   questionIds:['CARS9.9'],expectedCorrect:[3],engineSceneId:'MT_TWO_SECOND_MINIMUM_GAP_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['vehicle-ahead','safe-gap','two-second-rule','uk-motorway'],prohibited:['one-second','tailgating-as-correct','reused-approved-video']
+  },
+  {
+   key:'collisionStopAtScene',category:'accidents',titleIt:'Collisione: fermati sul luogo',titleEn:'Collision: stop at the scene',status:'ready',
+   questionIds:['CARS6.59'],expectedCorrect:[2],engineSceneId:'MT_COLLISION_STOP_AT_SCENE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['collision','crash-scene','stop-at-scene','vehicle-damage'],prohibited:['drive-away','insurance-first','reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

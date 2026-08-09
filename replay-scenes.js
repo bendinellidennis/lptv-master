@@ -1820,13 +1820,13 @@ global.ReplayEngine.registerScene({
  category:'alertness',country:'MT',licenceType:'LPTV',drivingSide:'left',countryPackId:'MT-LPTV',
  sceneKey:'mobilePhoneDrivingDistraction',visualStatus:'final-real-footage',replayTemplate:'standard-video',
  title:'Mobile phone while driving — distraction from the road',
- accessibilityLabel:'Real driver inside a moving car using a mobile phone while steering',
+ accessibilityLabel:'Real driver actively driving in rainy conditions while talking on a handheld mobile phone',
  playbackRate:0.9,
  media:{
-  video:'https://videos.pexels.com/video-files/6637301/6637301-hd_1920_1080_25fps.mp4',
-  videoSources:['https://videos.pexels.com/video-files/6637301/6637301-hd_1920_1080_25fps.mp4','https://www.pexels.com/download/video/6637301/'],
-  poster:'https://images.pexels.com/videos/6637301/pexels-photo-6637301.jpeg?auto=compress&dpr=1&h=750&w=1260',
-  credit:'Pexels · Gustavo Fring',sourcePage:'https://www.pexels.com/video/a-man-talking-on-the-cell-phone-inside-the-vehicle-6637301/'
+  video:'https://videos.pexels.com/video-files/5290305/5290305-hd_1920_1080_30fps.mp4',
+  videoSources:['https://videos.pexels.com/video-files/5290305/5290305-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/5290305/'],
+  poster:'https://images.pexels.com/videos/5290305/free-video-5290305.jpg?auto=compress&dpr=1&h=750&w=1260',
+  credit:'Pexels · faizan amjed',sourcePage:'https://www.pexels.com/video/man-answering-a-call-while-driving-5290305/'
  },
  timeline:[
   {at:.4,end:2.4,event:'observe',textIt:'Il conducente sta usando il telefono mentre è al volante',textEn:'The driver is using a phone while at the wheel'},

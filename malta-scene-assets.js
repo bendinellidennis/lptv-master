@@ -453,13 +453,13 @@
 
   {
    sceneKey:'mobilePhoneDrivingDistraction',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
-   video:'https://videos.pexels.com/video-files/6637301/6637301-hd_1920_1080_25fps.mp4',
-   videoSources:['https://videos.pexels.com/video-files/6637301/6637301-hd_1920_1080_25fps.mp4','https://www.pexels.com/download/video/6637301/'],
-   poster:'https://images.pexels.com/videos/6637301/pexels-photo-6637301.jpeg?auto=compress&dpr=1&h=750&w=1260',
-   credit:'Pexels · Gustavo Fring',
-   sourcePage:'https://www.pexels.com/video/a-man-talking-on-the-cell-phone-inside-the-vehicle-6637301/',
+   video:'https://videos.pexels.com/video-files/5290305/5290305-hd_1920_1080_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/5290305/5290305-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/5290305/'],
+   poster:'https://images.pexels.com/videos/5290305/free-video-5290305.jpg?auto=compress&dpr=1&h=750&w=1260',
+   credit:'Pexels · faizan amjed',
+   sourcePage:'https://www.pexels.com/video/man-answering-a-call-while-driving-5290305/',
    tags:['mobile-phone','driver','driving-distraction','attention-from-road','vehicle-control'],
-   note:'CARS1.15 corrected strict-match: phases 01-03 use three distinct real photographs clearly showing mobile-phone use at the steering wheel; phase 04 uses dedicated real footage explicitly described as a man inside a car using a mobile phone while driving.'
+   note:'CARS1.15 corrected strict-match: phases 01-03 use three distinct real photographs clearly showing mobile-phone use at the steering wheel; phase 04 uses dedicated real footage explicitly described as an adult male driving in rainy conditions while talking on a smartphone, with the road and active driving clearly visible.'
   },
 
   {

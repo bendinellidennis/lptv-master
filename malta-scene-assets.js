@@ -785,6 +785,42 @@
   },
 
   {
+   sceneKey:'hardShoulderRejoinSpeed',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/4320049/',videoSources:['https://www.pexels.com/download/video/4320049/'],
+   poster:'https://images.pexels.com/videos/4320049/caminhao-de-carga-4320049.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · SANDRO CALABREZI',sourcePage:'https://www.pexels.com/video/caminhao-de-carga-4320049/',
+   tags:['hard-shoulder','highway-entry','build-speed','merge','cargo-truck','highway'],
+   note:'CARS9.8 strict-match. Dedicated real footage shows a heavy vehicle entering a highway from the shoulder/entry road. Replay teaching focuses on building speed before safely merging, never moving out first and accelerating afterwards.'
+  },
+  {
+   sceneKey:'missedExitContinueNext',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/4035988/',videoSources:['https://www.pexels.com/download/video/4035988/'],
+   poster:'https://images.pexels.com/videos/4035988/pexels-photo-4035988.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · K',sourcePage:'https://www.pexels.com/video/close-up-shot-of-a-road-signs-4035988/',
+   tags:['highway','exit-sign','road-signs','continue-forward','next-exit'],
+   note:'CARS9.11 strict-match. Real highway footage prominently shows an EXIT sign and continuing traffic. The Replay makes the correct recovery explicit: continue forward to the next exit; never reverse or U-turn.'
+  },
+  {
+   sceneKey:'driverCausesSkid',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/36224050/',videoSources:['https://www.pexels.com/download/video/36224050/'],
+   poster:'https://images.pexels.com/videos/36224050/pexels-photo-36224050.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Harvey Tan Villarino',sourcePage:'https://www.pexels.com/video/white-car-drifting-on-winding-road-outdoors-36224050/',
+   tags:['driver','skid','sideways-motion','high-speed','curved-road','car-control'],
+   note:'CARS4.16 strict-match. The real vehicle is deliberately driven into a visible skid/sideways motion on a curved road, directly illustrating that driver input is the main cause of this skid rather than the road acting by itself.'
+  },
+  {
+   sceneKey:'shockStayAndReassure',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/6687814/',videoSources:['https://www.pexels.com/download/video/6687814/'],
+   poster:'https://images.pexels.com/videos/6687814/pexels-photo-6687814.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Pavel Danilyuk',sourcePage:'https://www.pexels.com/video/emt-holding-woman-s-hand-6687814/',
+   tags:['patient','paramedic','hand-holding','reassurance','stay-with-casualty','emergency-care'],
+   note:'CARS13.11 strict-match. Real emergency-care footage visibly shows the responder remaining beside the patient and holding her hand, matching both correct actions: do not leave the casualty alone and reassure them.'
+  },
+  {
+   sceneKey:'firstAidAbc',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/3981743/',videoSources:['https://www.pexels.com/download/video/3981743/'],
+   poster:'https://images.pexels.com/videos/3981743/pexels-photo-3981743.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Gustavo Fring',sourcePage:'https://www.pexels.com/video/people-practicing-bag-valve-mask-ventilation-on-dummy-3981743/',
+   tags:['first-aid','airway-management','breathing','cpr','circulation','resuscitation-training'],
+   note:'CARS13.8 strict-match. Real CPR/airway training visibly uses airway-management and ventilation equipment; Replay labels the full ABC sequence: Airway, Breathing, Circulation.'
+  },
+
+  {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

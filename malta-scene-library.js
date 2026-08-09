@@ -479,6 +479,32 @@
   },
 
   {
+   key:'hardShoulderRejoinSpeed',category:'dual-carriageways',titleIt:'Rientro dalla corsia di emergenza: accelera prima di immetterti',titleEn:'Rejoining from hard shoulder: build speed before merging',status:'ready',
+   questionIds:['CARS9.8'],expectedCorrect:[2],engineSceneId:'MT_HARD_SHOULDER_REJOIN_SPEED_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['hard-shoulder','highway-entry','build-speed','merge'],prohibited:['move-out-first','hazard-lights-merge','reused-approved-video']
+  },
+  {
+   key:'missedExitContinueNext',category:'dual-carriageways',titleIt:'Uscita mancata: prosegui fino alla successiva',titleEn:'Missed exit: continue to the next one',status:'ready',
+   questionIds:['CARS9.11'],expectedCorrect:[1],engineSceneId:'MT_MISSED_EXIT_CONTINUE_NEXT_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['highway','exit-sign','continue-forward','next-exit'],prohibited:['reverse','u-turn','hard-shoulder-reverse','reused-approved-video']
+  },
+  {
+   key:'driverCausesSkid',category:'skidding',titleIt:'Sbandata: il conducente è la causa principale',titleEn:'Skid: the driver is the main cause',status:'ready',
+   questionIds:['CARS4.16'],expectedCorrect:[1],engineSceneId:'MT_DRIVER_CAUSES_SKID_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['driver','skid','sideways-motion','high-speed','curved-road'],prohibited:['road-alone-causes-skid','weather-alone-causes-skid','reused-approved-video']
+  },
+  {
+   key:'shockStayAndReassure',category:'first-aid',titleIt:'Shock: resta con il ferito e rassicuralo',titleEn:'Shock: stay with the casualty and reassure them',status:'ready',
+   questionIds:['CARS13.11'],expectedCorrect:[0,1],engineSceneId:'MT_SHOCK_STAY_REASSURE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['patient','paramedic','hand-holding','reassurance','stay-with-casualty'],prohibited:['leave-alone','drink','cigarette','reused-approved-video']
+  },
+  {
+   key:'firstAidAbc',category:'first-aid',titleIt:'Primo soccorso ABC: vie aeree, respirazione, circolazione',titleEn:'First aid ABC: airway, breathing, circulation',status:'ready',
+   questionIds:['CARS13.8'],expectedCorrect:[0,1,4],engineSceneId:'MT_FIRST_AID_ABC_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['first-aid','airway-management','breathing','cpr','circulation'],prohibited:['broken-bones-priority','alert-only','reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

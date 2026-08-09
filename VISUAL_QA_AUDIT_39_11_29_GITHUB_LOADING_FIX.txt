@@ -1,0 +1,11 @@
+MALTA DRIVING MASTER — VISUAL/TECHNICAL QA AUDIT
+Build: 39.11.29
+
+STATUS: 25/25 Replay photographic set retained.
+
+Targeted regression fix after real GitHub Pages test:
+- CARS2.6 — pedestrianWaveAcross: PASS — 01-03 embedded photographic freeze, no video loading; 04 approved video.
+- CARS2.4 — zebraWaitingStop: PASS — 01-03 embedded photographic freeze, no video loading; 04 approved video.
+
+All other 23 Replay freeze images are unchanged from Build 39.11.28.
+No question/answer/Coach/mapping/video content changed.

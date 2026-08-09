@@ -1,0 +1,356 @@
+function replayCaptionVttData(scene,phase){
+ const ui=scene?.ui||{};
+ const phaseData=(ui.phases||[])[phase]||{};
+ const title=replayUi(phaseData.titleIt||'',phaseData.titleEn||'');
+ const body=replayUi(phaseData.bodyIt||'',phaseData.bodyEn||'');
+ const text=[title,body].filter(Boolean).join(' — ');
+ if(!text)return '';
+ const safe=text.replace(/-->/g,'→').replace(/\r?\n/g,' ');
+ const vtt=`WEBVTT\n\n00:00:00.000 --> 00:10:00.000\n${safe}\n`;
+ return `data:text/vtt;charset=utf-8,${encodeURIComponent(vtt)}`;
+}
+function replayStandardVideoScene(question,phase,scene){
+ const ui=scene?.ui||{};
+ const hotspot=ui.hotspot||{};
+ const options={...((ui.phaseOptions||[])[phase]||({0:{startRatio:0,autoplay:true,endRatio:.48},1:{startRatio:.36,freeze:true},2:{startRatio:.36,freeze:true},3:{startRatio:.48,autoplay:true,endRatio:.95}}[phase]))};
+ if(phase===3&&ui.staticUntilFinal){options.freeze=false;options.autoplay=true;}
+ const phaseMedia=(ui.phaseMedia||[])[phase]||null;
+ if(phaseMedia?.videoSources)options.videoSources=phaseMedia.videoSources;
+ const labels=[
+  replayUi('SCENA REALE · OSSERVAZIONE','REAL SCENE · OBSERVATION'),
+  replayUi('FREEZE TIME · PERICOLO','FREEZE TIME · HAZARD'),
+  replayUi('SPIEGAZIONE · REGOLA','EXPLANATION · RULE'),
+  replayUi('AZIONE CORRETTA · IN MOVIMENTO','CORRECT ACTION · IN MOTION')
+ ];
+ const instruction=replayUi(hotspot.instructionIt||'TOCCA IL PERICOLO',hotspot.instructionEn||'TAP THE HAZARD');
+ return `<section class="real-film-replay wave-across-replay standard-video-replay phase-${phase}${ui.staticUntilFinal?' static-until-final':''}" data-standard-video>
+  <div class="wave-across-stage">
+   ${phase<3?`<div class="replay-local-freeze" style="position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:#102f44"><img style="position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center;margin:0;padding:0" src="${(window.REPLAY_FREEZE_INLINE&&(window.REPLAY_FREEZE_INLINE[scene.sceneKey]||window.REPLAY_FREEZE_INLINE.__fallback))||''}" alt="${esc(replayUi(scene.accessibilityLabel||scene.title,scene.accessibilityLabel||scene.title))}" draggable="false"></div>`:ReplayEngine.renderVideoMarkup(scene.id,{label:replayUi(scene.accessibilityLabel||scene.title,scene.accessibilityLabel||scene.title),mediaOverride:phaseMedia||undefined,captionVtt:replayCaptionVttData(scene,phase),language:settings.lang==='it'?'it':'en'})}
+   <div class="real-film-top compact"><span class="real-film-badge"><i></i>${esc(labels[phase])}</span><span class="real-film-count">${String(phase+1).padStart(2,'0')} / 04</span></div>
+   ${phase===0?`<div class="wave-across-instruction">${esc(instruction)}</div>${replayHazardSurfaceHtml({instructionIt:hotspot.instructionIt||'TOCCA IL PERICOLO',instructionEn:hotspot.instructionEn||'TAP THE HAZARD',ariaIt:hotspot.ariaIt||hotspot.instructionIt||'Tocca il pericolo',ariaEn:hotspot.ariaEn||hotspot.instructionEn||'Tap the hazard',left:Number(hotspot.left||50),top:Number(hotspot.top||50)})}`:''}
+   ${replayStandardVideoOverlay(scene,phase)}
+  </div>
+  ${replayStandardBelowCaption(scene,phase)}
+  ${replayCoachVisibleHtml()}
+  <div class="real-film-controls four ${phase===0?'hazard-locked':''}">
+   ${['Trova','Pericolo','Spiega','Esegui'].map((name,i)=>`<button class="${phase===i?'active':''}" data-replay-stage="${i}" ${i>phase?'disabled aria-disabled="true"':''}><span>0${i+1}</span><strong>${esc(replayUi(name,['Find','Hazard','Explain','Perform'][i]))}</strong></button>`).join('')}
+  </div>
+  <template data-replay-phase-options>${esc(JSON.stringify(options))}</template>
+ </section>`;
+}
+function replayStrictUnavailableScene(question,selection){
+ const reason=selection?.validation?.reason||'scene-not-ready';
+ return `<section class="real-film-replay strict-unavailable-replay" data-strict-unavailable>
+  <div class="strict-unavailable-card">
+   <span>${esc(replayUi('SCENA REALE NON DISPONIBILE','REAL SCENE UNAVAILABLE'))}</span>
+   <strong>${esc(replayUi('Replay bloccato dal controllo qualità','Replay blocked by quality control'))}</strong>
+   <p>${esc(replayUi('Questa domanda non mostrerà disegni o video generici. Verrà riattivata solo con una scena reale approvata e perfettamente pertinente.','This question will not show drawings or generic video. It will be re-enabled only with an approved, directly relevant real scene.'))}</p>
+   <small>${esc(reason)}</small>
+  </div>
+ </section>`;
+}
+function errorReplayVisualHtml(question,step=0){
+ const phase=Math.min(3,step);
+ const selection=replaySceneSelection(question);
+ const approved=selection.entry?.status==='ready'&&selection.asset?.status==='approved'&&selection.scene?.media?.video;
+ if(question?.id==='CARS2.6'&&approved&&selection.scene?.id===PEDESTRIAN_WAVE_SCENE_ID){
+  return replayWaveAcrossScene(question,phase);
+ }
+ if(question?.id==='CARS2.4'&&approved&&selection.scene?.id===ZEBRA_WAITING_SCENE_ID){
+  return replayZebraWaitingScene(question,phase);
+ }
+ if(approved&&selection.scene?.replayTemplate==='standard-video'){
+  return replayStandardVideoScene(question,phase,selection.scene);
+ }
+ return replayStrictUnavailableScene(question,selection);
+}
+
+function errorReplayLessonText(question){
+ const scenario=errorReplayScenario(question);
+ return ['MALTA DRIVING MASTER — ERROR REPLAY','',`${question.id} — ${question.question}`,`IT: ${question.question_it||question.question}`,'',`${replayUi('Pericolo','Hazard')}: ${replayUi(scenario.dangerIt,scenario.dangerEn)}`,`${replayUi('Azione corretta','Correct action')}: ${replayCorrectAnswer(question)}`,`${replayUi('Motivo','Reason')}: ${settings.lang==='en'?(question.explanation||question.explanation_it):(question.explanation_it||question.explanation)}`,'',`Build ${BUILD_VERSION}`].join('\n');
+}
+function errorReplayPool(){
+ const ranked=zeroErrorRanked(true).map(item=>item.question),wrong=Q.filter(question=>(progress.wrong?.[question.id]||0)>0),unique=[];
+ [...wrong,...ranked].forEach(question=>{if(question&&!unique.some(item=>item.id===question.id))unique.push(question)});
+ return unique.slice(0,30);
+}
+function errorReplayViewHtml(){
+ const questionId=route.data?.questionId||errorReplay.lastQuestionId||'',question=errorReplayQuestion(questionId),pool=errorReplayPool();
+ const scenario=question?errorReplayScenario(question):null;
+ return [
+  `<div class="section-title replay-section-title"><div><span class="replay-title-symbol" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M16 12h18a6 6 0 0 1 6 6v16a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6V18a6 6 0 0 1 6-6h2Z"/><path d="m20 20 11 7-11 7Z"/></svg></span><div><h2>${esc(t('errorReplay'))}</h2><p>${esc(replayUi('Scene cinematiche e spiegazioni immediate','Cinematic scenes with immediate explanations'))}</p></div></div><span class="badge official">Build ${esc(BUILD_VERSION)}</span></div>`,
+  `<div class="replay-professional-note"><strong>${esc(replayUi('SIMULATORE VISIVO','VISUAL SIMULATOR'))}</strong><p>${esc(replayUi('Ogni scena evidenzia posizione dei veicoli, visuale, traiettoria e margine di sicurezza. La regola ufficiale resta il testo inglese della domanda.','Each scene highlights vehicle position, view, path and safety margin. The official rule remains the English question text.'))}</p></div><div class="replay-core-status"><span>REPLAY CORE ENGINE 1.0</span><strong>${esc(replayUi('Motore separato attivo','Separate engine active'))}</strong><small>${esc(replayUi('Scene, timeline e video ora sono gestiti fuori dal codice principale.','Scenes, timeline and video are now managed outside the main app code.'))}</small></div>${replayPackStatusHtml()}${replayLibraryCardHtml(question)}${replayAssetStatusHtml(question)}${replayDifficultyHtml(question)}${replayCoachCardHtml()}`,
+  `<div class="replay-metrics"><article><strong>${errorReplayViewedCount()}</strong><span>${esc(t('errorReplayViewed'))}</span></article><article><strong>${errorReplayCompletedCount()}</strong><span>${esc(t('errorReplayCompleted'))}</span></article><article><strong>${pool.length}</strong><span>${esc(t('errorReplayLibrary'))}</span></article></div>`,
+  `<div class="card replay-search-card"><input id="errorReplaySearch" placeholder="${esc(t('errorReplaySearch'))}" value="${esc(question?.id||'')}"><button class="btn" id="errorReplaySearchBtn">${esc(t('errorReplayOpenScene'))}</button></div>`,
+  question?`<section class="replay-main-card">
+   <div class="replay-question-head"><span>${esc(question.id)} · ${esc(replayUi(scenario.labelIt,scenario.labelEn))}</span><h2>${esc(question.question)}</h2><p>${esc(question.question_it||question.question)}</p></div>
+   ${errorReplayVisualHtml(question,errorReplayStep)}
+   <div class="replay-stage-nav four"><button class="${errorReplayStep===0?'active':''}" data-replay-stage="0"><span>01</span><strong>${esc(replayUi('Situazione','Situation'))}</strong><small>${esc(replayUi('Guarda la strada','Read the road'))}</small></button><button class="${errorReplayStep===1?'active':''}" data-replay-stage="1"><span>02</span><strong>${esc(replayUi('Pericolo','Hazard'))}</strong><small>${esc(replayUi('Scopri cosa non vedi','Reveal what is hidden'))}</small></button><button class="${errorReplayStep===2?'active':''}" data-replay-stage="2"><span>03</span><strong>${esc(replayUi('Spiegazione','Explanation'))}</strong><small>${esc(replayUi('Capisci la regola','Understand the rule'))}</small></button><button class="${errorReplayStep===3?'active':''}" data-replay-stage="3"><span>04</span><strong>${esc(replayUi('Azione','Action'))}</strong><small>${esc(replayUi('Guardala in movimento','Watch it in motion'))}</small></button></div>
+   <div class="replay-decision-panel"><article class="avoid"><span>${esc(replayUi('DA EVITARE','AVOID'))}</span><h3>${esc(replayUi(scenario.dangerIt,scenario.dangerEn))}</h3></article><article class="correct"><span>${esc(replayUi('AZIONE CORRETTA','CORRECT ACTION'))}</span><h3>${esc(replayCorrectAnswer(question))}</h3><p>${esc(settings.lang==='en'?(question.explanation||question.explanation_it):(question.explanation_it||question.explanation))}</p></article></div>
+   <div class="replay-controls"><select id="errorReplaySpeed"><option value="slow" ${errorReplay.speed==='slow'?'selected':''}>${esc(t('errorReplaySlow'))}</option><option value="normal" ${errorReplay.speed==='normal'?'selected':''}>${esc(t('errorReplayNormal'))}</option><option value="fast" ${errorReplay.speed==='fast'?'selected':''}>${esc(t('errorReplayFast'))}</option></select><button class="btn" id="errorReplayPlay">${esc(errorReplayStep>=2?replayUi('Rivedi dall’inizio','Replay from start'):replayUi('Avvia analisi','Start analysis'))}</button><button class="btn secondary" id="errorReplayNext">${esc(replayUi('Passaggio successivo','Next stage'))}</button></div>
+   <div class="replay-actions"><button class="btn" data-replay-practise="${esc(question.id)}">${esc(t('errorReplayPractise'))}</button><button class="btn secondary" data-replay-ai="${esc(question.id)}">${esc(t('errorReplayUnderstand'))}</button></div>
+   <div class="replay-share-actions"><button class="btn" data-replay-share="${esc(question.id)}">${esc(t('errorReplayShare'))}</button><button class="btn secondary" data-replay-copy="${esc(question.id)}">${esc(t('errorReplayCopy'))}</button></div>
+  </section>`:`<div class="card replay-empty"><p>${esc(t('errorReplayNoQuestion'))}</p></div>`,
+  `<div class="section-title"><div><h2>${esc(t('errorReplayLibrary'))}</h2><p>${esc(replayUi('Seleziona una domanda per aprire la ricostruzione tecnica','Select a question to open its technical reconstruction'))}</p></div><strong>${pool.length}</strong></div>`,
+  `<div class="replay-library-grid">${pool.length?pool.map(item=>{const s=errorReplayScenario(item);return `<button data-replay-open="${esc(item.id)}"><span>${esc(item.id)} · ${esc(replayUi(s.labelIt,s.labelEn))}</span><strong>${esc(item.question)}</strong><small>${esc(item.question_it||item.question)}</small></button>`}).join(''):`<p>${esc(t('errorReplayNoQuestion'))}</p>`}</div>`
+ ].join('');
+}
+function errorReplayOpen(id){
+ const question=errorReplayQuestion(id);
+ if(!question){toast(t('noResults'));return}
+ errorReplayStep=0;
+ replayCoachFeedback=null;
+ errorReplayMarkViewed(id);
+ try{
+  go('errorreplay',{questionId:id});
+ }catch(err){
+  console.error('Error Replay navigation fallback',err);
+  route={name:'errorreplay',data:{questionId:id}};
+  try{history.pushState({name:'errorreplay',data:{questionId:id}},'','#errorreplay')}catch(_){}
+  render();
+ }
+}
+function errorReplaySearch(){const value=cleanProfileValue($('#errorReplaySearch')?.value,180).toLowerCase();if(!value)return;const question=Q.find(item=>item.id.toLowerCase()===value)||Q.find(item=>(item.question+' '+(item.question_it||'')).toLowerCase().includes(value));if(!question)return toast(t('noResults'));errorReplayOpen(question.id)}
+function renderReplayStable(){
+ const anchor=screen.querySelector('[data-real-film]')||screen.querySelector('.replay-main-card');
+ const anchorTop=anchor?anchor.getBoundingClientRect().top:null;
+ render({preserveScroll:true});
+ if(anchorTop===null)return;
+ requestAnimationFrame(()=>{
+  const nextAnchor=screen.querySelector('[data-real-film]')||screen.querySelector('.replay-main-card');
+  if(!nextAnchor)return;
+  const delta=nextAnchor.getBoundingClientRect().top-anchorTop;
+  if(Math.abs(delta)>.5)window.scrollBy(0,delta);
+ });
+}
+function errorReplayNextStep(questionId){errorReplayStep=Math.min(3,errorReplayStep+1);if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);renderReplayStable()}
+function errorReplayPlay(questionId){
+ if(errorReplayTimer){clearInterval(errorReplayTimer);errorReplayTimer=null}
+ if(errorReplayStep===0){
+  toast(replayUi(
+   'Prima individua il pericolo nella scena e premi Continua.',
+   'Find the hazard in the scene and press Continue first.'
+  ));
+  return;
+ }
+ if(errorReplayStep>=3)errorReplayStep=1;
+ const speed=$('#errorReplaySpeed')?.value||errorReplay.speed||'normal';errorReplay.speed=speed;errorReplaySave();
+ const delay=speed==='slow'?2300:speed==='fast'?900:1500;
+ errorReplayTimer=setInterval(()=>{errorReplayStep++;if(errorReplayStep>=3){errorReplayStep=3;clearInterval(errorReplayTimer);errorReplayTimer=null;errorReplayMarkCompleted(questionId)}renderReplayStable()},delay);
+}
+function bindErrorReplay(){
+ const questionId=route.data?.questionId||errorReplay.lastQuestionId||'';
+ const question=errorReplayQuestion(questionId);
+
+ if(questionId)errorReplayMarkViewed(questionId);
+
+ const searchButton=$('#errorReplaySearchBtn');
+ if(searchButton)searchButton.onclick=errorReplaySearch;
+
+ const search=$('#errorReplaySearch');
+ if(search){
+  search.onkeydown=event=>{
+   if(event.key==='Enter')errorReplaySearch();
+  };
+ }
+
+ const playButton=$('#errorReplayPlay');
+ if(playButton)playButton.onclick=()=>errorReplayPlay(questionId);
+
+ const nextButton=$('#errorReplayNext');
+ if(nextButton){
+  nextButton.onclick=()=>{
+   // Stage 01 must be completed by finding the hazard.
+   if(errorReplayStep===0){
+    toast(replayUi(
+     'Prima individua il pericolo nella scena.',
+     'Find the hazard in the scene first.'
+    ));
+    return;
+   }
+   if(errorReplayStep===1||errorReplayStep===2){
+    toast(replayUi(
+     'Premi Continua nella scena.',
+     'Press Continue in the scene.'
+    ));
+    return;
+   }
+   errorReplayNextStep(questionId);
+  };
+ }
+
+ const speed=$('#errorReplaySpeed');
+ if(speed){
+  speed.onchange=()=>{
+   errorReplay.speed=speed.value;
+   errorReplaySave();
+  };
+ }
+
+ screen.querySelectorAll('[data-replay-stage]').forEach(button=>{
+  button.onclick=()=>{
+   if(button.disabled||button.getAttribute('aria-disabled')==='true'){
+    toast(replayUi(
+     'Prima individua il pericolo.',
+     'Find the hazard first.'
+    ));
+    return;
+   }
+
+   const requested=Number(button.dataset.replayStage)||0;
+
+   if(requested>errorReplayStep){
+    toast(replayUi(
+     'Usa Continua per passare alla fase successiva.',
+     'Use Continue to move to the next stage.'
+    ));
+    return;
+   }
+
+   if(errorReplayStep===0&&requested>0){
+    toast(replayUi(
+     'Prima individua il pericolo nella scena.',
+     'Find the hazard in the scene first.'
+    ));
+    return;
+   }
+
+   errorReplayStep=requested;
+   if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);
+   renderReplayStable();
+  };
+ });
+
+ const phaseContinue=screen.querySelector('[data-replay-phase-continue]');
+ if(phaseContinue){
+  phaseContinue.onclick=event=>{
+   event.preventDefault();
+   event.stopPropagation();
+   const target=Number(phaseContinue.dataset.replayPhaseContinue);
+   if(!Number.isFinite(target)||target!==errorReplayStep+1)return;
+   errorReplayStep=Math.min(3,target);
+   if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);
+   replayCoachFeedback=null;
+   renderReplayStable();
+  };
+ }
+
+ const replayPlayer=$('[data-replay-engine-player]');
+ if(replayPlayer){
+  const sceneId=replayPlayer.dataset.replayEnginePlayer||REPLAY_ACTION_SCENE_ID;
+  let phaseOptions={};
+  const optionsTemplate=screen.querySelector('[data-replay-phase-options]');
+  if(optionsTemplate){try{phaseOptions=JSON.parse(optionsTemplate.textContent||'{}')}catch(_){phaseOptions={}}}
+  ReplayEngine.mount(replayPlayer,sceneId,{
+   language:settings.lang==='it'?'it':'en',
+   playbackRate:errorReplay.speed==='slow'?.68:errorReplay.speed==='fast'?1:.82,
+   ...phaseOptions
+  });
+ }
+
+ const hazardSurface=$('[data-hazard-surface]');
+
+ if(hazardSurface&&question){
+  replayPerceptionStartedAt=performance.now();
+
+  const clearAttempt=()=>{
+   hazardSurface.querySelectorAll('.hazard-tap-marker').forEach(node=>node.remove());
+   hazardSurface.querySelector('.hazard-inline-feedback')?.remove();
+  };
+
+  const renderInlineFeedback=(feedback,hit)=>{
+   const panel=document.createElement('div');
+   panel.className=`hazard-inline-feedback ${hit?'success':'warning'}`;
+
+   const heading=hit
+    ?replayUi('Pericolo individuato','Hazard identified')
+    :replayUi('Non è questo il punto','This is not the point');
+
+   const isWaveAcross=question?.id==='CARS2.6';
+   const isZebraWaiting=question?.id==='CARS2.4';
+   const activeScene=replaySceneSelection(question).scene;
+   const instruction=hit
+    ?(isWaveAcross?replayUi('Hai individuato il pedone e il punto in cui un gesto potrebbe essere frainteso.','You identified the pedestrian and where a gesture could be misunderstood.'):isZebraWaiting?replayUi('Hai individuato i pedoni in attesa: ora devi rallentare e prepararti a fermarti.','You identified the waiting pedestrians: now slow down and prepare to stop.'):activeScene?.coach?replayUi(activeScene.coach.hitIt||'Pericolo individuato.',activeScene.coach.hitEn||'Hazard identified.'):replayUi('Pericolo individuato.','Hazard identified.'))
+    :(isWaveAcross?replayUi('Tocca il pedone e controlla anche il traffico che potrebbe arrivare dalle altre corsie.','Tap the pedestrian and also check traffic that may approach from other lanes.'):isZebraWaiting?replayUi('Tocca i pedoni in attesa vicino all’attraversamento.','Tap the pedestrians waiting near the crossing.'):activeScene?.coach?replayUi(activeScene.coach.missIt||'Osserva meglio la scena.','Look more carefully at the scene.'):replayUi('Osserva meglio la scena.','Look more carefully at the scene.'));
+
+   panel.innerHTML=`
+    <strong>${esc(heading)}</strong>
+    <span>${esc(instruction)}</span>
+    ${feedback?`
+     <div class="hazard-inline-coach ${esc(feedback.tone||'info')}">
+      <small>${esc(replayUi('COACH DINAMICO','DYNAMIC COACH'))}</small>
+      <b>${esc(feedback.title)}</b>
+      <p>${esc(feedback.body)}</p>
+     </div>`:''}
+    ${hit?`<button type="button" class="hazard-continue-button" data-hazard-continue>
+     ${esc(replayUi('Continua','Continue'))}<span aria-hidden="true">→</span>
+    </button>`:''}
+   `;
+
+   hazardSurface.appendChild(panel);
+
+   const continueButton=panel.querySelector('[data-hazard-continue]');
+   if(continueButton){
+    continueButton.onclick=continueEvent=>{
+     continueEvent.preventDefault();
+     continueEvent.stopPropagation();
+     errorReplayStep=1;
+     renderReplayStable();
+    };
+   }
+  };
+
+  hazardSurface.onclick=event=>{
+   event.preventDefault();
+   event.stopPropagation();
+
+   if(hazardSurface.dataset.resolved==='true')return;
+
+   clearAttempt();
+   hazardSurface.classList.remove('hazard-missed','hazard-found');
+
+   const rect=hazardSurface.getBoundingClientRect();
+   const x=(event.clientX-rect.left)/rect.width;
+   const y=(event.clientY-rect.top)/rect.height;
+
+   // Calibrated to the actual observation image:
+   // road horizon / loss of full opposing-lane visibility.
+   const isWaveAcross=question?.id==='CARS2.6';
+   const isZebraWaiting=question?.id==='CARS2.4';
+   const activeScene=replaySceneSelection(question).scene;
+   const sceneHotspot=activeScene?.ui?.hotspot||null;
+   const targetX=sceneHotspot?Number(sceneHotspot.left||50)/100:(isWaveAcross||isZebraWaiting)?.50:.53;
+   const targetY=sceneHotspot?Number(sceneHotspot.top||50)/100:(isWaveAcross||isZebraWaiting)?.58:.47;
+   const radiusX=sceneHotspot?Number(sceneHotspot.radiusX||22)/100:(isWaveAcross||isZebraWaiting)?.28:.20;
+   const radiusY=sceneHotspot?Number(sceneHotspot.radiusY||20)/100:(isWaveAcross||isZebraWaiting)?.24:.16;
+
+   const dx=(x-targetX)/radiusX;
+   const dy=(y-targetY)/radiusY;
+   const hit=(dx*dx+dy*dy)<=1;
+   const elapsed=Math.max(
+    120,
+    Math.round(performance.now()-replayPerceptionStartedAt)
+   );
+
+   const perception=errorReplay.perception;
+   perception.attempts+=1;
+
+   const marker=document.createElement('span');
+   marker.className=`hazard-tap-marker ${hit?'hit':'miss'}`;
+   marker.style.left=`${Math.max(3,Math.min(97,x*100))}%`;
+   marker.style.top=`${Math.max(3,Math.min(97,y*100))}%`;
+   hazardSurface.appendChild(marker);
+
+   const scene=replaySceneSelection(question).scene;
+   replayCoachFeedback=window.ReplayCoach?.coachMessage(
+    question,
+    scene,
+    {hit,elapsed,x,y},
+    settings.lang==='it'?'it':'en'
+   )||null;
+
+   if(hit){
+    perception.hits+=1;
+    perception.totalMs+=elapsed;
+    perception.bestMs=perception.bestMs
+     ?Math.min(perception.bestMs,elapsed)

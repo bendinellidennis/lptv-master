@@ -1,3 +1,4 @@
+/* 39.12.16 Replay75 — five new strict real-media assets. */
 /* 39.12.15 Replay70 — five new strict real-media assets. */
 /* 39.12.13 Replay60 — five new strict sign/signal assets. */
 
@@ -739,6 +740,48 @@
    poster:'https://images.pexels.com/videos/5786587/pexels-photo-5786587.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Tom Fisk',sourcePage:'https://www.pexels.com/video/vehicles-moving-on-a-highway-5786587/',
    tags:['vehicle-ahead','following-distance','safe-gap','traffic','pov'],
    note:'CARS2.12 strict-match. Phase 01-03 use a real driver-view photograph showing substantial space to vehicles ahead; phase 04 uses real POV traffic footage so the learner sees the correct alternative to following too closely.'
+  },
+
+
+  {
+   sceneKey:'brakeLightsSignal',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/4099070/4099070-hd_1920_1080_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/4099070/4099070-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/4099070/'],
+   poster:'https://images.pexels.com/videos/4099070/pexels-photo-4099070.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · TYPHOON BRO',sourcePage:'https://www.pexels.com/video/balloon-hot-air-balloons-balloon-fiesta-4099070/',
+   tags:['brake-lights','rear-vehicle','slowing-stopping','signal','stop-lights','traffic'],
+   note:'CARS10.25 strict-match. The real rear view clearly shows the vehicle ahead with its brake/stop lights illuminated; phase 04 keeps the same real traffic context in motion.'
+  },
+  {
+   sceneKey:'hazardLightsSuddenSlowdown',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/5004303/5004303-hd_1920_1080_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/5004303/5004303-hd_1920_1080_30fps.mp4','https://www.pexels.com/download/video/5004303/'],
+   poster:'https://images.pexels.com/videos/5004303/norway-oslo-5004303.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Joshua Miranda',sourcePage:'https://www.pexels.com/video/vehicles-traveling-on-expressway-while-raining-5004303/',
+   tags:['dual-carriageway','hazard-lights','traffic-ahead','sudden-slowing','expressway','traffic'],
+   note:'CARS9.4 strict-match. Real expressway traffic footage is explicitly indexed with hazard lights and shows traffic ahead in a fast-road environment, matching the warning of sudden slowing/stopping.'
+  },
+  {
+   sceneKey:'longVehicleRoundaboutCourse',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/34742973/14728346_3840_2160_60fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/34742973/14728346_3840_2160_60fps.mp4','https://www.pexels.com/download/video/34742973/'],
+   poster:'https://images.pexels.com/videos/34742973/pexels-photo-34742973.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · 强 王',sourcePage:'https://www.pexels.com/video/scenic-electric-bus-roundabout-journey-34742973/',
+   tags:['long-vehicle','bus','roundabout','wide-course','large-vehicle'],
+   note:'CARS10.27 strict-match. Real long buses are visibly negotiating a roundabout, directly illustrating why a long vehicle may need a different/wider course.'
+  },
+  {
+   sceneKey:'leftLaneBeforeExit',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/3621864/3621864-hd_1280_720_30fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/3621864/3621864-hd_1280_720_30fps.mp4','https://www.pexels.com/download/video/3621864/'],
+   poster:'https://images.pexels.com/videos/3621864/free-video-3621864.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · George Morina',sourcePage:'https://www.pexels.com/video/shoulder-roads-as-exit-points-coming-from-a-highway-3621864/',
+   tags:['uk-motorway','left-driving','exit','left-lane','multi-lane-carriageway'],
+   note:'CARS9.10 strict-match. Real UK motorway/exit footage keeps the driving side and exit context visible so the learner associates the next exit with moving into the left lane in good time.'
+  },
+  {
+   sceneKey:'giveWayPedestriansJunction',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://videos.pexels.com/video-files/36304391/15396212_1920_1080_25fps.mp4',
+   videoSources:['https://videos.pexels.com/video-files/36304391/15396212_1920_1080_25fps.mp4','https://www.pexels.com/download/video/36304391/'],
+   poster:'https://images.pexels.com/videos/36304391/pexels-photo-36304391.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Scott Precious',sourcePage:'https://www.pexels.com/video/busy-city-intersection-with-traffic-and-pedestrians-36304391/',
+   tags:['junction','pedestrians-crossing','vehicles','give-way','uk','intersection'],
+   note:'CARS6.5 strict-match. Phase 01-03 use a separate real crossing frame where pedestrians are unmistakable; phase 04 uses a real UK intersection with cars, a bus and pedestrians crossing through the junction.'
   },
 
   {

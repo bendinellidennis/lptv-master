@@ -1,3 +1,4 @@
+/* 39.12.16 Replay75 — five new strict real-media replays. */
 /* 39.12.15 Replay70 — five new strict real-media replays. */
 /* 39.12.13 Replay60 — five new strict sign/signal replays. */
 
@@ -448,6 +449,33 @@
    key:'doNotFollowTooClosely',category:'following-distance',titleIt:'Distanza: non seguire troppo da vicino',titleEn:'Following distance: do not follow too closely',status:'ready',
    questionIds:['CARS2.12'],expectedCorrect:[2],engineSceneId:'MT_DO_NOT_FOLLOW_TOO_CLOSELY_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
    required:['vehicle-ahead','following-distance','safe-gap','traffic'],prohibited:['tailgating-as-correct','reused-approved-video']
+  },
+
+
+  {
+   key:'brakeLightsSignal',category:'signals',titleIt:'Luci di stop: segnalano rallentamento o arresto',titleEn:'Brake lights: signal slowing or stopping',status:'ready',
+   questionIds:['CARS10.25'],expectedCorrect:[0],engineSceneId:'MT_BRAKE_LIGHTS_SIGNAL_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['brake-lights','rear-vehicle','slowing-stopping','signal'],prohibited:['indicator-only','headlights-only','reused-approved-video']
+  },
+  {
+   key:'hazardLightsSuddenSlowdown',category:'dual-carriageways',titleIt:'Hazard davanti: traffico in rapido rallentamento',titleEn:'Hazard lights ahead: traffic slowing suddenly',status:'ready',
+   questionIds:['CARS9.4'],expectedCorrect:[2],engineSceneId:'MT_HAZARD_LIGHTS_SUDDEN_SLOWDOWN_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['dual-carriageway','hazard-lights','traffic-ahead','sudden-slowing'],prohibited:['lane-change-signal','police-speed-check','reused-approved-video']
+  },
+  {
+   key:'longVehicleRoundaboutCourse',category:'roundabouts',titleIt:'Veicolo lungo: traiettoria più ampia in rotatoria',titleEn:'Long vehicle: wider course at a roundabout',status:'ready',
+   questionIds:['CARS10.27'],expectedCorrect:[3],engineSceneId:'MT_LONG_VEHICLE_ROUNDABOUT_COURSE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['long-vehicle','bus','roundabout','wide-course'],prohibited:['sports-car','estate-car','reused-approved-video']
+  },
+  {
+   key:'leftLaneBeforeExit',category:'dual-carriageways',titleIt:'Prossima uscita: posizionati nella corsia sinistra',titleEn:'Next exit: position in the left lane',status:'ready',
+   questionIds:['CARS9.10'],expectedCorrect:[1],engineSceneId:'MT_LEFT_LANE_BEFORE_EXIT_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['uk-motorway','left-driving','exit','left-lane'],prohibited:['hard-shoulder-driving','middle-lane-only','reused-approved-video']
+  },
+  {
+   key:'giveWayPedestriansJunction',category:'pedestrian',titleIt:'Svolta a sinistra: dai precedenza ai pedoni',titleEn:'Turning left: give way to pedestrians',status:'ready',
+   questionIds:['CARS6.5'],expectedCorrect:[3],engineSceneId:'MT_GIVE_WAY_PEDESTRIANS_JUNCTION_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['junction','pedestrians-crossing','vehicles','give-way'],prohibited:['sound-horn','wave-across','force-through','reused-approved-video']
   },
 
   {

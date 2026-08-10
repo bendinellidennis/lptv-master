@@ -1,3 +1,4 @@
+/* Build 39.12.29 Replay120 — five new strict mappings; previous 115 preserved */
 /* Build 39.12.28 Replay115 — five new strict mappings; Replay110 GitHub fix preserved */
 /* 39.12.26 Replay110 — five new strict real-media mappings; previous 105 unchanged. */
 /* build 39.12.23 Replay105 */
@@ -704,6 +705,13 @@
    questionIds:['CARS1.14'],expectedCorrect:[3],engineSceneId:'MT_HANDS_FREE_PHONE_DIVERTS_ATTENTION_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
    required:['driver','hands-free','phone-conversation','distraction'],prohibited:['improves-concentration','improves-safety','reused-approved-video','generic-unrelated-scene']
   },
+
+  /* 39.12.29 Replay120 — five new strict real-scene mappings. */
+  {"key":"cyclistsRoundaboutAnyDirection","category":"cyclists","titleIt":"Ciclisti in rotatoria: possono andare in qualsiasi direzione","titleEn":"Cyclists at a roundabout: expect any direction","status":"ready","questionIds":["CARS6.30"],"expectedCorrect":[2],"engineSceneId":"MT_CYCLISTS_ROUNDABOUT_ANY_DIRECTION_V1","countryPackId":"MT-LPTV","visualStatus":"final-real-footage","required":["cyclists","roundabout","left-lane","any-direction"],"prohibited":["assume-left-only","assume-straight-only","reused-approved-video","generic-unrelated-scene"]},
+  {"key":"extraRoomMotorcyclesBicycles","category":"vulnerable-road-users","titleIt":"Sorpasso: più spazio a motocicli e biciclette","titleEn":"Overtaking: extra room for motorcycles and bicycles","status":"ready","questionIds":["CARS6.33"],"expectedCorrect":[1,3],"engineSceneId":"MT_EXTRA_ROOM_MOTORCYCLES_BICYCLES_V1","countryPackId":"MT-LPTV","visualStatus":"final-real-footage","required":["motorcycles","bicycles","overtaking","extra-room"],"prohibited":["tractor-only","sweeper-only","reused-approved-video","generic-unrelated-scene"]},
+  {"key":"windyMotorcyclistExtraRoom","category":"motorcyclists","titleIt":"Vento forte: lascia più spazio al motociclista","titleEn":"Strong wind: give the motorcyclist extra room","status":"ready","questionIds":["CARS6.34"],"expectedCorrect":[1],"engineSceneId":"MT_WINDY_MOTORCYCLIST_EXTRA_ROOM_V1","countryPackId":"MT-LPTV","visualStatus":"final-real-footage","required":["motorcyclist","windy-road","crosswind","extra-room"],"prohibited":["normal-speed-only","reused-approved-video","generic-unrelated-scene"]},
+  {"key":"motorcycleStrongWindMostAffected","category":"wind","titleIt":"Vento forte: il motociclo è il più esposto","titleEn":"Strong winds: motorcycles are most affected","status":"ready","questionIds":["CARS6.35"],"expectedCorrect":[1],"engineSceneId":"MT_MOTORCYCLE_STRONG_WIND_MOST_AFFECTED_V1","countryPackId":"MT-LPTV","visualStatus":"final-real-footage","required":["motorcycle","strong-wind","exposed-vehicle"],"prohibited":["car-as-answer","tractor-as-answer","reused-approved-video","generic-unrelated-scene"]},
+  {"key":"motorcyclesCyclistsJunctionVisibility","category":"junctions","titleIt":"Incroci: motociclisti e ciclisti sono più difficili da vedere","titleEn":"Junctions: motorcyclists and cyclists are harder to see","status":"ready","questionIds":["CARS6.36"],"expectedCorrect":[2],"engineSceneId":"MT_MOTORCYCLES_CYCLISTS_JUNCTION_VISIBILITY_V1","countryPackId":"MT-LPTV","visualStatus":"final-real-footage","required":["junction","motorcyclist","cyclist","visibility"],"prohibited":["priority-claim","generic-empty-road","reused-approved-video"]},
 
   {
    key:'pedestrianHidden',

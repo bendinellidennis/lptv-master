@@ -1,3 +1,4 @@
+/* 39.12.20 Replay90 — CARS13.7 freeze reliability fix; catalog unchanged. */
 /* 39.12.19 Replay90 — five new strict real-media replays. */
 /* 39.12.16 Replay75 — five new strict real-media replays. */
 /* 39.12.15 Replay70 — five new strict real-media replays. */

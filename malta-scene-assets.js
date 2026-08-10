@@ -896,6 +896,36 @@
   },
 
   {
+   sceneKey:'accidentFirstArrivalActions',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/8943642/',videoSources:['https://www.pexels.com/download/video/8943642/'],poster:'https://images.pexels.com/videos/8943642/pexels-photo-8943642.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Mikhail Nilov',sourcePage:'https://www.pexels.com/video/a-paramedic-opening-the-door-of-an-ambulance-van-8943642/',
+   tags:['accident','ambulance','emergency-response','call-emergency-services','scene-safety'],note:'CARS13.2 strict-match real emergency/first-aid footage selected for the correct response.'
+  },
+
+  {
+   sceneKey:'seriousAccidentProtectScene',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/8944324/',videoSources:['https://www.pexels.com/download/video/8944324/'],poster:'https://images.pexels.com/videos/8943642/pexels-photo-8943642.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Mikhail Nilov',sourcePage:'https://www.pexels.com/video/paramedics-helping-a-person-on-a-stretcher-8944324/',
+   tags:['serious-accident','ambulance','paramedics','hazard-lights','move-uninjured-away'],note:'CARS13.3 strict-match real emergency/first-aid footage selected for the correct response.'
+  },
+
+  {
+   sceneKey:'motorcyclistAirwayBreathingBleeding',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/6520252/',videoSources:['https://www.pexels.com/download/video/6520252/'],poster:'https://images.pexels.com/videos/6520252/ambulance-clinic-corona-coronavirus-6520252.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · RDNE Stock project',sourcePage:'https://www.pexels.com/video/paramedic-applying-bandage-on-man-s-arm-6520252/',
+   tags:['first-aid','airway','breathing','severe-bleeding','bandage','paramedic'],note:'CARS13.5 strict-match real emergency/first-aid footage selected for the correct response.'
+  },
+
+  {
+   sceneKey:'unconsciousMotorcyclistBreathingFirst',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/3981833/',videoSources:['https://www.pexels.com/download/video/3981833/'],poster:'https://images.pexels.com/videos/3981833/pexels-photo-3981833.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Gustavo Fring',sourcePage:'https://www.pexels.com/video/a-woman-giving-rescue-breaths-on-a-dummy-3981833/',
+   tags:['first-aid','breathing','airway','rescue-breaths','unconscious-casualty'],note:'CARS13.6 strict-match real emergency/first-aid footage selected for the correct response.'
+  },
+
+  {
+   sceneKey:'unconsciousPrioritiesAbcBleeding',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/3981865/',videoSources:['https://www.pexels.com/download/video/3981865/'],poster:'https://images.pexels.com/videos/3981865/pexels-photo-3981865.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Gustavo Fring',sourcePage:'https://www.pexels.com/video/a-woman-learning-how-to-perform-mouth-to-mouth-resuscitation-3981865/',
+   tags:['first-aid','airway','breathing','severe-bleeding','cpr-training'],note:'CARS13.9 strict-match real emergency/first-aid footage selected for the correct response.'
+  },
+
+  {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',
    drivingSide:'left',

@@ -560,6 +560,36 @@
   },
 
   {
+   key:'accidentFirstArrivalActions',category:'accidents',titleIt:'Incidente: metti in sicurezza e chiama i soccorsi',titleEn:'Accident: secure the scene and call emergency services',status:'ready',
+   questionIds:['CARS13.2'],expectedCorrect:[0,1,2,3],engineSceneId:'MT_ACCIDENT_FIRST_ARRIVAL_ACTIONS_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['accident','ambulance','emergency-response','call-emergency-services','scene-safety'],prohibited:['reused-approved-video']
+  },
+
+  {
+   key:'seriousAccidentProtectScene',category:'accidents',titleIt:'Incidente grave: proteggi la scena e chiama l’ambulanza',titleEn:'Serious accident: protect the scene and call an ambulance',status:'ready',
+   questionIds:['CARS13.3'],expectedCorrect:[2,3,4],engineSceneId:'MT_SERIOUS_ACCIDENT_PROTECT_SCENE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['serious-accident','ambulance','paramedics','hazard-lights','move-uninjured-away'],prohibited:['reused-approved-video']
+  },
+
+  {
+   key:'motorcyclistAirwayBreathingBleeding',category:'first-aid',titleIt:'Motociclista incosciente: vie aeree, respirazione e sanguinamento',titleEn:'Unconscious motorcyclist: airway, breathing and bleeding',status:'ready',
+   questionIds:['CARS13.5'],expectedCorrect:[0,1,4],engineSceneId:'MT_MOTORCYCLIST_AIRWAY_BREATHING_BLEEDING_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['first-aid','airway','breathing','severe-bleeding','bandage','paramedic'],prohibited:['reused-approved-video']
+  },
+
+  {
+   key:'unconsciousMotorcyclistBreathingFirst',category:'first-aid',titleIt:'Motociclista incosciente: controlla prima la respirazione',titleEn:'Unconscious motorcyclist: check breathing first',status:'ready',
+   questionIds:['CARS13.6'],expectedCorrect:[0],engineSceneId:'MT_UNCONSCIOUS_MOTORCYCLIST_BREATHING_FIRST_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['first-aid','breathing','airway','rescue-breaths','unconscious-casualty'],prohibited:['reused-approved-video']
+  },
+
+  {
+   key:'unconsciousPrioritiesAbcBleeding',category:'first-aid',titleIt:'Persona incosciente: respirazione, vie aeree e sanguinamento',titleEn:'Unconscious casualty: breathing, airway and severe bleeding',status:'ready',
+   questionIds:['CARS13.9'],expectedCorrect:[0,1,2],engineSceneId:'MT_UNCONSCIOUS_PRIORITIES_ABC_BLEEDING_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['first-aid','airway','breathing','severe-bleeding','cpr-training'],prohibited:['reused-approved-video']
+  },
+
+  {
    key:'pedestrianHidden',
    category:'pedestrian',
    titleIt:'Pedone nascosto tra auto parcheggiate',

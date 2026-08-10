@@ -1,4 +1,4 @@
-/* Build 39.12.27 Replay110 — GitHub compatibility/validation fix */
+/* Build 39.12.28 Replay115 — five new strict assets; Replay110 GitHub fix preserved */
 /* 39.12.26 Replay110 — five new dedicated phase-04 videos; previous 105 unchanged. */
 /* build 39.12.23 Replay105 */
 /* 39.12.20 Replay90 — CARS13.7 freeze reliability fix; video asset unchanged. */
@@ -1021,6 +1021,33 @@
    sceneKey:'roadHumpsSlowDown',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/30170494/',videoSources:['https://www.pexels.com/download/video/30170494/'],poster:'https://images.pexels.com/videos/30170494/pexels-photo-30170494.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Saulo Nulo',sourcePage:'https://www.pexels.com/video/city-road-traffic-and-vehicles-in-motion-30170494/',
    tags:['road-hump','speed-bump','road-safety','traffic-calming','slow-down','residential-road'],freezeCredit:'Wikimedia Commons · Richard Drdul · CC BY-SA 2.0',freezeSourcePage:'https://commons.wikimedia.org/wiki/File:Speed_hump_with_car.jpg',note:'CARS4.27 dedicated unused video explicitly tagged Speed Bump; phases 01-03 are embedded real JPEGs of a car approaching a speed hump.'
+  },
+
+  /* 39.12.28 Replay115 — five new approved real-media assets. */
+  {
+   sceneKey:'rightMirrorOvertakeCheck',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/7705430/',videoSources:['https://www.pexels.com/download/video/7705430/'],poster:'https://images.pexels.com/videos/7705430/auto-car-city-road-driving-7705430.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Julia Repnikova',sourcePage:'https://www.pexels.com/video/video-of-a-car-side-mirror-7705430/',
+   tags:['right-mirror','passing-cars','overtaking-traffic','mirror-check','queue','right-turn'],note:'CARS6.11 dedicated unused real mirror footage; phases 01-03 are embedded local JPEGs.'
+  },
+  {
+   sceneKey:'busyJunctionWrongLaneContinue',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/8783216/',videoSources:['https://www.pexels.com/download/video/8783216/'],poster:'https://images.pexels.com/videos/8783216/pexels-photo-8783216.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · RDNE Stock project',sourcePage:'https://www.pexels.com/video/drone-footage-of-an-intersection-8783216/',
+   tags:['busy-junction','multiple-lanes','road-markings','intersection','continue-lane'],note:'CARS10.21 dedicated unused junction footage with visible lane layout; phases 01-03 are embedded local JPEGs.'
+  },
+  {
+   sceneKey:'roundaboutStraightAheadIndicateLeft',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/12399569/',videoSources:['https://www.pexels.com/download/video/12399569/'],poster:'https://images.pexels.com/videos/12399569/pexels-photo-12399569.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · 2type',sourcePage:'https://www.pexels.com/video/street-crossing-near-roundabout-12399569/',
+   tags:['roundabout','exits','lane-markings','vehicle-movement','straight-ahead','previous-exit','left-indicator'],freezeCredit:'Wikimedia Commons · Kiensvay · CC BY-SA 3.0',freezeSourcePage:'https://commons.wikimedia.org/wiki/File:Aerial_View_of_Golden_Lions_Roundabout.jpg',note:'CARS10.26 dedicated unused real roundabout footage; phases 01-03 are embedded local JPEGs.'
+  },
+  {
+   sceneKey:'dualCarriagewaySuddenHazardLights',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/3037272/',videoSources:['https://www.pexels.com/download/video/3037272/'],poster:'https://images.pexels.com/videos/3037272/free-video-3037272.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · George Morina',sourcePage:'https://www.pexels.com/video/a-car-with-the-hazard-lights-blinking-indicating-it-is-in-a-stationary-position-3037272/',
+   tags:['hazard-lights','warning','traffic','rapid-slowing','dual-carriageway','sudden-hazard','hazard-warning-lights'],freezeCredit:'Wikimedia Commons · USAF public domain + Zorba the Geek CC BY-SA 2.0',note:'CARS9.5 dedicated unused hazard-warning-light footage; phases 01-03 use embedded real fast-road warning frames.'
+  },
+  {
+   sceneKey:'handsFreePhoneDivertsAttention',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/10358940/',videoSources:['https://www.pexels.com/download/video/10358940/'],poster:'https://images.pexels.com/videos/10358940/pexels-photo-10358940.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Denys Gromov',sourcePage:'https://www.pexels.com/video/man-in-mask-driving-car-10358940/',
+   tags:['driver','airpod','hands-free','driving','distraction','phone-conversation'],note:'CARS1.14 dedicated unused in-car driving footage indexed with AirPod/hands-free context; phases 01-03 are embedded local JPEGs.'
   },
 
   {

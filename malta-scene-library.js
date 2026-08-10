@@ -1,4 +1,4 @@
-/* Build 39.12.27 Replay110 — GitHub compatibility/validation fix */
+/* Build 39.12.28 Replay115 — five new strict mappings; Replay110 GitHub fix preserved */
 /* 39.12.26 Replay110 — five new strict real-media mappings; previous 105 unchanged. */
 /* build 39.12.23 Replay105 */
 /* 39.12.20 Replay90 — CARS13.7 freeze reliability fix; catalog unchanged. */
@@ -676,6 +676,33 @@
    key:'roadHumpsSlowDown',category:'traffic-calming',titleIt:'Dossi stradali: riduci molto la velocità',titleEn:'Road humps: slow right down',status:'ready',
    questionIds:['CARS4.27'],expectedCorrect:[2],engineSceneId:'MT_ROAD_HUMPS_SLOW_DOWN_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
    required:['road-hump','residential-road','slow-down','traffic-calming'],prohibited:['stop-and-check-pavements','move-left','reused-approved-video','generic-unrelated-scene']
+  },
+
+  /* 39.12.28 Replay115 — five new strict real-scene mappings. */
+  {
+   key:'rightMirrorOvertakeCheck',category:'junctions',titleIt:'Prima di svoltare a destra: controlla chi sta sorpassando',titleEn:'Before turning right: check for overtaking traffic',status:'ready',
+   questionIds:['CARS6.11'],expectedCorrect:[1],engineSceneId:'MT_RIGHT_MIRROR_OVERTAKE_CHECK_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['right-mirror','overtaking-traffic','queue','right-turn'],prohibited:['emerging-traffic-only','pedestrian-only','reused-approved-video','generic-unrelated-scene']
+  },
+  {
+   key:'busyJunctionWrongLaneContinue',category:'junctions',titleIt:'Corsia sbagliata all’ultimo momento: continua nella corsia',titleEn:'Wrong lane at the last moment: continue in lane',status:'ready',
+   questionIds:['CARS10.21'],expectedCorrect:[0],engineSceneId:'MT_BUSY_JUNCTION_WRONG_LANE_CONTINUE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['busy-junction','multiple-lanes','road-markings','continue-lane'],prohibited:['cut-across','stop-in-lane','force-across','reused-approved-video']
+  },
+  {
+   key:'roundaboutStraightAheadIndicateLeft',category:'roundabouts',titleIt:'Dritto in rotatoria: indica a sinistra dopo l’uscita precedente',titleEn:'Straight ahead at a roundabout: signal left after the previous exit',status:'ready',
+   questionIds:['CARS10.26'],expectedCorrect:[0],engineSceneId:'MT_ROUNDABOUT_STRAIGHT_AHEAD_INDICATE_LEFT_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['roundabout','straight-ahead','previous-exit','left-indicator'],prohibited:['signal-left-on-approach','signal-right','no-signal','reused-approved-video']
+  },
+  {
+   key:'dualCarriagewaySuddenHazardLights',category:'dual-carriageways',titleIt:'Rallentamento improvviso: accendi le quattro frecce',titleEn:'Sudden slowing: use hazard warning lights',status:'ready',
+   questionIds:['CARS9.5'],expectedCorrect:[0],engineSceneId:'MT_DUAL_CARRIAGEWAY_SUDDEN_HAZARD_LIGHTS_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['dual-carriageway','sudden-hazard','rapid-slowing','hazard-warning-lights'],prohibited:['flash-headlights','horn','full-beam','reused-approved-video']
+  },
+  {
+   key:'handsFreePhoneDivertsAttention',category:'alertness',titleIt:'Vivavoce: può comunque distogliere l’attenzione',titleEn:'Hands-free phone: can still divert attention',status:'ready',
+   questionIds:['CARS1.14'],expectedCorrect:[3],engineSceneId:'MT_HANDS_FREE_PHONE_DIVERTS_ATTENTION_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['driver','hands-free','phone-conversation','distraction'],prohibited:['improves-concentration','improves-safety','reused-approved-video','generic-unrelated-scene']
   },
 
   {

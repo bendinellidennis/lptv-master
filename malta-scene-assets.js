@@ -925,6 +925,43 @@
    tags:['first-aid','airway','breathing','severe-bleeding','cpr-training'],note:'CARS13.9 strict-match real emergency/first-aid footage selected for the correct response.'
   },
 
+  /* 39.12.22 Replay100 — five new approved real-media assets. */
+  {
+   sceneKey:'headlightFlashPresence',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/15821917/',videoSources:['https://www.pexels.com/download/video/15821917/'],
+   poster:'https://images.pexels.com/videos/15821917/beetle-beetlelove-fusca-kafer-15821917.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · paashuu',sourcePage:'https://www.pexels.com/video/a-vintage-volkswagen-beetle-with-flickering-headlights-15821917/',
+   tags:['headlights','flashing','vehicle','presence-warning'],
+   note:'39.12.22 strict visual match for CARS2.33. Dedicated video not used by another approved Replay.'
+  },
+  {
+   sceneKey:'restrictedJunctionParkedCars',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/3890236/',videoSources:['https://www.pexels.com/download/video/3890236/'],
+   poster:'https://images.pexels.com/videos/3890236/atlantic-ocean-canada-north-north-america-3890236.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · WeStarMoney Rec',sourcePage:'https://www.pexels.com/video/motor-vehicles-driving-on-the-road-3890236/',
+   tags:['junction','parked-cars','restricted-view','creep-forward'],
+   note:'39.12.22 strict visual match for CARS6.10. Dedicated video not used by another approved Replay.'
+  },
+  {
+   sceneKey:'oneWayRightTurnPosition',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/2854172/',videoSources:['https://www.pexels.com/download/video/2854172/'],
+   poster:'https://images.pexels.com/videos/2854172/free-video-2854172.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Andrey Kirievskiy',sourcePage:'https://www.pexels.com/video/a-one-way-direction-steep-road-2854172/',
+   tags:['one-way-street','right-side-position','right-turn','positioning'],
+   note:'39.12.22 strict visual match for CARS2.36. Dedicated video not used by another approved Replay.'
+  },
+  {
+   sceneKey:'learnerDriverPatience',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/9518192/',videoSources:['https://www.pexels.com/download/video/9518192/'],
+   poster:'https://images.pexels.com/videos/9518192/adult-affection-car-child-9518192.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Ron Lach',sourcePage:'https://www.pexels.com/video/father-teaching-his-son-how-to-drive-9518192/',
+   tags:['learner-driver','driving-lesson','patience','no-pressure'],
+   note:'39.12.22 strict visual match for CARS6.61. Dedicated video not used by another approved Replay.'
+  },
+  {
+   sceneKey:'pelicanChangingSignalPedestrians',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/19597637/',videoSources:['https://www.pexels.com/download/video/19597637/'],
+   poster:'https://images.pexels.com/videos/19597637/pexels-photo-19597637.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Teju',sourcePage:'https://www.pexels.com/video/a-city-street-with-cars-and-a-traffic-light-19597637/',
+   tags:['pedestrian-crossing','pedestrians','red-light','give-way'],
+   note:'39.12.22 strict visual match for CARS6.13. Dedicated video not used by another approved Replay.'
+  },
+
   {
    sceneKey:'pedestrianHidden',
    countryPackId:'MT-LPTV',

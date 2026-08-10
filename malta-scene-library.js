@@ -1,4 +1,4 @@
-/* 39.12.25 Replay105 inline JPEG repair — catalog unchanged. */
+/* 39.12.26 Replay110 — five new strict real-media mappings; previous 105 unchanged. */
 /* build 39.12.23 Replay105 */
 /* 39.12.20 Replay90 — CARS13.7 freeze reliability fix; catalog unchanged. */
 /* 39.12.19 Replay90 — five new strict real-media replays. */
@@ -647,6 +647,34 @@
    key:'hardBrakingBendSkid',category:'vehicle-control',titleIt:"Frenata forte in curva: rischio di sbandata",titleEn:"Hard braking on a bend: skidding risk",status:'ready',
    questionIds:['CARS4.6'],expectedCorrect:[1],engineSceneId:'MT_HARD_BRAKING_BEND_SKID_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
    required:['car','sharp-bend','hard-braking','skid'],prohibited:['reused-approved-video','generic-unrelated-scene']
+  },
+
+
+  /* 39.12.26 Replay110 — five new strict real-scene mappings. */
+  {
+   key:'dualCarriagewayJoinGiveWay',category:'dual-carriageways',titleIt:'Immissione su doppia carreggiata: dai precedenza',titleEn:'Joining a dual carriageway: give way',status:'ready',
+   questionIds:['CARS9.2'],expectedCorrect:[3],engineSceneId:'MT_DUAL_CARRIAGEWAY_JOIN_GIVE_WAY_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['dual-carriageway','slip-road','merge','give-way-to-main-traffic'],prohibited:['stop-at-end','hard-shoulder','reused-approved-video','generic-unrelated-scene']
+  },
+  {
+   key:'slowTrafficCheckFilteringMotorcycles',category:'motorcyclists',titleIt:'Traffico lento: controlla i motociclisti prima di cambiare corsia',titleEn:'Slow traffic: check filtering motorcyclists before changing lane',status:'ready',
+   questionIds:['CARS6.49'],expectedCorrect:[3],engineSceneId:'MT_SLOW_TRAFFIC_CHECK_FILTERING_MOTORCYCLES_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['slow-traffic','motorcycle','filtering','lane-change-check'],prohibited:['horn','arm-signal','reused-approved-video','generic-unrelated-scene']
+  },
+  {
+   key:'motorcyclistsQueueHazards',category:'motorcyclists',titleIt:'Code di traffico: tre pericoli dei motociclisti',titleEn:'Traffic queues: three motorcyclist hazards',status:'ready',
+   questionIds:['CARS6.47'],expectedCorrect:[0,3,4],engineSceneId:'MT_MOTORCYCLISTS_QUEUE_HAZARDS_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['traffic-queue','motorcycles','passing-close','filtering','cutting-in'],prohibited:['dipped-headlights-as-hazard','single-file-as-hazard','reused-approved-video','generic-unrelated-scene']
+  },
+  {
+   key:'amberBeaconVehicles',category:'signals',titleIt:'Lampeggianti gialli: manutenzione e soccorso stradale',titleEn:'Amber beacons: maintenance and breakdown recovery',status:'ready',
+   questionIds:['CARS9.6'],expectedCorrect:[1,3],engineSceneId:'MT_AMBER_BEACON_VEHICLES_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['amber-beacon','maintenance-vehicle','breakdown-recovery','warning-light'],prohibited:['doctor-car','blood-transfusion','reused-approved-video','generic-unrelated-scene']
+  },
+  {
+   key:'roadHumpsSlowDown',category:'traffic-calming',titleIt:'Dossi stradali: riduci molto la velocità',titleEn:'Road humps: slow right down',status:'ready',
+   questionIds:['CARS4.27'],expectedCorrect:[2],engineSceneId:'MT_ROAD_HUMPS_SLOW_DOWN_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['road-hump','residential-road','slow-down','traffic-calming'],prohibited:['stop-and-check-pavements','move-left','reused-approved-video','generic-unrelated-scene']
   },
 
   {

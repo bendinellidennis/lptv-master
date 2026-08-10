@@ -1,4 +1,4 @@
-/* 39.12.25 Replay105 inline JPEG repair — approved phase-04 video assets unchanged. */
+/* 39.12.26 Replay110 — five new dedicated phase-04 videos; previous 105 unchanged. */
 /* build 39.12.23 Replay105 */
 /* 39.12.20 Replay90 — CARS13.7 freeze reliability fix; video asset unchanged. */
 /* 39.12.19 Replay90 — five new strict real-media assets. */
@@ -992,6 +992,34 @@
    sceneKey:'hardBrakingBendSkid',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/36223937/',videoSources:['https://www.pexels.com/download/video/36223937/'],poster:'https://images.pexels.com/videos/36223937/pexels-photo-36223937.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:"Pexels · Harvey Tan Villarino",sourcePage:'https://www.pexels.com/video/sporty-car-drifting-on-a-winding-road-36223937/',
    tags:['car','sharp-bend','hard-braking','skid'],note:'CARS4.6 strict visual match; dedicated real footage selected for the exact hazard/rule.'
+  },
+
+
+  /* 39.12.26 Replay110 — five new approved real-media assets. */
+  {
+   sceneKey:'dualCarriagewayJoinGiveWay',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/6733154/',videoSources:['https://www.pexels.com/download/video/6733154/'],poster:'https://images.pexels.com/videos/6733154/car-cars-distance-drive-6733154.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Casey Whalen',sourcePage:'https://www.pexels.com/video/cars-moving-along-the-freeway-6733154/',
+   tags:['dual-carriageway','slip-road','highway-ramp','merge','give-way'],freezeCredit:'Wikimedia Commons · Ann Cook · CC BY-SA 2.0',freezeSourcePage:'https://commons.wikimedia.org/wiki/File:Slip_road_joining_the_motorway_-_geograph.org.uk_-_1867716.jpg',note:'CARS9.2 dedicated unused video; phases 01-03 are embedded real JPEGs.'
+  },
+  {
+   sceneKey:'slowTrafficCheckFilteringMotorcycles',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/30031070/',videoSources:['https://www.pexels.com/download/video/30031070/'],poster:'https://images.pexels.com/videos/30031070/pexels-photo-30031070.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Manish Khandagale',sourcePage:'https://www.pexels.com/video/busy-street-traffic-from-motorcycle-perspective-30031070/',
+   tags:['slow-traffic','motorcycle','filtering','lane-change-check'],freezeCredit:'Wikimedia Commons · Eric Schmuttenmaer · CC BY-SA 2.0',freezeSourcePage:'https://commons.wikimedia.org/wiki/File:Two_riders_lane_splitting.jpg',note:'CARS6.49 dedicated unused video; phases 01-03 are embedded real JPEGs.'
+  },
+  {
+   sceneKey:'motorcyclistsQueueHazards',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/36101883/',videoSources:['https://www.pexels.com/download/video/36101883/'],poster:'https://images.pexels.com/videos/36101883/pexels-photo-36101883.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Nothing Ahead',sourcePage:'https://www.pexels.com/video/busy-urban-street-with-motorcyclists-and-traffic-36101883/',
+   tags:['traffic-queue','motorcycles','passing-close','filtering','cutting-in'],freezeCredit:'Wikimedia Commons · Roland Dobbins · CC BY 2.0',freezeSourcePage:'https://commons.wikimedia.org/wiki/File:Motorcyclists_lane_splitting_in_Bangkok,_Thailand.jpg',note:'CARS6.47 dedicated unused video; phases 01-03 are embedded real JPEGs.'
+  },
+  {
+   sceneKey:'amberBeaconVehicles',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/28172140/',videoSources:['https://www.pexels.com/download/video/28172140/'],poster:'https://images.pexels.com/videos/28172140/cinelike-d-pictur-profile-tony-rusf-28172140.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Tony Rush',sourcePage:'https://www.pexels.com/video/emergency-light-28172140/',
+   tags:['amber-beacon','utility-vehicle','maintenance','breakdown-recovery','yellow-light'],freezeCredit:'Wikimedia Commons · Kevin.B · CC BY-SA',freezeSourcePage:'https://commons.wikimedia.org/wiki/File:D%C3%A9panneuse_jaune_Mercedes-benz_Atego.jpg',note:'CARS9.6 dedicated unused video showing a utility vehicle amber beacon; phases 01-03 show a real recovery truck with amber lightbars.'
+  },
+  {
+   sceneKey:'roadHumpsSlowDown',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/30170494/',videoSources:['https://www.pexels.com/download/video/30170494/'],poster:'https://images.pexels.com/videos/30170494/pexels-photo-30170494.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Saulo Nulo',sourcePage:'https://www.pexels.com/video/city-road-traffic-and-vehicles-in-motion-30170494/',
+   tags:['road-hump','speed-bump','road-safety','traffic-calming','slow-down'],freezeCredit:'Wikimedia Commons · Richard Drdul · CC BY-SA 2.0',freezeSourcePage:'https://commons.wikimedia.org/wiki/File:Speed_hump_with_car.jpg',note:'CARS4.27 dedicated unused video explicitly tagged Speed Bump; phases 01-03 are embedded real JPEGs of a car approaching a speed hump.'
   },
 
   {

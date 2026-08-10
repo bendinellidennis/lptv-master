@@ -1,3 +1,5 @@
+/* 39.12.25 Replay105 inline JPEG repair — approved phase-04 video assets unchanged. */
+/* build 39.12.23 Replay105 */
 /* 39.12.20 Replay90 — CARS13.7 freeze reliability fix; video asset unchanged. */
 /* 39.12.19 Replay90 — five new strict real-media assets. */
 /* 39.12.16 Replay75 — five new strict real-media assets. */
@@ -923,6 +925,73 @@
    sceneKey:'unconsciousPrioritiesAbcBleeding',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/3981865/',videoSources:['https://www.pexels.com/download/video/3981865/'],poster:'https://images.pexels.com/videos/3981865/pexels-photo-3981865.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Gustavo Fring',sourcePage:'https://www.pexels.com/video/a-woman-learning-how-to-perform-mouth-to-mouth-resuscitation-3981865/',
    tags:['first-aid','airway','breathing','severe-bleeding','cpr-training'],note:'CARS13.9 strict-match real emergency/first-aid footage selected for the correct response.'
+  },
+
+  /* 39.12.22 Replay100 — five new approved real-media assets. */
+  {
+   sceneKey:'headlightFlashPresence',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/15821917/',videoSources:['https://www.pexels.com/download/video/15821917/'],
+   poster:'https://images.pexels.com/videos/15821917/beetle-beetlelove-fusca-kafer-15821917.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · paashuu',sourcePage:'https://www.pexels.com/video/a-vintage-volkswagen-beetle-with-flickering-headlights-15821917/',
+   tags:['headlights','flashing','vehicle','presence-warning'],
+   note:'39.12.22 strict visual match for CARS2.33. Dedicated video not used by another approved Replay.'
+  },
+  {
+   sceneKey:'restrictedJunctionParkedCars',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/3890236/',videoSources:['https://www.pexels.com/download/video/3890236/'],
+   poster:'https://images.pexels.com/videos/3890236/atlantic-ocean-canada-north-north-america-3890236.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · WeStarMoney Rec',sourcePage:'https://www.pexels.com/video/motor-vehicles-driving-on-the-road-3890236/',
+   tags:['junction','parked-cars','restricted-view','creep-forward'],
+   note:'39.12.22 strict visual match for CARS6.10. Dedicated video not used by another approved Replay.'
+  },
+  {
+   sceneKey:'oneWayRightTurnPosition',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/2854172/',videoSources:['https://www.pexels.com/download/video/2854172/'],
+   poster:'https://images.pexels.com/videos/2854172/free-video-2854172.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Andrey Kirievskiy',sourcePage:'https://www.pexels.com/video/a-one-way-direction-steep-road-2854172/',
+   tags:['one-way-street','right-side-position','right-turn','positioning'],
+   note:'39.12.22 strict visual match for CARS2.36. Dedicated video not used by another approved Replay.'
+  },
+  {
+   sceneKey:'learnerDriverPatience',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/9518192/',videoSources:['https://www.pexels.com/download/video/9518192/'],
+   poster:'https://images.pexels.com/videos/9518192/adult-affection-car-child-9518192.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Ron Lach',sourcePage:'https://www.pexels.com/video/father-teaching-his-son-how-to-drive-9518192/',
+   tags:['learner-driver','driving-lesson','patience','no-pressure'],
+   note:'39.12.22 strict visual match for CARS6.61. Dedicated video not used by another approved Replay.'
+  },
+  {
+   sceneKey:'pelicanChangingSignalPedestrians',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/19597637/',videoSources:['https://www.pexels.com/download/video/19597637/'],
+   poster:'https://images.pexels.com/videos/19597637/pexels-photo-19597637.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Teju',sourcePage:'https://www.pexels.com/video/a-city-street-with-cars-and-a-traffic-light-19597637/',
+   tags:['pedestrian-crossing','pedestrians','red-light','give-way'],
+   note:'39.12.22 strict visual match for CARS6.13. Dedicated video not used by another approved Replay.'
+  },
+
+  {
+   sceneKey:'closeFollowerIncreaseGap',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/4836031/',videoSources:['https://www.pexels.com/download/video/4836031/'],poster:'https://images.pexels.com/videos/4836031/pexels-photo-4836031.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:"Pexels · Super Lunar",sourcePage:'https://www.pexels.com/video/cars-lined-up-in-a-traffic-jam-4836031/',
+   tags:['following-traffic','close-follower','mirror','increase-gap-ahead'],note:'CARS2.19 strict visual match; dedicated real footage selected for the exact hazard/rule.'
+  },
+
+  {
+   sceneKey:'limitedVisibilityJunctionCreep',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/3704261/',videoSources:['https://www.pexels.com/download/video/3704261/'],poster:'https://images.pexels.com/videos/3704261/pexels-photo-3704261.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:"Pexels · Rholdan Ortiz",sourcePage:'https://www.pexels.com/video/a-woman-driving-a-car-applying-full-stop-in-the-intersecting-road-3704261/',
+   tags:['junction','limited-view','creep-forward','look-both-ways'],note:'CARS4.20 strict visual match; dedicated real footage selected for the exact hazard/rule.'
+  },
+
+  {
+   sceneKey:'elderlyDriverAllowTime',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/5020186/',videoSources:['https://www.pexels.com/download/video/5020186/'],poster:'https://images.pexels.com/videos/5020186/pexels-photo-5020186.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:"Pexels · Andi Farruku",sourcePage:'https://www.pexels.com/video/a-man-driving-a-car-5020186/',
+   tags:['elderly-driver','car','allow-time','patience'],note:'CARS6.19 strict visual match; dedicated real footage selected for the exact hazard/rule.'
+  },
+
+  {
+   sceneKey:'motorcyclistUnevenRoadRoom',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/35132133/',videoSources:['https://www.pexels.com/download/video/35132133/'],poster:'https://images.pexels.com/videos/35132133/pexels-photo-35132133.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:"Pexels · Mahbub Haasan",sourcePage:'https://www.pexels.com/video/scenic-motorcycle-ride-in-ladakh-mountains-35132133/',
+   tags:['motorcyclist','rough-road','uneven-surface','extra-room'],note:'CARS6.26 strict visual match; dedicated real footage selected for the exact hazard/rule.'
+  },
+
+  {
+   sceneKey:'hardBrakingBendSkid',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/36223937/',videoSources:['https://www.pexels.com/download/video/36223937/'],poster:'https://images.pexels.com/videos/36223937/pexels-photo-36223937.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:"Pexels · Harvey Tan Villarino",sourcePage:'https://www.pexels.com/video/sporty-car-drifting-on-a-winding-road-36223937/',
+   tags:['car','sharp-bend','hard-braking','skid'],note:'CARS4.6 strict visual match; dedicated real footage selected for the exact hazard/rule.'
   },
 
   {

@@ -1,3 +1,4 @@
+/* Build 39.12.27 Replay110 — GitHub compatibility/validation fix */
 /* 39.12.26 Replay110 — five new dedicated phase-04 videos; previous 105 unchanged. */
 /* build 39.12.23 Replay105 */
 /* 39.12.20 Replay90 — CARS13.7 freeze reliability fix; video asset unchanged. */
@@ -999,7 +1000,7 @@
   {
    sceneKey:'dualCarriagewayJoinGiveWay',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/6733154/',videoSources:['https://www.pexels.com/download/video/6733154/'],poster:'https://images.pexels.com/videos/6733154/car-cars-distance-drive-6733154.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Casey Whalen',sourcePage:'https://www.pexels.com/video/cars-moving-along-the-freeway-6733154/',
-   tags:['dual-carriageway','slip-road','highway-ramp','merge','give-way'],freezeCredit:'Wikimedia Commons · Ann Cook · CC BY-SA 2.0',freezeSourcePage:'https://commons.wikimedia.org/wiki/File:Slip_road_joining_the_motorway_-_geograph.org.uk_-_1867716.jpg',note:'CARS9.2 dedicated unused video; phases 01-03 are embedded real JPEGs.'
+   tags:['dual-carriageway','slip-road','highway-ramp','merge','give-way','give-way-to-main-traffic'],freezeCredit:'Wikimedia Commons · Ann Cook · CC BY-SA 2.0',freezeSourcePage:'https://commons.wikimedia.org/wiki/File:Slip_road_joining_the_motorway_-_geograph.org.uk_-_1867716.jpg',note:'CARS9.2 dedicated unused video; phases 01-03 are embedded real JPEGs.'
   },
   {
    sceneKey:'slowTrafficCheckFilteringMotorcycles',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
@@ -1014,12 +1015,12 @@
   {
    sceneKey:'amberBeaconVehicles',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/28172140/',videoSources:['https://www.pexels.com/download/video/28172140/'],poster:'https://images.pexels.com/videos/28172140/cinelike-d-pictur-profile-tony-rusf-28172140.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Tony Rush',sourcePage:'https://www.pexels.com/video/emergency-light-28172140/',
-   tags:['amber-beacon','utility-vehicle','maintenance','breakdown-recovery','yellow-light'],freezeCredit:'Wikimedia Commons · Kevin.B · CC BY-SA',freezeSourcePage:'https://commons.wikimedia.org/wiki/File:D%C3%A9panneuse_jaune_Mercedes-benz_Atego.jpg',note:'CARS9.6 dedicated unused video showing a utility vehicle amber beacon; phases 01-03 show a real recovery truck with amber lightbars.'
+   tags:['amber-beacon','utility-vehicle','maintenance','maintenance-vehicle','breakdown-recovery','yellow-light','warning-light'],freezeCredit:'Wikimedia Commons · Kevin.B · CC BY-SA',freezeSourcePage:'https://commons.wikimedia.org/wiki/File:D%C3%A9panneuse_jaune_Mercedes-benz_Atego.jpg',note:'CARS9.6 dedicated unused video showing a utility vehicle amber beacon; phases 01-03 show a real recovery truck with amber lightbars.'
   },
   {
    sceneKey:'roadHumpsSlowDown',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
    video:'https://www.pexels.com/download/video/30170494/',videoSources:['https://www.pexels.com/download/video/30170494/'],poster:'https://images.pexels.com/videos/30170494/pexels-photo-30170494.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Saulo Nulo',sourcePage:'https://www.pexels.com/video/city-road-traffic-and-vehicles-in-motion-30170494/',
-   tags:['road-hump','speed-bump','road-safety','traffic-calming','slow-down'],freezeCredit:'Wikimedia Commons · Richard Drdul · CC BY-SA 2.0',freezeSourcePage:'https://commons.wikimedia.org/wiki/File:Speed_hump_with_car.jpg',note:'CARS4.27 dedicated unused video explicitly tagged Speed Bump; phases 01-03 are embedded real JPEGs of a car approaching a speed hump.'
+   tags:['road-hump','speed-bump','road-safety','traffic-calming','slow-down','residential-road'],freezeCredit:'Wikimedia Commons · Richard Drdul · CC BY-SA 2.0',freezeSourcePage:'https://commons.wikimedia.org/wiki/File:Speed_hump_with_car.jpg',note:'CARS4.27 dedicated unused video explicitly tagged Speed Bump; phases 01-03 are embedded real JPEGs of a car approaching a speed hump.'
   },
 
   {

@@ -1,3 +1,4 @@
+/* Build 39.12.27 Replay110 — GitHub compatibility/validation fix */
 /* BUILD 39.12.26 — REPLAY110 — five new strict scenes with embedded JPEG phases 01-03; previous 105 unchanged */
 /* build 39.12.23 Replay105 */
 /* 39.12.20 Replay90 — CARS13.7 embedded freeze fix. */

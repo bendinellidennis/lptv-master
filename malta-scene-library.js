@@ -1,3 +1,4 @@
+/* 39.12.19 Replay90 — five new strict real-media replays. */
 /* 39.12.16 Replay75 — five new strict real-media replays. */
 /* 39.12.15 Replay70 — five new strict real-media replays. */
 /* 39.12.13 Replay60 — five new strict sign/signal replays. */
@@ -528,6 +529,33 @@
    key:'collisionStopAtScene',category:'accidents',titleIt:'Collisione: fermati sul luogo',titleEn:'Collision: stop at the scene',status:'ready',
    questionIds:['CARS6.59'],expectedCorrect:[2],engineSceneId:'MT_COLLISION_STOP_AT_SCENE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
    required:['collision','crash-scene','stop-at-scene','vehicle-damage'],prohibited:['drive-away','insurance-first','reused-approved-video']
+  },
+
+
+  {
+   key:'elderlyPelicanWait',category:'vulnerable-road-users',titleIt:'Pelican: aspetta gli anziani ancora in attraversamento',titleEn:'Pelican: wait for elderly pedestrians still crossing',status:'ready',
+   questionIds:['CARS6.15'],expectedCorrect:[3],engineSceneId:'MT_ELDERLY_PELICAN_WAIT_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['elderly-pedestrians','pedestrian-crossing','crossing-in-progress','wait-patiently'],prohibited:['flash-headlights','rev-engine','wave-hurry','reused-approved-video']
+  },
+  {
+   key:'dualCarriagewayJoinLeft',category:'dual-carriageways',titleIt:'Doppia carreggiata: dopo l’ingresso posizionati a sinistra',titleEn:'Dual carriageway: after joining, position in the left lane',status:'ready',
+   questionIds:['CARS9.1'],expectedCorrect:[3],engineSceneId:'MT_DUAL_CARRIAGEWAY_JOIN_LEFT_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['uk-motorway','multiple-lanes','left-lane','left-driving'],prohibited:['centre-lane-normal','overtake-immediately','reused-approved-video']
+  },
+  {
+   key:'accidentProtectYourself',category:'accidents',titleIt:'Incidente: non mettere te stesso in pericolo',titleEn:'Accident scene: do not put yourself at risk',status:'ready',
+   questionIds:['CARS13.1'],expectedCorrect:[0],engineSceneId:'MT_ACCIDENT_PROTECT_YOURSELF_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['accident-scene','paramedics','protective-response','street-emergency'],prohibited:['run-into-danger','leave-engines-running','pull-everyone-out','reused-approved-video']
+  },
+  {
+   key:'antiDazzleInteriorMirror',category:'night-driving',titleIt:'Abbagliamento da dietro: usa lo specchio antiabbagliamento',titleEn:'Rear glare at night: set the interior mirror to anti-dazzle',status:'ready',
+   questionIds:['CARS6.64'],expectedCorrect:[0],engineSceneId:'MT_ANTI_DAZZLE_INTERIOR_MIRROR_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['rearview-mirror','driver','mirror-adjustment','anti-dazzle'],prohibited:['brake-sharply','dazzle-other-driver','reused-approved-video']
+  },
+  {
+   key:'unconsciousCasualtyAbc',category:'first-aid',titleIt:'Incidente: controlla subito vie aeree, circolazione e respirazione',titleEn:'Accident: urgently check airway, circulation and breathing',status:'ready',
+   questionIds:['CARS13.7'],expectedCorrect:[1,3,4],engineSceneId:'MT_UNCONSCIOUS_CASUALTY_ABC_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
+   required:['first-aid','airway','breathing','circulation','cpr-training'],prohibited:['broken-bones-first','shock-only','reused-approved-video']
   },
 
   {

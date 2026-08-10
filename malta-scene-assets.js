@@ -1,3 +1,4 @@
+/* 39.12.19 Replay90 — five new strict real-media assets. */
 /* 39.12.16 Replay75 — five new strict real-media assets. */
 /* 39.12.15 Replay70 — five new strict real-media assets. */
 /* 39.12.13 Replay60 — five new strict sign/signal assets. */
@@ -854,6 +855,43 @@
    poster:'https://images.pexels.com/videos/12901485/pexels-photo-12901485.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · K',sourcePage:'https://www.pexels.com/video/accident-on-highway-12901485/',
    tags:['collision','crash-scene','stop-at-scene','vehicle-damage','road-incident','stopped-traffic'],
    note:'CARS6.59 strict-match. Real collision aftermath clearly shows a damaged vehicle stopped at the incident scene, directly supporting the first required action after a collision: stop at the scene.'
+  },
+
+
+  {
+   sceneKey:'elderlyPelicanWait',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/8928019/',videoSources:['https://www.pexels.com/download/video/8928019/','https://videos.pexels.com/video-files/8928019/8928019-uhd_3840_2160_25fps.mp4'],
+   poster:'https://images.pexels.com/videos/8928019/couple-elderly-elderly-couple-elderly-man-8928019.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · SHVETS production',sourcePage:'https://www.pexels.com/video/an-elderly-couple-crossing-on-a-pedestrian-lane-8928019/',
+   tags:['elderly-pedestrians','pedestrian-crossing','crossing-in-progress','wait-patiently','zebra-crossing','senior-couple'],
+   note:'CARS6.15 strict-match. Real senior pedestrians are visibly still crossing a marked pedestrian crossing. The Replay teaches that even when the signal changes, the driver waits patiently because elderly pedestrians may need more time.'
+  },
+  {
+   sceneKey:'dualCarriagewayJoinLeft',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/3621854/',videoSources:['https://www.pexels.com/download/video/3621854/','https://videos.pexels.com/video-files/3621854/3621854-hd_1280_720_30fps.mp4'],
+   poster:'https://images.pexels.com/videos/3621854/free-video-3621854.jpg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · George Morina',sourcePage:'https://www.pexels.com/video/vehicles-travelling-in-separate-lanes-at-daylight-3621854/',
+   tags:['uk-motorway','multiple-lanes','left-lane','left-driving','dual-carriageway','traffic'],
+   note:'CARS9.1 strict-match. Real UK motorway footage supplies the correct left-driving multi-lane context; the Replay highlights the normal left lane immediately after joining and explicitly rejects treating the centre lane as the normal position.'
+  },
+  {
+   sceneKey:'accidentProtectYourself',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/6520440/',videoSources:['https://www.pexels.com/download/video/6520440/','https://videos.pexels.com/video-files/6520440/6520440-uhd_3840_2160_24fps.mp4'],
+   poster:'https://images.pexels.com/videos/6520440/ambulance-clinic-corona-coronavirus-6520440.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · RDNE Stock project',sourcePage:'https://www.pexels.com/video/paramedic-administering-first-aid-6520440/',
+   tags:['accident-scene','paramedics','protective-response','street-emergency','first-aid','injured-person'],
+   note:'CARS13.1 strict-match. Real responders give first aid to an injured person in a street emergency. The scene is used to teach the first principle at an accident: approach and help without becoming another casualty yourself.'
+  },
+  {
+   sceneKey:'antiDazzleInteriorMirror',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/7154216/',videoSources:['https://www.pexels.com/download/video/7154216/','https://videos.pexels.com/video-files/7154216/7154216-hd_1920_1080_25fps.mp4'],
+   poster:'https://images.pexels.com/videos/7154216/pexels-photo-7154216.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · AI25.Studio Studio',sourcePage:'https://www.pexels.com/video/man-inside-a-car-7154216/',
+   tags:['rearview-mirror','driver','mirror-adjustment','anti-dazzle','vehicle-interior'],
+   note:'CARS6.64 strict-match. The real driver visibly reaches to and adjusts the interior rear-view mirror, matching the required anti-dazzle mirror action when lights from behind cause glare at night.'
+  },
+  {
+   sceneKey:'unconsciousCasualtyAbc',countryPackId:'MT-LPTV',drivingSide:'left',status:'approved',sourceType:'remote-stock',
+   video:'https://www.pexels.com/download/video/3981828/',videoSources:['https://www.pexels.com/download/video/3981828/'],
+   poster:'https://images.pexels.com/videos/3981828/pexels-photo-3981828.jpeg?auto=compress&dpr=1&h=750&w=1260',credit:'Pexels · Gustavo Fring',sourcePage:'https://www.pexels.com/video/group-of-people-practicing-cpr-procedure-3981828/',
+   tags:['first-aid','airway','breathing','circulation','cpr-training','unconscious-casualty'],
+   note:'CARS13.7 strict-match. Real lifesaving CPR training is paired with real airway/breathing and pulse-check imagery so all three urgent checks are represented: airway, breathing and circulation.'
   },
 
   {

@@ -589,34 +589,6 @@
    required:['first-aid','airway','breathing','severe-bleeding','cpr-training'],prohibited:['reused-approved-video']
   },
 
-
-  /* 39.12.22 Replay100 — five new strict real-scene mappings. */
-  {
-   key:'headlightFlashPresence',category:'signals',titleIt:'Lampeggio fari: segnala solo la tua presenza',titleEn:'Headlight flash: only signal your presence',status:'ready',
-   questionIds:['CARS2.33'],expectedCorrect:[3],engineSceneId:'MT_HEADLIGHT_FLASH_PRESENCE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
-   required:['headlights','flashing','vehicle','presence-warning'],prohibited:['give-way-message','right-of-way-message','reused-approved-video']
-  },
-  {
-   key:'restrictedJunctionParkedCars',category:'junctions',titleIt:'Incrocio con visuale coperta: fermati e avanza lentamente',titleEn:'Restricted junction: stop and creep forward',status:'ready',
-   questionIds:['CARS6.10'],expectedCorrect:[3],engineSceneId:'MT_RESTRICTED_JUNCTION_PARKED_CARS_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
-   required:['junction','parked-cars','restricted-view','creep-forward'],prohibited:['pull-out-fast','horn-and-go','reused-approved-video']
-  },
-  {
-   key:'oneWayRightTurnPosition',category:'positioning',titleIt:'Senso unico: posizione a destra prima della svolta',titleEn:'One-way street: position right before turning right',status:'ready',
-   questionIds:['CARS2.36'],expectedCorrect:[3],engineSceneId:'MT_ONE_WAY_RIGHT_TURN_POSITION_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
-   required:['one-way-street','right-side-position','right-turn','positioning'],prohibited:['left-lane-position','centre-only','reused-approved-video']
-  },
-  {
-   key:'learnerDriverPatience',category:'attitude',titleIt:'Learner driver: sii paziente',titleEn:'Learner driver: be patient',status:'ready',
-   questionIds:['CARS6.61'],expectedCorrect:[0],engineSceneId:'MT_LEARNER_DRIVER_PATIENCE_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
-   required:['learner-driver','driving-lesson','patience','no-pressure'],prohibited:['rev-engine','flash-headlights','overtake-immediately','reused-approved-video']
-  },
-  {
-   key:'pelicanChangingSignalPedestrians',category:'pedestrian-crossings',titleIt:'Pelican: lascia terminare l’attraversamento',titleEn:'Pelican crossing: let pedestrians finish crossing',status:'ready',
-   questionIds:['CARS6.13'],expectedCorrect:[2],engineSceneId:'MT_PELICAN_CHANGING_SIGNAL_PEDESTRIANS_V1',countryPackId:'MT-LPTV',visualStatus:'final-real-footage',
-   required:['pedestrian-crossing','pedestrians','red-light','give-way'],prohibited:['move-off-immediately','wave-across','reused-approved-video']
-  },
-
   {
    key:'pedestrianHidden',
    category:'pedestrian',

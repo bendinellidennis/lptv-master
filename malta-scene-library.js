@@ -836,7 +836,12 @@
    visualStatus:'planned',
    required:['left-driving','malta-markings','give-way'],
    prohibited:['right-driving']
-  }
+  },
+  {"key":"rightTurnPositionEarly","category":"positioning","titleIt":"Svolta a destra: posizionati per tempo","titleEn":"Right turn: take position in good time","status":"ready","questionIds":["CARS2.37"],"expectedCorrect":[2],"engineSceneId":"MT_RIGHT_TURN_POSITION_EARLY_V1","countryPackId":"MT-LPTV","visualStatus":"final-real-footage","required":["positioning","real-scene","question-specific"],"prohibited":["reused-approved-video","generic-unrelated-scene","remote-freeze"]},
+  {"key":"signalsWhenUseful","category":"signals","titleIt":"Segnali: quando devi usarli","titleEn":"Signals: when to use them","status":"ready","questionIds":["CARS2.41"],"expectedCorrect":[0,2],"engineSceneId":"MT_SIGNALS_WHEN_USEFUL_V1","countryPackId":"MT-LPTV","visualStatus":"final-real-footage","required":["signals","real-scene","question-specific"],"prohibited":["reused-approved-video","generic-unrelated-scene","remote-freeze"]},
+  {"key":"signalBeforeParking","category":"parking","titleIt":"Parcheggio: segnala sempre per tempo","titleEn":"Parking: signal clearly in good time","status":"ready","questionIds":["LPOINTS1.134"],"expectedCorrect":[0],"engineSceneId":"MT_SIGNAL_BEFORE_PARKING_V1","countryPackId":"MT-LPTV","visualStatus":"final-real-footage","required":["parking","real-scene","question-specific"],"prohibited":["reused-approved-video","generic-unrelated-scene","remote-freeze"]},
+  {"key":"hazardLightsAmber","category":"vehicle-lights","titleIt":"Luci di emergenza: colore ambra","titleEn":"Hazard warning lights: amber","status":"ready","questionIds":["LPOINTS1.176"],"expectedCorrect":[2],"engineSceneId":"MT_HAZARD_LIGHTS_AMBER_V1","countryPackId":"MT-LPTV","visualStatus":"final-real-footage","required":["vehicle-lights","real-scene","question-specific"],"prohibited":["reused-approved-video","generic-unrelated-scene","remote-freeze"]},
+  {"key":"hornRestrictedHospital","category":"horn","titleIt":"Clacson: limitato vicino agli ospedali","titleEn":"Horn use: restricted near hospitals","status":"ready","questionIds":["LPOINTS1.184"],"expectedCorrect":[2],"engineSceneId":"MT_HORN_RESTRICTED_HOSPITAL_V1","countryPackId":"MT-LPTV","visualStatus":"final-real-footage","required":["horn","real-scene","question-specific"],"prohibited":["reused-approved-video","generic-unrelated-scene","remote-freeze"]}
  ];
 
  entries.forEach(entry=>global.SceneCatalog.register(entry));

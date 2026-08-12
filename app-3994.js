@@ -145,7 +145,15 @@ Object.assign(window.REPLAY_FREEZE_INLINE, window.REPLAY_FREEZE_EXTERNAL_391236|
 
 (() => {
 'use strict';
-const ALL_Q = Array.isArray(window.LPTV_QUESTIONS) ? window.LPTV_QUESTIONS : [];
+/* Replay150 SCHOOL.009 defensive question binding — guarantees Replay Library lookup even if a stale database.js is served. */
+const REPLAY150_REQUIRED_QUESTIONS=[
+ {id:'SCHOOL.009',category:'Seat belts',status:'school_material_confirmed',question:'You may remove your seat belt when carrying out a manoeuvre that involves:',question_it:'Puoi togliere la cintura di sicurezza quando esegui una manovra che comporta:',answers:['Reversing','Overtaking','Driving through a tunnel','Approaching a junction'],answers_it:['Retromarcia','Sorpasso','Guida in galleria','Avvicinamento a un incrocio'],correct:[0],explanation:'The exemption applies when reversing because the manoeuvre may require greater freedom of movement to observe behind.',explanation_it:'L\'esenzione si applica durante la retromarcia perché la manovra può richiedere maggiore libertà di movimento per osservare dietro.',source:'Driving school study material',bank:'lptv_core',bank_label:'Preparazione LPTV principale'}
+];
+if(!Array.isArray(window.LPTV_QUESTIONS)) window.LPTV_QUESTIONS=[];
+for(const requiredQuestion of REPLAY150_REQUIRED_QUESTIONS){
+ if(!window.LPTV_QUESTIONS.some(q=>q&&q.id===requiredQuestion.id)) window.LPTV_QUESTIONS.push(requiredQuestion);
+}
+const ALL_Q = window.LPTV_QUESTIONS;
 const CORE_Q = ALL_Q.filter(q=>q.bank==='lptv_core');
 const ROAD_SAFETY_Q = ALL_Q.filter(q=>q.bank==='road_safety');
 const Q = ALL_Q.filter(q=>q.bank==='lptv_core'||q.bank==='road_safety');
@@ -2161,7 +2169,19 @@ function aiEffectiveLanguageMode(){
 let errorReplayTimer=null;
 let errorReplayStep=0;
 function errorReplaySave(){save(ERROR_REPLAY_KEY,errorReplay)}
-function errorReplayQuestion(id){return Q.find(question=>question.id===id)||null}
+function normalizeReplayQuestionId(value){
+ const raw=String(value||'').trim().toUpperCase().replace(/\s+/g,'');
+ if(!raw)return '';
+ // Accept common mobile typing variants used in Replay Library searches.
+ let normalized=raw.replace(/^SCHOLL(?=\.?\d)/,'SCHOOL');
+ normalized=normalized.replace(/^SCHOOL(\d+)$/,'SCHOOL.$1');
+ normalized=normalized.replace(/^LPOINTS1(\d+)$/,'LPOINTS1.$1');
+ return normalized;
+}
+function errorReplayQuestion(id){
+ const wanted=normalizeReplayQuestionId(id);
+ return Q.find(question=>normalizeReplayQuestionId(question.id)===wanted)||null;
+}
 function errorReplayViewedCount(){return Object.keys(errorReplay.viewed).filter(id=>errorReplay.viewed[id]).length}
 function errorReplayCompletedCount(){return Object.keys(errorReplay.completed).filter(id=>errorReplay.completed[id]).length}
 function replayUi(it,en){return settings.lang==='en'?en:it}
@@ -2759,7 +2779,15 @@ function errorReplayOpen(id){
   render();
  }
 }
-function errorReplaySearch(){const value=cleanProfileValue($('#errorReplaySearch')?.value,180).toLowerCase();if(!value)return;const question=Q.find(item=>item.id.toLowerCase()===value)||Q.find(item=>(item.question+' '+(item.question_it||'')).toLowerCase().includes(value));if(!question)return toast(t('noResults'));errorReplayOpen(question.id)}
+function errorReplaySearch(){
+ const raw=cleanProfileValue($('#errorReplaySearch')?.value,180);
+ if(!raw)return;
+ const normalizedId=normalizeReplayQuestionId(raw);
+ const value=raw.toLowerCase();
+ const question=Q.find(item=>normalizeReplayQuestionId(item.id)===normalizedId)||Q.find(item=>(item.question+' '+(item.question_it||'')).toLowerCase().includes(value));
+ if(!question)return toast(t('noResults'));
+ errorReplayOpen(question.id);
+}
 function renderReplayStable(){
  const anchor=screen.querySelector('[data-real-film]')||screen.querySelector('.replay-main-card');
  const anchorTop=anchor?anchor.getBoundingClientRect().top:null;

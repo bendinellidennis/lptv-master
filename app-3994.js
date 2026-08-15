@@ -1,3 +1,4 @@
+/* Build 39.12.69 Replay250 FINAL ENGINE/UI REFINEMENT — manual phase flow + mobile Continue dock; Replay content unchanged. */
 /* Build 39.12.52 Replay185 — INITIAL INLINE FREEZE MAP FIX; base 39.12.49 preserved */
 /* Build 39.12.49 Replay180 — adds five Replay176-180 with 15 portrait-safe inline freezes; prior Replay logic/content preserved. */
 /* build 39.12.34 Replay140 — 5 NEW STRICT REPLAYS + 15 INLINE JPEG FREEZES; GITHUB SAFE SIZE FIX V2 */
@@ -2851,9 +2852,9 @@ function errorReplayViewHtml(){
   question?`<section class="replay-main-card">
    <div class="replay-question-head"><span>${esc(question.id)} · ${esc(replayUi(scenario.labelIt,scenario.labelEn))}</span><h2>${esc(question.question)}</h2><p>${esc(question.question_it||question.question)}</p></div>
    ${errorReplayVisualHtml(question,errorReplayStep)}
-   <div class="replay-stage-nav four"><button class="${errorReplayStep===0?'active':''}" data-replay-stage="0"><span>01</span><strong>${esc(replayUi('Situazione','Situation'))}</strong><small>${esc(replayUi('Guarda la strada','Read the road'))}</small></button><button class="${errorReplayStep===1?'active':''}" data-replay-stage="1"><span>02</span><strong>${esc(replayUi('Pericolo','Hazard'))}</strong><small>${esc(replayUi('Scopri cosa non vedi','Reveal what is hidden'))}</small></button><button class="${errorReplayStep===2?'active':''}" data-replay-stage="2"><span>03</span><strong>${esc(replayUi('Spiegazione','Explanation'))}</strong><small>${esc(replayUi('Capisci la regola','Understand the rule'))}</small></button><button class="${errorReplayStep===3?'active':''}" data-replay-stage="3"><span>04</span><strong>${esc(replayUi('Azione','Action'))}</strong><small>${esc(replayUi('Guardala in movimento','Watch it in motion'))}</small></button></div>
+   <div class="replay-stage-nav four"><button class="${errorReplayStep===0?'active':''}" data-replay-stage="0"><span>01</span><strong>${esc(replayUi('Situazione','Situation'))}</strong><small>${esc(replayUi('Guarda la strada','Read the road'))}</small></button><button class="${errorReplayStep===1?'active':''}" data-replay-stage="1" ${errorReplayStep<1?'disabled aria-disabled="true"':''}><span>02</span><strong>${esc(replayUi('Pericolo','Hazard'))}</strong><small>${esc(replayUi('Scopri cosa non vedi','Reveal what is hidden'))}</small></button><button class="${errorReplayStep===2?'active':''}" data-replay-stage="2" ${errorReplayStep<2?'disabled aria-disabled="true"':''}><span>03</span><strong>${esc(replayUi('Spiegazione','Explanation'))}</strong><small>${esc(replayUi('Capisci la regola','Understand the rule'))}</small></button><button class="${errorReplayStep===3?'active':''}" data-replay-stage="3" ${errorReplayStep<3?'disabled aria-disabled="true"':''}><span>04</span><strong>${esc(replayUi('Azione','Action'))}</strong><small>${esc(replayUi('Guardala in movimento','Watch it in motion'))}</small></button></div>
    <div class="replay-decision-panel"><article class="avoid"><span>${esc(replayUi('DA EVITARE','AVOID'))}</span><h3>${esc(replayUi(scenario.dangerIt,scenario.dangerEn))}</h3></article><article class="correct"><span>${esc(replayUi('AZIONE CORRETTA','CORRECT ACTION'))}</span><h3>${esc(replayCorrectAnswer(question))}</h3><p>${esc(settings.lang==='en'?(question.explanation||question.explanation_it):(question.explanation_it||question.explanation))}</p></article></div>
-   <div class="replay-controls"><select id="errorReplaySpeed"><option value="slow" ${errorReplay.speed==='slow'?'selected':''}>${esc(t('errorReplaySlow'))}</option><option value="normal" ${errorReplay.speed==='normal'?'selected':''}>${esc(t('errorReplayNormal'))}</option><option value="fast" ${errorReplay.speed==='fast'?'selected':''}>${esc(t('errorReplayFast'))}</option></select><button class="btn" id="errorReplayPlay">${esc(errorReplayStep>=2?replayUi('Rivedi dall’inizio','Replay from start'):replayUi('Avvia analisi','Start analysis'))}</button><button class="btn secondary" id="errorReplayNext">${esc(replayUi('Passaggio successivo','Next stage'))}</button></div>
+   <div class="replay-controls replay-controls-final"><select id="errorReplaySpeed"><option value="slow" ${errorReplay.speed==='slow'?'selected':''}>${esc(t('errorReplaySlow'))}</option><option value="normal" ${errorReplay.speed==='normal'?'selected':''}>${esc(t('errorReplayNormal'))}</option><option value="fast" ${errorReplay.speed==='fast'?'selected':''}>${esc(t('errorReplayFast'))}</option></select><button class="btn secondary" id="errorReplayRestart" ${errorReplayStep===0?'disabled aria-disabled="true"':''}>${esc(replayUi('Ricomincia','Restart'))}</button></div>
    <div class="replay-actions"><button class="btn" data-replay-practise="${esc(question.id)}">${esc(t('errorReplayPractise'))}</button><button class="btn secondary" data-replay-ai="${esc(question.id)}">${esc(t('errorReplayUnderstand'))}</button></div>
    <div class="replay-share-actions"><button class="btn" data-replay-share="${esc(question.id)}">${esc(t('errorReplayShare'))}</button><button class="btn secondary" data-replay-copy="${esc(question.id)}">${esc(t('errorReplayCopy'))}</button></div>
   </section>`:`<div class="card replay-empty"><p>${esc(t('errorReplayNoQuestion'))}</p></div>`,
@@ -2897,22 +2898,38 @@ function renderReplayStable(){
   if(Math.abs(delta)>.5)window.scrollBy(0,delta);
  });
 }
-function errorReplayNextStep(questionId){errorReplayStep=Math.min(3,errorReplayStep+1);if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);renderReplayStable()}
-function errorReplayPlay(questionId){
+function replayRemoveMobileContinueDock(){
+ screen.querySelector('[data-replay-mobile-continue-dock]')?.remove();
+ screen.classList.remove('replay-continue-docked');
+}
+function replayAdvanceTo(target,questionId){
+ if(!Number.isFinite(target)||target!==errorReplayStep+1)return;
  if(errorReplayTimer){clearInterval(errorReplayTimer);errorReplayTimer=null}
- if(errorReplayStep===0){
-  toast(replayUi(
-   'Prima individua il pericolo nella scena e premi Continua.',
-   'Find the hazard in the scene and press Continue first.'
-  ));
-  return;
- }
- if(errorReplayStep>=3)errorReplayStep=1;
- const speed=$('#errorReplaySpeed')?.value||errorReplay.speed||'normal';errorReplay.speed=speed;errorReplaySave();
- const delay=speed==='slow'?2300:speed==='fast'?900:1500;
- errorReplayTimer=setInterval(()=>{errorReplayStep++;if(errorReplayStep>=3){errorReplayStep=3;clearInterval(errorReplayTimer);errorReplayTimer=null;errorReplayMarkCompleted(questionId)}renderReplayStable()},delay);
+ errorReplayStep=Math.min(3,target);
+ if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);
+ replayCoachFeedback=null;
+ renderReplayStable();
+}
+function replayMountMobileContinueDock(target,questionId){
+ replayRemoveMobileContinueDock();
+ if(!Number.isFinite(target)||target!==errorReplayStep+1)return;
+ const dock=document.createElement('div');
+ dock.className='replay-mobile-continue-dock';
+ dock.dataset.replayMobileContinueDock='true';
+ dock.innerHTML=`<button type="button" data-replay-mobile-continue><strong>${esc(replayUi('Continua','Continue'))}</strong><span aria-hidden="true">→</span></button>`;
+ screen.appendChild(dock);
+ screen.classList.add('replay-continue-docked');
+ const button=dock.querySelector('[data-replay-mobile-continue]');
+ if(button)button.onclick=event=>{event.preventDefault();event.stopPropagation();replayAdvanceTo(target,questionId)};
+}
+function errorReplayNextStep(){
+ toast(replayUi('Usa Continua nella scena.','Use Continue in the scene.'));
+}
+function errorReplayPlay(){
+ toast(replayUi('Il Replay avanza solo con Continua.','The Replay advances only with Continue.'));
 }
 function bindErrorReplay(){
+ replayRemoveMobileContinueDock();
  const questionId=route.data?.questionId||errorReplay.lastQuestionId||'';
  const question=errorReplayQuestion(questionId);
 
@@ -2928,28 +2945,13 @@ function bindErrorReplay(){
   };
  }
 
- const playButton=$('#errorReplayPlay');
- if(playButton)playButton.onclick=()=>errorReplayPlay(questionId);
-
- const nextButton=$('#errorReplayNext');
- if(nextButton){
-  nextButton.onclick=()=>{
-   // Stage 01 must be completed by finding the hazard.
-   if(errorReplayStep===0){
-    toast(replayUi(
-     'Prima individua il pericolo nella scena.',
-     'Find the hazard in the scene first.'
-    ));
-    return;
-   }
-   if(errorReplayStep===1||errorReplayStep===2){
-    toast(replayUi(
-     'Premi Continua nella scena.',
-     'Press Continue in the scene.'
-    ));
-    return;
-   }
-   errorReplayNextStep(questionId);
+ const restartButton=$('#errorReplayRestart');
+ if(restartButton){
+  restartButton.onclick=()=>{
+   if(errorReplayTimer){clearInterval(errorReplayTimer);errorReplayTimer=null}
+   errorReplayStep=0;
+   replayCoachFeedback=null;
+   renderReplayStable();
   };
  }
 
@@ -2997,16 +2999,13 @@ function bindErrorReplay(){
 
  const phaseContinue=screen.querySelector('[data-replay-phase-continue]');
  if(phaseContinue){
+  const target=Number(phaseContinue.dataset.replayPhaseContinue);
   phaseContinue.onclick=event=>{
    event.preventDefault();
    event.stopPropagation();
-   const target=Number(phaseContinue.dataset.replayPhaseContinue);
-   if(!Number.isFinite(target)||target!==errorReplayStep+1)return;
-   errorReplayStep=Math.min(3,target);
-   if(errorReplayStep>=3)errorReplayMarkCompleted(questionId);
-   replayCoachFeedback=null;
-   renderReplayStable();
+   replayAdvanceTo(target,questionId);
   };
+  replayMountMobileContinueDock(target,questionId);
  }
 
  const replayPlayer=$('[data-replay-engine-player]');
@@ -3068,9 +3067,9 @@ function bindErrorReplay(){
     continueButton.onclick=continueEvent=>{
      continueEvent.preventDefault();
      continueEvent.stopPropagation();
-     errorReplayStep=1;
-     renderReplayStable();
+     replayAdvanceTo(1,questionId);
     };
+    replayMountMobileContinueDock(1,questionId);
    }
   };
 

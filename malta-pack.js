@@ -10,7 +10,7 @@
   licenceType:'LPTV',
   drivingSide:'left',
   units:{distance:'km',speed:'km/h'},
-  languages:['en','it'],
+  languages:['en','it','mt'],
   visualProfile:{
    roadStone:'limestone',
    climate:'Mediterranean',

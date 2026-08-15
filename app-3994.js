@@ -228,7 +228,7 @@ const SETTINGS = 'mdm-v1-settings';
 const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
-const BUILD_VERSION = '40.3';
+const BUILD_VERSION = '40.4.6';
 const BUILD_RELEASE_DATE = '15/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -274,7 +274,7 @@ const ui = {
  mt:{home:'Dar',search:'Fittex',assistant:'Assistent LPTV',profile:'Profil',welcome:'Dak kollu li għandek bżonn biex titgħallem u ssuq f’Malta.',continue:'Kompli l-preparazzjoni tiegħek',lptv:'LPTV',lptvSub:'Eżami, studju u żbalji',licences:'Liċenzji tas-sewqan',licencesSub:'Kategoriji użati f’Malta',roadCode:'Kodiċi tat-Triq',roadCodeSub:'Regoli spjegati b’mod ċar',regulations:'Regolamenti',regulationsSub:'Sorsi uffiċjali u aġġornamenti',ai:'Assistent LPTV',aiSub:'Fittex regoli, mistoqsijiet u spjegazzjonijiet offline',profileTitle:'Il-profil tiegħek',startExam:'Eżami realistiku',examDetail:'35 mistoqsija • 45 minuta • tgħaddi 30/35',study:'Studja skont is-suġġett',errors:'Erġa’ agħmel l-iżbalji',progress:'Progress',back:'Lura',translate:'Ittraduċi',listen:'Isma’',explain:'Spjegali',confirm:'Ikkonferma',next:'Li jmiss',exit:'Oħroġ',question:'Mistoqsija',selectOne:'Agħżel tweġiba waħda',selectMany:n=>`Agħżel ${n} tweġibiet`,correct:'Tweġiba korretta',wrong:'Tweġiba ħażina',yourAnswer:'It-tweġiba tiegħek',rightAnswer:'It-tweġiba korretta',passed:'GĦADDEJT',failed:'MA GĦADDEJTX',completed:'Sessjoni lesta',officialSource:'Sors uffiċjali',openSource:'Iftaħ is-sors uffiċjali',language:'Lingwa',theme:'Dehra',light:'Ċar',dark:'Skur',system:'Sistema',clear:'Ħassar il-progress',database:'Database',questions:'mistoqsijiet',searchPlaceholder:'Fittex mistoqsijiet, regoli jew regolamenti…',noResults:'Ma nstab l-ebda riżultat.',assistantIntro:'Staqsi dwar regola, mistoqsija jew suġġett tas-sewqan. L-ewwel infittex fil-kontenut verifikat tal-app.',assistantPlaceholder:'Eżempju: prijorità fir-roundabout, passiġġier anzjan, tunnel…',send:'Ibgħat',assistantLocal:'Tfittxija lokali trasparenti — ebda AI esterna',assistantDisclaimer:'Dan huwa assistent ta’ tfittxija LPTV offline, mhux AI ġenerattiva. Għal deċiżjonijiet legali iċċekkja s-sorsi uffiċjali.',officialEnglish:'Ingliż uffiċjali',italian:'Taljan',maltese:'Malti',maltesePending:'It-traduzzjoni Maltija ta’ dan il-kontenut qed titħejja. It-test uffiċjali bl-Ingliż jibqa’ disponibbli.',categories:'Kategoriji',lastVerified:'Sorsi ċċekkjati',resetConfirm:'Tħassar il-progress kollu?',noErrors:'Għad m’għandekx żbalji salvati.',resume:'Kompli s-sessjoni',newExam:'Eżami ġdid',allTopics:'Is-suġġetti kollha',chooseTopic:'Agħżel suġġett',start:'Ibda',seen:'Rajthom',accuracy:'Preċiżjoni',exams:'Eżamijiet',best:'L-aħjar',last:'L-aħħar riżultat',official:'Bank ta’ preparazzjoni estiż',studyMode:'Modalità ta’ studju',examMode:'Modalità ta’ eżami',noHelpExam:'Traduzzjonijiet u spjegazzjonijiet ikunu disponibbli wara l-eżami.',resultReview:'Ara l-iżbalji',close:'Agħlaq',guidedStudy:'Studju gwidat',guidedStudyDetail:'250 mistoqsija pertinenti • traduzzjoni • awdjo • korrezzjoni immedjata',assistedSimulation:'Simulazzjoni bl-għajnuna',assistedDetail:'35 mistoqsija • traduzzjoni u awdjo • timer fakultattiv',realExamPieta:'Eżami reali ta’ Pietà',realExamDetail:'35 mistoqsija • 45 minuta • Ingliż biss • korrezzjoni fl-aħħar',chooseTimer:'Agħżel it-timer',noTimer:'Mingħajr timer',timer45:'45 minuta',timer30:'30 minuta',startSimulation:'Ibda s-simulazzjoni',guidedMode:'Studju gwidat',assistedMode:'Simulazzjoni bl-għajnuna',realExamMode:'Eżami reali ta’ Pietà',hideTranslation:'Aħbi t-traduzzjoni',translationQuestion:'Mistoqsija bit-Taljan',translationAnswers:'Tweġibiet bit-Taljan',whyCorrect:'Għaliex din it-tweġiba hija korretta',wrongChoiceReason:'L-għażla magħżula ma taqbilx mar-regola mitluba mill-mistoqsija.',fourChapters:"Kors sħiħ",fourChaptersSub:"250 mistoqsija pertinenti fl-4 kapitoli ta’ preparazzjoni",weakAttack:"Taħriġ fuq id-dgħufijiet",weakAttackSub:"Taħriġ adattiv ibbażat fuq l-iżbalji u l-inqas preċiżjoni",topicSafety:"Saħħa, sigurtà u responsabbiltajiet legali",topicSafetyDesc:"Inċidenti, first aid, dokumenti, pieni, operaturi, vetturi u tagħbija sigura",topicCustomer:"Customer care u passiġġieri vulnerabbli",topicCustomerDesc:"Assistenza, diżabilità, kumdità, komunikazzjoni u mġiba professjonali",topicRoad:"Proċeduri u responsabbiltajiet fit-triq",topicRoadDesc:"Regoli, sinjali, junctions, crossings, perikli u defensive driving",topicEco:"Sewqan ekoloġiku u sigur",topicEcoDesc:"Fjuwil, emissjonijiet, ambjent u sewqan effiċjenti",chapterProgress:"Progress tal-kapitlu",startChapter:"Studja dan il-kapitlu",allChapterQuestions:"Il-mistoqsijiet kollha tal-kapitlu",adaptiveTraining:"Taħriġ adattiv",adaptiveTrainingDesc:"L-app tagħti prijorità lill-iżbalji, preċiżjoni baxxa u mistoqsijiet mhux magħmula.",availableWeak:"Mistoqsijiet magħżula għalik",startWeak:"Ibda t-taħriġ fuq id-dgħufijiet",readiness:"Tħejjija għall-eżami",coverage:"Kopertura",recentAverage:"Medja tal-aħħar eżamijiet",recommended:"Il-pass li jmiss",readinessStart:"Bidu",readinessGrowing:"Qed titjieb",readinessAlmost:"Kważi lest",readinessReady:"Lest għat-test reali",recommendStudy:"Agħmel aktar mistoqsijiet ta’ studju.",recommendWeak:"Aħdem fuq l-aktar suġġetti dgħajfa.",recommendExam:"Ipprova eżami realistiku ieħor.",examHistory:"Storja tal-eżamijiet",noExamHistory:"Għad ma lestejt l-ebda eżami realistiku.",passedSmall:"Għaddejt",failedSmall:"Ma għaddejtx",chapterQuestions:"Mistoqsijiet tal-kapitlu",chapterAccuracy:"Preċiżjoni tal-kapitlu",diagnostic:"Dijanjosi personali",dailyPlan:"Pjan tal-lum",dailyPlanSub:"15-il mistoqsija personalizzata biex tkompli l-preparazzjoni",dailyDone:"Progress tal-lum",dailyComplete:"L-għan tal-ġurnata tlesta",startDaily:"Ibda t-taħriġ tal-lum",repeatDaily:"Erġa’ agħmel it-taħriġ tal-lum",streak:"Jiem konsekuttivi",days:"jiem",englishCoach:"English Coach",englishCoachSub:"Kliem importanti tal-LPTV bit-Taljan, eżempji u awdjo",vocabularySearch:"Fittex kelma bl-Ingliż jew bit-Taljan…",knownWords:"Kliem mitgħallem",markKnown:"Immarka bħala mitgħallma",known:"Mitgħallma",savedQuestions:"Mistoqsijiet salvati",savedQuestionsSub:"Żomm mistoqsijiet diffiċli jew importanti għar-reviżjoni",saveQuestion:"Issejvja l-mistoqsija",removeSaved:"Neħħi mis-salvati",noSavedQuestions:"Għad ma ssejvjajt l-ebda mistoqsija.",backup:"Backup tal-progress",backupSub:"Issejvja jew irrestawra r-riżultati u l-istorja",exportBackup:"Esporta backup",importBackup:"Importa backup",backupCreated:"Backup inħoloq.",backupRestored:"Backup ġie rrestawrat.",backupInvalid:"Dan il-file tal-backup mhuwiex validu.",today:"Illum",words:"kliem",example:"Eżempju",dailyGoal:"Għan tal-ġurnata",examCentre:"Ċentru tal-Eżami",examCentreSub:"35 mistoqsija mill-bank estiż ta’ preparazzjoni LPTV",examInstructions:"Istruzzjonijiet tal-eżami",examRuleQuestions:"35 mistoqsija",examRuleTime:"45 minuta",examRulePass:"Tgħaddi b’30/35",examRuleEnglish:"Ingliż biss waqt it-test",examRuleNavigation:"Tista’ timxi bejn il-mistoqsijiet u timmarkahom għar-reviżjoni.",startRealExam:"Ibda l-eżami reali",answered:"Imwieġba",unanswered:"Mhux imwieġba",flagged:"Immarkati",flagQuestion:"Immarka",unflagQuestion:"Neħħi l-marka",navigator:"Navigatur tal-mistoqsijiet",previous:"Lura",finishExam:"Temm l-eżami",pauseExam:"Waqqaf temporanjament",pauseExamConfirm:"Trid twaqqaf l-eżami u tmur lura fil-menu? It-tweġibiet u t-timer jinżammu.",confirmFinish:"Trid tissottometti l-eżami issa?",examSummary:"Sommarju tal-eżami",timeUsed:"Ħin użat",topicResults:"Riżultati skont il-kapitlu",resumeExam:"Kompli l-eżami",autoSubmitted:"Il-ħin skada. L-eżami ġie sottomess awtomatikament.",answerRecorded:"Tweġiba ssejvjata",examQuestionHelp:"Agħżel it-tweġiba. Tista’ tibdilha qabel tissottometti.",examPassTarget:"Għandek bżonn mill-inqas 30 tweġiba korretta.",newRealExam:"Eżami reali ġdid",allAnswered:"Il-mistoqsijiet kollha ġew imwieġba",unansweredWarning:n=>`Għad għandek ${n} mistoqsijiet mhux imwieġba. Tissottometti xorta?`,bankScope:"Bank tal-mistoqsijiet",bankAll:"Il-mistoqsijiet pertinenti kollha",bankCore:"Qalba LPTV",bankRoad:"Estensjoni tas-sigurtà fit-triq",bankAuditTitle:"Bank estiż u separat",bankAuditText:"250 mistoqsija għat-taħriġ: 68 qalba LPTV u 182 dwar is-sigurtà fit-triq.",bankExcludedText:"Esklużi: 31 mistoqsija ta’ operaturi/SOV/ġestjoni u 2 mistoqsijiet amministrattivi tal-liċenzja B.",bankDisclaimer:"Transport Malta ma tippubblikax id-daqs totali tal-bank LPTV. Dan huwa bank ta’ preparazzjoni, mhux il-lista uffiċjali sħiħa.",questionLibrary:"Bank tal-mistoqsijiet",questionLibrarySub:"Fittex, iffiltra u irrevedi l-250 mistoqsija pertinenti",scheduledReview:"Reviżjoni skedata",scheduledReviewSub:"Il-mistoqsijiet jerġgħu lura meta jkun il-ħin biex tirrevedihom",dueNow:"Għar-reviżjoni issa",nextReview:"Reviżjoni li jmiss",startReview:"Ibda r-reviżjoni skedata",noReviewDue:"Illum m’hemmx mistoqsijiet dovuti",reviewReady:"Mistoqsijiet lesti għar-reviżjoni",filterStatus:"Status tal-progress",filterChapter:"Kapitlu",filterBank:"Bank tal-mistoqsijiet",statusAll:"L-istatus kollha",statusUnseen:"Qatt ma ġew studjati",statusWrong:"Imwieġba ħażin",statusSaved:"Salvati",statusDue:"Dovuti għar-reviżjoni",statusMastered:"Mitgħallma",resultsCount:"riżultati",attempts:"Tentattivi",studyNow:"Studja issa",mastered:"Mitgħallma",dueToday:"Irrevedi llum",reviewIn:"Reviżjoni fi",resetFilters:"Neħħi l-filtri",loadMore:"Uri aktar",allChapters:"Il-kapitli kollha",librarySearch:"Fittex bl-Ingliż, bit-Taljan, kategorija jew ID…",reviewSystem:"Reviżjoni intelliġenti",reviewSystemSub:"Tweġibiet korretti jerġgħu lura wara 1, 3, 7, 14 u 30 jum. L-iżbalji jerġgħu lura minnufih.",nextReviewNone:"Għad ma ġiet skedata l-ebda reviżjoni.",masteredQuestions:"Mistoqsijiet mitgħallma",reviewedQuestions:"Mistoqsijiet skedati",sentenceCoach:"Ifhem il-frażi",hideSentenceCoach:"Aħbi l-għajnuna tal-frażi",sentenceCoachSub:"Frażijiet u kliem importanti spjegati bit-Taljan",keyPhrases:"Frażijiet tipiċi tal-eżami",keyWords:"Kliem importanti",slowListen:"Isma’ bil-mod",noKeyTerms:"Ma nstabet l-ebda frażi jew kelma mid-dizzjunarju f’din il-mistoqsija.",phrasebook:"Frażarju tal-eżami",phrasebookSub:"Espressjonijiet komuni fil-mistoqsijiet tat-test tas-sewqan",commonPhrases:"Frażijiet komuni tal-eżami",phraseSearch:"Fittex frażi bl-Ingliż jew bit-Taljan…",learnedPhrases:"Frażijiet mitgħallma",markPhraseKnown:"Immarka l-frażi bħala mitgħallma",phraseKnown:"Frażi mitgħallma",flashcards:"Flashcards tal-frażijiet",flashcardsSub:"Prattika mill-Ingliż għat-Taljan u mit-Taljan għall-Ingliż",englishToItalian:"Ingliż → Taljan",italianToEnglish:"Taljan → Ingliż",revealAnswer:"Uri t-tweġiba",hideAnswer:"Aħbi t-tweġiba",nextCard:"Karta li jmiss",shuffleCards:"Ħawwad il-karti",cardProgress:"Karta",phraseMeaning:"Tifsira bit-Taljan",questionLanguageHelp:"Għajnuna biex tifhem il-mistoqsija",audioNormal:"Veloċità normali",audioSlow:"Veloċità bil-mod",personalDetails:"Dettalji personali",personalDetailsSub:"Imla l-profil u pprepara l-kuntatt tar-reġistrazzjoni",firstName:"Isem",lastName:"Kunjom",emailAddress:"Indirizz elettroniku",addressOptional:"Indirizz (mhux obbligatorju)",ageOptional:"Età (mhux obbligatorja)",saveProfile:"Issejvja l-profil",prepareRegistration:"Ipprepara l-email tar-reġistrazzjoni",profileSaved:"Il-profil ġie ssejvjat fuq dan l-apparat.",profileRequired:"Daħħal isem, kunjom u indirizz elettroniku validu.",privacyRequired:"Aċċetta l-avviż tal-privatezza qabel ir-reġistrazzjoni.",privacyConsent:"Naċċetta li dawn id-dettalji jintbagħtu lil Malta Driving Master għar-reġistrazzjoni u l-assistenza.",updatesConsent:"Nixtieq nirċievi wkoll aġġornamenti importanti bl-email.",privacyNote:"Id-dettalji jibqgħu fuq dan l-apparat. L-app tiftaħ Mail jew Gmail u trid tagħfas Ibgħat.",registrationPrepared:"L-email tar-reġistrazzjoni ġiet ippreparata. Ibgħatha minn Mail jew Gmail.",registrationPending:"Profil mhux komplut",registrationComplete:"Profil komplut",completeProfile:"Imla l-profil tiegħek",completeProfileSub:"Isem, kunjom u email huma obbligatorji għar-reġistrazzjoni.",registrationId:"Kodiċi tar-reġistrazzjoni",adminContact:"Kuntatt amministrattiv",deletePersonalData:"Ħassar id-dettalji personali",deletePersonalDataConfirm:"Tħassar id-dettalji personali ssejvjati fuq dan l-apparat?",personalDataDeleted:"Id-dettalji personali tħassru.",emailInvalid:"Daħħal indirizz elettroniku validu.",ageInvalid:"L-età trid tkun bejn 16 u 100 jew titħalla vojta.",emailNotAutomatic:"Il-ftuħ tal-email ma jibgħathiex awtomatikament.",privacyAndContact:"Privatezza u kuntatt",savedOnDevice:"Issejvjat fuq l-apparat",registrationPreparedOn:"Reġistrazzjoni ppreparata",sendRegistration:"Ibgħat ir-reġistrazzjoni",shareRegistration:"Aqsam ir-reġistrazzjoni",openGmail:"Iftaħ Gmail",openMail:"Iftaħ Mail",copyRegistration:"Ikkopja d-dettalji",registrationCopied:"Id-dettalji tar-reġistrazzjoni ġew ikkupjati.",shareUnavailable:"Il-qsim mhux disponibbli hawn. Uża Gmail, Mail jew Ikkopja.",gmailOpening:"Qed jinfetaħ Gmail…",mailOpening:"Qed jinfetaħ Mail…",sendOptions:"Għażliet biex tibgħat ir-reġistrazzjoni",sendOptionsSub:"Agħżel il-metodu li jaħdem fuq l-apparat tiegħek.",copyFallback:"Id-dettalji huma lesti. Waħħalhom f’email lil:",closeOptions:"Agħlaq",directSendNote:"L-ebda messaġġ ma jintbagħat awtomatikament. Iċċekkja r-riċevitur u agħfas Ibgħat.",detailedHistory:"Storja dettaljata tal-eżamijiet",examDetails:"Dettalji tal-eżami",examDetailsSub:"Iċċekkja kull tweġiba tas-simulazzjoni",viewDetails:"Ara d-dettalji",oldExamSummary:"Dan l-eżami sar qabel l-istorja dettaljata. Huwa disponibbli biss is-sommarju.",correctQuestions:"Mistoqsijiet korretti",wrongQuestions:"Mistoqsijiet żbaljati",unansweredQuestions:"Mistoqsijiet mhux imwieġba",flaggedQuestions:"Mistoqsijiet immarkati",selectedAnswer:"Tweġiba magħżula",noAnswerSelected:"L-ebda tweġiba magħżula",retryExamErrors:"Erġa’ agħmel l-iżbalji ta’ dan l-eżami",shareProgressReport:"Aqsam ir-rapport tal-progress",copyProgressReport:"Ikkopja r-rapport tal-progress",progressReportCopied:"Ir-rapport tal-progress ġie kkupjat.",examReportCopied:"Ir-rapport tal-eżami ġie kkupjat.",shareExamReport:"Aqsam ir-rapport tal-eżami",reportTitle:"Rapport tal-progress Malta Driving Master",registeredUser:"Utent irreġistrat",notProvided:"Mhux indikat",examNumber:"Eżami",examResult:"Riżultat tal-eżami",questionsReviewed:"Mistoqsijiet iċċekkjati",statisticsCorrection:"Statistika tal-eżami kkoreġuta",statisticsCorrectionSub:"Kull mistoqsija tal-eżami issa tingħadd darba biss.",backToProgress:"Lura għall-progress",answerStatus:"Status tat-tweġiba",questionCode:"Kodiċi tal-mistoqsija",examNotFound:"L-eżami ma nstabx.",noMistakesInExam:"M’hemmx żbalji x’terġa’ tagħmel f’dan l-eżami.",reportPrepared:"Ir-rapport ġie ppreparat.",examDate:"Data tal-eżami",passRate:"Rata ta’ suċċess",helpSupport:"Għajnuna u appoġġ",helpSupportSub:"Installa l-app, ara l-funzjonijiet ewlenin u rrapporta problema",installApp:"Installa l-app",installAppSub:"Żid Malta Driving Master mat-telefon bħal app normali",appInstalled:"App installata",appNotInstalled:"L-app għadha mhix installata",installNow:"Installa issa",installIOS:"Fuq iPhone: agħfas Share, agħżel Add to Home Screen u mbagħad Add.",installAndroid:"Fuq Android: iftaħ il-menu tal-browser u agħżel Install app jew Add to Home screen.",installDesktop:"Uża l-ikona jew il-menu tal-browser biex tinstalla l-app.",installUnavailable:"L-installazzjoni awtomatika mhix disponibbli hawn. Segwi l-istruzzjonijiet murija.",installationComplete:"L-installazzjoni tlestiet.",refreshApp:"Aġġorna l-verżjoni tal-app",refreshingApp:"Qed tiġi ċċekkjata l-aħħar verżjoni…",quickGuide:"Gwida ta’ malajr",quickGuideSub:"Iftaħ it-taqsimiet ewlenin tal-app",guideStudy:"Studja bi traduzzjoni, awdjo u korrezzjoni immedjata",guideExam:"Ipprova s-simulazzjoni realistika ta’ 35 mistoqsija",guideProgress:"Iċċekkja r-riżultati, l-iżbalji u l-istorja tal-eżamijiet",guideProfile:"Irreġistra, issejvja l-progress u biddel is-settings",frequentQuestions:"Mistoqsijiet frekwenti",faqBankQ:"Il-250 mistoqsija huma l-bank uffiċjali sħiħ ta’ Transport Malta?",faqBankA:"Le. Huma bank magħżul għat-taħriġ. Transport Malta ma tippubblikax il-bank sħiħ tal-LPTV.",faqOfflineQ:"L-app taħdem mingħajr internet?",faqOfflineA:"Wara li tinfetaħ online u tiġi installata, il-kontenut ewlieni jista’ jaħdem offline. Links esterni u email jeħtieġu internet.",faqDataQ:"Fejn jinżammu l-progress u d-dettalji personali?",faqDataA:"Jinżammu fuq dan l-apparat. Id-dettalji jaslu għand l-amministratur biss meta tibgħat il-messaġġ.",faqUpdateQ:"Kif nirċievi verżjoni ġdida?",faqUpdateA:"Wara build ġdida, iftaħ din il-paġna u agħfas Aġġorna l-verżjoni tal-app.",faqDeleteQ:"Nista’ nħassar id-data tiegħi?",faqDeleteA:"Iva. Id-dettalji personali u l-progress jistgħu jitħassru separatament mill-Profil.",reportProblem:"Irrapporta problema",reportProblemSub:"Iddeskrivi x’ġara. Il-messaġġ jitħejja għall-appoġġ ta’ Malta Driving Master.",supportCategory:"Tip ta’ rapport",supportTechnical:"Problema teknika",supportQuestion:"Mistoqsija jew tweġiba biex tiġi ċċekkjata",supportRegistration:"Problema tar-reġistrazzjoni",supportSuggestion:"Suġġeriment",questionIdOptional:"Kodiċi tal-mistoqsija (mhux obbligatorju)",problemDescription:"Deskrizzjoni",problemPlaceholder:"Spjega x’ġara u x’kont qed tagħmel…",descriptionRequired:"Ikteb deskrizzjoni ta’ mill-inqas 10 karattri.",shareReport:"Aqsam ir-rapport",openSupportGmail:"Iftaħ Gmail",openSupportMail:"Iftaħ Mail",copySupportReport:"Ikkopja r-rapport",supportCopied:"Ir-rapport ġie kkupjat.",supportPrepared:"Ir-rapport ġie ppreparat.",contactSupport:"Kuntatt tal-appoġġ",version:"Verżjoni",privacySummary:"Sommarju tal-privatezza",privacySummaryText:"Id-data tal-istudju u l-profil jibqgħu fuq dan l-apparat. Xejn ma jintbagħat awtomatikament.",openProfile:"Iftaħ il-profil",openStudy:"Iftaħ l-istudju gwidat",openExam:"Iftaħ iċ-Ċentru tal-Eżami",openProgress:"Iftaħ il-progress",standaloneMode:"Modalità app installata",browserMode:"Modalità browser",menuHelp:"Għajnuna",device:"Apparat",currentPage:"Paġna kurrenti",brandSlogan:"Ipprepara għall-eżami. Irrispetta t-triq. Ipproteġi kull passiġġier.",bridgeTest:"Bridge Test",bridgeTestSub:"Jifred l-għarfien tar-regoli mill-fehim tal-Ingliż",bridgeIntro:"L-istess kunċetti jiġu ttestjati l-ewwel bit-Taljan u mbagħad bl-Ingliż tal-eżami.",bridgeQuestions:"Kunċetti għat-test",bridgeStart:"Ibda Bridge Test",bridgePhaseItalian:"Fażi 1 minn 2 — Ir-regola bit-Taljan",bridgePhaseEnglish:"Fażi 2 minn 2 — L-Ingliż tal-eżami",bridgeNoHelp:"Wieġeb mingħajr għajnuna. Id-dijanjosi tidher fl-aħħar.",bridgeTransition:"Il-fażi Taljana tlestiet. Issa wieġeb bl-Ingliż.",bridgeResults:"Riżultat Bridge Test",knowledgeScore:"Għarfien tar-regoli",englishScore:"Fehim tal-Ingliż",masteredConcepts:"Kunċetti mifhuma fiż-żewġ lingwi",languageBarrier:"Ostaklu tal-lingwa",ruleGap:"Nuqqas fl-għarfien tar-regola",recoveredEnglish:"Korretta biss bl-Ingliż",bridgeMeaning:"Id-dijanjosi tiegħek",bridgeLanguageMeaning:"Kont taf ir-regola bit-Taljan iżda żbaljajt bl-Ingliż.",bridgeRuleMeaning:"Ir-regola ma kinitx ċara bit-Taljan.",bridgeMasteredMeaning:"Fhimt ir-regola u l-kliem bl-Ingliż.",trainLanguageBarrier:"Ħarreġ il-lingwa",trainRuleGaps:"Ħarreġ ir-regoli",repeatBridge:"Erġa’ agħmel Bridge Test",latestBridge:"L-aħħar dijanjosi Bridge",noBridgeYet:"Għad ma lestejt l-ebda Bridge Test.",bridgeNotOfficial:"Din hija dijanjosi tat-tagħlim, mhux riżultat uffiċjali.",italianPhase:"Fażi Taljana",englishPhase:"Fażi Ingliża",confirmBridge:"Ikkonferma u kompli",bridgeCompleted:"Bridge Test tlesta.",errorDna:"DNA tal-iżball",errorDnaSub:"Skopri għaliex tiżbalja, mhux biss liema mistoqsijiet",whyWrong:"X’kienet il-kawża ta’ dan l-iżball?",reasonRule:"Ma kontx naf ir-regola",reasonLanguage:"Ma fhimtx il-mistoqsija bl-Ingliż",reasonWord:"Ma kontx naf kelma importanti",reasonMultiple:"Għażilt numru ħażin ta’ tweġibiet",reasonRush:"Qrajt malajr wisq",reasonUnsure:"Ma kontx ċert u qtajt",reasonSaved:"Il-kawża ġiet issejvjata",noErrorDna:"Agħżel il-kawża wara tweġiba ħażina biex jinbena l-profil tiegħek.",trainThisCause:"Ħarreġ din il-kawża",assistantOffline:"OFFLINE",assistantResults:"Riżultati rilevanti",assistantStudyQuestion:"Studja din il-mistoqsija",assistantNoMatch:"Ma sibtx riżultat qawwi. Ipprova kelma qasira bħal roundabout, pedestrian, passenger, tunnel jew brakes.",assistantTry:"Ipprova staqsi",respectRoad:"Irrispetta t-triq",protectPassengers:"Ipproteġi kull passiġġier",assistantFound:n=>`${n} riżultati rilevanti`,findSchool:"Sib skola tas-sewqan",findSchoolSub:"Qabbel is-servizzi u sib l-iskola l-aktar adattata għalik",schoolPartner:"School Partner",schoolPartnerSub:"Ippubblika s-servizzi u rċievi talbiet minn studenti adattati",schoolMarketplace:"Żona tal-iskejjel għall-istudent",schoolMarketplaceSub:"Smart Match iqabbel il-preferenzi tiegħek mas-servizzi ddikjarati mill-iskola.",schoolDemoNotice:"Żona dimostrattiva: dawn huma profili fittizji biex tiġi ttestjata l-pjattaforma. Għad m’hemm l-ebda skola reali reklamata.",smartMatch:"Smart Match",smartMatchSub:"Il-viżibilità mħallsa qatt ma tbiddel il-punteġġ ta’ kompatibbiltà.",matchScore:"kompatibbiltà",yourPreferences:"Il-preferenzi tiegħek",preferredArea:"Żona preferuta",preferredLanguage:"Lingwa tal-għalliem",courseNeeded:"Kors meħtieġ",transmission:"Trasmissjoni",preferredSchedule:"Ħin preferut",supportNeeded:"Appoġġ addizzjonali",areaAll:"Malta kollha",areaNorth:"Tramuntana",areaCentral:"Ċentru",areaSouth:"Nofsinhar",areaGozo:"Għawdex",languageAny:"Kwalunkwe lingwa",courseLptv:"LPTV / TAG",courseB:"Kategorija B",transmissionAny:"Awtomatika jew manwali",automatic:"Awtomatika",manual:"Manwali",scheduleAny:"Kwalunkwe ħin",daytime:"Matul il-jum",evening:"Filgħaxija",weekend:"Tmiem il-ġimgħa",englishSupport:"Appoġġ għall-Ingliż tal-eżami",documentSupport:"Gwida għad-dokumenti u TAG",updateMatches:"Aġġorna l-abbinamenti",schoolsFound:"profili misjuba",schoolDetails:"Dettalji tal-iskola",compareSchools:"Qabbel l-iskejjel",addToCompare:"Żid mal-paragun",removeFromCompare:"Neħħi mill-paragun",compareLimit:"Tista’ tqabbel sa tliet skejjel.",comparisonEmpty:"Agħżel skejjel mil-lista biex tqabbelhom.",servicesOffered:"Servizzi offruti",languagesSpoken:"Lingwi",coursesOffered:"Korsijiet",availability:"Disponibbiltà",pricingBySchool:"Prezzijiet imdaħħla mill-iskola",pricingPending:"Il-prezzijiet jinżammu aġġornati mill-iskola.",requestInformation:"Itlob informazzjoni",studentRequest:"Talba ta’ informazzjoni mill-istudent",requestPrepared:"It-talba ġiet ippreparata.",pilotRequestNotice:"Fil-fażi pilota t-talbiet jintbagħtu lil Malta Driving Master. Aktar tard imorru direttament lill-iskola verifikata.",profileNeededForRequest:"Imla l-profil personali qabel titlob informazzjoni.",demoProfile:"Profil dimostrattiv",verifiedSchool:"Skola verifikata",verificationPending:"Verifika pendenti",sponsored:"Sponsorizzat",sponsoredExplanation:"Servizzi sponsorizzati huma mmarkati u ma jinfluwenzawx Smart Match.",whyMatched:"Għaliex hija adattata",bridgeMatch:"Adattata għall-bżonnijiet tiegħek tal-Ingliż",areaMatch:"Taqbel maż-żona preferuta",languageMatch:"Taqbel mal-lingwa mitluba",scheduleMatch:"Taqbel mal-ħin mitlub",serviceEnglish:"Appoġġ bl-Ingliż",serviceDocuments:"Gwida tad-dokumenti",serviceBridge:"Appoġġ Bridge Test",serviceProgress:"Rapporti tal-progress",serviceVulnerable:"Xenarji tas-sigurtà tal-passiġġieri",servicePickup:"Servizz ta’ ġbir",schoolPlans:"Pjanijiet School Partner",basicPlan:"Profil bażiku",basicPlanSub:"Preżenza b’xejn b’identità verifikata u servizzi essenzjali",proPlan:"School Pro",proPlanSub:"Għodod imħallsa għal servizzi, disponibbiltà, talbiet u gruppi ta’ studenti",featuredPlan:"Servizzi sponsorizzati",featuredPlanSub:"Viżibilità mħallsa, dejjem immarkata u separata minn Smart Match",commercialTerms:"Kundizzjonijiet kummerċjali għandhom jiġu definiti qabel it-tnedija",partnerPrinciples:"Prinċipji tal-pjattaforma",partnerPrincipleVerify:"L-iskejjel jiġu ċċekkjati qabel il-pubblikazzjoni.",partnerPrincipleFair:"Il-ħlas ma jixtrix punteġġ ogħla ta’ kompatibbiltà.",partnerPrincipleControl:"L-istudent jagħżel liema progress jaqsam.",applySchoolPartner:"Applika bħala School Partner",schoolName:"Isem tal-iskola",permitReference:"Permess jew referenza uffiċjali",schoolEmail:"Email tal-iskola",schoolPhone:"Telefon",schoolArea:"Żona operattiva",schoolLanguages:"Lingwi offruti",schoolServices:"Servizzi għall-pubblikazzjoni",schoolPrices:"Prezzijiet jew ħlas",schoolAvailability:"Disponibbiltà u ħin ta’ stennija",schoolDescription:"X’jagħmel lill-iskola differenti?",choosePlan:"Pjan ta’ interess",partnerConsent:"Nikkonferma li l-informazzjoni hija korretta u tista’ tiġi ċċekkjata qabel il-pubblikazzjoni.",saveSchoolDraft:"Issejvja l-abbozz",sendPartnerApplication:"Ibgħat l-applikazzjoni",partnerDraftSaved:"L-abbozz tal-iskola ġie ssejvjat.",partnerRequired:"Daħħal l-isem, il-permess, email valida u aċċetta d-dikjarazzjoni.",partnerSendOptions:"Ibgħat l-applikazzjoni",noRealSchoolYet:"Għad ma ġiet approvata l-ebda skola reali f’dan il-prototip.",studentArea:"Żona tal-istudent",schoolAreaTitle:"Żona tal-iskola",smartMatchDiagnosis:"Bridge Test u l-preferenzi tiegħek jistgħu jtejbu l-abbinament.",paidServiceLabel:"Servizz imħallas",clearComparison:"Neħħi l-paragun",lptvPassport:"LPTV Passport",lptvPassportSub:"Il-mixja personali tiegħek mit-taħriġ sal-Driver Permit Tag",passportOfficialUpdate:"Aġġornament uffiċjali importanti",passportOfficialUpdateText:"Mid-29 ta’ Lulju 2026, applikant ġdid LPTV irid ikun ilu jżomm liċenzja B valida tal-UE għal mill-inqas sentejn u ma jkollux aktar minn sitt punti ta’ penali.",passportChecked:"Informazzjoni uffiċjali ċċekkjata",passportMode:"Tip ta’ applikazzjoni",passportNew:"L-ewwel applikazzjoni",passportRenewal:"Tiġdid tat-TAG",passportApplicantType:"Kategorija tal-applikant",passportMaltese:"Ċittadin Malti",passportEU:"Ċittadin UE/ŻEE/Svizzera mhux Malti",passportTCN:"Ċittadin ta’ pajjiż terz",passportStatus:"Status tal-applikazzjoni",passportPlanning:"Ippjanar",passportCollecting:"Ġbir tad-dokumenti",passportReady:"Lesta għas-sottomissjoni",passportSubmitted:"Applikazzjoni sottomessa",passportEligibilityLetter:"Ittra ta’ eliġibbiltà / pass ta’ Identità",passportWaiting:"Qed tistenna l-ħruġ",passportIssued:"TAG maħruġ",passportChecklist:"Lista personali",passportChecklistSub:"Immarka biss dokumenti li għandek jew passi li lestejt.",passportCompleted:"komplut",passportEligibility:"Kontroll tal-eliġibbiltà",passportLicenceSince:"Liċenzja B miżmuma minn",passportPenaltyPoints:"Punti ta’ penali attwali",passportEligibleDate:"Ir-rekwiżit tas-sentejn jintlaħaq",passportLicenceTooNew:"Il-liċenzja B għadha ma ilha sentejn.",passportPointsBlocked:"Aktar minn sitt punti ta’ penali jwaqqfu applikazzjoni ġdida.",passportEligibilityUnknown:"Daħħal id-data tal-liċenzja u l-punti biex tiċċekkja.",passportBasicEligible:"Il-kundizzjonijiet bażiċi jidhru sodisfatti.",passportDates:"Skadenzi u validità",passportDatesSub:"Il-validità tat-TAG tista’ tkun limitata mill-ewwel skadenza tad-dokumenti applikabbli.",passportDrivingExpiry:"Skadenza tal-liċenzja",passportResidenceExpiry:"Skadenza tad-dokument ta’ residenza",passportEmploymentExpiry:"Skadenza tal-awtorizzazzjoni tax-xogħol",passportOperatorExpiry:"Skadenza tal-liċenzja tal-operatur",passportTagExpiry:"Skadenza tat-TAG",passportMedicalDate:"Data taċ-ċertifikat mediku",passportApplicationDate:"Data tal-applikazzjoni",passportEarliestExpiry:"L-ewwel skadenza mdaħħla",passportNoExpiry:"L-ebda skadenza mdaħħla",passportDaysRemaining:"jiem fadal",passportExpired:"skadut",passportCalendar:"Oħloq tfakkiriet tal-Kalendarju",passportCalendarSub:"Joħloq fajl .ics bi tfakkiriet qabel l-iskadenzi.",passportCalendarCreated:"Il-fajl tal-kalendarju nħoloq.",passportCalendarMissing:"Daħħal mill-inqas data waħda.",passportNotes:"Noti personali",passportSave:"Issejvja Passport",passportSaved:"LPTV Passport ġie ssejvjat.",passportShare:"Aqsam ir-rapport Passport",passportCopy:"Ikkopja r-rapport Passport",passportCopied:"Ir-rapport Passport ġie kkupjat.",passportReset:"Irrisettja Passport",passportResetConfirm:"Tħassar il-lista, id-dati u n-noti?",passportResetDone:"LPTV Passport ġie rrisettjat.",passportOfficialDocuments:"Formoli u gwida uffiċjali",passportOfficialWarning:"Niżżel dejjem l-aħħar formoli minn Transport Malta. Din il-lista ma tissostitwixxix deċiżjoni uffiċjali.",passportSubmissionOffices:"Uffiċċji tas-sottomissjoni",passportSubmissionText:"L-applikazzjonijiet jistgħu jitressqu f’Paola, Ħal Lija jew Victoria, Għawdex. Iċċekkja l-ħinijiet.",passportFeeNew:"L-ewwel applikazzjoni: €17.50 skont il-paġna uffiċjali. Jista’ japplika ħlas ieħor ta’ €10 għall-kodiċi 103.",passportFeeRenew:"Tiġdid: €12.",passportTagNotPermission:"Ittra ta’ eliġibbiltà mhijiex TAG u ma tawtorizzax sewqan sakemm jinħareġ it-TAG.",passportValidityRule:"Il-validità ma tistax taqbeż l-ewwel skadenza rilevanti tad-dokumenti.",passportDocId:"ID jew dokument ta’ residenza validu",passportDocLicence:"Liċenzja B tal-UE valida",passportDocTwoYears:"Liċenzja B għal mill-inqas sentejn",passportDocPoints:"Mhux aktar minn sitt punti",passportDocCourse:"Ċertifikat tal-kors Customer Care LPTV",passportDocDPA13:"Formola DPA13 kompluta",passportDocDPA14:"Formola DPA14 kompluta",passportDocMedical:"Ċertifikat mediku DRV032",passportDocCriminalLocal:"Rekord kriminali lokali",passportDocCriminalForeign:"Rekord kriminali barrani fejn japplika",passportDocPoliceConduct:"Ċertifikat tal-kondotta tal-Pulizija",passportDocPhoto:"Ritratt fejn japplika",passportDocFeeNew:"Ħlasijiet tal-ewwel applikazzjoni",passportDocFeeRenew:"Ħlas tat-tiġdid",passportDocJobsplus:"Dokumenti JobsPlus bħala Cab Driver",passportDocDPA16:"DPA16 jew liċenzja LPTS valida għall-awtoimpjegat",passportDocOperator15:"Liċenzja tal-operatur valida għal aktar minn 15-il jum",passportDocSinglePermit:"Dokumenti tax-xogħol/residenza korretti",passportDocSignatory:"Kopja tal-ID tal-firmatarju fejn meħtieġ",passportDocBluePaper:"Blue paper għal tiġdid biss f’każijiet limitati",passportDocCopyLicence:"Kopja tal-liċenzja",passportGeneral:"Rekwiżiti ġenerali",passportTCNExtra:"Rekwiżiti addizzjonali TCN",passportSubmission:"Sottomissjoni u ħlas",passportOpen:"Iftaħ dokument uffiċjali",passportDPA13:"DPA13 — l-ewwel applikazzjoni",passportDPA14:"DPA14 — tiġdid",passportDPA16:"DPA16 — dikjarazzjoni ta’ min iħaddem",passportDRV032:"DRV032 — ċertifikat mediku",passportSOPT01:"SOPT 01 — l-ewwel applikazzjonijiet",passportSOPT02:"SOPT 02 — tiġdid",passportOperatorGuide:"Gwida tal-operatur LPTV",passportMainPage:"Paġna uffiċjali LPTV",passportTraining:"Taħriġ u testijiet approvati",passportDownloads:"Formoli Transport Malta",passportContact:"Kuntatt u ħinijiet",passportCurrentProgress:"Progress Passport",passportRequiredComplete:"rekwiżiti kompluti",passportAttention:"Jeħtieġ attenzjoni",passportGood:"Mixja tajba",passportNoBackend:"Id-data tibqa’ fuq dan l-apparat u tidħol fil-backup.",passportOpenDirect:"Iftaħ direttament",passportShareOfficial:"Aqsam / iftaħ f’Safari",passportOfficialCopied:"Il-link uffiċjali ġie kkupjat.",passportOfficialShareText:"Dokument uffiċjali ta’ Transport Malta",passportCalendarShared:"Il-fajl tal-kalendarju ntbagħat fil-menu Share tal-iPhone.",passportCalendarCopiedFallback:"Dan il-browser ma jistax jesporta l-fajl. Il-lista tat-tfakkiriet ġiet ikkupjata.",passportCalendarOpenSafariNote:"F’Koder uża Share u agħżel Save to Files. F’Safari tkun tista’ wkoll tniżżel il-fajl .ics.",passportKoderFix:"Kontrolli kompatibbli ma’ Koder",personalRoadmap:"Personal Roadmap",personalRoadmapSub:"Mixja ċara mill-istudju tal-lum sal-eżami u d-Driver Permit Tag",roadmapInternalEstimate:"Stima interna — mhijiex deċiżjoni uffiċjali ta’ eliġibbiltà",roadmapJourneyScore:"Punteġġ tal-mixja",roadmapNextAction:"L-aħjar azzjoni li jmiss",roadmapDoNow:"Agħmilha issa",roadmapWhy:"Għaliex tiġi l-ewwel",roadmapToday:"Illum",roadmapWeek:"Is-7 passi li jmiss",roadmapWeekSub:"Sekwenza ġġenerata mill-progress reali tiegħek",roadmapSettings:"Settings tal-pjan",roadmapTargetDate:"Data tal-mira",roadmapDailyMinutes:"Minuti għal kull jum ta’ studju",roadmapStudyDays:"Jiem ta’ studju fil-ġimgħa",roadmapMainGoal:"Għan ewlieni",roadmapGoalExam:"Għaddi mit-test teoriku",roadmapGoalTag:"Ikseb id-Driver Permit Tag",roadmapSavePlan:"Issejvja l-pjan",roadmapPlanSaved:"Personal Roadmap ġiet issejvjata.",roadmapNoTarget:"L-ebda data tal-mira",roadmapDaysToTarget:"jiem sal-mira",roadmapTargetToday:"Il-mira hija llum",roadmapTargetPassed:"Id-data tal-mira għaddiet",roadmapStudyScore:"Preparazzjoni għall-eżami",roadmapEnglishScore:"Ingliż / Bridge",roadmapPassportScore:"Dokumenti / Passport",roadmapDailyScore:"Drawwa tal-lum",roadmapCoverage:"Kopertura tal-mistoqsijiet",roadmapAccuracy:"Preċiżjoni",roadmapExamAverage:"Medja tal-aħħar eżamijiet",roadmapPassportProgress:"Progress Passport",roadmapBridgeProgress:"L-aħħar Bridge",roadmapWeakestTopic:"Suġġett li jeħtieġ l-aktar attenzjoni",roadmapAchievements:"Miri milħuqa",roadmapAchievementsSub:"Progress li diġà ksibt",roadmapLocked:"Għadu mhux milħuq",roadmapShare:"Aqsam ir-rapport Roadmap",roadmapCopy:"Ikkopja r-rapport Roadmap",roadmapCopied:"Ir-rapport ġie kkupjat.",roadmapActionProfile:"Imla l-profil personali",roadmapReasonProfile:"Id-dettalji huma meħtieġa għar-rapporti u t-talbiet lill-iskejjel.",roadmapActionDaily:"Imla l-pjan tal-istudju tal-lum",roadmapReasonDaily:"Sessjoni qasira kuljum tibni memorja stabbli.",roadmapActionReview:"Irrevedi l-mistoqsijiet dovuti",roadmapReasonReview:"Ir-ripetizzjoni skedata tipprevjeni li tinsa.",roadmapActionBridge:"Agħmel Bridge Test",roadmapReasonBridge:"L-app trid tifred l-għarfien mir-restrizzjoni tal-Ingliż.",roadmapActionEnglish:"Ħarreġ il-barriera tal-Ingliż",roadmapReasonEnglish:"L-aħħar Bridge juri li l-Ingliż qed inaqqas il-punteġġ.",roadmapActionCoverage:"Kompli l-istudju gwidat",roadmapReasonCoverage:"Għad hemm wisq mistoqsijiet mhux ipprattikati.",roadmapActionAccuracy:"Attakka l-aktar suġġett dgħajjef",roadmapReasonAccuracy:"Il-preċiżjoni trid tkun stabbli qabel simulazzjonijiet sħaħ.",roadmapActionExam:"Agħmel simulazzjoni sħiħa",roadmapReasonExam:"Jeħtieġ test ta’ 35 mistoqsija biex jitkejjel il-livell reali.",roadmapActionPassport:"Kompli l-LPTV Passport",roadmapReasonPassport:"L-istudju u d-dokumenti għandhom jimxu flimkien.",roadmapActionSchool:"Qabbel skejjel adattati",roadmapReasonSchool:"Il-progress jista’ jgħinek tagħżel l-appoġġ it-tajjeb.",roadmapActionReady:"Żomm il-livell miksub",roadmapReasonReady:"Int fit-triq it-tajba: kompli b’reviżjoni u simulazzjonijiet.",roadmapStepDaily:"Studju adattiv ta’ kuljum",roadmapStepWeak:"Attakk tas-suġġett dgħajjef",roadmapStepBridge:"Sessjoni Bridge bl-Ingliż",roadmapStepReview:"Reviżjoni skedata",roadmapStepExam:"Simulazzjoni sħiħa",roadmapStepPassport:"Passport u dokumenti",roadmapStepReflect:"Kontroll tal-progress",roadmapAchievementProfile:"Profil personali komplut",roadmapAchievement25:"L-ewwel 25 mistoqsija",roadmapAchievement100:"100 mistoqsija differenti",roadmapAchievementExam:"L-ewwel simulazzjoni",roadmapAchievementPass:"Simulazzjoni b’30/35 jew aktar",roadmapAchievementBridge:"Bridge mastery ta’ 80%",roadmapAchievementStreak:"Sebat ijiem konsekuttivi",roadmapAchievementPassport:"Checklist Passport kompluta",roadmapPace:"Ritmu stmat",roadmapPaceText:"Bir-ritmu magħżul, il-mistoqsijiet li fadal jeħtieġu madwar",roadmapSessions:"sessjonijiet",roadmapQuestionsLeft:"mistoqsijiet mhux meqjusa",roadmapRecommended:"Rakkomandat",roadmapOverallGood:"Progress b’saħħtu",roadmapOverallGrowing:"Il-progress qed jikber",roadmapOverallStart:"Ibni l-pedamenti",roadmapReset:"Irrisettja l-pjan",roadmapResetConfirm:"Tirrisettja biss id-data u s-settings? Il-progress ma jitħassarx.",roadmapResetDone:"Is-settings ġew irrisettjati.",roadmapCurrentProgress:"Progress attwali",schoolDashboard:"Dashboard School Partner",schoolDashboardSub:"Immaniġġja prototip lokali ta’ studenti, gruppi, stediniet u rapporti",schoolDashboardLocal:"Prototip lokali",schoolDashboardNotice:"Din id-dashboard taħdem biss fuq dan l-apparat. Ma toħloqx kontijiet reali u ma tissinkronizzax data privata online.",openDashboard:"Iftaħ Dashboard tal-iskola",dashboardProfile:"Profil tal-iskola",dashboardProfileCompletion:"Tlestija tal-profil",dashboardReadyReview:"Lest biex jintalab review",dashboardDraftStatus:"L-abbozz għadu mhux komplut",dashboardEditProfile:"Editja l-profil",dashboardPublicPreview:"Preview tal-profil pubbliku",dashboardPublicPreviewSub:"Hekk tista’ tidher l-informazzjoni wara verifika.",dashboardNoSchoolName:"Abbozz ta’ skola bla isem",dashboardPermitHidden:"Permess/referenza mogħtija għar-review",dashboardStudents:"Studenti",dashboardGroups:"Gruppi",dashboardInvites:"Kodiċijiet ta’ stedina",dashboardAverage:"Progress medju manwali",dashboardNoStudents:"Għadu ma żdied l-ebda student.",dashboardNoGroups:"Għadu ma nħoloq l-ebda grupp.",dashboardNoInvites:"Għadu ma nħoloq l-ebda kodiċi.",dashboardManualData:"Il-progress jiddaħħal manwalment u ma jiġix sinkronizzat mal-app tal-istudent.",dashboardAddStudent:"Żid student",dashboardStudentName:"Isem tal-istudent",dashboardStudentEmail:"Email tal-istudent",dashboardStudentCourse:"Kors",dashboardStudentGroup:"Grupp",dashboardStudentProgress:"Preparazzjoni %",dashboardStudentBridge:"Bridge %",dashboardStudentPassport:"Passport %",dashboardStudentStatus:"Status",dashboardStudentNotes:"Noti tal-istudent",dashboardStatusActive:"Attiv",dashboardStatusPaused:"Pawża",dashboardStatusReady:"Lest għall-eżami",dashboardStatusCompleted:"Lest",dashboardNoGroup:"L-ebda grupp",dashboardSaveStudent:"Issejvja student",dashboardUpdateStudent:"Aġġorna",dashboardRemoveStudent:"Neħħi",dashboardStudentRequired:"Daħħal isem u email valida.",dashboardStudentSaved:"L-istudent ġie ssejvjat lokalment.",dashboardStudentRemoved:"L-istudent tneħħa.",dashboardRemoveStudentConfirm:"Tneħħi dan l-istudent mid-dashboard lokali?",dashboardAddGroup:"Oħloq grupp",dashboardGroupName:"Isem tal-grupp",dashboardGroupLanguage:"Lingwa tat-tagħlim",dashboardGroupSchedule:"Ħin",dashboardGroupNotes:"Noti tal-grupp",dashboardSaveGroup:"Issejvja grupp",dashboardGroupRequired:"Daħħal isem tal-grupp.",dashboardGroupSaved:"Il-grupp ġie ssejvjat.",dashboardRemoveGroup:"Neħħi grupp",dashboardRemoveGroupConfirm:"Tneħħi l-grupp? L-istudenti jibqgħu mingħajru.",dashboardGroupRemoved:"Il-grupp tneħħa.",dashboardMembers:"membri",dashboardGenerateInvite:"Oħloq kodiċi ta’ stedina",dashboardInviteGroup:"Stedina għall-grupp",dashboardCreateInvite:"Oħloq kodiċi",dashboardInviteCreated:"Kodiċi dimostrattiv inħoloq.",dashboardInviteWarning:"Il-kodiċijiet huma dimostrattivi sakemm ikun hemm backend u kontijiet siguri.",dashboardShareInvite:"Aqsam stedina",dashboardCopyInvite:"Ikkopja kodiċi",dashboardRemoveInvite:"Ħassar kodiċi",dashboardInviteText:"Stedina Malta Driving Master",dashboardInviteCopied:"L-istedina ġiet ikkupjata.",dashboardReports:"Rapporti tal-iskola",dashboardReportsSub:"Oħloq sommarju mid-data lokali.",dashboardShareReport:"Aqsam ir-rapport",dashboardCopyReport:"Ikkopja r-rapport",dashboardExportCsv:"Esporta studenti CSV",dashboardReportCopied:"Ir-rapport ġie kkupjat.",dashboardCsvShared:"Il-fajl CSV intbagħat fil-menu Share.",dashboardCsvCopied:"Il-kontenut CSV ġie kkupjat.",dashboardDemoData:"Daħħal data dimostrattiva",dashboardDemoDataSub:"Iżid studenti u gruppi fittizji biex tittestja d-dashboard.",dashboardLoadDemo:"Daħħal demo",dashboardDemoConfirm:"Iżżid data dimostrattiva fittizja?",dashboardDemoLoaded:"Id-data dimostrattiva ddaħħlet.",dashboardDemoBadge:"Demo",dashboardClear:"Ħassar id-data tad-dashboard",dashboardClearConfirm:"Tħassar studenti, gruppi u kodiċijiet lokali?",dashboardCleared:"Id-data lokali tħassret.",dashboardSchoolNotes:"Noti interni tal-iskola",dashboardSaveNotes:"Issejvja noti",dashboardNotesSaved:"In-noti ġew issejvjati.",dashboardVerification:"Status tal-verifika",dashboardNotVerified:"Mhux verifikata",dashboardReviewNeeded:"Jeħtieġ review qabel pubblikazzjoni",dashboardPrivacy:"Privatezza tal-istudenti",dashboardPrivacyText:"Iddaħħalx data medika, dokumenti ta’ identità jew rekord kriminali f’dan il-prototip.",dashboardPlan:"Pjan magħżul",dashboardCreated:"Maħluq",dashboardLastUpdated:"L-aħħar aġġornament",dashboardStudentCount:"numru ta’ studenti",dashboardGroupCount:"numru ta’ gruppi",onboardingWelcome:"Merħba f’Malta Driving Master",onboardingWelcomeSub:"Ipprepara għall-eżami. Irrispetta t-triq. Ipproteġi kull passiġġier.",onboardingChooseRole:"Kif se tuża l-pjattaforma?",onboardingStudent:"Student",onboardingStudentSub:"Studju, Bridge Test, Passport, Roadmap u tqabbil tal-iskejjel",onboardingSchool:"Skola tas-sewqan",onboardingSchoolSub:"Profil, dashboard lokali, studenti, gruppi u rapporti",onboardingBoth:"It-tnejn",onboardingBothSub:"Uża ż-żona tal-istudent u School Partner",onboardingDataTitle:"Id-data tiegħek tibqa’ taħt il-kontroll tiegħek",onboardingDataText:"Din il-verżjoni taħżen progress u abbozzi lokalment. Id-data ma tintbagħatx awtomatikament.",onboardingRequiredStorage:"Nifhem li l-ħażna lokali essenzjali tintuża biex issalva l-progress u s-settings.",onboardingTerms:"Qrajt u naċċetta l-informazzjoni, il-limitazzjonijiet u l-użu responsabbli.",onboardingUpdates:"Nixtieq nirċievi aġġornamenti meta nibgħat volontarjament l-email tar-reġistrazzjoni.",onboardingContinue:"Idħol f’Malta Driving Master",onboardingRequired:"Agħżel rwol u aċċetta ż-żewġ dikjarazzjonijiet.",onboardingLocalOnly:"Prototip local-first",onboardingNoTracking:"L-ebda tracking tar-reklamar",onboardingOfficialWarning:"L-app tgħin fit-taħriġ u l-organizzazzjoni iżda ma tissostitwixxix deċiżjoni uffiċjali.",privacyCenter:"Ċentru tal-Privatezza u Data",privacyCenterSub:"Ara x’inhu ssejvjat, esportah u ħassar dak li tagħżel",privacyOverview:"Ħarsa ġenerali tad-data",privacyStoredLocally:"Issejvjat lokalment fuq dan l-apparat",privacySentOnlyByAction:"Jintbagħat biss meta tuża Share, Gmail jew Mail",privacyNoAutomaticUpload:"L-ebda upload awtomatiku f’din il-verżjoni",privacyProfileData:"Profil personali",privacyStudyData:"Progress tal-istudju",privacyPassportData:"LPTV Passport",privacyRoadmapData:"Personal Roadmap",privacySchoolData:"Data tal-iskola u dashboard",privacyPreferencesData:"Preferenzi tal-privatezza",privacyPresent:"Preżenti",privacyEmpty:"Vojt",privacyItems:"elementi",privacyExportTitle:"Esporta d-data",privacyExportText:"Oħloq backup JSON tad-data lokali.",privacyExportAll:"Esporta d-data lokali kollha",privacyDeleteTitle:"Tħassir selettiv",privacyDeleteText:"Ħassar żona waħda mingħajr ma taffettwa l-oħrajn.",privacyDeleteStudy:"Ħassar il-progress tal-istudju",privacyDeleteProfile:"Ħassar il-profil personali",privacyDeletePassport:"Ħassar Passport",privacyDeleteRoadmap:"Ħassar settings Roadmap",privacyDeleteSchool:"Ħassar data tal-iskola",privacyDeleteAll:"Ħassar id-data kollha",privacyDeleteStudyConfirm:"Tħassar tweġibiet, eżamijiet, favoriti u Bridge?",privacyDeleteProfileConfirm:"Tħassar il-profil personali?",privacyDeletePassportConfirm:"Tħassar il-Passport?",privacyDeleteRoadmapConfirm:"Tħassar is-settings Roadmap?",privacyDeleteSchoolConfirm:"Tħassar preferenzi u data tal-iskola?",privacyDeleteAllConfirm:"Tħassar id-data kollha ta’ Malta Driving Master?",privacyDeleted:"Id-data magħżula tħassret.",privacyAllDeleted:"Id-data lokali kollha tħassret.",privacyRequestTitle:"Talba għal data mibgħuta barra l-apparat",privacyRequestText:"Jekk bgħatt email qabel, tista’ tipprepara talba għal aċċess, korrezzjoni jew tħassir.",privacyRequestAccess:"Itlob aċċess",privacyRequestCorrection:"Itlob korrezzjoni",privacyRequestErasure:"Itlob tħassir",privacyRequestPrepared:"It-talba ġiet ippreparata.",privacyRightsNotice:"Id-drittijiet jistgħu jinkludu informazzjoni, aċċess, korrezzjoni, tħassir u portabbiltà.",privacyConsentSettings:"Preferenzi fakultattivi",privacyAnalytics:"Ippermetti statistika anonima futura",privacyMarketing:"Ippermetti komunikazzjonijiet promozzjonali futuri",privacyNotActive:"Dawn il-funzjonijiet mhumiex attivi f’din il-verżjoni.",privacySavePreferences:"Issejvja preferenzi",privacyPreferencesSaved:"Il-preferenzi ġew issejvjati.",privacyChecked:"Informazzjoni ċċekkjata",privacyOpenCenter:"Iftaħ iċ-Ċentru tal-Privatezza",privacyRole:"Rwol magħżul",privacyChangeRole:"Ibdel ir-rwol",privacyRestartOnboarding:"Erġa’ uri l-introduzzjoni",privacyStorageNecessary:"Ħażna lokali essenzjali",privacyStorageExplanation:"Tintuża biex tiftakar progress u settings. It-tħassir tal-ħażna jneħħi d-data.",privacyContactController:"Kuntatt tal-privatezza",privacyLegalDraft:"Dan huwa sommarju fl-app u mhux politika legali finali.",privacyDataCount:"Sommarju tad-data lokali",privacyProfileComplete:"oqsma tal-profil",privacyStudyRecords:"rekords tal-istudju",privacyPassportChecks:"kontrolli Passport",privacySchoolRecords:"rekords tal-iskola",premiumTagline:"Saq b’għarfien. Irrispetta kull triq. Ipproteġi kull passiġġier.",premiumEnter:"Idħol f’Malta Driving Master",premiumLoading:"Qed titħejja l-mixja tiegħek",premiumSkip:"Aqbeż",premiumTrust:"Maħluqa għal toroq aktar siguri u sewwieqa aktar preparati",premiumWelcomeBack:"Merħba lura",premiumContinue:"Kompli l-mixja tiegħek",premiumTodayFocus:"L-għan tal-lum",premiumNoDelay:"L-introduzzjoni ddum ftit sekondi u dejjem tista’ tinqabeż.",premiumReplay:"Erġa’ ara l-introduzzjoni premium",mdmCoach:"MDM Coach",mdmCoachSub:"Il-gwida intelliġenti offline tiegħek",coachFoundation:"Fondazzjoni AI",coachOffline:"Intelliġenza offline",coachOfflineText:"MDM Coach janalizza biss il-progress fuq dan l-apparat. Mhuwiex AI online u ma jibgħatx data awtomatikament.",confidenceScore:"Confidence Score",confidenceMeaning:"Stima tal-preparazzjoni",confidenceLow:"Ibni l-pedamenti",confidenceMedium:"Il-progress qed isir stabbli",confidenceHigh:"Preparazzjoni b’saħħitha",confidenceExcellent:"Mudell lest għall-eżami",predictionToday:"Probabbiltà stmata llum",predictionWeek:"Probabbiltà stmata fi 7 ijiem",predictionDisclaimer:"Gwida statistika biss. Mhijiex garanzija jew valutazzjoni uffiċjali.",coachInsight:"Analiżi tal-Coach",coachNextMove:"L-aħjar azzjoni li jmiss",coachImprovement:"Titjib riċenti",coachNoData:"Agħmel aktar attività biex tikseb stima aħjar.",coachWeakness:"Dgħufija ewlenija",coachStrength:"Saħħa ewlenija",coachTrendUp:"Ir-riżultati qed jitjiebu.",coachTrendStable:"Ir-riżultati huma stabbli.",coachTrendDown:"Ir-riżultati jeħtieġu attenzjoni.",dailyMission:"Missjoni ta’ kuljum",dailyMissionSub:"Missjoni qasira mill-progress reali tiegħek",missionStudy:"Imla blokk ta’ studju",missionReview:"Irrevedi mistoqsijiet dovuti jew żbaljati",missionBridge:"Imla attività Bridge",missionComplete:"Missjoni kompluta",missionCompletedText:"Lestejt il-missjoni tal-lum.",missionMarkDone:"Immarka komplut",missionReset:"Irrisettja l-missjoni",missionProgress:"Progress tal-missjoni",coachAchievements:"Kisbiet tal-Coach",coachAchievementsSub:"Miri utli, mhux punti dekorattivi",achievementFirst25:"L-ewwel 25 mistoqsija",achievementFirst100:"100 mistoqsija",achievementExamPass:"Simulazzjoni mgħoddija",achievementBridge:"Bridge Champion",achievementSafety:"Safety Expert",achievementPassenger:"Passenger Care Master",achievementConsistency:"Sebat ijiem konsistenti",achievementPassport:"Passport komplut",achievementLocked:"Imblukkat",investorPreview:"Investor Preview",investorPreviewSub:"Sommarju gwidat tal-valur tal-pjattaforma",investorProblem:"Problema",investorProblemText:"Ħafna kandidati jonqsu minħabba l-Ingliż u għodod li ma jidentifikawx il-kawża vera tal-iżbalji.",investorSolution:"Soluzzjoni",investorSolutionText:"Malta Driving Master jgħaqqad taħriġ, dijanjosi lingwistika, dokumenti, skejjel u għodod professjonali.",investorStudentValue:"Valur għall-istudent",investorSchoolValue:"Valur għall-iskola",investorStudentPoints:"Bridge Test, Roadmap, Passport, studju gwidat, simulazzjonijiet u rapporti",investorSchoolPoints:"Profili, gruppi, dashboard, talbiet u għodod futuri",investorDifferentiator:"Differenza ewlenija",investorDifferentiatorText:"Il-pjattaforma tifred nuqqas ta’ għarfien minn diffikultà lingwistika.",investorScale:"Skalabbiltà",investorScaleText:"L-istess sistema tista’ tikber għal aktar lingwi u kategoriji.",investorStatus:"Status tal-prototip",investorStatusText:"PWA offline b’250 mistoqsija, Student, School Partner, Privacy, Roadmap, Passport u MDM Coach.",investorArchitecture:"Arkitettura",investorArchitectureText:"Issa: HTML, CSS u JavaScript. Futur: backend sigur, kontijiet, database, pagamenti u AI protetta.",investorOpen:"Iftaħ Investor Preview",investorShare:"Aqsam sommarju",investorCopy:"Ikkopja sommarju",investorCopied:"Is-sommarju ġie kkupjat.",investorMetrics:"Metriċi tal-prototip",investorActiveQuestions:"Mistoqsijiet attivi",investorCoreModules:"Moduli",investorLanguages:"Lingwi",investorUserTypes:"Tipi ta’ utenti",coachOpen:"Iftaħ MDM Coach",coachUpdated:"Coach aġġornat",coachDataPoints:"data analizzata",coachScoreComponents:"Komponenti tal-punteġġ",coachAccuracy:"Preċiżjoni",coachCoverage:"Kopertura",coachExam:"Simulazzjonijiet",coachBridge:"Bridge",coachConsistency:"Konsistenza",coachReview:"Reviżjoni",coachExplain:"Kif tinħadem l-istima",coachExplainText:"Il-punteġġ jgħaqqad preċiżjoni, kopertura, eżamijiet, Bridge, konsistenza u reviżjoni.",coachReset:"Irrisettja missjoni",coachResetConfirm:"Tirrisettja biss il-missjoni tal-lum?",coachResetDone:"Il-missjoni ġiet irrisettjata.",coachRecovery:"Coach Spjegazzjoni u Rkupru",coachRecoverySub:"Ifhem għaliex tiżbalja u segwi pjan immirat",recoveryOffline:"Analiżi personalizzata offline",recoveryOfflineText:"Id-dijanjosi tuża t-tweġibiet u l-kawżi li ddaħħal int. Ma tibgħatx data lil AI esterna.",recoveryDiagnosis:"Dijanjosi tal-iżbalji",recoveryDominantCause:"L-aktar kawża komuni",recoveryRecordedErrors:"Kawżi rreġistrati",recoveryNoReasons:"Għad m’hemmx kawżi rreġistrati.",recoveryReasonRule:"Għarfien tar-regola",recoveryReasonLanguage:"Sentenza bl-Ingliż",recoveryReasonWord:"Kelma mhux magħrufa",recoveryReasonMultiple:"Aktar minn tweġiba waħda",recoveryReasonRush:"Tweġiba mgħaġġla",recoveryReasonUnsure:"Nuqqas ta’ kunfidenza",recoveryPrescription:"Parir tal-Coach",recoveryRuleAdvice:"Studja r-regola u mbagħad wieġeb ħames mistoqsijiet mingħajr traduzzjoni.",recoveryLanguageAdvice:"Uża Bridge Test u Sentence Coach qabel terġa’ tipprova.",recoveryWordAdvice:"Irrevedi l-kliem u isma’ bil-mod.",recoveryMultipleAdvice:"Aqra l-istruzzjoni darbtejn u għodd it-tweġibiet meħtieġa.",recoveryRushAdvice:"Stenna tliet sekondi u identifika r-regola qabel twieġeb.",recoveryUnsureAdvice:"Spjega r-regola qabel twieġeb.",recoveryGeneralAdvice:"Kompli l-istudju u rreġistra l-kawża ta’ kull żball.",recoveryPriorityQuestions:"Mistoqsijiet ta’ rkupru",recoveryPrioritySub:"Magħżula mill-iżbalji u s-suġġetti dgħajfa",recoveryStartQuestion:"Studja din il-mistoqsija",recoveryMarkResolved:"Immarka solvuta",recoveryResolved:"Solvuta",recoveryNoQuestions:"Għad m’hemmx mistoqsijiet ta’ prijorità.",recoveryResetResolved:"Irrisettja mistoqsijiet solvuti",recoveryResetConfirm:"Tirrisettja l-istatus tal-mistoqsijiet?",recoveryResetDone:"L-istatus ġie rrisettjat.",coachDialogue:"Staqsi lil MDM Coach",coachDialogueSub:"Agħżel mistoqsija għal tweġiba bbażata fuq id-data",coachAskWhy:"Għaliex għadni niżbalja?",coachAskEnglish:"L-Ingliż huwa l-problema ewlenija?",coachAskReady:"Jien lest għall-eżami?",coachAskNext:"X’għandi nagħmel issa?",coachAnswerWhy:"Il-mudell tiegħek juri",coachAnswerEnglishHigh:"L-Ingliż jidher bħala barriera importanti.",coachAnswerEnglishLow:"L-Ingliż mhuwiex il-barriera ewlenija bħalissa.",coachAnswerReadyHigh:"Id-data turi preparazzjoni b’saħħitha.",coachAnswerReadyMedium:"Qed titjieb iżda r-riżultati għadhom mhux stabbli.",coachAnswerReadyLow:"Jeħtieġ aktar studju u kopertura.",coachAnswerNext:"L-aħjar azzjoni li jmiss hija",recoveryPlan:"Pjan ta’ tliet passi",recoveryStepUnderstand:"Ifhem",recoveryStepPractise:"Ipprattika",recoveryStepVerify:"Ivverifika",recoveryUnderstandText:"Aqra l-ispjegazzjoni u identifika r-regola jew il-frażi.",recoveryPractiseText:"Agħmel sessjoni qasira bil-mistoqsijiet magħżula.",recoveryVerifyText:"Erġa’ pprova mingħajr traduzzjoni u agħmel simulazzjoni.",recoveryScore:"Progress tar-rkupru",recoveryOpen:"Iftaħ Coach Rkupru",recoveryReport:"Aqsam ir-rapport",recoveryCopy:"Ikkopja r-rapport",recoveryCopied:"Ir-rapport ġie kkupjat.",recoveryDataNeeded:"Jeħtieġ aktar data",recoveryResolvedCount:"mistoqsijiet solvuti",examDayMode:"Modalità Jum l-Eżami",examDayModeSub:"Preparazzjoni finali għall-jum tat-test teoriku",examDayInternal:"Għodda interna",examDayInternalText:"Ma tissostitwixxix istruzzjonijiet uffiċjali jew dokumenti meħtieġa.",examTargetDate:"Data tal-eżami",examDaysRemaining:"jiem fadal",examDateToday:"Id-data hija llum",examDatePassed:"Id-data għaddiet",examNoDate:"L-ebda data",finalReadiness:"Preparazzjoni finali",finalReady:"Preparazzjoni b’saħħitha",finalAlmost:"Kważi lest",finalNotReady:"Jeħtieġ aktar taħriġ",finalReadinessText:"Ibbażata fuq Confidence, simulazzjonijiet, Bridge, reviżjoni u checklist.",examDayChecklist:"Checklist tal-eżami",examDayChecklistSub:"Immarka biss dak li hu verament lest",examItemId:"Dokument validu lest",examItemBooking:"Booking u post ikkonfermati",examItemTime:"Ħin tal-wasla ppjanat",examItemRest:"Pjan ta’ rqad u mistrieħ",examItemTravel:"Rotta u trasport ikkonfermati",examItemLanguage:"Istruzzjonijiet bl-Ingliż riveduti",examItemMultiple:"Regoli ta’ tweġibiet multipli riveduti",examItemEmergency:"Sigurtà u emerġenzi riveduti",examItemCalm:"Rutina ta’ kalma mifhuma",examChecklistProgress:"Progress checklist",examBreathing:"Rutina ta’ kalma ta’ 60 sekonda",examBreathingSub:"Eżerċizzju qasir qabel l-istudju jew l-eżami",examBreathingStart:"Ibda rutina",examBreathingIn:"Ħu nifs",examBreathingHold:"Żomm",examBreathingOut:"Oħroġ in-nifs",examBreathingDone:"Rutina kompluta",examFinalSimulation:"Simulazzjoni finali",examFinalSimulationSub:"Agħmel simulazzjoni ta’ 35 mistoqsija",examStartFinal:"Ibda simulazzjoni finali",examLastFinalScore:"L-aħħar punteġġ",examNoFinalScore:"L-ebda simulazzjoni finali",examQuickReview:"Reviżjoni finali",examQuickReviewSub:"L-oqsma ta’ riskju l-aktar importanti",examReviewSafety:"Sigurtà u emerġenzi",examReviewPassengers:"Kura tal-passiġġieri",examReviewRoad:"Proċeduri tat-triq",examReviewEco:"Sewqan eco",examReviewEnglish:"Nases bl-Ingliż",examOpenTopic:"Iftaħ reviżjoni",examCertificate:"Ċertifikat intern",examCertificateSub:"Rapport privat tal-preparazzjoni",examCertificateIssue:"Oħloq ċertifikat",examCertificateLocked:"Imla l-checklist u ġib mill-inqas 30/35.",examCertificateReady:"Ċertifikat disponibbli",examCertificateShare:"Aqsam ċertifikat",examCertificateCopy:"Ikkopja ċertifikat",examCertificateCopied:"Ċertifikat ikkupjat.",examCertificateDisclaimer:"Mhuwiex ċertifikat uffiċjali.",examReset:"Irrisettja Exam Day",examResetConfirm:"Tirrisettja d-data, checklist u ċertifikat?",examResetDone:"Exam Day ġie rrisettjat.",examSave:"Issejvja",examSaved:"Settings issejvjati.",examConfidence:"Confidence Score",examBridge:"Bridge",examRecent:"Simulazzjoni riċenti",examChecklist:"Checklist",examCalm:"Rutina ta’ kalma",examFinalStatus:"Status finali",examReadyMessage:"Id-data turi preparazzjoni b’saħħitha.",examAlmostMessage:"Kważi lest. Imla l-checklist u agħmel simulazzjoni oħra.",examNotReadyMessage:"Jeħtieġ aktar studju u simulazzjonijiet.",examRiskAlert:"Riskju ewlieni",examNoRisk:"L-ebda riskju kbir",examRiskEnglish:"L-Ingliż jista’ jnaqqas il-punteġġ",examRiskAccuracy:"Il-preċiżjoni mhix stabbli",examRiskCoverage:"Wisq mistoqsijiet għadhom mhux meqjusa",examRiskSimulation:"Is-simulazzjoni hija taħt il-mira",examRiskChecklist:"Il-preparazzjoni prattika mhix kompluta",zeroErrorMode:"Modalità Żero Żbalji",zeroErrorSub:"Sib u għeleb il-mistoqsijiet li jistgħu jiswewlek l-eżami",zeroErrorInternal:"Analiżi personali tar-riskju",zeroErrorInternalText:"Ir-riskju juża biss tentattivi, żbalji, reviżjoni u data maħżuna lokalment.",zeroErrorIndex:"Indiċi Żero Żbalji",zeroErrorRed:"Aħmar — għad hemm riskji kritiċi",zeroErrorYellow:"Isfar — progress iżda għad hemm riskji",zeroErrorGreen:"Aħdar — l-iżbalji kritiċi huma taħt kontroll",zeroErrorTraffic:"Dawl tal-preparazzjoni",zeroErrorCritical:"Mistoqsijiet kritiċi",zeroErrorDefeated:"Żbalji megħluba",zeroErrorUnseen:"Mistoqsijiet ta’ riskju mhux meqjusa",zeroErrorRisk:"Punteġġ tar-riskju",zeroErrorWhy:"Għaliex hija kritika",zeroErrorRepeated:"Żbalji ripetuti",zeroErrorLowRate:"Preċiżjoni baxxa",zeroErrorDue:"Reviżjoni dovuta",zeroErrorWeakTopic:"Mis-suġġett l-aktar dgħajjef",zeroErrorCause:"Kawża ripetuta",zeroErrorNeverCorrect:"Qatt ma kienet korretta",zeroErrorToday:"Top 10 għal-lum",zeroErrorTomorrow:"Top 5 għal għada",zeroErrorTop20:"Top 20 żbalji kritiċi",zeroErrorTop20Sub:"Ikklassifikati mid-data maħżuna",zeroErrorStudy:"Elimina dan l-iżball",zeroErrorVerify:"Ivverifika l-ħakma",zeroErrorMarkDefeated:"Immarka megħlub",zeroErrorUndoDefeated:"Erġa’ poġġi fil-lista",zeroErrorDefeatedTitle:"Żbalji megħluba",zeroErrorDefeatedSub:"Mistoqsijiet imneħħija mil-lista kritika",zeroErrorNoCritical:"Għad m’hemmx mistoqsijiet kritiċi.",zeroErrorNoDefeated:"Għad ma għelebt l-ebda żball.",zeroErrorPlan:"Pjan awtomatiku",zeroErrorPlanSub:"Illum, għada u verifika",zeroErrorTodayText:"Aħdem fuq l-għaxar mistoqsijiet bl-ogħla riskju.",zeroErrorTomorrowText:"Irrepeti ħames mistoqsijiet wara pawża.",zeroErrorVerifyText:"Ivverifika bl-Ingliż mingħajr traduzzjoni u f’simulazzjoni.",zeroErrorProgress:"Kontroll tar-riskji",zeroErrorResolved:"Megħlub",zeroErrorVerified:"Verifikat",zeroErrorNeedsVerify:"Jeħtieġ verifika",zeroErrorReset:"Irrisettja żbalji megħluba",zeroErrorResetConfirm:"Tirritorna l-mistoqsijiet kollha fil-lista kritika?",zeroErrorResetDone:"L-istatus ġie rrisettjat.",zeroErrorReport:"Aqsam ir-rapport",zeroErrorCopy:"Ikkopja r-rapport",zeroErrorCopied:"Ir-rapport ġie kkupjat.",zeroErrorScoreMeaning:"Indiċi ogħla jfisser inqas riskji.",zeroErrorDataNeeded:"Jeħtieġ aktar data.",zeroErrorOpen:"Iftaħ Modalità Żero Żbalji",zeroErrorQuestionCount:"mistoqsijiet analizzati",zeroErrorStartToday:"Ibda Top 10",zeroErrorStartTomorrow:"Ibda Top 5",zeroErrorStartCritical:"Ibda sessjoni kritika",schoolPortal2:"School Partner 2.0",schoolPortal2Sub:"Oħloq profil aktar komplut u għodod kummerċjali lokali",schoolPortalNotice:"Prototip kummerċjali lokali",schoolPortalNoticeText:"Il-profili u bookings jibqgħu fuq dan l-apparat sakemm jiżdied backend sigur.",schoolPublicProfile:"Profil pubbliku tal-iskola",schoolHeadline:"Headline",schoolWebsite:"Website",schoolWhatsapp:"WhatsApp",schoolLogoText:"Inizjali tal-logo",schoolSavePublic:"Issejvja profil",schoolPublicSaved:"Il-profil ġie ssejvjat.",schoolVerifiedStatus:"Status tal-verifika",schoolVerified:"Verifikata",schoolUnverified:"Mhux verifikata",schoolInstructors:"Istrutturi",schoolInstructorName:"Isem tal-istruttur",schoolInstructorLanguages:"Lingwi",schoolInstructorSpeciality:"Speċjalità",schoolInstructorBio:"Bijografija qasira",schoolAddInstructor:"Żid istruttur",schoolInstructorSaved:"L-istruttur ġie ssejvjat.",schoolRemoveInstructor:"Neħħi istruttur",schoolCourses:"Korsijiet",schoolCourseTitle:"Titlu tal-kors",schoolCourseCategory:"Kategorija",schoolCoursePrice:"Prezz",schoolCourseDuration:"Tul",schoolCourseFormat:"Format",schoolCourseDescription:"Deskrizzjoni",schoolAddCourse:"Żid kors",schoolCourseSaved:"Il-kors ġie ssejvjat.",schoolOffers:"Offerti",schoolOfferTitle:"Titlu tal-offerta",schoolOfferDiscount:"Skont jew benefiċċju",schoolOfferExpiry:"Skadenza",schoolOfferDescription:"Deskrizzjoni",schoolAddOffer:"Żid offerta",schoolOfferSaved:"L-offerta ġiet issejvjata.",schoolReviews:"Reviews",schoolReviewName:"Isem",schoolReviewRating:"Rating",schoolReviewText:"Test",schoolAddReview:"Żid review demo",schoolReviewDemo:"Review dimostrattiva",schoolReviewSaved:"Review demo ssejvjata.",schoolRequests:"Talbiet tal-istudenti",schoolRequestName:"Isem tal-istudent",schoolRequestEmail:"Email",schoolRequestService:"Servizz",schoolRequestMessage:"Messaġġ",schoolAddRequest:"Żid talba",schoolRequestStatus:"Status",schoolRequestNew:"Ġdida",schoolRequestContacted:"Ikkuntattjat",schoolRequestClosed:"Magħluqa",schoolRequestSaved:"It-talba ġiet ssejvjata.",schoolBookings:"Bookings",schoolBookingStudent:"Student",schoolBookingCourse:"Kors",schoolBookingDate:"Data",schoolBookingTime:"Ħin",schoolBookingNotes:"Noti",schoolAddBooking:"Żid booking",schoolBookingSaved:"Il-booking ġie ssejvjat.",schoolPortalMetrics:"Metriċi",schoolPublishedContent:"Kontenut",schoolCommercialTools:"Għodod kummerċjali",schoolPortalPreview:"Preview għall-istudent",schoolPortalPreviewSub:"Kif tista’ tidher l-iskola wara verifika",schoolPortalShare:"Aqsam profil",schoolPortalCopy:"Ikkopja profil",schoolPortalCopied:"Il-profil ġie kkupjat.",schoolPortalDemo:"Daħħal demo",schoolPortalDemoText:"Iżid data fittizja.",schoolPortalDemoLoaded:"Demo ddaħħlet.",schoolPortalClear:"Ħassar data",schoolPortalClearConfirm:"Tħassar id-data School Partner 2.0?",schoolPortalCleared:"Id-data tħassret.",schoolPortalRequired:"Imla l-oqsma meħtieġa.",schoolRemove:"Neħħi",schoolStatusUpdate:"Aġġorna status",schoolNoItems:"Għad m’hemm xejn",schoolPriceFrom:"Minn",schoolBookNow:"Ibbukkja",schoolRequestInfo:"Itlob informazzjoni",schoolContactSchool:"Ikkuntattja l-iskola",schoolPortalOpen:"Iftaħ School Partner 2.0",instructorPortal:"Portal tal-Istruttur",instructorPortalSub:"Segwi studenti, assenja xogħol u oħloq rapporti",instructorLocal:"Prototip lokali",instructorLocalText:"Assignments u noti jibqgħu fuq dan l-apparat.",instructorProfile:"Profil tal-istruttur",instructorName:"Isem",instructorEmail:"Email",instructorPhone:"Telefon",instructorLanguages:"Lingwi",instructorSpeciality:"Speċjalità",instructorBio:"Bijografija",instructorSaveProfile:"Issejvja profil",instructorProfileSaved:"Profil issejvjat.",instructorStudents:"Monitoraġġ studenti",instructorStudentsSub:"Juża studenti lokali mid-Dashboard",instructorNoStudents:"Għad m’hemmx studenti.",instructorRisk:"Riskju",instructorPriority:"Prijorità",instructorProgress:"Progress",instructorBridge:"Bridge",instructorPassport:"Passport",instructorAverage:"Medja",instructorAssign:"Assenja xogħol",instructorAssignmentTitle:"Titlu",instructorAssignmentType:"Tip",instructorAssignmentDue:"Data",instructorAssignmentPriority:"Prijorità",instructorAssignmentNotes:"Noti",instructorAssignmentStudent:"Student",instructorSaveAssignment:"Issejvja",instructorAssignmentSaved:"Assignment issejvjat.",instructorAssignmentStudy:"Studju gwidat",instructorAssignmentReview:"Reviżjoni żbalji",instructorAssignmentBridge:"Bridge Test",instructorAssignmentExam:"Simulazzjoni",instructorAssignmentZero:"Zero Error",instructorAssignmentPassport:"Passport",instructorLow:"Baxxa",instructorMedium:"Medja",instructorHigh:"Għolja",instructorUrgent:"Urġenti",instructorAssignments:"Assignments",instructorNoAssignments:"Għad m’hemmx assignments.",instructorAssignmentDone:"Lesta",instructorAssignmentOpen:"Miftuħa",instructorToggleDone:"Ibdel status",instructorRemoveAssignment:"Neħħi",instructorPrivateNotes:"Noti privati",instructorNoteStudent:"Student",instructorNoteText:"Nota privata",instructorSaveNote:"Issejvja nota",instructorNoteSaved:"Nota ssejvjata.",instructorNoNotes:"Għad m’hemmx noti.",instructorRemoveNote:"Neħħi nota",instructorReports:"Rapporti individwali",instructorReportsSub:"Oħloq sommarju għal student",instructorSelectStudent:"Agħżel student",instructorShareReport:"Aqsam rapport",instructorCopyReport:"Ikkopja rapport",instructorReportCopied:"Rapport ikkupjat.",instructorStudentNotFound:"Agħżel student validu.",instructorRecommendedAction:"Azzjoni rakkomandata",instructorAttention:"Attenzjoni",instructorAttentionHigh:"Jeħtieġ appoġġ immedjat",instructorAttentionMedium:"Jeħtieġ follow-up",instructorAttentionLow:"Żomm il-pjan",instructorMetrics:"Metriċi",instructorActiveAssignments:"Assignments miftuħa",instructorCompletedAssignments:"Assignments lesti",instructorStudentsAtRisk:"Studenti ta’ riskju",instructorDemo:"Daħħal demo",instructorDemoText:"Iżid assignments u noti fittizji.",instructorDemoLoaded:"Demo ddaħħlet.",instructorClear:"Ħassar data",instructorClearConfirm:"Tħassar il-profil, assignments u noti?",instructorCleared:"Id-data tħassret.",instructorOpenPortal:"Iftaħ Portal tal-Istruttur",aiInstructor:"AI Driving Coach",aiInstructorSub:"Spjegazzjonijiet, tagħlim gwidat u reviżjoni tal-iżbalji għal kull mistoqsija",aiInstructorFoundation:"Fondazzjoni lesta għall-AI",aiInstructorOffline:"AI Driving Coach offline trasparenti",aiInstructorOfflineText:"Din il-Build tuża data lokali u loġika didattika. Għadha mhix marbuta ma’ AI online.",aiInstructorSettings:"Settings tat-tagħlim",aiInstructorLanguage:"Lingwa",aiInstructorEnglish:"Ingliż",aiInstructorItalian:"Taljan",aiInstructorBilingual:"Ingliż + Taljan",aiInstructorLevel:"Livell",aiInstructorSimple:"Sempliċi",aiInstructorNormal:"Normali",aiInstructorTechnical:"Tekniku",aiInstructorSave:"Issejvja settings",aiInstructorSaved:"Settings issejvjati.",aiInstructorAsk:"Iftaħ AI Driving Coach",aiInstructorUnderstand:"Għinni nifhem",aiInstructorLesson:"Lezzjoni tal-mistoqsija",aiInstructorSimpleExplanation:"Spjegazzjoni sempliċi",aiInstructorTechnicalExplanation:"Spjegazzjoni teknika",aiInstructorMaltaExample:"Eżempju f’Malta",aiInstructorMemoryTip:"Mod kif tiftakar",aiInstructorCommonMistake:"Żball komuni",aiInstructorWrongOptions:"Għaliex l-oħrajn huma żbaljati",aiInstructorSimilar:"Mistoqsija simili",aiInstructorAttempts:"Drabi spjegata",aiInstructorAdaptive:"Metodu adattiv",aiInstructorAdaptiveText:"Il-metodu jinbidel meta l-istess mistoqsija tiġi spjegata aktar minn darba.",aiInstructorNoQuestion:"Agħżel mistoqsija jew iftaħ l-Istruttur wara quiz.",aiInstructorQuestionSearch:"Fittex ID jew kliem",aiInstructorOpenLesson:"Iftaħ lezzjoni",aiInstructorMyTutor:"It-Tutur tiegħi",aiInstructorTutorSub:"Saħħiet, dgħufijiet u lezzjoni li jmiss",aiInstructorStrong:"Saħħiet",aiInstructorWeak:"Bżonn titjib",aiInstructorNext:"Lezzjoni li jmiss",aiInstructorExplainedCount:"Mistoqsijiet spjegati",aiInstructorSocratic:"Għinni nifhem",aiInstructorSocraticSub:"Wieġeb mistoqsijiet qosra biex tasal għar-regola",aiInstructorSocraticStart:"Ibda djalogu",aiInstructorSocraticRestart:"Ibda mill-ġdid",aiInstructorSocraticNext:"Kompli",aiInstructorSocraticComplete:"Wasalt għar-regola",aiInstructorSocraticQ1:"X’inhu l-periklu jew obbligu ewlieni?",aiInstructorSocraticQ2:"Liema għażla tipproteġi s-sigurtà?",aiInstructorSocraticQ3:"Għaliex l-għażliet l-oħra huma inqas korretti?",aiInstructorSocraticPrompt:"Ikteb ir-raġunament tiegħek",aiInstructorSocraticFeedback1:"Tajjeb. Sib il-periklu jew obbligu l-ewwel.",aiInstructorSocraticFeedback2:"Qabbel kull għażla mar-regola.",aiInstructorSocraticFeedback3:"Dan il-paragun jgħinek tiftakar.",aiInstructorSocraticEmpty:"Ikteb tweġiba qasira.",aiInstructorExplainAgain:"Spjega b’mod ieħor",aiInstructorPractise:"Ipprattika din il-mistoqsija",aiInstructorReport:"Aqsam lezzjoni",aiInstructorCopy:"Ikkopja lezzjoni",aiInstructorCopied:"Lezzjoni kkupjata.",aiInstructorOpen:"Iftaħ Istruttur AI",cloudReady:"Cloud Ready",cloudReadySub:"Arkitettura lokali għal sinkronizzazzjoni futura",cloudNotice:"Il-cloud għadu mhux attiv",cloudNoticeText:"Din il-Build tipprepara identità, apparati u sync queue lokali. L-ebda data ma tittella’ online.",cloudUserIdentity:"Identità tal-utent",cloudUserId:"User ID",cloudDeviceId:"Device ID",cloudDeviceName:"Isem tal-apparat",cloudGenerateIdentity:"Oħloq identità",cloudIdentityReady:"Identità lesta",cloudQueue:"Sync queue",cloudQueueSub:"Avvenimenti lokali għal backend futur",cloudPending:"Elementi pendenti",cloudLastSync:"L-aħħar sync",cloudNever:"Qatt",cloudLocalBackup:"Backup lokali",cloudCloudBackup:"Cloud backup",cloudNotConnected:"Mhux konness",cloudWaiting:"Qed jistenna",cloudAddTestEvent:"Żid test event",cloudClearQueue:"Ħassar queue",cloudQueueCleared:"Queue tħassret.",cloudDeviceManager:"Device Manager",cloudDeviceManagerSub:"Ipprepara l-istess profil fuq diversi apparati",cloudAddDevice:"Żid apparat",cloudDeviceType:"Tip",cloudDeviceLabel:"Isem",cloudRemoveDevice:"Neħħi",cloudNoDevices:"Għad m’hemmx apparati.",cloudPreparedLogin:"Preparazzjoni login",cloudPreparedLoginText:"L-app hija lesta strutturalment għal accounts futuri.",cloudArchitecture:"Status tal-cloud",cloudIdentityStatus:"Identità",cloudQueueStatus:"Queue",cloudDevicesStatus:"Apparati",cloudLoginStatus:"Login",cloudReadyStatus:"Lest",cloudFutureStatus:"Jeħtieġ backend",cloudEventQuiz:"Quiz event",cloudEventProfile:"Profile event",cloudEventMission:"Mission event",cloudEventCreated:"Event miżjud.",cloudExportQueue:"Ikkopja queue",cloudQueueCopied:"Queue kkupjata.",missions:"Missjonijiet",missionsSub:"Għanijiet konkreti għall-preparazzjoni",missionToday:"Missjoni tal-lum",missionSafety:"Missjoni Sigurtà",missionEnglish:"Missjoni Ingliż",missionZero:"Missjoni Zero Error",missionExam:"Missjoni Eżami",missionPassport:"Missjoni Passport",missionDailyText:"Imla 15-il mistoqsija b’80% preċiżjoni.",missionSafetyText:"Imla 10 mistoqsijiet ta’ sigurtà.",missionEnglishText:"Imla attività Bridge u 5 traps bl-Ingliż.",missionZeroText:"Għeleb 5 mistoqsijiet kritiċi.",missionExamText:"Imla simulazzjoni ta’ 35 mistoqsija.",missionPassportText:"Imla rekwiżit wieħed tal-Passport.",missionStart:"Ibda missjoni",missionActive:"Missjoni attiva",missionComplete:"Imla missjoni",missionCompleted:"Missjoni kompluta",missionProgressLabel:"Progress",missionReward:"Premju utli",missionRewardText:"Missjonijiet jagħtu badge u jaġġornaw il-Coach.",missionReset:"Irrisettja missjonijiet",missionResetConfirm:"Tirrisettja l-progress tal-missjonijiet?",missionResetDone:"Progress irrisettjat.",missionNoActive:"L-ebda missjoni attiva.",missionChoose:"Agħżel missjoni",missionBadgeFocus:"Studju ffukat",missionBadgeSafety:"Dixxiplina tas-sigurtà",missionBadgeEnglish:"Kunfidenza fl-Ingliż",missionBadgeZero:"Żbalji taħt kontroll",missionBadgeExam:"Dixxiplina tas-simulazzjoni",missionBadgePassport:"Vjaġġ tal-permit",missionCompletedCount:"Missjonijiet kompluti",missionOpen:"Iftaħ Missjonijiet",errorReplay:"Replay tal-Iżball",errorReplaySub:"Ara l-għażla perikoluża u mbagħad l-imġiba korretta",errorReplayVisual:"Simulazzjoni viżiva edukattiva",errorReplayVisualText:"Ix-xeni huma illustrazzjonijiet edukattivi simplifikati u mhux dijagrammi uffiċjali.",errorReplayOpen:"Erġa’ ara dan l-iżball",errorReplayRiskScene:"Xena ta’ riskju",errorReplayCorrectScene:"Xena korretta",errorReplayStep1:"Osserva s-sitwazzjoni",errorReplayStep2:"Sib il-periklu",errorReplayStep3:"Agħmel l-azzjoni l-aktar sigura",errorReplayPlay:"Ibda replay",errorReplayRestart:"Ibda mill-ġdid",errorReplayNext:"Xena li jmiss",errorReplayPractise:"Ipprattika l-mistoqsija",errorReplayUnderstand:"Iftaħ l-ispjegazzjoni AI",errorReplaySlow:"Bil-mod",errorReplayNormal:"Normali",errorReplayFast:"Mgħaġġla",errorReplayLibrary:"Librerija replay",errorReplayLibrarySub:"Żbalji u mistoqsijiet ta’ riskju",errorReplayViewed:"Replays meqjusa",errorReplayCompleted:"Replays kompluti",errorReplayNoQuestion:"Agħżel mistoqsija jew iftaħ replay wara quiz.",errorReplaySearch:"Fittex ID jew kliem",errorReplayOpenScene:"Iftaħ replay",errorReplayWhyDangerous:"Għaliex l-ewwel xena hija perikoluża",errorReplayWhyCorrect:"Għaliex it-tieni xena hija korretta",errorReplayDangerText:"L-ewwel azzjoni tħalli riskju mhux ikkontrollat.",errorReplayCorrectText:"L-azzjoni korretta tnaqqas ir-riskju u ssegwi r-regola.",errorReplayBlindSpot:"Riskju ta’ blind spot",errorReplayCrossing:"Riskju ta’ crossing",errorReplayBreakdown:"Riskju ta’ breakdown",errorReplayPassenger:"Riskju tal-passiġġier",errorReplayEco:"Riskju eco",errorReplayGeneral:"Riskju ġenerali",errorReplayShare:"Aqsam il-lezzjoni",errorReplayCopy:"Ikkopja l-lezzjoni",errorReplayCopied:"Lezzjoni kkupjata.",installedVersion:"Verżjoni installata",allModulesUpdated:"Il-moduli kollha huma allinjati",releaseDate:"Data tal-verżjoni"}
 };
 let settings = load(SETTINGS,{lang:'en',theme:'system'});
-let progress = load(STORAGE,{seen:{},correct:{},wrong:{},exams:[],favourites:[],activity:{},knownWords:[],knownPhrases:[],review:{},errorReasons:{},bridgeResults:[]});
+let progress = load(STORAGE,{seen:{},correct:{},wrong:{},exams:[],favourites:[],activity:{},knownWords:[],knownPhrases:[],review:{},errorReasons:{},bridgeResults:[],responseHistory:[]});
 progress.favourites=Array.isArray(progress.favourites)?progress.favourites:[];
 progress.activity=progress.activity&&typeof progress.activity==='object'?progress.activity:{};
 progress.knownWords=Array.isArray(progress.knownWords)?progress.knownWords:[];
@@ -282,6 +282,7 @@ progress.knownPhrases=Array.isArray(progress.knownPhrases)?progress.knownPhrases
 progress.review=progress.review&&typeof progress.review==='object'?progress.review:{};
 progress.errorReasons=progress.errorReasons&&typeof progress.errorReasons==='object'?progress.errorReasons:{};
 progress.bridgeResults=Array.isArray(progress.bridgeResults)?progress.bridgeResults:[];
+progress.responseHistory=Array.isArray(progress.responseHistory)?progress.responseHistory:[];
 
 const DEFAULT_SCHOOL_PREFS={
  area:'all',
@@ -1247,7 +1248,10 @@ function loadExamSelection(){
 function goExamQuestion(index){
  if(!quiz||quiz.mode!=='exam')return;
  quiz.index=Math.max(0,Math.min(quiz.list.length-1,index));
- quiz.answered=false;quiz.showTranslation=false;loadExamSelection();saveSession();renderQuiz();window.scrollTo(0,0);
+ quiz.answered=false;quiz.showTranslation=false;loadExamSelection();
+ const currentId=quiz.list[quiz.index]?.id;
+ if(!Number(quiz.answers?.[currentId]?.responseMs))quiz.questionStartedAt=Date.now();
+ saveSession();renderQuiz();window.scrollTo(0,0);
 }
 function toggleExamFlag(){
  if(!quiz||quiz.mode!=='exam')return;
@@ -3016,7 +3020,7 @@ function bindErrorReplay(){
   replayMountMobileContinueDock(target,questionId);
  }
 
- const replayPlayer=$('[data-replay-engine-player]');
+ const replayPlayer=screen.querySelector('[data-replay-engine-player]');
  if(replayPlayer){
   const sceneId=replayPlayer.dataset.replayEnginePlayer||REPLAY_ACTION_SCENE_ID;
   let phaseOptions={};
@@ -3029,7 +3033,7 @@ function bindErrorReplay(){
   });
  }
 
- const hazardSurface=$('[data-hazard-surface]');
+ const hazardSurface=screen.querySelector('[data-hazard-surface]');
 
  if(hazardSurface&&question){
   replayPerceptionStartedAt=performance.now();
@@ -3081,7 +3085,7 @@ function bindErrorReplay(){
    }
   };
 
-  hazardSurface.onclick=event=>{
+  const handleHazardTap=event=>{
    event.preventDefault();
    event.stopPropagation();
 
@@ -3091,8 +3095,11 @@ function bindErrorReplay(){
    hazardSurface.classList.remove('hazard-missed','hazard-found');
 
    const rect=hazardSurface.getBoundingClientRect();
-   const x=(event.clientX-rect.left)/rect.width;
-   const y=(event.clientY-rect.top)/rect.height;
+   const touchPoint=event.changedTouches?.[0]||event.touches?.[0]||event;
+   const clientX=Number.isFinite(touchPoint?.clientX)?touchPoint.clientX:(rect.left+rect.width/2);
+   const clientY=Number.isFinite(touchPoint?.clientY)?touchPoint.clientY:(rect.top+rect.height/2);
+   const x=(clientX-rect.left)/rect.width;
+   const y=(clientY-rect.top)/rect.height;
 
    // Calibrated to the actual observation image:
    // road horizon / loss of full opposing-lane visibility.
@@ -3172,6 +3179,56 @@ function bindErrorReplay(){
     renderInlineFeedback(replayCoachFeedback,false);
    }
   };
+
+  // Build 40.4.6 — GLOBAL REPLAY INPUT FIX
+  // Capture interaction from the whole visible stage, not only the transparent overlay.
+  // Some iOS/Koder WKWebViews render the overlay correctly but do not dispatch its tap reliably.
+  const hazardStage=hazardSurface.closest('.wave-across-stage')||hazardSurface;
+  let replayInputLastAt=0;
+  let replayTouchStart=null;
+
+  const replayInputAllowed=event=>{
+   const target=event.target instanceof Element?event.target:null;
+   if(!target)return true;
+   // UI chrome must never count as a hazard attempt.
+   return !target.closest('[data-hazard-continue],[data-replay-phase-continue],.real-film-top,.wave-across-instruction,.hazard-inline-feedback');
+  };
+
+  const dispatchReplayInput=event=>{
+   if(!replayInputAllowed(event))return;
+   const now=performance.now();
+   // pointer/touch are commonly followed by a synthetic click: process only one.
+   if(now-replayInputLastAt<420)return;
+   replayInputLastAt=now;
+   handleHazardTap(event);
+  };
+
+  const onReplayTouchStart=event=>{
+   const point=event.touches?.[0];
+   replayTouchStart=point?{x:point.clientX,y:point.clientY}:null;
+  };
+  const onReplayTouchEnd=event=>{
+   const point=event.changedTouches?.[0];
+   if(point&&replayTouchStart){
+    const dx=point.clientX-replayTouchStart.x;
+    const dy=point.clientY-replayTouchStart.y;
+    replayTouchStart=null;
+    // A scroll gesture must not be interpreted as a hazard tap.
+    if(Math.hypot(dx,dy)>18)return;
+   }
+   dispatchReplayInput(event);
+  };
+
+  // Capture phase on the stage survives child overlays/images and works on all 250 Replay scenes.
+  hazardStage.addEventListener('touchstart',onReplayTouchStart,{capture:true,passive:true});
+  hazardStage.addEventListener('touchend',onReplayTouchEnd,{capture:true,passive:false});
+  hazardStage.addEventListener('pointerup',dispatchReplayInput,{capture:true,passive:false});
+  hazardStage.addEventListener('click',dispatchReplayInput,true);
+
+  // Keep direct bindings too as an additional fallback for normal browsers.
+  hazardSurface.onpointerup=dispatchReplayInput;
+  hazardSurface.ontouchend=onReplayTouchEnd;
+  hazardSurface.onclick=dispatchReplayInput;
  }
 
  screen.querySelectorAll('[data-replay-open]').forEach(button=>{
@@ -3838,6 +3895,208 @@ function aiRecoveryPlanHtml(compact=false){
  }
  return `<div class="card ai-recovery-plan"><div class="ai-plan-head"><span>🧭</span><div><small>${esc(aiRecoveryText('PIANO DI RECUPERO INTELLIGENTE','SMART RECOVERY PLAN'))}</small><h3>${topicTitle}</h3><p>${esc(summary)}</p></div><strong>${stats.done}/${stats.total}</strong></div><div class="ai-plan-progress"><i style="width:${stats.pct}%"></i></div><div class="ai-plan-stage-list">${rows}</div><div class="ai-plan-actions"><button class="btn" id="aiRecoveryPlanStart">${esc(stats.allDone?aiRecoveryText('Ripeti dal blocco 1','Repeat from block 1'):aiRecoveryText(`Continua dal blocco ${plan.stages.indexOf(next)+1}`,`Continue from block ${plan.stages.indexOf(next)+1}`))}</button><button class="btn secondary" id="aiRecoveryPlanRebuild">↻ ${esc(aiRecoveryText('Ricalcola piano','Recalculate plan'))}</button></div></div>`;
 }
+// Build 40.4.6 — Global Replay Scene Input Fix
+const AI_PATTERN_GROUPS=[
+ {id:'priority',icon:'↔️',it:'Precedenze e incroci',en:'Priorities and junctions',categories:['Junctions','Roundabouts','Road signs and junctions','Box junctions','Positioning']},
+ {id:'signs',icon:'🚦',it:'Segnali e limiti',en:'Signs, signals and limits',categories:['Road signs','Road and traffic signs','Signals','Police signals','Traffic lights','Speed limits','Traffic calming','Hazard warning lights','Flashing beacons','Horn']},
+ {id:'vulnerable',icon:'🧍',it:'Utenti vulnerabili e passeggeri',en:'Vulnerable users and passengers',categories:['Vulnerable road users','Vulnerable passengers','Disabled passengers','Passenger comfort','Customer care','Children','Cyclists','Motorcyclists','Motorcyclists and cyclists','Motorcyclists and overtaking','Pedestrian crossings','Pedestrian safety','Pedestrians','Disabled pedestrians','Elderly pedestrians','Buses']},
+ {id:'procedures',icon:'📋',it:'Procedure, legge e primo soccorso',en:'Procedures, law and first aid',categories:['Accidents','Administrative penalties','Documents','Documents and disqualification','Documents and penalty points','Driver requirements','Driving and rest periods','Enforcement','First aid and shock','Garaging','Insurance','Intermediary booking platforms','LPTV Law 2026','Operator licences','Operator responsibilities','Safe loading','Special Occasion Vehicles']},
+ {id:'observation',icon:'👀',it:'Osservazione e manovre',en:'Observation and manoeuvres',categories:['Bends','Country roads','Defensive driving','Dual carriageways','Emergency vehicles','Following distance','Lane changing','Large vehicles','Mirrors and observation','Narrow roads','Overtaking','Parking','Rules of the road','Safety margins','Single-track roads','Stopping distances']},
+ {id:'vehicle',icon:'🚘',it:'Controllo e sicurezza del veicolo',en:'Vehicle control and safety',categories:['ABS','ABS and emergency braking','ABS and road surface','ABS and steering','Braking dynamics','Emergency braking','Floods and brakes','Seat belts','Skidding','Tyres','Vehicle control','Vehicle faults','Vehicle lighting','Vehicle lights','Vehicle safety']},
+ {id:'risk',icon:'⚠️',it:'Rischi, condizioni e attenzione',en:'Hazards, conditions and attention',categories:['Accident prevention','Alcohol','Alertness','Attitude','Concentration','Distractions','Eyesight','Fatigue','Floods','Fog','Hazard awareness','Hot weather','Medicines','Mobile phones','Night driving','Tunnels','Weather','Wet weather','Wind']},
+ {id:'eco',icon:'🌱',it:'Eco-guida e gestione del veicolo',en:'Eco-driving and vehicle efficiency',categories:['Eco driving','Engine maintenance','Environment','Fuel safety','Vehicle emissions']}
+];
+function aiPatternGroupForQuestion(q){
+ if(!q)return AI_PATTERN_GROUPS.find(g=>g.id==='risk');
+ const category=String(q.category||'').trim();
+ const exact=AI_PATTERN_GROUPS.find(group=>group.categories.includes(category));
+ if(exact)return exact;
+ const key=category.toLowerCase();
+ if(/passenger|pedestrian|cycl|motorcycl|vulnerable|customer|child|elderly|disabled|bus/.test(key))return AI_PATTERN_GROUPS.find(g=>g.id==='vulnerable');
+ if(/junction|roundabout|priority|position/.test(key))return AI_PATTERN_GROUPS.find(g=>g.id==='priority');
+ if(/sign|signal|light|speed|beacon|horn|traffic calming/.test(key))return AI_PATTERN_GROUPS.find(g=>g.id==='signs');
+ if(/accident|document|penalt|licen|insurance|operator|law|enforcement|loading|garag|booking|first aid|rest period|requirement/.test(key))return AI_PATTERN_GROUPS.find(g=>g.id==='procedures');
+ if(/abs|brak|tyre|vehicle|seat belt|skid/.test(key))return AI_PATTERN_GROUPS.find(g=>g.id==='vehicle');
+ if(/eco|environment|emission|engine|fuel/.test(key))return AI_PATTERN_GROUPS.find(g=>g.id==='eco');
+ if(/alert|alcohol|fatigue|weather|flood|fog|wind|medicine|mobile|distraction|hazard|night|tunnel|concentration|attitude|eyesight|hot/.test(key))return AI_PATTERN_GROUPS.find(g=>g.id==='risk');
+ return AI_PATTERN_GROUPS.find(g=>g.id==='observation');
+}
+function aiPatternGroupForHistory(item){
+ const q=aiQuestionById(item?.id);
+ return q?aiPatternGroupForQuestion(q).id:String(item?.pattern||'risk');
+}
+function aiCaptureResponseMs(){
+ if(!quiz)return 0;
+ const start=Number(quiz.questionStartedAt)||Date.now();
+ return Math.max(250,Math.min(180000,Date.now()-start));
+}
+function aiRecordPatternAttempt(q,ok,responseMs,mode,extra={}){
+ if(!q)return;
+ progress.responseHistory=Array.isArray(progress.responseHistory)?progress.responseHistory:[];
+ const group=aiPatternGroupForQuestion(q);
+ progress.responseHistory.push({
+  id:q.id,ts:new Date().toISOString(),ok:Boolean(ok),ms:Math.max(0,Math.round(Number(responseMs)||0)),mode:String(mode||'guided'),pattern:group.id,
+  translationUsed:Boolean(extra.translationUsed),sentenceCoachUsed:Boolean(extra.sentenceCoachUsed),multiple:Array.isArray(q.correct)&&q.correct.length>1
+ });
+ progress.responseHistory=progress.responseHistory.slice(-600);
+}
+function aiPatternMedian(values){
+ const clean=values.map(Number).filter(v=>Number.isFinite(v)&&v>0).sort((a,b)=>a-b);
+ if(!clean.length)return 0;
+ const m=Math.floor(clean.length/2);return clean.length%2?clean[m]:Math.round((clean[m-1]+clean[m])/2);
+}
+function aiPatternReasonTotalsForIds(ids){
+ const wanted=new Set(ids),totals=Object.fromEntries(ERROR_REASON_IDS.map(id=>[id,0]));
+ wanted.forEach(id=>{const map=progress.errorReasons?.[id]||{};ERROR_REASON_IDS.forEach(reason=>totals[reason]+=Number(map[reason]||0));});
+ return totals;
+}
+function aiPatternLikelyCause(base){
+ const r=base.reasonTotals||{},reasonOrder=ERROR_REASON_IDS.map(id=>[id,Number(r[id]||0)]).sort((a,b)=>b[1]-a[1]);
+ if(reasonOrder[0]?.[1]>=2){
+  const id=reasonOrder[0][0];
+  const labels={rule:['Regola non consolidata','Rule not consolidated'],language:['Comprensione della frase inglese','English sentence comprehension'],word:['Vocabolario inglese','English vocabulary'],multiple:['Gestione delle risposte multiple','Multiple-answer handling'],rush:['Risposta impulsiva','Rushed answering'],unsure:['Incertezza / bassa sicurezza','Uncertainty / low confidence']};
+  return {id,label:aiRecoveryText(...labels[id])};
+ }
+ const wc=base.wrongMedian,cc=base.correctMedian;
+ if(wc&&cc&&wc<Math.min(9000,cc*.72))return {id:'rush',label:aiRecoveryText('Risposta troppo rapida / impulsiva','Answering too quickly / impulsively')};
+ if(wc&&cc&&wc>Math.max(15000,cc*1.45))return {id:'unsure',label:aiRecoveryText('Esitazione: regola non automatizzata','Hesitation: rule not automatic yet')};
+ if(base.wrong>=3&&base.errorRate>=30)return {id:'rule',label:aiRecoveryText('Conoscenza non ancora stabile','Knowledge is not stable yet')};
+ return {id:'observe',label:aiRecoveryText('Schema ancora in osservazione','Pattern still under observation')};
+}
+function aiPatternAction(cause,group){
+ const map={
+  language:['Bridge Test sulle stesse aree, poi ripeti senza traduzione.','Run a Bridge Test on the same areas, then repeat without translation.'],
+  word:['Ripassa parole chiave e frasi, poi verifica senza aiuti.','Review key words and phrases, then verify without help.'],
+  multiple:['Allenati su 5 domande multiple contando prima quante risposte servono.','Train on 5 multiple-answer questions, counting required answers first.'],
+  rush:['Imponi una pausa di 3 secondi: identifica regola/pericolo prima di toccare la risposta.','Use a 3-second pause: identify the rule/hazard before touching an answer.'],
+  unsure:['Spiega mentalmente la regola prima di rispondere, poi ripeti 5 domande mirate.','State the rule mentally before answering, then repeat 5 targeted questions.'],
+  rule:['Micro-recupero mirato: spiegazione → Replay → 5 domande della stessa famiglia.','Targeted micro-recovery: explanation → Replay → 5 questions from the same family.'],
+  observe:['Continua a raccogliere tentativi: il Coach aggiornerà automaticamente la diagnosi.','Keep collecting attempts: the Coach will update the diagnosis automatically.']
+ };
+ return aiRecoveryText(...(map[cause]||map.observe));
+}
+function aiPatternGroupAnalysis(group){
+ const questions=Q.filter(q=>aiPatternGroupForQuestion(q).id===group.id),ids=questions.map(q=>q.id);
+ const attempts=questions.reduce((n,q)=>n+Number(progress.seen[q.id]||0),0);
+ const wrong=questions.reduce((n,q)=>n+Number(progress.wrong[q.id]||0),0);
+ const correct=questions.reduce((n,q)=>n+Number(progress.correct[q.id]||0),0);
+ const history=(progress.responseHistory||[]).filter(item=>aiPatternGroupForHistory(item)===group.id);
+ const recent=history.slice(-40),recentWrong=recent.filter(x=>!x.ok).length;
+ const lastFive=history.slice(-5);
+ const recentRecovery=lastFive.length===5&&lastFive.every(x=>x.ok)&&(()=>{const ts=Date.parse(lastFive[lastFive.length-1]?.ts||'');return Number.isFinite(ts)&&(Date.now()-ts)<=7*24*60*60*1000})();
+ const recentRecoveryQuestionIds=recentRecovery?lastFive.map(x=>x.id):[];
+ const stabilityRecord=progress.patternStability?.[group.id]||null;
+ const stabilityTs=Date.parse(stabilityRecord?.ts||'');
+ const wrongAfterStability=Number.isFinite(stabilityTs)&&history.some(x=>!x.ok&&Date.parse(x.ts||'')>stabilityTs);
+ const stabilityConfirmed=Boolean(stabilityRecord?.passed)&&!wrongAfterStability&&Number.isFinite(stabilityTs)&&(Date.now()-stabilityTs)<=30*24*60*60*1000;
+ const correctMedian=aiPatternMedian(history.filter(x=>x.ok).map(x=>x.ms));
+ const wrongMedian=aiPatternMedian(history.filter(x=>!x.ok).map(x=>x.ms));
+ const errorRate=attempts?Math.round(wrong/attempts*100):0;
+ const reasonTotals=aiPatternReasonTotalsForIds(ids);
+ const reasonWeight=Object.values(reasonTotals).reduce((a,b)=>a+Number(b||0),0);
+ const score=(wrong*8)+(errorRate*.55)+(recentWrong*7)+(reasonWeight*2.5);
+ const recurrence=wrong>=3&&errorRate>=25?'recurring':recentWrong>=2?'emerging':wrong?'occasional':'clean';
+ const base={id:group.id,group,questions,ids,attempts,wrong,correct,errorRate,recentWrong,correctMedian,wrongMedian,reasonTotals,score,recurrence,recentRecovery,recentRecoveryQuestionIds,stabilityRecord,stabilityConfirmed};
+ if(stabilityConfirmed){
+  base.recurrence='clean';
+  base.cause={id:'stable',label:aiRecoveryText('Stabilità confermata','Stability confirmed')};
+  base.action=aiRecoveryText('Recupero 5/5 + verifica 5/5 su domande diverse: il pattern è sotto controllo. Continuerò a sorvegliarlo nelle sessioni future.','Recovery 5/5 + verification 5/5 on different questions: the pattern is under control. I will keep monitoring it in future sessions.');
+ }else if(recentRecovery){
+  base.recurrence='improving';
+  base.cause={id:'recovered',label:aiRecoveryText('Recupero riuscito: area in miglioramento','Recovery successful: area improving')};
+  base.action=aiRecoveryText('Lo storico resta da consolidare, ma hai appena ottenuto 5/5. Ora il Coach userà 5 domande diverse per verificare la stabilità.','The history still needs consolidation, but you just scored 5/5. The Coach will now use 5 different questions to verify stability.');
+ }else{
+  base.cause=aiPatternLikelyCause(base);
+  base.action=aiPatternAction(base.cause.id,group);
+ }
+ return base;
+}
+function aiEnglishPatternAnalysis(){
+ const bridge=latestBridgeResult();
+ const totals=errorReasonTotals();
+ const reasonCount=Number(totals.language||0)+Number(totals.word||0);
+ const gap=bridge?Math.max(0,Number(bridge.knowledgePct||0)-Number(bridge.englishPct||0)):0;
+ const bridgeLanguage=bridge?.languageIds?.length||0;
+ const history=progress.responseHistory||[];
+ const noTranslate=history.filter(x=>!x.translationUsed),withTranslate=history.filter(x=>x.translationUsed);
+ const noTranslateWrong=noTranslate.filter(x=>!x.ok).length,withTranslateWrong=withTranslate.filter(x=>!x.ok).length;
+ const noRate=noTranslate.length?Math.round(noTranslateWrong/noTranslate.length*100):0;
+ const yesRate=withTranslate.length?Math.round(withTranslateWrong/withTranslate.length*100):0;
+ const translationGap=(noTranslate.length>=5&&withTranslate.length>=3)?Math.max(0,noRate-yesRate):0;
+ const score=reasonCount*12+gap*.9+bridgeLanguage*8+translationGap*.8;
+ if(score<12)return null;
+ const cause={id:'language',label:aiRecoveryText('Comprensione dell’inglese sotto pressione','English comprehension under pressure')};
+ return {id:'english',group:{id:'english',icon:'🇬🇧',it:'Comprensione inglese',en:'English comprehension'},attempts:(bridge?.total||0)+reasonCount,wrong:bridgeLanguage+reasonCount,errorRate:bridge?.total?Math.round(bridgeLanguage/bridge.total*100):0,recentWrong:bridgeLanguage,correctMedian:0,wrongMedian:0,reasonTotals:{language:Number(totals.language||0),word:Number(totals.word||0)},score,cause,action:aiPatternAction('language'),recurrence:score>=35?'recurring':'emerging',bridgeGap:gap,translationGap};
+}
+function aiCoachPatternAnalysis(){
+ const base=AI_PATTERN_GROUPS.map(aiPatternGroupAnalysis).filter(item=>item.attempts||item.wrong||Object.values(item.reasonTotals).some(Boolean));
+ const english=aiEnglishPatternAnalysis();if(english)base.push(english);
+ const ranked=base.filter(item=>item.wrong||item.recentWrong||item.score>=12).sort((a,b)=>b.score-a.score);
+ const timing=(progress.responseHistory||[]).filter(x=>x.ms>0);
+ const wrongMedian=aiPatternMedian(timing.filter(x=>!x.ok).map(x=>x.ms));
+ const correctMedian=aiPatternMedian(timing.filter(x=>x.ok).map(x=>x.ms));
+ const evidence=timing.length+Object.keys(progress.errorReasons||{}).length+(progress.exams||[]).length;
+ return {ranked,timingCount:timing.length,wrongMedian,correctMedian,evidence,evidenceLevel:evidence>=80?'high':evidence>=25?'medium':'growing'};
+}
+function aiPatternRecurrenceLabel(value){
+ const labels={recurring:['RICORRENTE','RECURRING'],emerging:['IN EMERSIONE','EMERGING'],improving:['IN MIGLIORAMENTO','IMPROVING'],occasional:['OCCASIONALE','OCCASIONAL'],clean:['STABILE','STABLE']};
+ return aiRecoveryText(...(labels[value]||labels.occasional));
+}
+function aiPatternEvidenceLabel(value){
+ const labels={high:['Evidenza alta','High evidence'],medium:['Evidenza media','Medium evidence'],growing:['Evidenza in crescita','Growing evidence']};
+ return aiRecoveryText(...labels[value]);
+}
+function aiPatternSeconds(ms){return ms?`${(ms/1000).toFixed(1)} s`:'—'}
+function aiPatternQuestionsFor(id,limit=5,excludeIds=[]){
+ const excluded=new Set((excludeIds||[]).map(String));
+ if(id==='english'){
+  const bridge=latestBridgeResult();
+  const ids=[...(bridge?.languageIds||[]),...errorReasonQuestions('language').map(q=>q.id),...errorReasonQuestions('word').map(q=>q.id)];
+  const seen=new Set();return ids.map(aiQuestionById).filter(q=>q&&!excluded.has(q.id)&&!seen.has(q.id)&&seen.add(q.id)).slice(0,limit);
+ }
+ const group=AI_PATTERN_GROUPS.find(g=>g.id===id);if(!group)return [];
+ const scored=Q.filter(q=>aiPatternGroupForQuestion(q).id===id&&!excluded.has(q.id)).map(q=>{
+  const seen=Number(progress.seen[q.id]||0),wrong=Number(progress.wrong[q.id]||0),correct=Number(progress.correct[q.id]||0);
+  const rate=seen?wrong/seen:0;return {q,score:wrong*10+rate*5+(correct===0&&seen?4:0),seen};
+ }).sort((a,b)=>b.score-a.score||a.seen-b.seen).map(x=>x.q);
+ return scored.slice(0,limit);
+}
+function aiPatternLastQuestionIds(id,count=5){
+ const history=(progress.responseHistory||[]).filter(item=>aiPatternGroupForHistory(item)===id);
+ const ids=[];for(let i=history.length-1;i>=0&&ids.length<count;i--){const qid=String(history[i]?.id||'');if(qid&&!ids.includes(qid))ids.push(qid)}
+ return ids;
+}
+function startAiPatternTraining(id){
+ const group=AI_PATTERN_GROUPS.find(g=>g.id===id);
+ const item=group?aiPatternGroupAnalysis(group):null;
+ if(id==='english'){
+  const pool=aiPatternQuestionsFor(id,5);const focus=pool.map(q=>q.id);return startBridgeTest(Math.min(10,Math.max(5,focus.length||5)),focus);
+ }
+ const isVerification=Boolean(item?.recentRecovery||item?.stabilityConfirmed);
+ const exclude=isVerification?(item?.recentRecoveryQuestionIds?.length?item.recentRecoveryQuestionIds:aiPatternLastQuestionIds(id,item?.stabilityConfirmed?10:5)):[];
+ let pool=aiPatternQuestionsFor(id,5,exclude);
+ if(pool.length<5&&isVerification){
+  const fallback=aiPatternQuestionsFor(id,5,[]).filter(q=>!pool.some(x=>x.id===q.id));pool=[...pool,...fallback].slice(0,5);
+ }
+ if(!pool.length)return toast(aiRecoveryText('Servono più dati prima di creare il recupero.','More data is needed before creating recovery.'));
+ startQuiz(pool,'guided',{patternVerificationId:isVerification?id:'',patternVerificationSourceIds:exclude});
+}
+function aiPatternAnalysisHtml(compact=false){
+ const analysis=aiCoachPatternAnalysis(),top=analysis.ranked.slice(0,compact?1:3);
+ if(!top.length)return `<div class="card ai-pattern-engine empty"><span>🧠</span><div><small>${esc(aiRecoveryText('BUILD 40.4.6 · COACH PATTERN ANALYSIS','BUILD 40.4.6 · COACH PATTERN ANALYSIS'))}</small><h3>${esc(aiRecoveryText('Il Coach sta costruendo il tuo profilo di errore','The Coach is building your error profile'))}</h3><p>${esc(aiRecoveryText('Completa alcune domande: da questa build vengono misurati anche i tempi reali di risposta.','Complete some questions: from this build, real response times are measured too.'))}</p></div></div>`;
+ const timingText=analysis.timingCount?aiRecoveryText(`Tempo mediano: corrette ${aiPatternSeconds(analysis.correctMedian)} · errate ${aiPatternSeconds(analysis.wrongMedian)}.`,`Median time: correct ${aiPatternSeconds(analysis.correctMedian)} · wrong ${aiPatternSeconds(analysis.wrongMedian)}.`):aiRecoveryText('I tempi di risposta iniziano a essere raccolti dalla Build 40.4.','Response-time data starts being collected from Build 40.4.');
+ const cards=top.map(item=>{
+  const label=aiRecoveryText(item.group.it,item.group.en),timing=item.id==='english'?((item.bridgeGap||item.translationGap)?aiRecoveryText(`Gap lingua: ${Math.max(item.bridgeGap||0,item.translationGap||0)} punti`,`Language gap: ${Math.max(item.bridgeGap||0,item.translationGap||0)} points`):''):aiRecoveryText(`Errori ${item.wrong} · ${item.errorRate}% · errate ${aiPatternSeconds(item.wrongMedian)}`,`Errors ${item.wrong} · ${item.errorRate}% · wrong ${aiPatternSeconds(item.wrongMedian)}`);
+  const recovered=Boolean(item.recentRecovery),stable=Boolean(item.stabilityConfirmed);
+  const stateClass=stable?'stable':recovered?'recovered':'';
+  const badge=stable?'10/10':recovered?'5/5':Math.min(99,Math.round(item.score));
+  const diagTitle=stable?aiRecoveryText('STABILITÀ CONFERMATA','STABILITY CONFIRMED'):recovered?aiRecoveryText('RECUPERO RECENTE','RECENT RECOVERY'):aiRecoveryText('CAUSA PROBABILE','LIKELY CAUSE');
+  const actionLabel=stable?aiRecoveryText('Mantieni stabilità','Maintain stability'):recovered?aiRecoveryText('Verifica stabilità · 5 domande diverse','Verify stability · 5 different questions'):aiRecoveryText('Esegui azione correttiva','Run corrective action');
+  return `<article class="ai-pattern-item ${stateClass}"><div class="ai-pattern-title"><span>${item.group.icon}</span><div><small>${esc(aiPatternRecurrenceLabel(item.recurrence))}</small><strong>${esc(label)}</strong><p>${esc(timing)}</p></div><b>${badge}</b></div><div class="ai-pattern-diagnosis"><span>${esc(diagTitle)}</span><strong>${esc(item.cause.label)}</strong><p>${esc(item.action)}</p></div><button class="btn secondary" data-ai-pattern-train="${esc(item.id)}">${esc(actionLabel)}</button></article>`;
+ }).join('');
+ return `<div class="card ai-pattern-engine ${compact?'compact':''}"><div class="ai-pattern-head"><span>🧠</span><div><small>${esc(aiRecoveryText('AI COGNITIVE ERROR ENGINE · BUILD 40.4.6','AI COGNITIVE ERROR ENGINE · BUILD 40.4.6'))}</small><h3>${esc(aiRecoveryText('Coach Pattern Analysis','Coach Pattern Analysis'))}</h3><p>${esc(aiRecoveryText('Non conta solo gli errori: cerca schema, velocità, ripetizione e causa probabile.','It does not just count errors: it looks for pattern, speed, repetition and likely cause.'))}</p></div><strong>${esc(aiPatternEvidenceLabel(analysis.evidenceLevel))}</strong></div><div class="ai-pattern-timing"><span>⏱️</span><p>${esc(timingText)}</p></div><div class="ai-pattern-list">${cards}</div><p class="ai-pattern-note">${esc(aiRecoveryText('Questa non è ancora la previsione pronto/non pronto: quella arriverà con la 40.5 usando i pattern raccolti qui.','This is not yet the ready/not-ready prediction: Build 40.5 will use the patterns collected here.'))}</p></div>`;
+}
+
 function aiInstructorViewHtml(){
  const queryId=route.data?.questionId||aiInstructor.lastQuestionId||'';
  const question=aiQuestionById(queryId);
@@ -3848,6 +4107,7 @@ function aiInstructorViewHtml(){
   `<div css="ai-offline-banner"><span>🔒</span><div><strong>${esc(t('aiInstructorOffline'))}</strong><p>${esc(t('aiInstructorOfflineText'))}</p></div></div>`,
   `<div class="card ai-settings-card"><h3>${esc(t('aiInstructorSettings'))}</h3><div class="ai-settings-grid"><label><span>${esc(t('aiInstructorLanguage'))}</span><select id="aiLanguageMode"><option value="english" ${aiInstructor.languageMode==='english'?'selected':''}>${esc(t('aiInstructorEnglish'))}</option><option value="italian" ${aiInstructor.languageMode==='italian'?'selected':''}>${esc(t('aiInstructorItalian'))}</option><option value="bilingual" ${aiInstructor.languageMode==='bilingual'?'selected':''}>${esc(t('aiInstructorBilingual'))}</option></select></label><label><span>${esc(t('aiInstructorLevel'))}</span><select id="aiLevel"><option value="simple" ${aiInstructor.level==='simple'?'selected':''}>${esc(t('aiInstructorSimple'))}</option><option value="normal" ${aiInstructor.level==='normal'?'selected':''}>${esc(t('aiInstructorNormal'))}</option><option value="technical" ${aiInstructor.level==='technical'?'selected':''}>${esc(t('aiInstructorTechnical'))}</option></select></label></div><button class="btn secondary" id="saveAiInstructor">${esc(t('aiInstructorSave'))}</button></div>`,
   `<div class="card ai-tutor-card"><div class="ai-tutor-head"><div><h3>${esc(t('aiInstructorMyTutor'))}</h3><p>${esc(t('aiInstructorTutorSub'))}</p></div><strong>${tutor.count}</strong></div><div class="ai-tutor-grid"><article><span>${esc(t('aiInstructorStrong'))}</span>${tutor.strong.map(item=>`<p>${item.topic.icon} ${esc(t(item.topic.title))} — ${item.score}%</p>`).join('')}</article><article><span>${esc(t('aiInstructorWeak'))}</span>${tutor.weak.map(item=>`<p>${item.topic.icon} ${esc(t(item.topic.title))} — ${item.score}%</p>`).join('')}</article><article><span>${esc(t('aiInstructorNext'))}</span><p>${tutor.next.icon} ${esc(t(tutor.next.title))}</p><small>${esc(t(tutor.next.reason))}</small></article></div></div>`,
+  aiPatternAnalysisHtml(false),
   aiTargetedRecoveryHtml(false),
   aiRecoveryPlanHtml(false),
   `<div class="card ai-search-card"><input id="aiQuestionSearch" placeholder="${esc(t('aiInstructorQuestionSearch'))}" value="${esc(question?.id||'')}"><button class="btn" id="aiQuestionSearchBtn">${esc(t('aiInstructorOpenLesson'))}</button></div>`,
@@ -3887,6 +4147,7 @@ function bindAiInstructor(){
  if(planRebuild)planRebuild.onclick=rebuildAiRecoveryPlan;
  screen.querySelectorAll('[data-ai-plan-stage]').forEach(button=>button.onclick=()=>startAiRecoveryPlanStage(button.dataset.aiPlanStage));
  screen.querySelectorAll('[data-ai-priority-open]').forEach(button=>button.onclick=()=>go('aiinstructor',{questionId:button.dataset.aiPriorityOpen}));
+ screen.querySelectorAll('[data-ai-pattern-train]').forEach(button=>button.onclick=()=>startAiPatternTraining(button.dataset.aiPatternTrain));
  $('#aiQuestionSearchBtn').onclick=aiFindQuestionFromSearch;
  const search=$('#aiQuestionSearch');
  if(search)search.onkeydown=event=>{if(event.key==='Enter')aiFindQuestionFromSearch()};
@@ -5171,7 +5432,7 @@ function resetStudyData(){
  progress={
   seen:{},correct:{},wrong:{},exams:[],favourites:[],activity:{},
   knownWords:[],knownPhrases:[],review:{},errorReasons:{},
-  bridgeResults:[],bankVersion:TAG_BANK_VERSION
+  bridgeResults:[],responseHistory:[],bankVersion:TAG_BANK_VERSION
  };
  save(STORAGE,progress);
  localStorage.removeItem(SESSION);
@@ -6058,6 +6319,17 @@ function bindViewSpecific(){
     $('#resultRecoveryPlanNext').onclick=()=>result.allDone?go('aiinstructor'):startAiRecoveryPlanStage(result.nextStageId);
    }
   }
+  if(route.data.patternVerification){
+   const result=route.data.patternVerification;
+   const actions=screen.querySelector('.result-actions');
+   if(actions){
+    const panel=document.createElement('div');
+    panel.className='card ai-plan-result';
+    panel.innerHTML=`<div><span>${result.passed?'🛡️':'🔁'}</span><div><small>${esc(aiRecoveryText('VERIFICA STABILITÀ','STABILITY CHECK'))}</small><h3>${esc(result.passed?aiRecoveryText('Stabilità confermata','Stability confirmed'):aiRecoveryText('Da consolidare','Needs consolidation'))}</h3><p>${esc(result.passed?aiRecoveryText(`5 domande diverse superate: ${result.correct}/${result.total}. Il Coach ora considera questo pattern sotto controllo.`,`5 different questions passed: ${result.correct}/${result.total}. The Coach now considers this pattern under control.`):aiRecoveryText(`Verifica: ${result.correct}/${result.total}. Il Coach manterrà il pattern in recupero e lo riproporrà in modo mirato.`,`Verification: ${result.correct}/${result.total}. The Coach will keep this pattern in recovery and target it again.`))}</p></div></div><button class="btn" id="resultPatternVerificationOpen">${esc(aiRecoveryText('Apri AI Driving Coach','Open AI Driving Coach'))}</button>`;
+    actions.parentNode.insertBefore(panel,actions);
+    $('#resultPatternVerificationOpen').onclick=()=>go('aiinstructor');
+   }
+  }
  }
 }
 const oldRender=render;render=function(){oldRender();bindViewSpecific()};
@@ -6078,7 +6350,7 @@ function buildExam(){
 }
 function startQuiz(list,mode,options={}){
  const timerSeconds=Number(options.timerSeconds||0);
- quiz={list,index:0,mode,answers:{},selected:[],remaining:mode==='exam'?2700:timerSeconds,initialSeconds:mode==='exam'?2700:timerSeconds,timerEnabled:mode==='exam'||timerSeconds>0,answered:false,showTranslation:false,flagged:[],startedAt:new Date().toISOString(),finished:false,recoveryPlanStage:String(options.recoveryPlanStage||''),recoveryPlanDate:String(options.recoveryPlanDate||'')};
+ quiz={list,index:0,mode,answers:{},selected:[],remaining:mode==='exam'?2700:timerSeconds,initialSeconds:mode==='exam'?2700:timerSeconds,timerEnabled:mode==='exam'||timerSeconds>0,answered:false,showTranslation:false,flagged:[],startedAt:new Date().toISOString(),questionStartedAt:Date.now(),finished:false,recoveryPlanStage:String(options.recoveryPlanStage||''),recoveryPlanDate:String(options.recoveryPlanDate||''),patternVerificationId:String(options.patternVerificationId||''),patternVerificationSourceIds:Array.isArray(options.patternVerificationSourceIds)?options.patternVerificationSourceIds.map(String):[]};
  saveSession();go('quiz');if(quiz.timerEnabled)startTimer()
 }
 function resumeQuiz(){
@@ -6089,6 +6361,7 @@ function resumeQuiz(){
  if(!Array.isArray(quiz.flagged))quiz.flagged=[];
  if(!quiz.initialSeconds)quiz.initialSeconds=quiz.mode==='exam'?2700:(quiz.remaining||0);
  if(!quiz.startedAt)quiz.startedAt=new Date().toISOString();
+ if(!Number(quiz.questionStartedAt))quiz.questionStartedAt=Date.now();
  loadExamSelection();
  go('quiz');if(quiz.timerEnabled&&quiz.remaining>0)startTimer()
 }
@@ -6102,6 +6375,7 @@ function renderQuiz(){
   quiz.selected=Array.isArray(quiz.selected)?quiz.selected:[];
   if(typeof quiz.showTranslation!=='boolean')quiz.showTranslation=false;
   if(typeof quiz.showSentenceCoach!=='boolean')quiz.showSentenceCoach=false;
+  if(!Number(quiz.questionStartedAt))quiz.questionStartedAt=Date.now();
 
   $('#qCounter').textContent=`${t('question')} ${quiz.index+1} ${settings.lang==='it'?'di':'/'} ${quiz.list.length}`;
   $('#quizTimer').textContent=quiz.timerEnabled?formatTime(quiz.remaining):t('noTimer');
@@ -6181,7 +6455,10 @@ function selectOption(i){
  else{if(quiz.selected.length>=max)return toast(max===1?t('selectOne'):t('selectMany',max));quiz.selected.push(i)}
  if(quiz.mode==='exam'){
    const chosen=[...quiz.selected].sort((a,b)=>a-b),correct=[...q.correct].sort((a,b)=>a-b);
-   quiz.answers[q.id]={selected:chosen,ok:chosen.length===correct.length&&JSON.stringify(chosen)===JSON.stringify(correct)};
+   const previous=quiz.answers[q.id]||{};
+   const complete=chosen.length===correct.length;
+   const responseMs=Number(previous.responseMs)||(complete?aiCaptureResponseMs():0);
+   quiz.answers[q.id]={...previous,selected:chosen,ok:complete&&JSON.stringify(chosen)===JSON.stringify(correct),responseMs};
  }
  saveSession();renderQuiz();
 }
@@ -6190,7 +6467,8 @@ function confirmAnswer(){
  if(quiz.selected.length!==need)return toast(need===1?t('selectOne'):t('selectMany',need));
  const chosen=[...quiz.selected].sort((a,b)=>a-b),correct=[...q.correct].sort((a,b)=>a-b);
  const ok=JSON.stringify(chosen)===JSON.stringify(correct);
- quiz.answers[q.id]={selected:chosen,ok};
+ const responseMs=aiCaptureResponseMs();
+ quiz.answers[q.id]={selected:chosen,ok,responseMs};
  quiz.answered=true;
  if(quiz.mode==='exam'){
   saveSession();
@@ -6202,11 +6480,156 @@ function confirmAnswer(){
  else progress.wrong[q.id]=(progress.wrong[q.id]||0)+1;
  recordActivity();
  updateReviewSchedule(q,ok);
+ aiRecordPatternAttempt(q,ok,responseMs,quiz.mode,{translationUsed:Boolean(quiz.showTranslation),sentenceCoachUsed:Boolean(quiz.showSentenceCoach)});
  save(STORAGE,progress);
  saveSession();
  renderQuiz();
 }
 function applyReview(q,a){if(!a)return;screen.querySelectorAll('[data-opt]').forEach(b=>{const i=Number(b.dataset.opt);if(q.correct.includes(i))b.classList.add('correct');else if(a.selected.includes(i))b.classList.add('wrong')});showExplanation(q,a)}
+// Build 40.4.6 — INLINE REPLAY INTERACTION FIX
+// Replay shown directly under a Study Guided answer must be interactive too.
+// Previously the hazard handler was mounted only on the dedicated Error Replay route.
+function mountInlineApprovedReplay(box,q){
+ const wrapper=box?.querySelector('.quiz-inline-approved-replay');
+ if(!wrapper||!q)return;
+ let phase=0;
+ let perceptionStartedAt=performance.now();
+ let lastInputAt=0;
+ let touchStart=null;
+
+ const renderPhase=()=>{
+  wrapper.dataset.inlineReplayPhase=String(phase);
+  wrapper.innerHTML=`<div class="quiz-inline-replay-head"><span>${esc(replayUi('REPLAY REALE · SUBITO VISIBILE','REAL REPLAY · IMMEDIATELY VISIBLE'))}</span><strong>${esc(q.id)}</strong></div>${errorReplayVisualHtml(q,phase)}`;
+
+  const player=wrapper.querySelector('[data-replay-engine-player]');
+  if(player){
+   const sceneId=player.dataset.replayEnginePlayer||REPLAY_ACTION_SCENE_ID;
+   let phaseOptions={};
+   const optionsTemplate=wrapper.querySelector('[data-replay-phase-options]');
+   if(optionsTemplate){try{phaseOptions=JSON.parse(optionsTemplate.textContent||'{}')}catch(_){phaseOptions={}}}
+   ReplayEngine.mount(player,sceneId,{language:settings.lang==='it'?'it':'en',playbackRate:.82,...phaseOptions});
+  }
+
+  wrapper.querySelectorAll('[data-replay-stage]').forEach(button=>{
+   button.type='button';
+   button.onclick=event=>{
+    event.preventDefault();event.stopPropagation();
+    const requested=Number(button.dataset.replayStage)||0;
+    if(button.disabled||requested>phase)return;
+    phase=requested;
+    perceptionStartedAt=performance.now();
+    renderPhase();
+   };
+  });
+
+  const phaseContinue=wrapper.querySelector('[data-replay-phase-continue]');
+  if(phaseContinue){
+   phaseContinue.type='button';
+   phaseContinue.onclick=event=>{
+    event.preventDefault();event.stopPropagation();
+    const target=Number(phaseContinue.dataset.replayPhaseContinue);
+    if(target!==phase+1)return;
+    phase=Math.min(3,target);
+    perceptionStartedAt=performance.now();
+    renderPhase();
+   };
+  }
+
+  if(phase!==0)return;
+  const surface=wrapper.querySelector('[data-hazard-surface]');
+  if(!surface)return;
+  const stage=surface.closest('.wave-across-stage')||surface;
+  perceptionStartedAt=performance.now();
+
+  const clearAttempt=()=>{
+   stage.querySelectorAll('.hazard-tap-marker,.hazard-inline-feedback.inline-replay-feedback').forEach(node=>node.remove());
+   surface.classList.remove('hazard-missed','hazard-found');
+  };
+
+  const feedback=(hit,coach)=>{
+   const panel=document.createElement('div');
+   panel.className=`hazard-inline-feedback inline-replay-feedback ${hit?'success':'warning'}`;
+   const scene=replaySceneSelection(q).scene;
+   const message=hit
+    ?replayUi(scene?.coach?.hitIt||'Pericolo individuato.','Hazard identified.')
+    :replayUi(scene?.coach?.missIt||'Osserva meglio la scena.','Look more carefully at the scene.');
+   panel.innerHTML=`<strong>${esc(hit?replayUi('Pericolo individuato','Hazard identified'):replayUi('Non è questo il punto','This is not the point'))}</strong><span>${esc(coach?.body||message)}</span>${hit?`<button type="button" class="hazard-continue-button" data-inline-replay-continue>${esc(replayUi('Continua','Continue'))}<span aria-hidden="true">→</span></button>`:''}`;
+   stage.appendChild(panel);
+   const next=panel.querySelector('[data-inline-replay-continue]');
+   if(next)next.onclick=event=>{event.preventDefault();event.stopPropagation();phase=1;perceptionStartedAt=performance.now();renderPhase()};
+  };
+
+  const handle=event=>{
+   const target=event.target instanceof Element?event.target:null;
+   if(target?.closest('[data-inline-replay-continue],.real-film-top,.hazard-inline-feedback'))return;
+   const now=performance.now();
+   if(now-lastInputAt<380)return;
+   lastInputAt=now;
+   if(event.cancelable)event.preventDefault();
+   event.stopPropagation();
+   if(surface.dataset.resolved==='true')return;
+
+   clearAttempt();
+   const rect=surface.getBoundingClientRect();
+   const point=event.changedTouches?.[0]||event.touches?.[0]||event;
+   const clientX=Number.isFinite(point?.clientX)?point.clientX:rect.left+rect.width/2;
+   const clientY=Number.isFinite(point?.clientY)?point.clientY:rect.top+rect.height/2;
+   const x=Math.max(0,Math.min(1,(clientX-rect.left)/Math.max(1,rect.width)));
+   const y=Math.max(0,Math.min(1,(clientY-rect.top)/Math.max(1,rect.height)));
+   const scene=replaySceneSelection(q).scene;
+   const hotspot=scene?.ui?.hotspot||{};
+   const targetX=Number(hotspot.left||50)/100;
+   const targetY=Number(hotspot.top||50)/100;
+   const radiusX=Math.max(.08,Number(hotspot.radiusX||22)/100);
+   const radiusY=Math.max(.08,Number(hotspot.radiusY||20)/100);
+   const dx=(x-targetX)/radiusX,dy=(y-targetY)/radiusY;
+   const hit=(dx*dx+dy*dy)<=1;
+   const elapsed=Math.max(120,Math.round(performance.now()-perceptionStartedAt));
+
+   const marker=document.createElement('span');
+   marker.className=`hazard-tap-marker ${hit?'hit':'miss'}`;
+   marker.style.left=`${Math.max(3,Math.min(97,x*100))}%`;
+   marker.style.top=`${Math.max(3,Math.min(97,y*100))}%`;
+   surface.appendChild(marker);
+
+   const p=errorReplay.perception;
+   if(p){
+    p.attempts=(p.attempts||0)+1;
+    if(hit){p.hits=(p.hits||0)+1;p.totalMs=(p.totalMs||0)+elapsed;p.bestMs=p.bestMs?Math.min(p.bestMs,elapsed):elapsed;}
+    p.lastResult={questionId:q.id,elapsed,hit,at:new Date().toISOString()};
+    errorReplaySave();
+   }
+   const coach=window.ReplayCoach?.coachMessage(q,scene,{hit,elapsed,x,y},settings.lang==='it'?'it':'en')||null;
+   surface.classList.add(hit?'hazard-found':'hazard-missed');
+   if(hit){surface.dataset.resolved='true';surface.setAttribute('aria-disabled','true');}
+   else{
+    const guide=surface.querySelector('.hazard-target-guide');
+    if(guide){guide.style.left=`${targetX*100}%`;guide.style.top=`${targetY*100}%`;}
+   }
+   feedback(hit,coach);
+  };
+
+  const onTouchStart=event=>{const p=event.touches?.[0];touchStart=p?{x:p.clientX,y:p.clientY}:null};
+  const onTouchEnd=event=>{
+   const p=event.changedTouches?.[0];
+   if(p&&touchStart){const dx=p.clientX-touchStart.x,dy=p.clientY-touchStart.y;touchStart=null;if(Math.hypot(dx,dy)>18)return;}
+   handle(event);
+  };
+
+  // Direct surface listeners + stage capture make this reliable in Koder/WKWebView.
+  surface.addEventListener('pointerup',handle,{passive:false});
+  surface.addEventListener('click',handle,false);
+  surface.addEventListener('touchstart',onTouchStart,{passive:true});
+  surface.addEventListener('touchend',onTouchEnd,{passive:false});
+  stage.addEventListener('touchstart',onTouchStart,{capture:true,passive:true});
+  stage.addEventListener('touchend',onTouchEnd,{capture:true,passive:false});
+  stage.addEventListener('pointerup',handle,{capture:true,passive:false});
+  stage.addEventListener('click',handle,true);
+ };
+
+ renderPhase();
+}
+
 function showExplanation(q,a){
  const box=$('#quizExplanation');
  const replaySelection=replaySceneSelection(q);
@@ -6227,6 +6650,7 @@ function showExplanation(q,a){
  <div class="ai-context-launch"><button class="btn" id="quizAiInstructor">🧠 ${esc(t('aiInstructorAsk'))}</button><button class="btn secondary" id="quizAiUnderstand">🧩 ${esc(t('aiInstructorUnderstand'))}</button><button class="btn secondary" id="quizErrorReplay"><span class="replay-inline-icon" aria-hidden="true">R</span>${esc(t('errorReplayOpen'))}</button></div>`;
  box.classList.remove('hidden');
  box.querySelectorAll('[data-error-reason]').forEach(button=>button.onclick=()=>recordErrorReason(q,a,button.dataset.errorReason));
+ mountInlineApprovedReplay(box,q);
  $('#quizAiInstructor').onclick=()=>{aiRecordExplanation(q.id);go('aiinstructor',{questionId:q.id})};
  $('#quizAiUnderstand').onclick=()=>aiSocraticStart(q.id);
  {
@@ -6241,13 +6665,15 @@ function showExplanation(q,a){
  }
 }
 }
-function nextQuestion(){if(quiz?.mode==='exam'){if(quiz.index<quiz.list.length-1)goExamQuestion(quiz.index+1);else showExamNavigator();return}if(quiz.index<quiz.list.length-1){quiz.index++;quiz.selected=[];quiz.answered=false;quiz.showTranslation=false;quiz.showSentenceCoach=false;saveSession();renderQuiz();window.scrollTo(0,0)}else finishQuiz(false)}
+function nextQuestion(){if(quiz?.mode==='exam'){if(quiz.index<quiz.list.length-1)goExamQuestion(quiz.index+1);else showExamNavigator();return}if(quiz.index<quiz.list.length-1){quiz.index++;quiz.selected=[];quiz.answered=false;quiz.showTranslation=false;quiz.showSentenceCoach=false;quiz.questionStartedAt=Date.now();saveSession();renderQuiz();window.scrollTo(0,0)}else finishQuiz(false)}
 function finishQuiz(autoSubmitted=false){
  if(!quiz||quiz.finished)return;
  quiz.finished=true;clearInterval(timerId);timerId=null;
  const mode=quiz.mode,list=[...quiz.list],answers={...quiz.answers};
  const recoveryPlanStage=String(quiz.recoveryPlanStage||'');
  const recoveryPlanDate=String(quiz.recoveryPlanDate||'');
+ const patternVerificationId=String(quiz.patternVerificationId||'');
+ const patternVerificationSourceIds=Array.isArray(quiz.patternVerificationSourceIds)?quiz.patternVerificationSourceIds.map(String):[];
  if(mode==='exam'){
    list.forEach(q=>{
      const a=answers[q.id];
@@ -6255,6 +6681,7 @@ function finishQuiz(autoSubmitted=false){
      if(a?.ok)progress.correct[q.id]=(progress.correct[q.id]||0)+1;
      else progress.wrong[q.id]=(progress.wrong[q.id]||0)+1;
      updateReviewSchedule(q,!!a?.ok);
+     if(Array.isArray(a?.selected)&&a.selected.length){aiRecordPatternAttempt(q,!!a.ok,Number(a.responseMs)||0,'exam',{translationUsed:false,sentenceCoachUsed:false});}
    });
  }
  const correct=list.filter(q=>answers[q.id]?.ok).length,total=list.length;
@@ -6279,16 +6706,25 @@ function finishQuiz(autoSubmitted=false){
      id:q.id,
      selected:Array.isArray(answers[q.id]?.selected)?answers[q.id].selected:[],
      ok:Boolean(answers[q.id]?.ok),
-     flagged:(quiz.flagged||[]).includes(q.id)
+     flagged:(quiz.flagged||[]).includes(q.id),
+     responseMs:Number(answers[q.id]?.responseMs)||0
     }))
    };
    progress.exams.push(examRecord);
    progress.exams=progress.exams.slice(-30);
  }
+ let patternVerificationResult=null;
+ if(mode!=='exam'&&patternVerificationId){
+  progress.patternStability=progress.patternStability&&typeof progress.patternStability==='object'?progress.patternStability:{};
+  const passed=total>=5&&correct===total;
+  const record={passed,correct,total,ts:new Date().toISOString(),questionIds:list.map(q=>q.id),sourceQuestionIds:patternVerificationSourceIds};
+  progress.patternStability[patternVerificationId]=record;
+  patternVerificationResult={id:patternVerificationId,passed,correct,total};
+ }
  save(STORAGE,progress);localStorage.removeItem(SESSION);
  const recoveryPlanResult=mode!=='exam'&&recoveryPlanStage?aiCompleteRecoveryPlanStage(recoveryPlanStage,{correct,total,planDate:recoveryPlanDate}):null;
  const title=mode==='exam'?(pass?t('passed'):t('failed')):t('completed');
- quiz=null;go('result',{correct,total,pass,title,wrongIds,mode,timeUsed,unanswered,flagged,breakdown,autoSubmitted,examId:examRecord?.id||null,recoveryPlan:recoveryPlanResult});
+ quiz=null;go('result',{correct,total,pass,title,wrongIds,mode,timeUsed,unanswered,flagged,breakdown,autoSubmitted,examId:examRecord?.id||null,recoveryPlan:recoveryPlanResult,patternVerification:patternVerificationResult});
 }
 function speak(text){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=.88;speechSynthesis.speak(u)}
 function speakQuestion(q){

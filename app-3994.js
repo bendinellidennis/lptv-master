@@ -228,7 +228,7 @@ const SETTINGS = 'mdm-v1-settings';
 const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
-const BUILD_VERSION = '40.2';
+const BUILD_VERSION = '40.3';
 const BUILD_RELEASE_DATE = '15/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -363,6 +363,7 @@ const DEFAULT_AI_INSTRUCTOR={
  reviewQueue:[],
  reviewIndex:0,
  reviewSource:'',
+ recoveryPlan:{date:'',topicId:'',createdAt:'',completedAt:'',stages:[]},
  socratic:{questionId:'',step:0,answers:[]}
 };
 let aiInstructor=Object.assign({},DEFAULT_AI_INSTRUCTOR,load(AI_INSTRUCTOR_KEY,{}));
@@ -370,6 +371,7 @@ aiInstructor.explained=aiInstructor.explained&&typeof aiInstructor.explained==='
 aiInstructor.reviewQueue=Array.isArray(aiInstructor.reviewQueue)?aiInstructor.reviewQueue:[];
 aiInstructor.reviewIndex=Math.max(0,Number(aiInstructor.reviewIndex||0));
 aiInstructor.reviewSource=String(aiInstructor.reviewSource||'');
+aiInstructor.recoveryPlan=normaliseAiRecoveryPlan(aiInstructor.recoveryPlan);
 aiInstructor.socratic=Object.assign({questionId:'',step:0,answers:[]},aiInstructor.socratic||{});
 aiInstructor.socratic.answers=Array.isArray(aiInstructor.socratic.answers)?aiInstructor.socratic.answers:[];
 
@@ -3709,6 +3711,133 @@ function aiTargetedRecoveryHtml(compact=false){
  const critical=topQuestions.length?`<div class="ai-priority-questions"><small>${esc(aiRecoveryText('Domande più critiche','Most critical questions'))}</small>${topQuestions.map(item=>`<button data-ai-priority-open="${esc(item.q.id)}"><strong>${esc(item.q.id)}</strong><span>${esc(item.q.question_it||item.q.question)}</span></button>`).join('')}</div>`:'';
  return `<div class="card ai-priority-recovery ${compact?'compact':''}"><div class="ai-priority-head"><span>🎯</span><div><small>${esc(aiRecoveryText('PRIORITÀ AUTOMATICA','AUTOMATIC PRIORITY'))}</small><h3>${title}</h3><p>${esc(evidence)}</p></div><strong>${pool.length}</strong></div>${compact?'':`<div class="ai-priority-topics">${rows}</div>${critical}`}<button class="btn" id="${compact?'examDayTargetedRecovery':'aiTargetedRecovery'}">${esc(aiRecoveryText(`Avvia ripasso prioritario (${pool.length})`,`Start priority review (${pool.length})`))}</button></div>`;
 }
+function normaliseAiRecoveryPlan(value){
+ const plan=value&&typeof value==='object'?value:{};
+ const stages=Array.isArray(plan.stages)?plan.stages.map(stage=>({
+  id:String(stage?.id||''),
+  questionIds:Array.isArray(stage?.questionIds)?stage.questionIds.filter(id=>typeof id==='string'&&Q.some(q=>q.id===id)).slice(0,5):[],
+  done:Boolean(stage?.done),
+  score:Number.isFinite(Number(stage?.score))?Number(stage.score):0,
+  total:Number.isFinite(Number(stage?.total))?Number(stage.total):0,
+  completedAt:String(stage?.completedAt||'')
+ })).filter(stage=>stage.id):[];
+ return {date:String(plan.date||''),topicId:String(plan.topicId||''),createdAt:String(plan.createdAt||''),completedAt:String(plan.completedAt||''),stages};
+}
+function aiRecoveryPlanStageMeta(id){
+ const map={
+  critical:{icon:'🚨',it:'Errori critici',en:'Critical mistakes',itSub:'Riparti dalle domande che ti stanno facendo perdere più punti.',enSub:'Restart from the questions costing you the most points.'},
+  priority:{icon:'🎯',it:'Argomento prioritario',en:'Priority topic',itSub:'Rinforza l’area che il Coach considera più debole.',enSub:'Strengthen the area the Coach currently considers weakest.'},
+  confirm:{icon:'✅',it:'Conferma finale',en:'Final confirmation',itSub:'Controlla che la correzione regga anche su domande diverse.',enSub:'Check that the recovery holds on different questions.'}
+ };
+ return map[id]||map.priority;
+}
+function aiRecoveryPlanQuestionPriority(q,topicId,dueIds){
+ const wrong=Number(progress.wrong?.[q.id]||0);
+ const attempts=questionAttempts(q);
+ const accuracy=attempts?questionAccuracy(q):50;
+ const due=dueIds.has(q.id)?1:0;
+ const topicBonus=topicIdFor(q)===topicId?1:0;
+ return wrong*20+(100-accuracy)*.35+due*12+topicBonus*8+(attempts===0?3:0);
+}
+function aiBuildRecoveryPlan(force=false){
+ const today=dateKey();
+ const current=normaliseAiRecoveryPlan(aiInstructor.recoveryPlan);
+ const valid=current.date===today&&current.stages.length===3&&current.stages.every(stage=>stage.questionIds.length===5);
+ if(valid&&!force)return current;
+ const analysis=aiTargetedRecoveryAnalysis();
+ const weakest=[...coachTopicRankings()].reverse()[0];
+ const topicId=analysis.priority?.topic?.id||weakest?.topic?.id||'road';
+ const dueIds=new Set(dueQuestions().map(q=>q.id));
+ const used=new Set();
+ const pick=(candidates,limit=5)=>{
+  const out=[];
+  for(const q of candidates){
+   if(!q||used.has(q.id))continue;
+   used.add(q.id);out.push(q);
+   if(out.length>=limit)break;
+  }
+  return out;
+ };
+ const allRanked=[...Q].sort((a,b)=>aiRecoveryPlanQuestionPriority(b,topicId,dueIds)-aiRecoveryPlanQuestionPriority(a,topicId,dueIds)||a.id.localeCompare(b.id));
+ const criticalCandidates=[...analysis.rankedQuestions.map(item=>item.q),...allRanked.filter(q=>Number(progress.wrong?.[q.id]||0)>0),...allRanked];
+ const critical=pick(criticalCandidates,5);
+ const topicCandidates=allRanked.filter(q=>topicIdFor(q)===topicId);
+ const priority=pick([...topicCandidates,...allRanked],5);
+ const secondTopic=analysis.rankedTopics.find(item=>item.topic.id!==topicId&&item.score>0)?.topic.id||[...coachTopicRankings()].reverse().find(item=>item.topic.id!==topicId)?.topic.id||'road';
+ const confirmCandidates=[...allRanked.filter(q=>dueIds.has(q.id)),...allRanked.filter(q=>topicIdFor(q)===secondTopic),...allRanked];
+ const confirm=pick(confirmCandidates,5);
+ const plan={
+  date:today,
+  topicId,
+  createdAt:new Date().toISOString(),
+  completedAt:'',
+  stages:[
+   {id:'critical',questionIds:critical.map(q=>q.id),done:false,score:0,total:critical.length,completedAt:''},
+   {id:'priority',questionIds:priority.map(q=>q.id),done:false,score:0,total:priority.length,completedAt:''},
+   {id:'confirm',questionIds:confirm.map(q=>q.id),done:false,score:0,total:confirm.length,completedAt:''}
+  ]
+ };
+ aiInstructor.recoveryPlan=plan;
+ aiInstructorSave();
+ return plan;
+}
+function aiRecoveryPlanStats(plan=aiBuildRecoveryPlan(false)){
+ const done=plan.stages.filter(stage=>stage.done).length;
+ const total=plan.stages.length;
+ const questions=plan.stages.reduce((sum,stage)=>sum+stage.questionIds.length,0);
+ const correct=plan.stages.reduce((sum,stage)=>sum+(stage.done?Number(stage.score||0):0),0);
+ const answered=plan.stages.reduce((sum,stage)=>sum+(stage.done?Number(stage.total||0):0),0);
+ return {done,total,questions,correct,answered,pct:total?Math.round(done/total*100):0,allDone:total>0&&done===total};
+}
+function startAiRecoveryPlanStage(stageId=''){
+ const plan=aiBuildRecoveryPlan(false);
+ const stage=(stageId&&plan.stages.find(item=>item.id===stageId))||plan.stages.find(item=>!item.done)||plan.stages[0];
+ if(!stage)return toast(aiRecoveryText('Piano non disponibile.','Recovery plan unavailable.'));
+ const list=stage.questionIds.map(aiQuestionById).filter(Boolean);
+ if(!list.length)return toast(aiRecoveryText('Le domande del blocco non sono disponibili.','The questions for this block are unavailable.'));
+ startQuiz(list,'guided',{recoveryPlanStage:stage.id,recoveryPlanDate:plan.date});
+}
+function rebuildAiRecoveryPlan(){
+ aiBuildRecoveryPlan(true);
+ toast(aiRecoveryText('Piano ricalcolato sui dati più recenti.','Plan recalculated from the latest data.'));
+ render();
+}
+function aiCompleteRecoveryPlanStage(stageId,result={}){
+ const plan=normaliseAiRecoveryPlan(aiInstructor.recoveryPlan);
+ if(!plan.stages.length||String(result.planDate||'')!==plan.date)return null;
+ const stage=plan.stages.find(item=>item.id===stageId);
+ if(!stage)return null;
+ stage.done=true;
+ stage.score=Number(result.correct||0);
+ stage.total=Number(result.total||stage.questionIds.length||0);
+ stage.completedAt=new Date().toISOString();
+ const stats=aiRecoveryPlanStats(plan);
+ if(stats.allDone)plan.completedAt=new Date().toISOString();
+ aiInstructor.recoveryPlan=plan;
+ aiInstructorSave();
+ const next=plan.stages.find(item=>!item.done)||null;
+ const meta=aiRecoveryPlanStageMeta(stage.id);
+ return {stageId:stage.id,stageTitle:aiRecoveryText(meta.it,meta.en),doneCount:stats.done,totalStages:stats.total,score:stage.score,total:stage.total,nextStageId:next?.id||'',allDone:stats.allDone};
+}
+function aiRecoveryPlanHtml(compact=false){
+ const plan=aiBuildRecoveryPlan(false);
+ const stats=aiRecoveryPlanStats(plan);
+ const topic=topicDefinition(plan.topicId);
+ const next=plan.stages.find(stage=>!stage.done)||plan.stages[0];
+ const topicTitle=`${topic.icon} ${esc(t(topic.title))}`;
+ const rows=plan.stages.map((stage,index)=>{
+  const meta=aiRecoveryPlanStageMeta(stage.id);
+  const state=stage.done?`✓ ${stage.score}/${stage.total}`:`${stage.questionIds.length} ${aiRecoveryText('domande','questions')}`;
+  return `<article class="ai-plan-stage ${stage.done?'done':''}"><div><span>${meta.icon}</span><div><small>${aiRecoveryText('BLOCCO','BLOCK')} ${index+1}</small><strong>${esc(aiRecoveryText(meta.it,meta.en))}</strong><p>${esc(aiRecoveryText(meta.itSub,meta.enSub))}</p></div></div><button class="btn ${stage.done?'secondary':''}" data-ai-plan-stage="${esc(stage.id)}">${esc(stage.done?aiRecoveryText('Ripeti','Repeat'):aiRecoveryText('Avvia','Start'))}<b>${esc(state)}</b></button></article>`;
+ }).join('');
+ const summary=stats.allDone
+  ?aiRecoveryText(`Piano di oggi completato: ${stats.correct}/${stats.answered} corrette nei tre blocchi.`,`Today's plan completed: ${stats.correct}/${stats.answered} correct across the three blocks.`)
+  :aiRecoveryText(`Tre blocchi da 5 domande. Completati ${stats.done}/${stats.total}.`,`Three blocks of 5 questions. Completed ${stats.done}/${stats.total}.`);
+ if(compact){
+  return `<div class="card ai-recovery-plan compact"><div class="ai-plan-head"><span>🧭</span><div><small>${esc(aiRecoveryText('PIANO RECUPERO','RECOVERY PLAN'))}</small><h3>${topicTitle}</h3><p>${esc(summary)}</p></div><strong>${stats.done}/${stats.total}</strong></div><div class="ai-plan-progress"><i style="width:${stats.pct}%"></i></div><div class="ai-plan-compact-actions"><button class="btn" id="examDayRecoveryPlanStart">${esc(stats.allDone?aiRecoveryText('Ripeti il piano','Repeat plan'):aiRecoveryText(`Avvia blocco ${plan.stages.indexOf(next)+1}`,`Start block ${plan.stages.indexOf(next)+1}`))}</button><button class="btn secondary" id="examDayRecoveryPlanOpen">${esc(aiRecoveryText('Apri piano','Open plan'))}</button></div></div>`;
+ }
+ return `<div class="card ai-recovery-plan"><div class="ai-plan-head"><span>🧭</span><div><small>${esc(aiRecoveryText('PIANO DI RECUPERO INTELLIGENTE','SMART RECOVERY PLAN'))}</small><h3>${topicTitle}</h3><p>${esc(summary)}</p></div><strong>${stats.done}/${stats.total}</strong></div><div class="ai-plan-progress"><i style="width:${stats.pct}%"></i></div><div class="ai-plan-stage-list">${rows}</div><div class="ai-plan-actions"><button class="btn" id="aiRecoveryPlanStart">${esc(stats.allDone?aiRecoveryText('Ripeti dal blocco 1','Repeat from block 1'):aiRecoveryText(`Continua dal blocco ${plan.stages.indexOf(next)+1}`,`Continue from block ${plan.stages.indexOf(next)+1}`))}</button><button class="btn secondary" id="aiRecoveryPlanRebuild">↻ ${esc(aiRecoveryText('Ricalcola piano','Recalculate plan'))}</button></div></div>`;
+}
 function aiInstructorViewHtml(){
  const queryId=route.data?.questionId||aiInstructor.lastQuestionId||'';
  const question=aiQuestionById(queryId);
@@ -3720,6 +3849,7 @@ function aiInstructorViewHtml(){
   `<div class="card ai-settings-card"><h3>${esc(t('aiInstructorSettings'))}</h3><div class="ai-settings-grid"><label><span>${esc(t('aiInstructorLanguage'))}</span><select id="aiLanguageMode"><option value="english" ${aiInstructor.languageMode==='english'?'selected':''}>${esc(t('aiInstructorEnglish'))}</option><option value="italian" ${aiInstructor.languageMode==='italian'?'selected':''}>${esc(t('aiInstructorItalian'))}</option><option value="bilingual" ${aiInstructor.languageMode==='bilingual'?'selected':''}>${esc(t('aiInstructorBilingual'))}</option></select></label><label><span>${esc(t('aiInstructorLevel'))}</span><select id="aiLevel"><option value="simple" ${aiInstructor.level==='simple'?'selected':''}>${esc(t('aiInstructorSimple'))}</option><option value="normal" ${aiInstructor.level==='normal'?'selected':''}>${esc(t('aiInstructorNormal'))}</option><option value="technical" ${aiInstructor.level==='technical'?'selected':''}>${esc(t('aiInstructorTechnical'))}</option></select></label></div><button class="btn secondary" id="saveAiInstructor">${esc(t('aiInstructorSave'))}</button></div>`,
   `<div class="card ai-tutor-card"><div class="ai-tutor-head"><div><h3>${esc(t('aiInstructorMyTutor'))}</h3><p>${esc(t('aiInstructorTutorSub'))}</p></div><strong>${tutor.count}</strong></div><div class="ai-tutor-grid"><article><span>${esc(t('aiInstructorStrong'))}</span>${tutor.strong.map(item=>`<p>${item.topic.icon} ${esc(t(item.topic.title))} — ${item.score}%</p>`).join('')}</article><article><span>${esc(t('aiInstructorWeak'))}</span>${tutor.weak.map(item=>`<p>${item.topic.icon} ${esc(t(item.topic.title))} — ${item.score}%</p>`).join('')}</article><article><span>${esc(t('aiInstructorNext'))}</span><p>${tutor.next.icon} ${esc(t(tutor.next.title))}</p><small>${esc(t(tutor.next.reason))}</small></article></div></div>`,
   aiTargetedRecoveryHtml(false),
+  aiRecoveryPlanHtml(false),
   `<div class="card ai-search-card"><input id="aiQuestionSearch" placeholder="${esc(t('aiInstructorQuestionSearch'))}" value="${esc(question?.id||'')}"><button class="btn" id="aiQuestionSearchBtn">${esc(t('aiInstructorOpenLesson'))}</button></div>`,
   question?aiCoachReviewNavHtml(question):'',
   question?`${socratic?`<div class="section-title"><div><h2>🧩 ${esc(t('aiInstructorSocratic'))}</h2><p>${esc(t('aiInstructorSocraticSub'))}</p></div></div>${aiSocraticHtml(question)}`:aiInstructorLessonHtml(question,false)}`:`<div class="card ai-empty"><p>${esc(t('aiInstructorNoQuestion'))}</p><button class="btn" data-go="questionlibrary">${esc(t('questionLibrary'))}</button></div>`
@@ -3751,6 +3881,11 @@ function bindAiInstructor(){
  $('#saveAiInstructor').onclick=saveAiInstructorSettings;
  const targeted=$('#aiTargetedRecovery');
  if(targeted)targeted.onclick=()=>startAiTargetedRecovery('targeted');
+ const planStart=$('#aiRecoveryPlanStart');
+ if(planStart)planStart.onclick=()=>startAiRecoveryPlanStage();
+ const planRebuild=$('#aiRecoveryPlanRebuild');
+ if(planRebuild)planRebuild.onclick=rebuildAiRecoveryPlan;
+ screen.querySelectorAll('[data-ai-plan-stage]').forEach(button=>button.onclick=()=>startAiRecoveryPlanStage(button.dataset.aiPlanStage));
  screen.querySelectorAll('[data-ai-priority-open]').forEach(button=>button.onclick=()=>go('aiinstructor',{questionId:button.dataset.aiPriorityOpen}));
  $('#aiQuestionSearchBtn').onclick=aiFindQuestionFromSearch;
  const search=$('#aiQuestionSearch');
@@ -4589,6 +4724,7 @@ function examDayViewHtml(){
   `<div class="exam-action-grid"><article class="card"><span>🫁</span><h3>${esc(t('examBreathing'))}</h3><p>${esc(t('examBreathingSub'))}</p><button class="btn ${examDayState.breathingDone?'secondary':''}" id="startExamBreathing">${examDayState.breathingDone?'✓ '+esc(t('examBreathingDone')):esc(t('examBreathingStart'))}</button></article><article class="card"><span>⏱️</span><h3>${esc(t('examFinalSimulation'))}</h3><p>${esc(t('examFinalSimulationSub'))}</p><strong>${readiness.latest?`${readiness.latest}/35`:esc(t('examNoFinalScore'))}</strong><button class="btn" id="startFinalSimulation">${esc(t('examStartFinal'))}</button></article></div>`,
   examDayAiRecoveryHtml(),
   aiTargetedRecoveryHtml(true),
+  aiRecoveryPlanHtml(true),
   `<div class="section-title"><div><h2>${esc(t('examQuickReview'))}</h2><p>${esc(t('examQuickReviewSub'))}</p></div></div>`,
   `<div class="exam-review-grid">${examDayReviewCards().map(([icon,label,route])=>`<button data-exam-review="${route}"><span>${icon}</span><strong>${esc(t(label))}</strong><small>${esc(t('examOpenTopic'))}</small></button>`).join('')}</div>`,
   `<div class="card exam-certificate-card ${eligible?'ready':'locked'}"><div><span>🏅</span><div><h3>${esc(t('examCertificate'))}</h3><p>${esc(t('examCertificateSub'))}</p></div></div>${eligible?`<strong>${esc(t('examCertificateReady'))}</strong><button class="btn" id="issueExamCertificate">${examDayState.certificateIssued?'✓ '+esc(t('examCertificateReady')):esc(t('examCertificateIssue'))}</button>${examDayState.certificateIssued?`<div class="exam-certificate-actions"><button class="btn secondary" id="shareExamCertificate">↗ ${esc(t('examCertificateShare'))}</button><button class="btn secondary" id="copyExamCertificate">⧉ ${esc(t('examCertificateCopy'))}</button></div>`:''}`:`<p>${esc(t('examCertificateLocked'))}</p>`}<small>${esc(t('examCertificateDisclaimer'))}</small></div>`,
@@ -4610,6 +4746,10 @@ function bindExamDay(){
  if(aiRecovery)aiRecovery.onclick=()=>aiCoachReviewStart(aiExamWrongIds(aiLatestExamRecord()),'examday');
  const targeted=$('#examDayTargetedRecovery');
  if(targeted)targeted.onclick=()=>startAiTargetedRecovery('examdaytargeted');
+ const planStart=$('#examDayRecoveryPlanStart');
+ if(planStart)planStart.onclick=()=>startAiRecoveryPlanStage();
+ const planOpen=$('#examDayRecoveryPlanOpen');
+ if(planOpen)planOpen.onclick=()=>go('aiinstructor');
  $('#resetExamDay').onclick=resetExamDay;
  const issue=$('#issueExamCertificate');
  if(issue)issue.onclick=issueExamDayCertificate;
@@ -5900,13 +6040,24 @@ function bindViewSpecific(){
    $('#exportBackup').onclick=exportBackup;
    $('#importBackup').onclick=()=>file.click();
    file.onchange=()=>{if(file.files?.[0])importBackup(file.files[0])};
-   $('#clearProgress').onclick=()=>{if(confirm(t('resetConfirm'))){progress={seen:{},correct:{},wrong:{},exams:[],favourites:[],activity:{},knownWords:[],knownPhrases:[],review:{},errorReasons:{},bridgeResults:[],bankVersion:TAG_BANK_VERSION};save(STORAGE,progress);localStorage.removeItem(SESSION);render()}}
+   $('#clearProgress').onclick=()=>{if(confirm(t('resetConfirm'))){progress={seen:{},correct:{},wrong:{},exams:[],favourites:[],activity:{},knownWords:[],knownPhrases:[],review:{},errorReasons:{},bridgeResults:[],bankVersion:TAG_BANK_VERSION};save(STORAGE,progress);aiInstructor.recoveryPlan=normaliseAiRecoveryPlan({});aiInstructorSave();localStorage.removeItem(SESSION);render()}}
  }
  if(route.name==='result'){
   const b=$('#reviewWrong');
   if(b)b.onclick=()=>{const list=route.data.wrongIds.map(id=>Q.find(q=>q.id===id)).filter(Boolean);startQuiz(list,'guided')};
   const coach=$('#resultAiCoach');
   if(coach)coach.onclick=()=>aiCoachReviewStart(route.data.wrongIds,route.data.mode||'result');
+  if(route.data.recoveryPlan){
+   const result=route.data.recoveryPlan;
+   const actions=screen.querySelector('.result-actions');
+   if(actions){
+    const panel=document.createElement('div');
+    panel.className='card ai-plan-result';
+    panel.innerHTML=`<div><span>${result.allDone?'🏁':'🧭'}</span><div><small>${esc(aiRecoveryText('PIANO RECUPERO','RECOVERY PLAN'))}</small><h3>${esc(result.stageTitle)}</h3><p>${esc(aiRecoveryText(`Blocco completato: ${result.score}/${result.total}. Progresso ${result.doneCount}/${result.totalStages}.`,`Block completed: ${result.score}/${result.total}. Progress ${result.doneCount}/${result.totalStages}.`))}</p></div></div><button class="btn" id="resultRecoveryPlanNext">${esc(result.allDone?aiRecoveryText('Apri piano completato','Open completed plan'):aiRecoveryText('Avvia prossimo blocco','Start next block'))}</button>`;
+    actions.parentNode.insertBefore(panel,actions);
+    $('#resultRecoveryPlanNext').onclick=()=>result.allDone?go('aiinstructor'):startAiRecoveryPlanStage(result.nextStageId);
+   }
+  }
  }
 }
 const oldRender=render;render=function(){oldRender();bindViewSpecific()};
@@ -5927,7 +6078,7 @@ function buildExam(){
 }
 function startQuiz(list,mode,options={}){
  const timerSeconds=Number(options.timerSeconds||0);
- quiz={list,index:0,mode,answers:{},selected:[],remaining:mode==='exam'?2700:timerSeconds,initialSeconds:mode==='exam'?2700:timerSeconds,timerEnabled:mode==='exam'||timerSeconds>0,answered:false,showTranslation:false,flagged:[],startedAt:new Date().toISOString(),finished:false};
+ quiz={list,index:0,mode,answers:{},selected:[],remaining:mode==='exam'?2700:timerSeconds,initialSeconds:mode==='exam'?2700:timerSeconds,timerEnabled:mode==='exam'||timerSeconds>0,answered:false,showTranslation:false,flagged:[],startedAt:new Date().toISOString(),finished:false,recoveryPlanStage:String(options.recoveryPlanStage||''),recoveryPlanDate:String(options.recoveryPlanDate||'')};
  saveSession();go('quiz');if(quiz.timerEnabled)startTimer()
 }
 function resumeQuiz(){
@@ -6095,6 +6246,8 @@ function finishQuiz(autoSubmitted=false){
  if(!quiz||quiz.finished)return;
  quiz.finished=true;clearInterval(timerId);timerId=null;
  const mode=quiz.mode,list=[...quiz.list],answers={...quiz.answers};
+ const recoveryPlanStage=String(quiz.recoveryPlanStage||'');
+ const recoveryPlanDate=String(quiz.recoveryPlanDate||'');
  if(mode==='exam'){
    list.forEach(q=>{
      const a=answers[q.id];
@@ -6133,8 +6286,9 @@ function finishQuiz(autoSubmitted=false){
    progress.exams=progress.exams.slice(-30);
  }
  save(STORAGE,progress);localStorage.removeItem(SESSION);
+ const recoveryPlanResult=mode!=='exam'&&recoveryPlanStage?aiCompleteRecoveryPlanStage(recoveryPlanStage,{correct,total,planDate:recoveryPlanDate}):null;
  const title=mode==='exam'?(pass?t('passed'):t('failed')):t('completed');
- quiz=null;go('result',{correct,total,pass,title,wrongIds,mode,timeUsed,unanswered,flagged,breakdown,autoSubmitted,examId:examRecord?.id||null});
+ quiz=null;go('result',{correct,total,pass,title,wrongIds,mode,timeUsed,unanswered,flagged,breakdown,autoSubmitted,examId:examRecord?.id||null,recoveryPlan:recoveryPlanResult});
 }
 function speak(text){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=.88;speechSynthesis.speak(u)}
 function speakQuestion(q){
@@ -6445,6 +6599,7 @@ function importBackup(file){
      if(data.aiInstructor&&typeof data.aiInstructor==='object'){
        aiInstructor=Object.assign({},DEFAULT_AI_INSTRUCTOR,data.aiInstructor);
        aiInstructor.explained=aiInstructor.explained&&typeof aiInstructor.explained==='object'?aiInstructor.explained:{};
+       aiInstructor.recoveryPlan=normaliseAiRecoveryPlan(aiInstructor.recoveryPlan);
        aiInstructor.socratic=Object.assign({questionId:'',step:0,answers:[]},aiInstructor.socratic||{});
        aiInstructor.socratic.answers=Array.isArray(aiInstructor.socratic.answers)?aiInstructor.socratic.answers:[];
        save(AI_INSTRUCTOR_KEY,aiInstructor);

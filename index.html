@@ -57,6 +57,20 @@
 [data-theme="dark"] .ai-recovery-plan,[data-theme="dark"] .ai-plan-result{background:#232d43;border-color:#526487}[data-theme="dark"] .ai-plan-stage{background:rgba(255,255,255,.05);border-color:#526487}[data-theme="dark"] .ai-plan-stage.done{background:rgba(69,127,93,.18)}
 @media(max-width:620px){.ai-plan-stage{grid-template-columns:1fr}.ai-plan-stage button{width:100%}.ai-plan-actions,.ai-plan-compact-actions{grid-template-columns:1fr}.ai-plan-head{grid-template-columns:auto 1fr}.ai-plan-head>strong{grid-column:2;justify-self:start}.ai-recovery-plan.compact .ai-plan-head{grid-template-columns:auto 1fr auto}.ai-recovery-plan.compact .ai-plan-head>strong{grid-column:auto}}
 
+
+
+/* Build 40.4.6 — Inline Replay Interaction Fix */
+.ai-pattern-item.recovered{box-shadow:inset 0 0 0 2px rgba(35,139,92,.18)}
+.ai-pattern-item.recovered .ai-pattern-diagnosis{background:rgba(228,247,237,.72)}
+
+.ai-pattern-engine{margin:14px 0;display:grid;gap:13px;border:1px solid rgba(88,65,145,.24);background:linear-gradient(145deg,#f7f5ff,#eef8ff)}
+.ai-pattern-engine.empty{grid-template-columns:auto 1fr;align-items:center}.ai-pattern-engine.empty>span{font-size:32px}.ai-pattern-engine.empty small,.ai-pattern-head small{font-weight:900;letter-spacing:.07em;color:#66558d}.ai-pattern-engine.empty h3{margin:4px 0}.ai-pattern-engine.empty p{margin:0;color:var(--muted,#667085)}
+.ai-pattern-head{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start}.ai-pattern-head>span{font-size:32px;line-height:1}.ai-pattern-head h3{margin:3px 0 5px}.ai-pattern-head p{margin:0;color:var(--muted,#667085)}.ai-pattern-head>strong{padding:7px 10px;border-radius:999px;background:#2b4168;color:#fff;font-size:12px;white-space:nowrap}
+.ai-pattern-timing{display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center;padding:10px 12px;border-radius:13px;background:rgba(43,65,104,.07)}.ai-pattern-timing span{font-size:20px}.ai-pattern-timing p{margin:0;font-size:13px;font-weight:700}
+.ai-pattern-list{display:grid;gap:10px}.ai-pattern-item{padding:12px;border:1px solid rgba(43,65,104,.13);border-radius:16px;background:rgba(255,255,255,.72);display:grid;gap:10px}.ai-pattern-title{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start}.ai-pattern-title>span{font-size:25px}.ai-pattern-title small{display:block;font-size:10px;font-weight:950;letter-spacing:.08em;color:#7b5b28}.ai-pattern-title strong{display:block;margin:2px 0}.ai-pattern-title p{margin:0;font-size:12px;color:var(--muted,#667085)}.ai-pattern-title>b{min-width:38px;height:38px;border-radius:999px;background:#173d5c;color:#fff;display:grid;place-items:center;font-size:12px}
+.ai-pattern-diagnosis{padding:10px 11px;border-radius:13px;background:rgba(107,80,160,.07)}.ai-pattern-diagnosis span{display:block;font-size:10px;font-weight:950;letter-spacing:.08em;color:#66558d}.ai-pattern-diagnosis strong{display:block;margin:3px 0 4px}.ai-pattern-diagnosis p{margin:0;font-size:13px;line-height:1.4}.ai-pattern-note{margin:0;font-size:12px;color:var(--muted,#667085);font-weight:650}
+[data-theme="dark"] .ai-pattern-engine{background:#25283b;border-color:#5a587a}[data-theme="dark"] .ai-pattern-item{background:rgba(255,255,255,.045);border-color:#4f5872}[data-theme="dark"] .ai-pattern-timing,[data-theme="dark"] .ai-pattern-diagnosis{background:rgba(255,255,255,.055)}
+@media(max-width:620px){.ai-pattern-head{grid-template-columns:auto 1fr}.ai-pattern-head>strong{grid-column:2;justify-self:start}.ai-pattern-title{grid-template-columns:auto 1fr}.ai-pattern-title>b{grid-column:2;justify-self:start}.ai-pattern-item .btn{width:100%}}
 </style>
 <title>Malta Driving Master</title>
 </head>
@@ -92,6 +106,6 @@
 <script src="replay-scenes.js?v=391269finalui"></script>
 <script src="scene-audit.js?v=39137"></script>
 <script src="replay-coach.js?v=39137"></script>
-<script src="app-3994.js?v=402targetedrecovery"></script>
+<script src="app-3994.js?v=4043stabilityverify"></script>
 </body>
 </html>

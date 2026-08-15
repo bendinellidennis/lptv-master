@@ -228,7 +228,7 @@ const SETTINGS = 'mdm-v1-settings';
 const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
-const BUILD_VERSION = '40.1.1';
+const BUILD_VERSION = '40.2';
 const BUILD_RELEASE_DATE = '15/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -3631,6 +3631,84 @@ function aiTutorSummary(){
  const next=roadmapNextAction();
  return {strong,weak,next,count:Object.keys(aiInstructor.explained).length};
 }
+function aiRecoveryText(it,en){return settings.lang==='it'?it:en}
+function aiTargetedRecoveryAnalysis(){
+ const recent=(progress.exams||[]).filter(exam=>Array.isArray(exam.details)&&exam.details.length).slice(-5);
+ const questions=new Map();
+ const topics=new Map(TOPIC_GROUPS.map(topic=>[topic.id,{topic,recentWrong:0,lifetimeWrong:0,score:0}]));
+ recent.forEach((exam,examIndex)=>{
+  const weight=examIndex+1;
+  exam.details.forEach(detail=>{
+   if(detail?.ok)return;
+   const q=aiQuestionById(detail?.id);
+   if(!q)return;
+   const topicId=topicIdFor(q);
+   const row=questions.get(q.id)||{q,recentWrong:0,lifetimeWrong:Number(progress.wrong?.[q.id]||0),score:0,lastExamIndex:-1};
+   row.recentWrong+=1;
+   row.score+=4*weight;
+   row.lastExamIndex=Math.max(row.lastExamIndex,examIndex);
+   questions.set(q.id,row);
+   const topic=topics.get(topicId);
+   if(topic){topic.recentWrong+=1;topic.score+=4*weight}
+  });
+ });
+ Q.forEach(q=>{
+  const lifetimeWrong=Number(progress.wrong?.[q.id]||0);
+  if(!lifetimeWrong)return;
+  const row=questions.get(q.id)||{q,recentWrong:0,lifetimeWrong,score:0,lastExamIndex:-1};
+  row.lifetimeWrong=lifetimeWrong;
+  row.score+=lifetimeWrong*2;
+  questions.set(q.id,row);
+  const topic=topics.get(topicIdFor(q));
+  if(topic){topic.lifetimeWrong+=lifetimeWrong;topic.score+=lifetimeWrong*2}
+ });
+ const rankedTopics=[...topics.values()].sort((a,b)=>b.score-a.score||b.recentWrong-a.recentWrong||b.lifetimeWrong-a.lifetimeWrong);
+ const rankedQuestions=[...questions.values()].sort((a,b)=>b.score-a.score||b.recentWrong-a.recentWrong||b.lifetimeWrong-a.lifetimeWrong||a.q.id.localeCompare(b.q.id));
+ return {recentExams:recent.length,rankedTopics,rankedQuestions,priority:rankedTopics.find(item=>item.score>0)||null};
+}
+function aiTargetedRecoveryPool(limit=10){
+ const analysis=aiTargetedRecoveryAnalysis();
+ if(!analysis.priority)return [];
+ const picked=[];const used=new Set();
+ const add=q=>{if(q&&!used.has(q.id)&&picked.length<limit){used.add(q.id);picked.push(q)}};
+ analysis.rankedQuestions.forEach(item=>add(item.q));
+ if(picked.length<limit){
+  const topicId=analysis.priority.topic.id;
+  Q.filter(q=>topicIdFor(q)===topicId)
+   .sort((a,b)=>{
+    const wa=Number(progress.wrong?.[a.id]||0),wb=Number(progress.wrong?.[b.id]||0);
+    const aa=questionAccuracy(a),ab=questionAccuracy(b);
+    return wb-wa||aa-ab||a.id.localeCompare(b.id);
+   }).forEach(add);
+ }
+ return picked.slice(0,limit);
+}
+function startAiTargetedRecovery(source='coach'){
+ const pool=aiTargetedRecoveryPool(10);
+ if(!pool.length){toast(aiRecoveryText('Non risultano errori sufficienti per creare un recupero mirato.','There are not enough mistakes to build a targeted recovery session.'));return}
+ aiInstructor.reviewQueue=pool.map(q=>q.id);
+ aiInstructor.reviewIndex=0;
+ aiInstructor.reviewSource=source;
+ aiInstructorSave();
+ startQuiz(pool,'guided');
+}
+function aiTargetedRecoveryHtml(compact=false){
+ const analysis=aiTargetedRecoveryAnalysis();
+ const priority=analysis.priority;
+ if(!priority)return `<div class="card ai-priority-recovery empty"><span>✅</span><div><h3>${esc(aiRecoveryText('Recupero prioritario','Priority recovery'))}</h3><p>${esc(aiRecoveryText('Non emergono debolezze critiche dai dati disponibili. Continua con studio e simulazioni.','No critical weakness is emerging from the available data. Continue with study and simulations.'))}</p></div></div>`;
+ const pool=aiTargetedRecoveryPool(10);
+ const topQuestions=analysis.rankedQuestions.slice(0,3);
+ const title=esc(t(priority.topic.title));
+ const evidence=analysis.recentExams
+  ?aiRecoveryText(`Analizzati gli ultimi ${analysis.recentExams} esami e gli errori salvati.`,`Analysed the latest ${analysis.recentExams} exams and saved mistakes.`)
+  :aiRecoveryText('Priorità calcolata dagli errori salvati nello studio.','Priority calculated from saved study mistakes.');
+ const rows=analysis.rankedTopics.filter(item=>item.score>0).slice(0,4).map(item=>{
+  const max=Math.max(1,analysis.rankedTopics[0]?.score||1);const pct=Math.max(8,Math.round(item.score/max*100));
+  return `<div class="ai-priority-topic"><span>${item.topic.icon} ${esc(t(item.topic.title))}</span><strong>${item.recentWrong||item.lifetimeWrong}</strong><i><b style="width:${pct}%"></b></i></div>`;
+ }).join('');
+ const critical=topQuestions.length?`<div class="ai-priority-questions"><small>${esc(aiRecoveryText('Domande più critiche','Most critical questions'))}</small>${topQuestions.map(item=>`<button data-ai-priority-open="${esc(item.q.id)}"><strong>${esc(item.q.id)}</strong><span>${esc(item.q.question_it||item.q.question)}</span></button>`).join('')}</div>`:'';
+ return `<div class="card ai-priority-recovery ${compact?'compact':''}"><div class="ai-priority-head"><span>🎯</span><div><small>${esc(aiRecoveryText('PRIORITÀ AUTOMATICA','AUTOMATIC PRIORITY'))}</small><h3>${title}</h3><p>${esc(evidence)}</p></div><strong>${pool.length}</strong></div>${compact?'':`<div class="ai-priority-topics">${rows}</div>${critical}`}<button class="btn" id="${compact?'examDayTargetedRecovery':'aiTargetedRecovery'}">${esc(aiRecoveryText(`Avvia ripasso prioritario (${pool.length})`,`Start priority review (${pool.length})`))}</button></div>`;
+}
 function aiInstructorViewHtml(){
  const queryId=route.data?.questionId||aiInstructor.lastQuestionId||'';
  const question=aiQuestionById(queryId);
@@ -3641,6 +3719,7 @@ function aiInstructorViewHtml(){
   `<div css="ai-offline-banner"><span>🔒</span><div><strong>${esc(t('aiInstructorOffline'))}</strong><p>${esc(t('aiInstructorOfflineText'))}</p></div></div>`,
   `<div class="card ai-settings-card"><h3>${esc(t('aiInstructorSettings'))}</h3><div class="ai-settings-grid"><label><span>${esc(t('aiInstructorLanguage'))}</span><select id="aiLanguageMode"><option value="english" ${aiInstructor.languageMode==='english'?'selected':''}>${esc(t('aiInstructorEnglish'))}</option><option value="italian" ${aiInstructor.languageMode==='italian'?'selected':''}>${esc(t('aiInstructorItalian'))}</option><option value="bilingual" ${aiInstructor.languageMode==='bilingual'?'selected':''}>${esc(t('aiInstructorBilingual'))}</option></select></label><label><span>${esc(t('aiInstructorLevel'))}</span><select id="aiLevel"><option value="simple" ${aiInstructor.level==='simple'?'selected':''}>${esc(t('aiInstructorSimple'))}</option><option value="normal" ${aiInstructor.level==='normal'?'selected':''}>${esc(t('aiInstructorNormal'))}</option><option value="technical" ${aiInstructor.level==='technical'?'selected':''}>${esc(t('aiInstructorTechnical'))}</option></select></label></div><button class="btn secondary" id="saveAiInstructor">${esc(t('aiInstructorSave'))}</button></div>`,
   `<div class="card ai-tutor-card"><div class="ai-tutor-head"><div><h3>${esc(t('aiInstructorMyTutor'))}</h3><p>${esc(t('aiInstructorTutorSub'))}</p></div><strong>${tutor.count}</strong></div><div class="ai-tutor-grid"><article><span>${esc(t('aiInstructorStrong'))}</span>${tutor.strong.map(item=>`<p>${item.topic.icon} ${esc(t(item.topic.title))} — ${item.score}%</p>`).join('')}</article><article><span>${esc(t('aiInstructorWeak'))}</span>${tutor.weak.map(item=>`<p>${item.topic.icon} ${esc(t(item.topic.title))} — ${item.score}%</p>`).join('')}</article><article><span>${esc(t('aiInstructorNext'))}</span><p>${tutor.next.icon} ${esc(t(tutor.next.title))}</p><small>${esc(t(tutor.next.reason))}</small></article></div></div>`,
+  aiTargetedRecoveryHtml(false),
   `<div class="card ai-search-card"><input id="aiQuestionSearch" placeholder="${esc(t('aiInstructorQuestionSearch'))}" value="${esc(question?.id||'')}"><button class="btn" id="aiQuestionSearchBtn">${esc(t('aiInstructorOpenLesson'))}</button></div>`,
   question?aiCoachReviewNavHtml(question):'',
   question?`${socratic?`<div class="section-title"><div><h2>🧩 ${esc(t('aiInstructorSocratic'))}</h2><p>${esc(t('aiInstructorSocraticSub'))}</p></div></div>${aiSocraticHtml(question)}`:aiInstructorLessonHtml(question,false)}`:`<div class="card ai-empty"><p>${esc(t('aiInstructorNoQuestion'))}</p><button class="btn" data-go="questionlibrary">${esc(t('questionLibrary'))}</button></div>`
@@ -3670,6 +3749,9 @@ function bindAiInstructor(){
  aiInstructor.lastVisit=new Date().toISOString();
  aiInstructorSave();
  $('#saveAiInstructor').onclick=saveAiInstructorSettings;
+ const targeted=$('#aiTargetedRecovery');
+ if(targeted)targeted.onclick=()=>startAiTargetedRecovery('targeted');
+ screen.querySelectorAll('[data-ai-priority-open]').forEach(button=>button.onclick=()=>go('aiinstructor',{questionId:button.dataset.aiPriorityOpen}));
  $('#aiQuestionSearchBtn').onclick=aiFindQuestionFromSearch;
  const search=$('#aiQuestionSearch');
  if(search)search.onkeydown=event=>{if(event.key==='Enter')aiFindQuestionFromSearch()};
@@ -4498,7 +4580,7 @@ function examDayViewHtml(){
  const readiness=examDayReadiness();
  const eligible=examDayCertificateEligible();
  return [
-  `<div class="section-title"><div><h2>🎯 ${esc(t('examDayMode'))}</h2><p>${esc(t('examDayModeSub'))}</p></div><span class="badge official">Build 20</span></div>`,
+  `<div class="section-title"><div><h2>🎯 ${esc(t('examDayMode'))}</h2><p>${esc(t('examDayModeSub'))}</p></div><span class="badge official">Build ${esc(BUILD_VERSION)}</span></div>`,
   `<div class="exam-day-warning"><span>ℹ</span><div><strong>${esc(t('examDayInternal'))}</strong><p>${esc(t('examDayInternalText'))}</p></div></div>`,
   `<section class="exam-day-hero ${readiness.state}"><div class="exam-readiness-ring" style="--exam-score:${readiness.score}"><div><strong>${readiness.score}%</strong><span>${esc(t('finalReadiness'))}</span></div></div><div><span>${esc(t('examFinalStatus'))}</span><h3>${esc(t(examDayStateLabel(readiness.state)))}</h3><p>${esc(t(examDayStateMessage(readiness.state)))}</p><small>${esc(t('examRiskAlert'))}: ${esc(t(examDayRisk()))}</small></div></section>`,
   `<div class="exam-day-metrics"><article><span>${esc(t('examConfidence'))}</span><strong>${readiness.metrics.confidence}%</strong></article><article><span>${esc(t('examBridge'))}</span><strong>${readiness.metrics.bridgeScore}%</strong></article><article><span>${esc(t('examRecent'))}</span><strong>${readiness.latest}/35</strong></article><article><span>${esc(t('examChecklist'))}</span><strong>${readiness.checklist.pct}%</strong></article></div>`,
@@ -4506,6 +4588,7 @@ function examDayViewHtml(){
   `<div class="card exam-checklist-card"><div class="exam-card-heading"><div><h3>${esc(t('examDayChecklist'))}</h3><p>${esc(t('examDayChecklistSub'))}</p></div><strong>${readiness.checklist.done}/${readiness.checklist.total}</strong></div><div class="exam-checklist-list">${examDayChecklistItems().map(([id,label])=>`<label><input type="checkbox" data-exam-check="${id}" ${examDayState.checklist[id]?'checked':''}><span>${esc(t(label))}</span></label>`).join('')}</div><div class="exam-progress"><span style="width:${readiness.checklist.pct}%"></span></div></div>`,
   `<div class="exam-action-grid"><article class="card"><span>🫁</span><h3>${esc(t('examBreathing'))}</h3><p>${esc(t('examBreathingSub'))}</p><button class="btn ${examDayState.breathingDone?'secondary':''}" id="startExamBreathing">${examDayState.breathingDone?'✓ '+esc(t('examBreathingDone')):esc(t('examBreathingStart'))}</button></article><article class="card"><span>⏱️</span><h3>${esc(t('examFinalSimulation'))}</h3><p>${esc(t('examFinalSimulationSub'))}</p><strong>${readiness.latest?`${readiness.latest}/35`:esc(t('examNoFinalScore'))}</strong><button class="btn" id="startFinalSimulation">${esc(t('examStartFinal'))}</button></article></div>`,
   examDayAiRecoveryHtml(),
+  aiTargetedRecoveryHtml(true),
   `<div class="section-title"><div><h2>${esc(t('examQuickReview'))}</h2><p>${esc(t('examQuickReviewSub'))}</p></div></div>`,
   `<div class="exam-review-grid">${examDayReviewCards().map(([icon,label,route])=>`<button data-exam-review="${route}"><span>${icon}</span><strong>${esc(t(label))}</strong><small>${esc(t('examOpenTopic'))}</small></button>`).join('')}</div>`,
   `<div class="card exam-certificate-card ${eligible?'ready':'locked'}"><div><span>🏅</span><div><h3>${esc(t('examCertificate'))}</h3><p>${esc(t('examCertificateSub'))}</p></div></div>${eligible?`<strong>${esc(t('examCertificateReady'))}</strong><button class="btn" id="issueExamCertificate">${examDayState.certificateIssued?'✓ '+esc(t('examCertificateReady')):esc(t('examCertificateIssue'))}</button>${examDayState.certificateIssued?`<div class="exam-certificate-actions"><button class="btn secondary" id="shareExamCertificate">↗ ${esc(t('examCertificateShare'))}</button><button class="btn secondary" id="copyExamCertificate">⧉ ${esc(t('examCertificateCopy'))}</button></div>`:''}`:`<p>${esc(t('examCertificateLocked'))}</p>`}<small>${esc(t('examCertificateDisclaimer'))}</small></div>`,
@@ -4525,6 +4608,8 @@ function bindExamDay(){
  $('#startFinalSimulation').onclick=startFinalSimulation;
  const aiRecovery=$('#examDayAiRecovery');
  if(aiRecovery)aiRecovery.onclick=()=>aiCoachReviewStart(aiExamWrongIds(aiLatestExamRecord()),'examday');
+ const targeted=$('#examDayTargetedRecovery');
+ if(targeted)targeted.onclick=()=>startAiTargetedRecovery('examdaytargeted');
  $('#resetExamDay').onclick=resetExamDay;
  const issue=$('#issueExamCertificate');
  if(issue)issue.onclick=issueExamDayCertificate;

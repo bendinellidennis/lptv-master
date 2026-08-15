@@ -71,6 +71,19 @@
 .ai-pattern-diagnosis{padding:10px 11px;border-radius:13px;background:rgba(107,80,160,.07)}.ai-pattern-diagnosis span{display:block;font-size:10px;font-weight:950;letter-spacing:.08em;color:#66558d}.ai-pattern-diagnosis strong{display:block;margin:3px 0 4px}.ai-pattern-diagnosis p{margin:0;font-size:13px;line-height:1.4}.ai-pattern-note{margin:0;font-size:12px;color:var(--muted,#667085);font-weight:650}
 [data-theme="dark"] .ai-pattern-engine{background:#25283b;border-color:#5a587a}[data-theme="dark"] .ai-pattern-item{background:rgba(255,255,255,.045);border-color:#4f5872}[data-theme="dark"] .ai-pattern-timing,[data-theme="dark"] .ai-pattern-diagnosis{background:rgba(255,255,255,.055)}
 @media(max-width:620px){.ai-pattern-head{grid-template-columns:auto 1fr}.ai-pattern-head>strong{grid-column:2;justify-self:start}.ai-pattern-title{grid-template-columns:auto 1fr}.ai-pattern-title>b{grid-column:2;justify-self:start}.ai-pattern-item .btn{width:100%}}
+
+
+/* Build 40.5 — AI Exam Readiness Prediction */
+.ai-readiness-predictor{margin:14px 0;display:grid;gap:13px;border:1px solid rgba(27,87,105,.24);background:linear-gradient(145deg,#f2fbf8,#f3f6ff)}
+.ai-readiness-predictor.notready{border-color:rgba(181,112,25,.30);background:linear-gradient(145deg,#fff9ef,#f4f6ff)}
+.ai-readiness-head{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start}.ai-readiness-head>span{font-size:30px;line-height:1}.ai-readiness-head small,.ai-readiness-blockers>small{font-weight:950;letter-spacing:.08em;color:#315f72}.ai-readiness-head h3{margin:3px 0 5px;font-size:25px}.ai-readiness-head p{margin:0;color:var(--muted,#667085);line-height:1.4}.ai-readiness-head>strong{padding:7px 10px;border-radius:999px;background:#173d5c;color:#fff;font-size:11px;white-space:nowrap}
+.ai-readiness-signal-score{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:10px 12px;border-radius:14px;background:rgba(23,61,92,.07)}.ai-readiness-signal-score b{font-size:20px}.ai-readiness-signal-score span{font-size:13px;font-weight:800}.ai-readiness-signal-score em{font-size:11px;font-style:normal;color:var(--muted,#667085);font-weight:800}
+.ai-readiness-signals{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ai-readiness-signals article{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:start;padding:10px;border:1px solid rgba(23,61,92,.11);border-radius:14px;background:rgba(255,255,255,.68)}.ai-readiness-signals article>span{font-size:20px}.ai-readiness-signals article strong{display:block;font-size:13px}.ai-readiness-signals article small{display:block;margin-top:2px;font-size:11px;line-height:1.3;color:var(--muted,#667085)}.ai-readiness-signals article>b{width:24px;height:24px;border-radius:99px;display:grid;place-items:center;font-size:12px;background:#dff3e8;color:#216344}.ai-readiness-signals article.block>b{background:#fff0d6;color:#8d5a12}
+.ai-readiness-blockers{display:grid;gap:8px}.ai-readiness-blocker{display:grid;grid-template-columns:auto 1fr;gap:9px;padding:10px 11px;border-radius:14px;background:rgba(181,112,25,.08)}.ai-readiness-blocker>span{width:25px;height:25px;border-radius:99px;background:#9d671d;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:900}.ai-readiness-blocker strong{display:block;font-size:13px}.ai-readiness-blocker p{margin:3px 0 0;font-size:12px;line-height:1.35;color:var(--muted,#667085)}.ai-readiness-disclaimer{margin:0;font-size:11px;line-height:1.35;color:var(--muted,#667085);font-weight:650}
+.ai-readiness-predictor.compact .ai-readiness-head h3{font-size:21px}.ai-readiness-predictor.compact .ai-readiness-signals{grid-template-columns:1fr 1fr}.ai-readiness-predictor.compact .ai-readiness-disclaimer{display:none}
+[data-theme="dark"] .ai-readiness-predictor,[data-theme="dark"] .ai-readiness-predictor.notready{background:#222d3a;border-color:#53667a}[data-theme="dark"] .ai-readiness-signals article{background:rgba(255,255,255,.05);border-color:#4c6075}[data-theme="dark"] .ai-readiness-signal-score,[data-theme="dark"] .ai-readiness-blocker{background:rgba(255,255,255,.055)}
+@media(max-width:620px){.ai-readiness-head{grid-template-columns:auto 1fr}.ai-readiness-head>strong{grid-column:2;justify-self:start}.ai-readiness-signals,.ai-readiness-predictor.compact .ai-readiness-signals{grid-template-columns:1fr}.ai-readiness-signal-score{grid-template-columns:auto 1fr}.ai-readiness-signal-score em{grid-column:1/-1}.ai-readiness-predictor .btn{width:100%}}
+
 </style>
 <title>Malta Driving Master</title>
 </head>
@@ -106,6 +119,6 @@
 <script src="replay-scenes.js?v=391269finalui"></script>
 <script src="scene-audit.js?v=39137"></script>
 <script src="replay-coach.js?v=39137"></script>
-<script src="app-3994.js?v=4043stabilityverify"></script>
+<script src="app-3994.js?v=405readinessprediction"></script>
 </body>
 </html>

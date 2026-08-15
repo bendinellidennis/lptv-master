@@ -228,7 +228,7 @@ const SETTINGS = 'mdm-v1-settings';
 const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
-const BUILD_VERSION = '40.4.6';
+const BUILD_VERSION = '40.5';
 const BUILD_RELEASE_DATE = '15/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -4083,7 +4083,7 @@ function startAiPatternTraining(id){
 }
 function aiPatternAnalysisHtml(compact=false){
  const analysis=aiCoachPatternAnalysis(),top=analysis.ranked.slice(0,compact?1:3);
- if(!top.length)return `<div class="card ai-pattern-engine empty"><span>🧠</span><div><small>${esc(aiRecoveryText('BUILD 40.4.6 · COACH PATTERN ANALYSIS','BUILD 40.4.6 · COACH PATTERN ANALYSIS'))}</small><h3>${esc(aiRecoveryText('Il Coach sta costruendo il tuo profilo di errore','The Coach is building your error profile'))}</h3><p>${esc(aiRecoveryText('Completa alcune domande: da questa build vengono misurati anche i tempi reali di risposta.','Complete some questions: from this build, real response times are measured too.'))}</p></div></div>`;
+ if(!top.length)return `<div class="card ai-pattern-engine empty"><span>🧠</span><div><small>${esc(aiRecoveryText('BUILD 40.5 · COACH PATTERN ANALYSIS','BUILD 40.5 · COACH PATTERN ANALYSIS'))}</small><h3>${esc(aiRecoveryText('Il Coach sta costruendo il tuo profilo di errore','The Coach is building your error profile'))}</h3><p>${esc(aiRecoveryText('Completa alcune domande: da questa build vengono misurati anche i tempi reali di risposta.','Complete some questions: from this build, real response times are measured too.'))}</p></div></div>`;
  const timingText=analysis.timingCount?aiRecoveryText(`Tempo mediano: corrette ${aiPatternSeconds(analysis.correctMedian)} · errate ${aiPatternSeconds(analysis.wrongMedian)}.`,`Median time: correct ${aiPatternSeconds(analysis.correctMedian)} · wrong ${aiPatternSeconds(analysis.wrongMedian)}.`):aiRecoveryText('I tempi di risposta iniziano a essere raccolti dalla Build 40.4.','Response-time data starts being collected from Build 40.4.');
  const cards=top.map(item=>{
   const label=aiRecoveryText(item.group.it,item.group.en),timing=item.id==='english'?((item.bridgeGap||item.translationGap)?aiRecoveryText(`Gap lingua: ${Math.max(item.bridgeGap||0,item.translationGap||0)} punti`,`Language gap: ${Math.max(item.bridgeGap||0,item.translationGap||0)} points`):''):aiRecoveryText(`Errori ${item.wrong} · ${item.errorRate}% · errate ${aiPatternSeconds(item.wrongMedian)}`,`Errors ${item.wrong} · ${item.errorRate}% · wrong ${aiPatternSeconds(item.wrongMedian)}`);
@@ -4094,7 +4094,118 @@ function aiPatternAnalysisHtml(compact=false){
   const actionLabel=stable?aiRecoveryText('Mantieni stabilità','Maintain stability'):recovered?aiRecoveryText('Verifica stabilità · 5 domande diverse','Verify stability · 5 different questions'):aiRecoveryText('Esegui azione correttiva','Run corrective action');
   return `<article class="ai-pattern-item ${stateClass}"><div class="ai-pattern-title"><span>${item.group.icon}</span><div><small>${esc(aiPatternRecurrenceLabel(item.recurrence))}</small><strong>${esc(label)}</strong><p>${esc(timing)}</p></div><b>${badge}</b></div><div class="ai-pattern-diagnosis"><span>${esc(diagTitle)}</span><strong>${esc(item.cause.label)}</strong><p>${esc(item.action)}</p></div><button class="btn secondary" data-ai-pattern-train="${esc(item.id)}">${esc(actionLabel)}</button></article>`;
  }).join('');
- return `<div class="card ai-pattern-engine ${compact?'compact':''}"><div class="ai-pattern-head"><span>🧠</span><div><small>${esc(aiRecoveryText('AI COGNITIVE ERROR ENGINE · BUILD 40.4.6','AI COGNITIVE ERROR ENGINE · BUILD 40.4.6'))}</small><h3>${esc(aiRecoveryText('Coach Pattern Analysis','Coach Pattern Analysis'))}</h3><p>${esc(aiRecoveryText('Non conta solo gli errori: cerca schema, velocità, ripetizione e causa probabile.','It does not just count errors: it looks for pattern, speed, repetition and likely cause.'))}</p></div><strong>${esc(aiPatternEvidenceLabel(analysis.evidenceLevel))}</strong></div><div class="ai-pattern-timing"><span>⏱️</span><p>${esc(timingText)}</p></div><div class="ai-pattern-list">${cards}</div><p class="ai-pattern-note">${esc(aiRecoveryText('Questa non è ancora la previsione pronto/non pronto: quella arriverà con la 40.5 usando i pattern raccolti qui.','This is not yet the ready/not-ready prediction: Build 40.5 will use the patterns collected here.'))}</p></div>`;
+ return `<div class="card ai-pattern-engine ${compact?'compact':''}"><div class="ai-pattern-head"><span>🧠</span><div><small>${esc(aiRecoveryText('AI COGNITIVE ERROR ENGINE · BUILD 40.5','AI COGNITIVE ERROR ENGINE · BUILD 40.5'))}</small><h3>${esc(aiRecoveryText('Coach Pattern Analysis','Coach Pattern Analysis'))}</h3><p>${esc(aiRecoveryText('Non conta solo gli errori: cerca schema, velocità, ripetizione e causa probabile.','It does not just count errors: it looks for pattern, speed, repetition and likely cause.'))}</p></div><strong>${esc(aiPatternEvidenceLabel(analysis.evidenceLevel))}</strong></div><div class="ai-pattern-timing"><span>⏱️</span><p>${esc(timingText)}</p></div><div class="ai-pattern-list">${cards}</div><p class="ai-pattern-note">${esc(aiRecoveryText('Questi pattern alimentano ora la previsione 40.5: un recupero 5/5 non basta finché la stabilità non è confermata.','These patterns now feed the Build 40.5 prediction: a 5/5 recovery is not enough until stability is confirmed.'))}</p></div>`;
+}
+
+
+// Build 40.5 — AI EXAM READINESS PREDICTION
+// This is deliberately NOT a single-score rule. READY is released only when
+// independent gates agree: realistic exams, breadth, unresolved patterns,
+// recovery/stability, response behaviour, English risk and data evidence.
+function aiReadinessPct(exam){
+ const total=Math.max(1,Number(exam?.total)||35);
+ return Math.round((Number(exam?.score)||0)/total*100);
+}
+function aiReadinessPrediction(){
+ const exams=(progress.exams||[]).slice(-5);
+ const recent=exams.slice(-3);
+ const recentPct=recent.map(aiReadinessPct);
+ const latestPct=recentPct.length?recentPct[recentPct.length-1]:0;
+ const recentAverage=recentPct.length?Math.round(recentPct.reduce((a,b)=>a+b,0)/recentPct.length):0;
+ const recentPasses=recent.filter(exam=>Number(exam?.score||0)>=30).length;
+ const examGate=recent.length>=2&&latestPct>=86&&recentAverage>=86&&recentPasses>=Math.min(2,recent.length);
+ const trendDelta=recentPct.length>=2?recentPct[recentPct.length-1]-recentPct[0]:0;
+ const trend=trendDelta>=5?'up':trendDelta<=-5?'down':'steady';
+
+ const seenUnique=Q.filter(q=>Number(progress.seen?.[q.id]||0)>0).length;
+ const coverage=Q.length?Math.round(seenUnique/Q.length*100):0;
+ const coverageGate=coverage>=70;
+
+ const groups=AI_PATTERN_GROUPS.map(aiPatternGroupAnalysis);
+ const recurring=groups.filter(item=>!item.stabilityConfirmed&&item.recurrence==='recurring');
+ const emergingCritical=groups.filter(item=>!item.stabilityConfirmed&&item.recurrence==='emerging'&&item.recentWrong>=3);
+ const unresolved=[...recurring,...emergingCritical.filter(x=>!recurring.some(y=>y.id===x.id))];
+ const improving=groups.filter(item=>!item.stabilityConfirmed&&item.recurrence==='improving');
+ const stable=groups.filter(item=>item.stabilityConfirmed);
+ const patternGate=unresolved.length===0;
+ const stabilityGate=improving.length===0;
+
+ const english=aiEnglishPatternAnalysis();
+ const strongExamOverride=recent.length>=3&&recentPasses===3&&recentAverage>=90;
+ const englishRisk=Boolean(english&&english.recurrence==='recurring'&&(
+  Number(english.bridgeGap||0)>=15||Number(english.translationGap||0)>=20||Number(english.wrong||0)>=4
+ ));
+ const englishGate=!englishRisk||strongExamOverride;
+
+ const allTiming=(progress.responseHistory||[]).filter(item=>Number(item?.ms)>0);
+ const examTiming=allTiming.filter(item=>item.mode==='exam');
+ const behaviourSample=examTiming.length>=12?examTiming:allTiming;
+ const correctTimes=behaviourSample.filter(item=>item.ok).map(item=>item.ms);
+ const wrongTimes=behaviourSample.filter(item=>!item.ok).map(item=>item.ms);
+ const correctMedian=aiPatternMedian(correctTimes),wrongMedian=aiPatternMedian(wrongTimes);
+ const impulsive=correctTimes.length>=5&&wrongTimes.length>=3&&wrongMedian>0&&correctMedian>0&&wrongMedian<Math.min(7000,correctMedian*.62);
+ const behaviourGate=!impulsive;
+
+ const reasonCount=Object.keys(progress.errorReasons||{}).length;
+ const evidenceScore=Math.round(
+  Math.min(40,(Math.min(3,recent.length)/3)*40)+
+  Math.min(25,(Math.min(30,allTiming.length)/30)*25)+
+  Math.min(20,(Math.min(70,coverage)/70)*20)+
+  Math.min(15,(Math.min(10,reasonCount)/10)*15)
+ );
+ const evidenceLevel=evidenceScore>=75?'high':evidenceScore>=50?'medium':'growing';
+ const evidenceGate=evidenceScore>=50;
+
+ const signals=[
+  {id:'exams',icon:'🎯',ok:examGate,label:aiRecoveryText('Esami realistici','Realistic exams'),detail:recent.length?aiRecoveryText(`${recentPasses}/${recent.length} superati · media ${recentAverage}% · ultimo ${latestPct}%`,`${recentPasses}/${recent.length} passed · avg ${recentAverage}% · latest ${latestPct}%`):aiRecoveryText('Nessuna simulazione reale completata','No realistic simulation completed')},
+  {id:'coverage',icon:'📚',ok:coverageGate,label:aiRecoveryText('Copertura reale','Real coverage'),detail:`${seenUnique}/${Q.length} · ${coverage}%`},
+  {id:'patterns',icon:'🧠',ok:patternGate,label:aiRecoveryText('Pattern critici','Critical patterns'),detail:unresolved.length?aiRecoveryText(`${unresolved.length} ancora aperti`,`${unresolved.length} still open`):aiRecoveryText('Nessun pattern critico aperto','No critical pattern open')},
+  {id:'stability',icon:'🧪',ok:stabilityGate,label:aiRecoveryText('Stabilità recuperi','Recovery stability'),detail:improving.length?aiRecoveryText(`${improving.length} recuperi da verificare`,`${improving.length} recoveries need verification`):aiRecoveryText(`${stable.length} aree con stabilità confermata`,`${stable.length} areas with confirmed stability`)},
+  {id:'behaviour',icon:'⏱️',ok:behaviourGate,label:aiRecoveryText('Comportamento di risposta','Response behaviour'),detail:behaviourSample.length?aiRecoveryText(`corrette ${aiPatternSeconds(correctMedian)} · errate ${aiPatternSeconds(wrongMedian)}`,`correct ${aiPatternSeconds(correctMedian)} · wrong ${aiPatternSeconds(wrongMedian)}`):aiRecoveryText('Tempi ancora insufficienti','Not enough timing data yet')},
+  {id:'english',icon:'🇬🇧',ok:englishGate,label:aiRecoveryText('Inglese sotto pressione','English under pressure'),detail:englishRisk&&!strongExamOverride?aiRecoveryText('Rischio linguistico ancora attivo','Language risk still active'):aiRecoveryText('Nessun blocco linguistico critico','No critical language blocker')},
+  {id:'evidence',icon:'🔬',ok:evidenceGate,label:aiRecoveryText('Affidabilità dei dati','Data reliability'),detail:aiRecoveryText(evidenceLevel==='high'?'Alta':evidenceLevel==='medium'?'Media':'In crescita',evidenceLevel==='high'?'High':evidenceLevel==='medium'?'Medium':'Growing')}
+ ];
+
+ const blockers=[];
+ if(recent.length<2)blockers.push({kind:'exam',title:aiRecoveryText('Servono almeno 2 simulazioni realistiche','At least 2 realistic simulations are needed'),detail:aiRecoveryText('Il Coach non dichiara PRONTO senza vedere prestazioni ripetute nelle condizioni dell’esame.','The Coach will not declare READY without repeated performance under exam conditions.'),action:{type:'exam',label:aiRecoveryText('Avvia simulazione 35 domande','Start 35-question simulation')}});
+ else if(!examGate)blockers.push({kind:'exam-performance',title:aiRecoveryText('Prestazione d’esame non ancora stabile','Exam performance is not stable yet'),detail:aiRecoveryText(`Ultimi risultati: ${recent.map(e=>`${e.score}/${e.total}`).join(' · ')}.`,`Recent results: ${recent.map(e=>`${e.score}/${e.total}`).join(' · ')}.`),action:{type:'targeted',label:aiRecoveryText('Recupera gli errori dell’esame','Recover exam mistakes')}});
+ if(improving.length){const item=improving[0];blockers.push({kind:'stability',title:aiRecoveryText('Recupero riuscito ma non ancora confermato','Recovery succeeded but is not confirmed yet'),detail:aiRecoveryText(`${item.group.it}: serve una verifica su 5 domande diverse.`,`${item.group.en}: verify on 5 different questions.`),action:{type:'pattern',id:item.id,label:aiRecoveryText('Verifica stabilità','Verify stability')}});}
+ if(unresolved.length){const item=unresolved[0];blockers.push({kind:'pattern',title:aiRecoveryText('Pattern ricorrente ancora aperto','Recurring pattern still open'),detail:`${aiRecoveryText(item.group.it,item.group.en)} · ${item.cause.label}`,action:{type:'pattern',id:item.id,label:aiRecoveryText('Correggi questo pattern','Correct this pattern')}});}
+ if(!englishGate)blockers.push({kind:'english',title:aiRecoveryText('L’inglese può ancora cambiare la risposta','English can still change the answer'),detail:aiRecoveryText('Il rischio linguistico resta significativo quando gli aiuti spariscono in esame.','Language risk remains significant when assistance disappears in the exam.'),action:{type:'bridge',label:aiRecoveryText('Apri Bridge Test','Open Bridge Test')}});
+ if(impulsive)blockers.push({kind:'behaviour',title:aiRecoveryText('Risposte errate troppo rapide','Wrong answers are too fast'),detail:aiRecoveryText(`Mediana errate ${aiPatternSeconds(wrongMedian)} contro corrette ${aiPatternSeconds(correctMedian)}: possibile risposta impulsiva.`,`Wrong median ${aiPatternSeconds(wrongMedian)} vs correct ${aiPatternSeconds(correctMedian)}: possible impulsive answering.`),action:{type:'pattern',id:(unresolved[0]||groups.find(x=>x.cause?.id==='rush'))?.id||'risk',label:aiRecoveryText('Allena il controllo della risposta','Train response control')}});
+ if(!coverageGate)blockers.push({kind:'coverage',title:aiRecoveryText('Copertura della banca ancora insufficiente','Question-bank coverage is still insufficient'),detail:aiRecoveryText(`Hai lavorato su ${seenUnique}/${Q.length} domande (${coverage}%).`,`You have worked on ${seenUnique}/${Q.length} questions (${coverage}%).`),action:{type:'study',label:aiRecoveryText('Continua Studio guidato','Continue Guided Study')}});
+ if(!evidenceGate&&!blockers.some(x=>x.kind==='exam'))blockers.push({kind:'evidence',title:aiRecoveryText('Il Coach vuole più dati prima di fidarsi della previsione','The Coach needs more data before trusting the prediction'),detail:aiRecoveryText('Continua con domande e simulazioni: la previsione diventa più affidabile mentre ti osserva.','Continue with questions and simulations: the prediction becomes more reliable as it observes you.'),action:{type:'exam',label:aiRecoveryText('Aggiungi una simulazione','Add a simulation')}});
+
+ const hardReady=examGate&&coverageGate&&patternGate&&stabilityGate&&behaviourGate&&englishGate&&evidenceGate;
+ const passedSignals=signals.filter(signal=>signal.ok).length;
+ const nextAction=blockers[0]?.action||{type:'exam',label:aiRecoveryText('Conferma con una simulazione finale','Confirm with a final simulation')};
+ return {ready:hardReady,state:hardReady?'ready':'notready',signals,passedSignals,totalSignals:signals.length,blockers,nextAction,evidenceLevel,evidenceScore,recent,recentAverage,latestPct,recentPasses,trend,trendDelta,coverage,seenUnique,unresolved,improving,stable,englishRisk,impulsive,correctMedian,wrongMedian,behaviourCount:behaviourSample.length};
+}
+function aiReadinessPredictionHtml(compact=false){
+ const p=aiReadinessPrediction();
+ const stateLabel=p.ready?aiRecoveryText('PRONTO','READY'):aiRecoveryText('NON PRONTO','NOT READY');
+ const evidenceLabel=aiRecoveryText(p.evidenceLevel==='high'?'Affidabilità alta':p.evidenceLevel==='medium'?'Affidabilità media':'Affidabilità in crescita',p.evidenceLevel==='high'?'High reliability':p.evidenceLevel==='medium'?'Medium reliability':'Growing reliability');
+ const headline=p.ready
+  ?aiRecoveryText('I segnali indipendenti convergono: oggi il profilo è compatibile con l’esame.','Independent signals converge: today the profile is compatible with the exam.')
+  :aiRecoveryText(`Non basta un punteggio: ${p.totalSignals-p.passedSignals} segnali stanno ancora bloccando la previsione.`,`A score alone is not enough: ${p.totalSignals-p.passedSignals} signals are still blocking the prediction.`);
+ const signalList=p.signals.slice(0,compact?4:p.signals.length).map(signal=>`<article class="${signal.ok?'ok':'block'}"><span>${signal.icon}</span><div><strong>${esc(signal.label)}</strong><small>${esc(signal.detail)}</small></div><b>${signal.ok?'✓':'!'}</b></article>`).join('');
+ const blockers=p.blockers.slice(0,compact?1:3).map((item,index)=>`<div class="ai-readiness-blocker"><span>${index+1}</span><div><strong>${esc(item.title)}</strong><p>${esc(item.detail)}</p></div></div>`).join('');
+ const trendText=p.recent.length<2?aiRecoveryText('Trend non disponibile','Trend unavailable'):p.trend==='up'?aiRecoveryText(`Trend in crescita +${p.trendDelta} punti`,`Rising trend +${p.trendDelta} points`):p.trend==='down'?aiRecoveryText(`Trend in calo ${p.trendDelta} punti`,`Falling trend ${p.trendDelta} points`):aiRecoveryText('Trend stabile','Stable trend');
+ return `<div class="card ai-readiness-predictor ${p.state} ${compact?'compact':''}"><div class="ai-readiness-head"><span>${p.ready?'🟢':'🟠'}</span><div><small>${esc(aiRecoveryText('AI EXAM READINESS PREDICTION · BUILD 40.5','AI EXAM READINESS PREDICTION · BUILD 40.5'))}</small><h3>${esc(stateLabel)}</h3><p>${esc(headline)}</p></div><strong>${esc(evidenceLabel)}</strong></div><div class="ai-readiness-signal-score"><b>${p.passedSignals}/${p.totalSignals}</b><span>${esc(aiRecoveryText('segnali favorevoli','favourable signals'))}</span><em>${esc(trendText)}</em></div><div class="ai-readiness-signals">${signalList}</div>${blockers?`<div class="ai-readiness-blockers"><small>${esc(aiRecoveryText('COSA TI BLOCCA ORA','WHAT IS BLOCKING YOU NOW'))}</small>${blockers}</div>`:''}<button class="btn ${p.ready?'secondary':''}" data-ai-readiness-action="${esc(p.nextAction.type)}" data-ai-readiness-id="${esc(p.nextAction.id||'')}">${esc(p.nextAction.label)}</button><p class="ai-readiness-disclaimer">${esc(aiRecoveryText('Previsione interna basata sui tuoi dati reali. Non garantisce l’esito dell’esame ufficiale.','Internal prediction based on your real data. It does not guarantee the official exam result.'))}</p></div>`;
+}
+function bindAiReadinessPrediction(){
+ screen.querySelectorAll('[data-ai-readiness-action]').forEach(button=>{
+  button.onclick=()=>{
+   const type=button.dataset.aiReadinessAction||'',id=button.dataset.aiReadinessId||'';
+   if(type==='pattern')return startAiPatternTraining(id||'risk');
+   if(type==='bridge')return go('bridgesetup');
+   if(type==='study')return go('studysetup');
+   if(type==='targeted')return startAiTargetedRecovery('readiness');
+   if(type==='plan')return startAiRecoveryPlanStage();
+   if(type==='exam')return startFinalSimulation();
+   go('examday');
+  };
+ });
 }
 
 function aiInstructorViewHtml(){
@@ -4107,6 +4218,7 @@ function aiInstructorViewHtml(){
   `<div css="ai-offline-banner"><span>🔒</span><div><strong>${esc(t('aiInstructorOffline'))}</strong><p>${esc(t('aiInstructorOfflineText'))}</p></div></div>`,
   `<div class="card ai-settings-card"><h3>${esc(t('aiInstructorSettings'))}</h3><div class="ai-settings-grid"><label><span>${esc(t('aiInstructorLanguage'))}</span><select id="aiLanguageMode"><option value="english" ${aiInstructor.languageMode==='english'?'selected':''}>${esc(t('aiInstructorEnglish'))}</option><option value="italian" ${aiInstructor.languageMode==='italian'?'selected':''}>${esc(t('aiInstructorItalian'))}</option><option value="bilingual" ${aiInstructor.languageMode==='bilingual'?'selected':''}>${esc(t('aiInstructorBilingual'))}</option></select></label><label><span>${esc(t('aiInstructorLevel'))}</span><select id="aiLevel"><option value="simple" ${aiInstructor.level==='simple'?'selected':''}>${esc(t('aiInstructorSimple'))}</option><option value="normal" ${aiInstructor.level==='normal'?'selected':''}>${esc(t('aiInstructorNormal'))}</option><option value="technical" ${aiInstructor.level==='technical'?'selected':''}>${esc(t('aiInstructorTechnical'))}</option></select></label></div><button class="btn secondary" id="saveAiInstructor">${esc(t('aiInstructorSave'))}</button></div>`,
   `<div class="card ai-tutor-card"><div class="ai-tutor-head"><div><h3>${esc(t('aiInstructorMyTutor'))}</h3><p>${esc(t('aiInstructorTutorSub'))}</p></div><strong>${tutor.count}</strong></div><div class="ai-tutor-grid"><article><span>${esc(t('aiInstructorStrong'))}</span>${tutor.strong.map(item=>`<p>${item.topic.icon} ${esc(t(item.topic.title))} — ${item.score}%</p>`).join('')}</article><article><span>${esc(t('aiInstructorWeak'))}</span>${tutor.weak.map(item=>`<p>${item.topic.icon} ${esc(t(item.topic.title))} — ${item.score}%</p>`).join('')}</article><article><span>${esc(t('aiInstructorNext'))}</span><p>${tutor.next.icon} ${esc(t(tutor.next.title))}</p><small>${esc(t(tutor.next.reason))}</small></article></div></div>`,
+  aiReadinessPredictionHtml(false),
   aiPatternAnalysisHtml(false),
   aiTargetedRecoveryHtml(false),
   aiRecoveryPlanHtml(false),
@@ -4138,6 +4250,7 @@ function saveAiInstructorSettings(){
 function bindAiInstructor(){
  aiInstructor.lastVisit=new Date().toISOString();
  aiInstructorSave();
+ bindAiReadinessPrediction();
  $('#saveAiInstructor').onclick=saveAiInstructorSettings;
  const targeted=$('#aiTargetedRecovery');
  if(targeted)targeted.onclick=()=>startAiTargetedRecovery('targeted');
@@ -4980,6 +5093,7 @@ function examDayViewHtml(){
   `<div class="exam-day-warning"><span>ℹ</span><div><strong>${esc(t('examDayInternal'))}</strong><p>${esc(t('examDayInternalText'))}</p></div></div>`,
   `<section class="exam-day-hero ${readiness.state}"><div class="exam-readiness-ring" style="--exam-score:${readiness.score}"><div><strong>${readiness.score}%</strong><span>${esc(t('finalReadiness'))}</span></div></div><div><span>${esc(t('examFinalStatus'))}</span><h3>${esc(t(examDayStateLabel(readiness.state)))}</h3><p>${esc(t(examDayStateMessage(readiness.state)))}</p><small>${esc(t('examRiskAlert'))}: ${esc(t(examDayRisk()))}</small></div></section>`,
   `<div class="exam-day-metrics"><article><span>${esc(t('examConfidence'))}</span><strong>${readiness.metrics.confidence}%</strong></article><article><span>${esc(t('examBridge'))}</span><strong>${readiness.metrics.bridgeScore}%</strong></article><article><span>${esc(t('examRecent'))}</span><strong>${readiness.latest}/35</strong></article><article><span>${esc(t('examChecklist'))}</span><strong>${readiness.checklist.pct}%</strong></article></div>`,
+  aiReadinessPredictionHtml(true),
   `<div class="card exam-date-card"><label><span>${esc(t('examTargetDate'))}</span><input id="examTargetDate" type="date" value="${esc(examDayState.targetDate)}"></label><strong>${esc(examDayTargetText())}</strong><button class="btn secondary" id="saveExamDay">${esc(t('examSave'))}</button></div>`,
   `<div class="card exam-checklist-card"><div class="exam-card-heading"><div><h3>${esc(t('examDayChecklist'))}</h3><p>${esc(t('examDayChecklistSub'))}</p></div><strong>${readiness.checklist.done}/${readiness.checklist.total}</strong></div><div class="exam-checklist-list">${examDayChecklistItems().map(([id,label])=>`<label><input type="checkbox" data-exam-check="${id}" ${examDayState.checklist[id]?'checked':''}><span>${esc(t(label))}</span></label>`).join('')}</div><div class="exam-progress"><span style="width:${readiness.checklist.pct}%"></span></div></div>`,
   `<div class="exam-action-grid"><article class="card"><span>🫁</span><h3>${esc(t('examBreathing'))}</h3><p>${esc(t('examBreathingSub'))}</p><button class="btn ${examDayState.breathingDone?'secondary':''}" id="startExamBreathing">${examDayState.breathingDone?'✓ '+esc(t('examBreathingDone')):esc(t('examBreathingStart'))}</button></article><article class="card"><span>⏱️</span><h3>${esc(t('examFinalSimulation'))}</h3><p>${esc(t('examFinalSimulationSub'))}</p><strong>${readiness.latest?`${readiness.latest}/35`:esc(t('examNoFinalScore'))}</strong><button class="btn" id="startFinalSimulation">${esc(t('examStartFinal'))}</button></article></div>`,
@@ -4993,6 +5107,7 @@ function examDayViewHtml(){
  ].join('');
 }
 function bindExamDay(){
+ bindAiReadinessPrediction();
  screen.querySelectorAll('[data-exam-check]').forEach(input=>{
   input.onchange=()=>{
    examDayState.checklist[input.dataset.examCheck]=input.checked;

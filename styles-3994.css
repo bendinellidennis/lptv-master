@@ -1393,10 +1393,10 @@ select,textarea{width:100%;border:2px solid var(--line);border-radius:15px;backg
  cursor:crosshair;overflow:hidden
 }
 .hazard-instruction{
- position:absolute;left:50%;top:18%;transform:translateX(-50%);
- padding:9px 13px;border:1px solid rgba(255,255,255,.2);border-radius:999px;
+ position:absolute;left:50%;top:14%;transform:translateX(-50%);
+ max-width:min(78%,280px);padding:8px 12px;border:1px solid rgba(255,255,255,.2);border-radius:999px;
  background:rgba(3,18,28,.62);backdrop-filter:blur(14px);
- color:#fff;font-size:8px;font-weight:950;letter-spacing:.14em;white-space:nowrap
+ color:#fff;font-size:8px;font-weight:950;letter-spacing:.14em;white-space:normal;text-align:center;line-height:1.24
 }
 .hazard-target-guide{
  position:absolute;left:55%;top:39%;width:120px;height:95px;transform:translate(-50%,-50%);
@@ -2015,3 +2015,39 @@ body.replay-fullscreen-open{
   margin:0!important;
   padding:0!important;
 }
+
+
+/* BUILD 40.8.0 — MDM INTERACTIVE REPLAY MVP */
+.interactive-replay-mvp-hub{margin:14px 0;display:grid;gap:12px;padding:16px;border-radius:22px;background:linear-gradient(145deg,#071f33,#0c4c6b);color:#fff;box-shadow:0 18px 42px rgba(5,30,48,.22)}
+.interactive-replay-mvp-head>span,.interactive-replay-scene-badge span{display:block;font-size:9px;font-weight:950;letter-spacing:.14em;color:#55d8ef}
+.interactive-replay-mvp-head strong{display:block;margin-top:6px;font-size:19px;line-height:1.2}.interactive-replay-mvp-head p{margin:6px 0 0;font-size:12px;line-height:1.45;color:rgba(255,255,255,.76)}
+.interactive-replay-mvp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.interactive-replay-mvp-stats article{padding:10px;border:1px solid rgba(255,255,255,.13);border-radius:14px;background:rgba(255,255,255,.07)}.interactive-replay-mvp-stats b{display:block;font-size:20px}.interactive-replay-mvp-stats span{display:block;margin-top:3px;font-size:9px;color:rgba(255,255,255,.7)}
+.interactive-replay-mvp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.interactive-replay-mvp-grid button{min-width:0;padding:11px;border:1px solid rgba(255,255,255,.15);border-radius:14px;background:rgba(255,255,255,.09);color:#fff;text-align:left;touch-action:manipulation}.interactive-replay-mvp-grid button strong,.interactive-replay-mvp-grid button span,.interactive-replay-mvp-grid button small{display:block}.interactive-replay-mvp-grid button strong{font-size:10px;color:#55d8ef}.interactive-replay-mvp-grid button span{margin-top:4px;font-size:11px;line-height:1.3}.interactive-replay-mvp-grid button small{margin-top:6px;font-size:9px;color:rgba(255,255,255,.62)}
+.interactive-replay-scene-badge{padding:11px 14px;border:1px solid #9ae4d0;border-radius:16px;background:#eafaf5;color:#123548}.interactive-replay-scene-badge strong{display:block;margin-top:4px;font-size:13px}.interactive-replay-scene-badge small{display:block;margin-top:3px;font-size:10px;color:#56717e}
+.hazard-inline-feedback.interactive-active{bottom:2%;width:min(92%,470px);max-height:76%;padding:12px;background:rgba(3,24,32,.95);border-color:rgba(85,216,239,.58)}
+.hazard-inline-feedback--decision{scroll-padding-bottom:18px}
+.replay-hazard-surface[data-resolved="true"] .hazard-instruction{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(-8px);transition:opacity .18s ease,transform .18s ease}
+.replay-hazard-surface[data-resolved="true"] .hazard-target-guide{opacity:0!important;box-shadow:none}
+.hazard-inline-feedback--decision>strong{font-size:12px}
+.hazard-inline-feedback--decision>span{font-size:10px;line-height:1.38}
+.hazard-inline-feedback--decision .hazard-inline-coach{margin-top:9px;padding-top:9px}
+.hazard-inline-feedback--decision .hazard-inline-coach small{font-size:8px}
+.hazard-inline-feedback--decision .hazard-inline-coach b{font-size:13px}
+.hazard-inline-feedback--decision .hazard-inline-coach p{font-size:10px;line-height:1.38}
+.hazard-inline-feedback--decision .interactive-replay-decision{margin-top:11px;padding-top:11px}
+.hazard-inline-feedback--decision .interactive-replay-decision h4{margin:5px 0 10px;font-size:15px;line-height:1.28}
+.hazard-inline-feedback--decision .interactive-replay-choices{gap:8px}
+.hazard-inline-feedback--decision .interactive-replay-choices button{min-height:52px;padding:11px 12px;font-size:12px;line-height:1.35}
+.hazard-inline-feedback--decision .interactive-replay-result{margin-top:10px;padding:10px 11px}
+.hazard-inline-feedback--decision .interactive-replay-result p{font-size:10px;line-height:1.42}
+.hazard-inline-feedback--decision .interactive-replay-score{gap:0 10px;margin-top:8px;padding-top:8px}
+.hazard-inline-feedback--decision .interactive-replay-score b{font-size:24px}
+.hazard-inline-feedback--decision .interactive-replay-score span{font-size:10px!important}
+.hazard-inline-feedback--decision .interactive-replay-score small{font-size:10px}
+.interactive-replay-decision{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.16)}.interactive-replay-decision>small{display:block;font-size:8px;font-weight:950;letter-spacing:.15em;color:#55d8ef}.interactive-replay-decision h4{margin:5px 0 8px;font-size:14px;line-height:1.3;color:#fff}.interactive-replay-choices{display:grid;gap:7px}.interactive-replay-choices button{width:100%;min-height:44px;padding:9px 11px;border:1px solid rgba(255,255,255,.22);border-radius:12px;background:rgba(255,255,255,.09);color:#fff;text-align:left;font-size:11px;font-weight:850;line-height:1.3;touch-action:manipulation}.interactive-replay-choices button:active{transform:scale(.99)}.interactive-replay-choices button.wrong{border-color:#ff8e97;background:rgba(117,22,33,.45)}.interactive-replay-choices button.correct{border-color:#65e4ac;background:rgba(20,105,72,.5)}.interactive-replay-choices button[disabled]{opacity:.68}
+.interactive-replay-result{margin-top:9px;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.08)}.interactive-replay-result.success{border:1px solid rgba(101,228,172,.45)}.interactive-replay-result.warning{border:1px solid rgba(255,142,151,.45)}.interactive-replay-result strong{font-size:9px!important;letter-spacing:.11em}.interactive-replay-result p{margin:5px 0;font-size:10px;line-height:1.4;color:rgba(255,255,255,.83)}.interactive-replay-result>small{display:block;font-size:9px;color:rgba(255,255,255,.68)}
+.interactive-replay-score{display:grid;grid-template-columns:auto 1fr;gap:0 8px;align-items:center;margin-top:7px;padding-top:7px;border-top:1px solid rgba(255,255,255,.12)}.interactive-replay-score b{grid-row:1/3;font-size:21px;color:#65e4ac}.interactive-replay-score span{margin:0!important;font-size:9px!important;color:#fff!important}.interactive-replay-score small{font-size:9px;color:rgba(255,255,255,.67)}
+@media(max-width:620px){.interactive-replay-mvp-grid{grid-template-columns:1fr}.interactive-replay-mvp-hub{padding:14px}.hazard-inline-feedback.interactive-active{bottom:1.5%;max-height:88%;width:96%;padding:12px}.hazard-inline-feedback--decision>strong{font-size:11px}.hazard-inline-feedback--decision .interactive-replay-decision h4{font-size:14px}.interactive-replay-choices button{min-height:50px;font-size:12px}.interactive-replay-mvp-stats article{padding:8px}.interactive-replay-mvp-stats b{font-size:18px}}
+
+/* Build 40.8.2 — INTERACTIVE REPLAY UI CLEANUP */
+.hazard-inline-feedback--decision .hazard-inline-coach:first-child{margin-top:0;padding-top:0;border-top:0}

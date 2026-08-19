@@ -2409,7 +2409,7 @@ body.replay-fullscreen-open{
 @media(max-width:430px){.assignment-hero{padding:24px 20px}.assignment-hero>span{font-size:34px}.assignment-card-head{display:block}.assignment-status{display:inline-block;margin-top:10px}.assignment-report{display:block}.assignment-report>div:last-child{margin-top:14px}.assignment-report .btn{width:100%}.assignment-missions-compact{display:block}.assignment-missions-compact .btn{width:100%;margin-top:12px}.assignment-criteria>label{grid-template-columns:44px 1fr}}
 
 
-/* ===== Build 44.0.1 — Real Backend Route Fix ===== */
+/* ===== Build 44.0.2 — Real Backend Two-Stage Check ===== */
 .backend-real-title{align-items:flex-start}
 .backend-real-hero,.backend-real-next{margin:16px 0;padding:30px 26px;border-radius:30px;background:linear-gradient(145deg,#075f63,#0c8d91);color:#fff;display:flex;gap:18px;justify-content:space-between;align-items:flex-start}
 .backend-real-hero>div,.backend-real-next{min-width:0}.backend-real-hero>span{font-size:38px;flex:0 0 auto}

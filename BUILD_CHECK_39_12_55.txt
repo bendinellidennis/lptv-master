@@ -1,0 +1,8 @@
+MALTA DRIVING MASTER — BUILD 39.12.55 — REPLAY195
+Base: Build 39.12.54 Replay190 CARS6.56 VIDEO 1080 FIX.
+New Replay IDs: CARS6.2, CARS6.14, CARS6.16, CARS6.43, CARS7.1.
+15 dedicated photographic JPEG freezes, 600x960 portrait-safe, embedded as data:image/jpeg in REPLAY_FREEZE_EXTERNAL_391255.
+Each new Replay uses three unique freeze keys. Previous Replay mappings preserved.
+Phase 04 uses a dedicated real video source for each new Replay.
+app-3994.js remains below 25 MB.
+No device Audit PASS is claimed; final Koder/iPhone verification remains user-side.

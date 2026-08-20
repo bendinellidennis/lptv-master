@@ -1,0 +1,5 @@
+Build 40.11.12 – CARS4.6 Freeze Fix
+
+Base: 40.11.11 FINAL UNTOUCHED INTERACTIVE REPLAY 144–157
+Change: fixed blank 01–03 freeze phases for CARS4.6 by replacing video-derived freeze mode with 3 embedded inline JPEG freezes (hardBrakingBendSkid_p0/p1/p2).
+Files changed: index.html, replay-scenes.js, app-3994.js

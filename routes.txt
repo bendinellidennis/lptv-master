@@ -1,0 +1,591 @@
+   </div>
+   <div class="dashboard-progress-bars">
+    <div><span>${esc(t('dashboardStudentProgress'))}</span><i><b style="width:${dashboardClamp(student.progress)}%"></b></i><strong>${dashboardClamp(student.progress)}%</strong></div>
+    <div><span>${esc(t('dashboardStudentBridge'))}</span><i><b style="width:${dashboardClamp(student.bridge)}%"></b></i><strong>${dashboardClamp(student.bridge)}%</strong></div>
+    <div><span>${esc(t('dashboardStudentPassport'))}</span><i><b style="width:${dashboardClamp(student.passport)}%"></b></i><strong>${dashboardClamp(student.passport)}%</strong></div>
+   </div>
+   <details><summary>${esc(t('dashboardUpdateStudent'))}</summary>${dashboardStudentFormHtml(student)}</details>
+  </article>`;
+ }).join('');
+}
+function dashboardGroupCardsHtml(){
+ if(!schoolDashboard.groups.length)return `<div class="dashboard-empty"><span>👥</span><p>${esc(t('dashboardNoGroups'))}</p></div>`;
+ return schoolDashboard.groups.map(group=>{
+  const members=schoolDashboard.students.filter(student=>student.groupId===group.id).length;
+  return `<article class="dashboard-group-card ${group.demo?'demo-record':''}">
+   <div>${group.demo?`<span class="badge demo-school">${esc(t('dashboardDemoBadge'))}</span>`:''}<h3>${esc(group.name)}</h3><p>${esc(schoolLanguageLabel(group.language))} • ${esc(schoolScheduleLabel(group.schedule))}</p></div>
+   <strong>${members} ${esc(t('dashboardMembers'))}</strong>
+   ${group.notes?`<p>${esc(group.notes)}</p>`:''}
+   <button class="btn secondary danger" data-remove-dashboard-group="${esc(group.id)}">${esc(t('dashboardRemoveGroup'))}</button>
+  </article>`;
+ }).join('');
+}
+function dashboardInviteCardsHtml(){
+ if(!schoolDashboard.invites.length)return `<div class="dashboard-empty"><span>✉</span><p>${esc(t('dashboardNoInvites'))}</p></div>`;
+ return schoolDashboard.invites.map(invite=>{
+  const group=dashboardGroupById(invite.groupId);
+  return `<article class="dashboard-invite-card">
+   <div><span>${esc(t('dashboardCreated'))}: ${esc(dashboardDate(invite.createdAt))}</span><strong>${esc(invite.code)}</strong><small>${esc(group?group.name:t('dashboardNoGroup'))}</small></div>
+   <div class="dashboard-invite-actions">
+    <button class="btn" data-share-dashboard-invite="${esc(invite.id)}">↗ ${esc(t('dashboardShareInvite'))}</button>
+    <button class="btn secondary" data-copy-dashboard-invite="${esc(invite.id)}">⧉ ${esc(t('dashboardCopyInvite'))}</button>
+    <button class="btn secondary danger" data-remove-dashboard-invite="${esc(invite.id)}">${esc(t('dashboardRemoveInvite'))}</button>
+   </div>
+  </article>`;
+ }).join('');
+}
+function dashboardCollectStudent(form){
+ const value=name=>form.querySelector(`[data-student-field="${name}"]`)?.value||'';
+ return {
+  name:cleanProfileValue(value('name'),100),
+  email:cleanProfileValue(value('email'),120).toLowerCase(),
+  course:value('course')==='b'?'b':'lptv',
+  groupId:value('groupId'),
+  progress:dashboardClamp(value('progress')),
+  bridge:dashboardClamp(value('bridge')),
+  passport:dashboardClamp(value('passport')),
+  status:['active','paused','ready','completed'].includes(value('status'))?value('status'):'active',
+  notes:cleanProfileValue(value('notes'),1000)
+ };
+}
+function saveDashboardStudent(id){
+ const form=screen.querySelector(`[data-student-form="${CSS.escape(id)}"]`);
+ if(!form)return;
+ const data=dashboardCollectStudent(form);
+ if(!data.name||!validProfileEmail(data.email))return toast(t('dashboardStudentRequired'));
+ if(id==='new'){
+  schoolDashboard.students.unshift({
+   id:schoolDashboardId('student'),
+   ...data,
+   demo:false,
+   createdAt:new Date().toISOString(),
+   updatedAt:new Date().toISOString()
+  });
+ }else{
+  const student=dashboardStudentById(id);
+  if(!student)return;
+  Object.assign(student,data,{updatedAt:new Date().toISOString()});
+ }
+ dashboardSave();
+ toast(t('dashboardStudentSaved'));
+ render();
+}
+function removeDashboardStudent(id){
+ if(!confirm(t('dashboardRemoveStudentConfirm')))return;
+ schoolDashboard.students=schoolDashboard.students.filter(student=>student.id!==id);
+ dashboardSave();
+ toast(t('dashboardStudentRemoved'));
+ render();
+}
+function saveDashboardGroup(){
+ const name=cleanProfileValue($('#dashboardGroupName')?.value,100);
+ if(!name)return toast(t('dashboardGroupRequired'));
+ schoolDashboard.groups.unshift({
+  id:schoolDashboardId('group'),
+  name,
+  language:$('#dashboardGroupLanguage')?.value||'en',
+  schedule:$('#dashboardGroupSchedule')?.value||'day',
+  notes:cleanProfileValue($('#dashboardGroupNotes')?.value,600),
+  demo:false,
+  createdAt:new Date().toISOString()
+ });
+ dashboardSave();
+ toast(t('dashboardGroupSaved'));
+ render();
+}
+function removeDashboardGroup(id){
+ if(!confirm(t('dashboardRemoveGroupConfirm')))return;
+ schoolDashboard.groups=schoolDashboard.groups.filter(group=>group.id!==id);
+ schoolDashboard.students.forEach(student=>{
+  if(student.groupId===id)student.groupId='';
+ });
+ schoolDashboard.invites=schoolDashboard.invites.filter(invite=>invite.groupId!==id);
+ dashboardSave();
+ toast(t('dashboardGroupRemoved'));
+ render();
+}
+function createDashboardInvite(){
+ const groupId=$('#dashboardInviteGroup')?.value||'';
+ const code=`MDM-${Math.random().toString(36).slice(2,8).toUpperCase()}`;
+ schoolDashboard.invites.unshift({
+  id:schoolDashboardId('invite'),
+  code,
+  groupId,
+  createdAt:new Date().toISOString()
+ });
+ dashboardSave();
+ toast(t('dashboardInviteCreated'));
+ render();
+}
+function dashboardInviteMessage(invite){
+ const group=dashboardGroupById(invite.groupId);
+ return [
+  t('dashboardInviteText'),
+  '',
+  `${t('schoolName')}: ${dashboardSchoolName()}`,
+  `${t('dashboardInviteGroup')}: ${group?group.name:t('dashboardNoGroup')}`,
+  `${t('dashboardInvites')}: ${invite.code}`,
+  '',
+  t('dashboardInviteWarning'),
+  `Build ${BUILD_VERSION}`
+ ].join('\n');
+}
+async function shareDashboardInvite(id){
+ const invite=dashboardInviteById(id);
+ if(!invite)return;
+ await shareTextReport(t('dashboardInviteText'),dashboardInviteMessage(invite),t('dashboardInviteCopied'));
+}
+async function copyDashboardInvite(id){
+ const invite=dashboardInviteById(id);
+ if(!invite)return;
+ await copyTextSafe(dashboardInviteMessage(invite),t('dashboardInviteCopied'));
+}
+function removeDashboardInvite(id){
+ schoolDashboard.invites=schoolDashboard.invites.filter(invite=>invite.id!==id);
+ dashboardSave();
+ render();
+}
+function dashboardSchoolReport(){
+ const profile=dashboardProfileCompletion();
+ const stats=dashboardStats();
+ const studentRows=schoolDashboard.students.map(student=>{
+  const group=dashboardGroupById(student.groupId);
+  return `- ${student.name} | ${dashboardCourseLabel(student.course)} | ${group?group.name:t('dashboardNoGroup')} | ${dashboardStudentAverage(student)}% | ${dashboardStatusLabel(student.status)}`;
+ });
+ return [
+  'MALTA DRIVING MASTER — SCHOOL PARTNER DASHBOARD',
+  '',
+  `${t('schoolName')}: ${dashboardSchoolName()}`,
+  `${t('dashboardProfileCompletion')}: ${profile.pct}%`,
+  `${t('dashboardVerification')}: ${t('dashboardNotVerified')}`,
+  `${t('dashboardPlan')}: ${schoolPartnerDraft.plan||'basic'}`,
+  `${t('dashboardStudents')}: ${stats.students}`,
+  `${t('dashboardGroups')}: ${stats.groups}`,
+  `${t('dashboardInvites')}: ${stats.invites}`,
+  `${t('dashboardAverage')}: ${stats.average}%`,
+  '',
+  `${t('dashboardStudents')}:`,
+  ...(studentRows.length?studentRows:['—']),
+  '',
+  `${t('dashboardSchoolNotes')}: ${schoolDashboard.schoolNotes||'—'}`,
+  '',
+  t('schoolDashboardNotice'),
+  `Build ${BUILD_VERSION} • ${new Date().toLocaleString()}`
+ ].join('\n');
+}
+function dashboardCsvText(){
+ const quote=value=>`"${String(value??'').replaceAll('"','""')}"`;
+ const header=[
+  'Name','Email','Course','Group','Preparation','Bridge','Passport',
+  'Average','Status','Notes','Demo','Created','Updated'
+ ];
+ const rows=schoolDashboard.students.map(student=>{
+  const group=dashboardGroupById(student.groupId);
+  return [
+   student.name,student.email,dashboardCourseLabel(student.course),
+   group?group.name:'',dashboardClamp(student.progress),
+   dashboardClamp(student.bridge),dashboardClamp(student.passport),
+   dashboardStudentAverage(student),dashboardStatusLabel(student.status),
+   student.notes||'',student.demo?'yes':'no',
+   student.createdAt||'',student.updatedAt||''
+  ].map(quote).join(',');
+ });
+ return [header.map(quote).join(','),...rows].join('\n');
+}
+async function exportDashboardCsv(){
+ const csv=dashboardCsvText();
+ const filename='malta-driving-master-students.csv';
+ try{
+  const file=new File([csv],filename,{type:'text/csv;charset=utf-8'});
+  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+   await navigator.share({files:[file],title:t('dashboardExportCsv')});
+   toast(t('dashboardCsvShared'));
+   return;
+  }
+ }catch(error){
+  if(error&&error.name==='AbortError')return;
+ }
+ await copyTextSafe(csv,t('dashboardCsvCopied'));
+}
+function loadDashboardDemo(){
+ if(!confirm(t('dashboardDemoConfirm')))return;
+ const firstGroupId=schoolDashboardId('group');
+ const secondGroupId=schoolDashboardId('group');
+ const now=new Date().toISOString();
+ schoolDashboard.groups.push(
+  {id:firstGroupId,name:'Demo LPTV Evening',language:'it',schedule:'evening',notes:'Fictitious demonstration group',demo:true,createdAt:now},
+  {id:secondGroupId,name:'Demo Weekend Bridge',language:'en',schedule:'weekend',notes:'Fictitious demonstration group',demo:true,createdAt:now}
+ );
+ schoolDashboard.students.push(
+  {id:schoolDashboardId('student'),name:'Demo Student One',email:'demo.one@example.invalid',course:'lptv',groupId:firstGroupId,progress:72,bridge:58,passport:35,status:'active',notes:'Fictitious record',demo:true,createdAt:now,updatedAt:now},
+  {id:schoolDashboardId('student'),name:'Demo Student Two',email:'demo.two@example.invalid',course:'lptv',groupId:secondGroupId,progress:88,bridge:84,passport:70,status:'ready',notes:'Fictitious record',demo:true,createdAt:now,updatedAt:now}
+ );
+ dashboardSave();
+ toast(t('dashboardDemoLoaded'));
+ render();
+}
+function clearSchoolDashboard(){
+ if(!confirm(t('dashboardClearConfirm')))return;
+ schoolDashboard=JSON.parse(JSON.stringify(DEFAULT_SCHOOL_DASHBOARD));
+ localStorage.removeItem(SCHOOL_DASHBOARD_KEY);
+ toast(t('dashboardCleared'));
+ render();
+}
+function saveDashboardNotes(){
+ schoolDashboard.schoolNotes=cleanProfileValue($('#dashboardSchoolNotes')?.value,3000);
+ dashboardSave();
+ toast(t('dashboardNotesSaved'));
+}
+function bindSchoolDashboard(){
+ screen.querySelectorAll('[data-save-dashboard-student]').forEach(button=>{
+  button.onclick=()=>saveDashboardStudent(button.dataset.saveDashboardStudent);
+ });
+ screen.querySelectorAll('[data-remove-dashboard-student]').forEach(button=>{
+  button.onclick=()=>removeDashboardStudent(button.dataset.removeDashboardStudent);
+ });
+ screen.querySelectorAll('[data-remove-dashboard-group]').forEach(button=>{
+  button.onclick=()=>removeDashboardGroup(button.dataset.removeDashboardGroup);
+ });
+ screen.querySelectorAll('[data-share-dashboard-invite]').forEach(button=>{
+  button.onclick=()=>shareDashboardInvite(button.dataset.shareDashboardInvite);
+ });
+ screen.querySelectorAll('[data-copy-dashboard-invite]').forEach(button=>{
+  button.onclick=()=>copyDashboardInvite(button.dataset.copyDashboardInvite);
+ });
+ screen.querySelectorAll('[data-remove-dashboard-invite]').forEach(button=>{
+  button.onclick=()=>removeDashboardInvite(button.dataset.removeDashboardInvite);
+ });
+ $('#dashboardSaveGroup').onclick=saveDashboardGroup;
+ $('#dashboardCreateInvite').onclick=createDashboardInvite;
+ $('#dashboardShareReport').onclick=()=>shareTextReport(t('dashboardReports'),dashboardSchoolReport(),t('dashboardReportCopied'));
+ $('#dashboardCopyReport').onclick=()=>copyTextSafe(dashboardSchoolReport(),t('dashboardReportCopied'));
+ $('#dashboardExportCsv').onclick=exportDashboardCsv;
+ $('#dashboardLoadDemo').onclick=loadDashboardDemo;
+ $('#dashboardClear').onclick=clearSchoolDashboard;
+ $('#dashboardSaveNotes').onclick=saveDashboardNotes;
+}
+
+function partnerSelectedValues(selector){
+ return [...screen.querySelectorAll(selector)].filter(input=>input.checked).map(input=>input.value);
+}
+function collectSchoolPartnerDraft(){
+ return {
+  schoolName:cleanProfileValue($('#partnerSchoolName')?.value,100),
+  permit:cleanProfileValue($('#partnerPermit')?.value,100),
+  email:cleanProfileValue($('#partnerEmail')?.value,120).toLowerCase(),
+  phone:cleanProfileValue($('#partnerPhone')?.value,60),
+  area:$('#partnerArea')?.value||'central',
+  languages:partnerSelectedValues('[data-partner-language]'),
+  services:partnerSelectedValues('[data-partner-service]'),
+  prices:cleanProfileValue($('#partnerPrices')?.value,1000),
+  availability:cleanProfileValue($('#partnerAvailability')?.value,600),
+  description:cleanProfileValue($('#partnerDescription')?.value,1200),
+  plan:$('#partnerPlan')?.value||'basic',
+  consent:Boolean($('#partnerConsent')?.checked)
+ };
+}
+function validateSchoolPartnerDraft(draft){
+ if(!draft.schoolName||!draft.permit||!validProfileEmail(draft.email)||!draft.consent)return t('partnerRequired');
+ return '';
+}
+function saveSchoolPartnerDraft(){
+ schoolPartnerDraft=collectSchoolPartnerDraft();
+ save(SCHOOL_PARTNER_KEY,schoolPartnerDraft);
+ toast(t('partnerDraftSaved'));
+}
+function schoolPartnerPayload(){
+ const draft=collectSchoolPartnerDraft();
+ const error=validateSchoolPartnerDraft(draft);
+ if(error){toast(error);return null}
+ schoolPartnerDraft=draft;
+ save(SCHOOL_PARTNER_KEY,schoolPartnerDraft);
+ const subject=`Malta Driving Master - School Partner - ${draft.schoolName}`;
+ const body=[
+  'RICHIESTA SCHOOL PARTNER',
+  '',
+  `Scuola: ${draft.schoolName}`,
+  `Autorizzazione/riferimento: ${draft.permit}`,
+  `E-mail: ${draft.email}`,
+  `Telefono: ${draft.phone||'Non indicato'}`,
+  `Zona: ${schoolAreaLabel(draft.area)}`,
+  `Lingue: ${draft.languages.map(schoolLanguageLabel).join(', ')||'Non indicate'}`,
+  `Servizi: ${draft.services.map(schoolServiceLabel).join(', ')||'Non indicati'}`,
+  `Piano richiesto: ${draft.plan}`,
+  '',
+  `Prezzi/pagamenti: ${draft.prices||'Non indicati'}`,
+  `Disponibilità: ${draft.availability||'Non indicata'}`,
+  `Descrizione: ${draft.description||'Non indicata'}`,
+  '',
+  `Dichiarazione accettata: ${draft.consent?'Sì':'No'}`,
+  `Build ${BUILD_VERSION} • ${new Date().toLocaleString()}`
+ ].join('\n');
+ return {subject,body};
+}
+async function shareSchoolPartnerApplication(){
+ const payload=schoolPartnerPayload();
+ if(!payload)return;
+ await shareTextReport(payload.subject,`A: ${ADMIN_EMAIL}\n\n${payload.body}`,t('requestPrepared'));
+}
+function openSchoolPartnerGmail(){
+ const payload=schoolPartnerPayload();
+ if(!payload)return;
+ const url=`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(ADMIN_EMAIL)}&su=${encodeURIComponent(payload.subject)}&body=${encodeURIComponent(payload.body)}`;
+ const opened=window.open(url,'_blank','noopener,noreferrer');
+ if(!opened)window.location.href=url;
+}
+function openSchoolPartnerMail(){
+ const payload=schoolPartnerPayload();
+ if(!payload)return;
+ window.location.href=`mailto:${ADMIN_EMAIL}?subject=${encodeURIComponent(payload.subject)}&body=${encodeURIComponent(payload.body)}`;
+}
+async function copySchoolPartnerApplication(){
+ const payload=schoolPartnerPayload();
+ if(!payload)return;
+ await copyTextSafe(`A: ${ADMIN_EMAIL}\nOggetto: ${payload.subject}\n\n${payload.body}`,t('requestPrepared'));
+}
+function bindSchoolPartner(){
+ $('#saveSchoolDraft').onclick=saveSchoolPartnerDraft;
+ $('#shareSchoolPartner').onclick=shareSchoolPartnerApplication;
+ $('#gmailSchoolPartner').onclick=openSchoolPartnerGmail;
+ $('#mailSchoolPartner').onclick=openSchoolPartnerMail;
+ $('#copySchoolPartner').onclick=copySchoolPartnerApplication;
+}
+
+
+let premiumSplashSeen=Boolean(load(SPLASH_KEY,false));
+function premiumUserName(){
+ const name=[userProfile.firstName,userProfile.lastName].filter(Boolean).join(' ');
+ return name||t('premiumWelcomeBack');
+}
+function shouldShowPremiumSplash(){
+ return onboarding.completed&&!premiumSplashSeen&&route.name!=='onboarding'&&route.name!=='privacycenter';
+}
+function dismissPremiumSplash(){
+ premiumSplashSeen=true;
+ save(SPLASH_KEY,true);
+ document.body.classList.remove('premium-splash-open');
+ const splash=$('#premiumSplash');
+ if(!splash)return;
+ splash.classList.add('closing');
+ setTimeout(()=>splash.remove(),430);
+}
+function replayPremiumSplash(){
+ premiumSplashSeen=false;
+ save(SPLASH_KEY,false);
+ render();
+}
+function premiumSplashHtml(){
+ if(!shouldShowPremiumSplash())return '';
+ return `<div id="premiumSplash" class="premium-splash">
+  <button class="premium-skip" id="premiumSkip">${esc(t('premiumSkip'))}</button>
+  <div class="premium-orbit orbit-one"></div>
+  <div class="premium-orbit orbit-two"></div>
+  <div class="premium-splash-content">
+   <div class="premium-logo-mark"><span>M</span><b>D</b><em>M</em></div>
+   <p class="premium-eyebrow">MALTA DRIVING MASTER</p>
+   <h1>${esc(t('premiumTagline'))}</h1>
+   <div class="premium-loader"><span></span></div>
+   <p class="premium-loading-text">${esc(t('premiumLoading'))}</p>
+   <button class="premium-enter" id="premiumEnter">${esc(t('premiumEnter'))}</button>
+   <small>${esc(t('premiumNoDelay'))}</small>
+  </div>
+ </div>`;
+}
+
+
+function coachViewHtml(){
+ coachEnsureMission();
+ const insight=coachInsightData();
+ const m=insight.metrics;
+ const achievements=coachAchievementData();
+ const mission=coachMissionItems();
+ const missionDone=Object.values(coachState.missionSteps).filter(Boolean).length;
+ const trendKey=m.trend.state==='up'?'coachTrendUp':m.trend.state==='down'?'coachTrendDown':'coachTrendStable';
+ const componentRows=[
+  ['coachAccuracy',m.accuracy],
+  ['coachCoverage',m.coverage],
+  ['coachExam',m.examScore],
+  ['coachBridge',m.bridgeScore],
+  ['coachConsistency',m.consistency],
+  ['coachReview',m.review]
+ ];
+ return [
+  `<div class="section-title"><div><h2>🧠 ${esc(t('mdmCoach'))}</h2><p>${esc(t('mdmCoachSub'))}</p></div><span class="badge official">${esc(t('coachFoundation'))}</span></div>`,
+  `<div class="coach-offline-banner"><span>🔒</span><div><strong>${esc(t('coachOffline'))}</strong><p>${esc(t('coachOfflineText'))}</p></div></div>`,
+  `<button class="coach-recovery-launch" data-go="recoverycoach"><span>🩺</span><div><strong>${esc(t('coachRecovery'))}</strong><small>${esc(t('coachRecoverySub'))}</small></div><b>›</b></button>`,
+  `<button class="coach-recovery-launch zero-launch" data-go="zeroerror"><span>🚦</span><div><strong>${esc(t('zeroErrorMode'))}</strong><small>${esc(t('zeroErrorSub'))}</small></div><b>›</b></button>`,
+  `<section class="coach-hero"><div class="coach-score-ring" style="--coach-score:${m.confidence}"><div><strong>${m.confidence}%</strong><span>${esc(t('confidenceScore'))}</span></div></div><div><span>${esc(t('confidenceMeaning'))}</span><h3>${esc(t(coachConfidenceLabel(m.confidence)))}</h3><p>${esc(t(trendKey))}</p><small>${m.points} ${esc(t('coachDataPoints'))}</small></div></section>`,
+  `<div class="coach-prediction-grid"><article><span>${esc(t('predictionToday'))}</span><strong>${m.todayChance}%</strong></article><article><span>${esc(t('predictionWeek'))}</span><strong>${m.weekChance}%</strong></article></div>`,
+  `<p class="coach-disclaimer">${esc(t('predictionDisclaimer'))}</p>`,
+  `<div class="coach-insight-grid"><article class="card"><span>${esc(t('coachWeakness'))}</span><h3>${insight.weakness.topic.icon} ${esc(t(insight.weakness.topic.title))}</h3><p>${insight.weakness.values.accuracy}% • ${insight.weakness.values.coverage}%</p></article><article class="card"><span>${esc(t('coachStrength'))}</span><h3>${insight.strength.topic.icon} ${esc(t(insight.strength.topic.title))}</h3><p>${insight.strength.values.accuracy}% • ${insight.strength.values.coverage}%</p></article></div>`,
+  `<div class="card coach-next-card"><span>${esc(t('coachNextMove'))}</span><h3>${insight.next.icon} ${esc(t(insight.next.title))}</h3><p>${esc(t(insight.next.reason))}</p><button class="btn" data-go="${esc(insight.next.route)}">${esc(t('roadmapDoNow'))}</button></div>`,
+  `<div class="card coach-components-card"><h3>${esc(t('coachScoreComponents'))}</h3><div class="coach-component-list">${componentRows.map(row=>`<div><span>${esc(t(row[0]))}</span><i><b style="width:${row[1]}%"></b></i><strong>${row[1]}%</strong></div>`).join('')}</div><details><summary>${esc(t('coachExplain'))}</summary><p>${esc(t('coachExplainText'))}</p></details></div>`,
+  `<div class="section-title"><div><h2>${esc(t('dailyMission'))}</h2><p>${esc(t('dailyMissionSub'))}</p></div><strong>${missionDone}/3</strong></div>`,
+  `<div class="coach-mission-card ${coachState.missionDone?'complete':''}">${mission.map(item=>`<article><button class="coach-mission-check ${coachState.missionSteps[item.id]?'done':''}" data-coach-mission="${item.id}">${coachState.missionSteps[item.id]?'✓':'○'}</button><span>${item.icon}</span><div><strong>${esc(t(item.label))}</strong><small>${esc(item.detail)}</small></div><button class="coach-mission-open" data-go="${item.route}">›</button></article>`).join('')}<div class="coach-mission-footer"><span>${esc(t('missionProgress'))}: ${missionDone}/3</span>${coachState.missionDone?`<strong>🎉 ${esc(t('missionComplete'))}</strong>`:''}</div></div>`,
+  `<button class="text-danger-button coach-reset" id="resetCoachMission">${esc(t('coachReset'))}</button>`,
+  `<div class="section-title"><div><h2>${esc(t('coachAchievements'))}</h2><p>${esc(t('coachAchievementsSub'))}</p></div></div>`,
+  `<div class="coach-achievement-grid">${achievements.map(item=>`<article class="${item.done?'done':'locked'}"><span>${item.icon}</span><strong>${esc(t(item.label))}</strong><small>${item.done?'✓':esc(t('achievementLocked'))}</small></article>`).join('')}</div>`
+ ].join('');
+}
+function investorPreviewViewHtml(){
+ return [
+  `<div class="section-title"><div><h2>💼 ${esc(t('investorPreview'))}</h2><p>${esc(t('investorPreviewSub'))}</p></div><span class="badge partner-badge">Build 18</span></div>`,
+  `<section class="investor-hero"><div class="investor-logo">MDM</div><div><span>MALTA DRIVING MASTER</span><h1>${esc(t('premiumTagline'))}</h1><p>${esc(t('investorStatusText'))}</p></div></section>`,
+  `<div class="investor-metric-grid"><article><strong>250</strong><span>${esc(t('investorActiveQuestions'))}</span></article><article><strong>12+</strong><span>${esc(t('investorCoreModules'))}</span></article><article><strong>3</strong><span>${esc(t('investorLanguages'))}</span></article><article><strong>2</strong><span>${esc(t('investorUserTypes'))}</span></article></div>`,
+  `<div class="investor-story-grid"><article><span>01</span><h3>${esc(t('investorProblem'))}</h3><p>${esc(t('investorProblemText'))}</p></article><article><span>02</span><h3>${esc(t('investorSolution'))}</h3><p>${esc(t('investorSolutionText'))}</p></article><article><span>03</span><h3>${esc(t('investorDifferentiator'))}</h3><p>${esc(t('investorDifferentiatorText'))}</p></article><article><span>04</span><h3>${esc(t('investorScale'))}</h3><p>${esc(t('investorScaleText'))}</p></article></div>`,
+  `<div class="investor-value-grid"><article><span>🎓</span><h3>${esc(t('investorStudentValue'))}</h3><p>${esc(t('investorStudentPoints'))}</p></article><article><span>🏢</span><h3>${esc(t('investorSchoolValue'))}</h3><p>${esc(t('investorSchoolPoints'))}</p></article></div>`,
+  `<div class="card investor-architecture-card"><h3>${esc(t('investorArchitecture'))}</h3><p>${esc(t('investorArchitectureText'))}</p></div>`,
+  `<div class="investor-actions"><button class="btn" id="shareInvestorPreview">↗ ${esc(t('investorShare'))}</button><button class="btn secondary" id="copyInvestorPreview">⧉ ${esc(t('investorCopy'))}</button></div>`
+ ].join('');
+}
+
+const views={
+ errorreplay:()=>errorReplayViewHtml(),
+ cloudready:()=>cloudReadyViewHtml(),
+ missions:()=>missionViewHtml(),
+ aiinstructor:()=>aiInstructorViewHtml(),
+ instructorportal:()=>instructorPortalViewHtml(),
+ schoolportal2:()=>schoolPortalViewHtml(),
+ zeroerror:()=>zeroErrorViewHtml(),
+ examday:()=>examDayViewHtml(),
+ recoverycoach:()=>recoveryViewHtml(),
+ coach:()=>coachViewHtml(),
+ investorpreview:()=>investorPreviewViewHtml(),
+ onboarding:()=>`<section class="onboarding-shell"><div class="onboarding-brand"><div class="onboarding-logo">MDM</div><span>${esc(t('onboardingLocalOnly'))}</span><h1>${esc(t('onboardingWelcome'))}</h1><p>${esc(t('onboardingWelcomeSub'))}</p></div><div class="onboarding-panel"><h2>${esc(t('onboardingChooseRole'))}</h2><div class="onboarding-role-grid"><label data-onboarding-role class="${onboarding.role==='student'?'selected':''}"><input type="radio" name="onboardingRole" value="student" ${onboarding.role==='student'?'checked':''}><span>🎓</span><strong>${esc(t('onboardingStudent'))}</strong><small>${esc(t('onboardingStudentSub'))}</small></label><label data-onboarding-role class="${onboarding.role==='school'?'selected':''}"><input type="radio" name="onboardingRole" value="school" ${onboarding.role==='school'?'checked':''}><span>🏢</span><strong>${esc(t('onboardingSchool'))}</strong><small>${esc(t('onboardingSchoolSub'))}</small></label><label data-onboarding-role class="${onboarding.role==='both'?'selected':''}"><input type="radio" name="onboardingRole" value="both" ${onboarding.role==='both'?'checked':''}><span>🤝</span><strong>${esc(t('onboardingBoth'))}</strong><small>${esc(t('onboardingBothSub'))}</small></label></div><div class="onboarding-data-card"><div><span>🔒</span><div><h3>${esc(t('onboardingDataTitle'))}</h3><p>${esc(t('onboardingDataText'))}</p></div></div><ul><li>${esc(t('onboardingNoTracking'))}</li><li>${esc(t('privacyNoAutomaticUpload'))}</li><li>${esc(t('onboardingOfficialWarning'))}</li></ul></div><div class="onboarding-consents"><label><input type="checkbox" id="onboardingStorage" ${onboarding.acceptedLocalStorage?'checked':''}><span>${esc(t('onboardingRequiredStorage'))} *</span></label><label><input type="checkbox" id="onboardingTerms" ${onboarding.acceptedTerms?'checked':''}><span>${esc(t('onboardingTerms'))} *</span></label><label class="optional"><input type="checkbox" id="onboardingUpdates" ${onboarding.optionalUpdates?'checked':''}><span>${esc(t('onboardingUpdates'))}</span></label></div><button class="btn onboarding-continue" id="completeOnboarding">${esc(t('onboardingContinue'))}</button><p class="onboarding-privacy-link"><button data-go="privacycenter">${esc(t('privacyOpenCenter'))}</button></p></div></section>`,
+ privacycenter:()=>{const summary=privacyDataSummary();const cards=[['privacyProfileData',summary.profileCount,'privacyProfileComplete'],['privacyStudyData',summary.studyCount,'privacyStudyRecords'],['privacyPassportData',summary.passportCount,'privacyPassportChecks'],['privacyRoadmapData',personalRoadmap.targetDate?1:0,'privacyItems'],['privacySchoolData',summary.schoolCount,'privacySchoolRecords'],['privacyPreferencesData',Object.values(privacyPreferences).filter(Boolean).length,'privacyItems']];return `<div class="section-title"><div><h2>🔒 ${esc(t('privacyCenter'))}</h2><p>${esc(t('privacyCenterSub'))}</p></div><span class="privacy-checked">${esc(t('privacyChecked'))}: ${PRIVACY_INFORMATION_CHECKED}</span></div><div class="privacy-local-banner"><span>📱</span><div><strong>${esc(t('privacyStoredLocally'))}</strong><p>${esc(t('privacySentOnlyByAction'))}. ${esc(t('privacyNoAutomaticUpload'))}.</p></div></div><div class="privacy-summary-grid">${cards.map(([label,count,unit])=>`<article><span>${esc(t(label))}</span><strong>${count}</strong><small>${esc(t(unit))}</small></article>`).join('')}</div><div class="card privacy-explain-card"><h3>${esc(t('privacyStorageNecessary'))}</h3><p>${esc(t('privacyStorageExplanation'))}</p><div class="privacy-role-row"><span>${esc(t('privacyRole'))}</span><strong>${esc(onboardingRoleLabel(onboarding.role))}</strong></div><button class="btn secondary" id="privacyRestartOnboarding">${esc(t('privacyRestartOnboarding'))}</button></div><div class="card privacy-export-card"><h3>${esc(t('privacyExportTitle'))}</h3><p>${esc(t('privacyExportText'))}</p><button class="btn" id="privacyExportAll">${esc(t('privacyExportAll'))}</button></div><div class="card privacy-preferences-card"><h3>${esc(t('privacyConsentSettings'))}</h3><p>${esc(t('privacyNotActive'))}</p><label><input type="checkbox" id="privacyAnalytics" ${privacyPreferences.analytics?'checked':''}><span>${esc(t('privacyAnalytics'))}</span></label><label><input type="checkbox" id="privacyMarketing" ${privacyPreferences.marketing?'checked':''}><span>${esc(t('privacyMarketing'))}</span></label><button class="btn secondary" id="privacySavePreferences">${esc(t('privacySavePreferences'))}</button></div><div class="card privacy-delete-card"><h3>${esc(t('privacyDeleteTitle'))}</h3><p>${esc(t('privacyDeleteText'))}</p><div class="privacy-delete-grid"><button data-delete-privacy="study">${esc(t('privacyDeleteStudy'))}</button><button data-delete-privacy="profile">${esc(t('privacyDeleteProfile'))}</button><button data-delete-privacy="passport">${esc(t('privacyDeletePassport'))}</button><button data-delete-privacy="roadmap">${esc(t('privacyDeleteRoadmap'))}</button><button data-delete-privacy="school">${esc(t('privacyDeleteSchool'))}</button></div><button class="btn danger privacy-delete-all" id="privacyDeleteAll">${esc(t('privacyDeleteAll'))}</button></div><div class="card privacy-request-card"><h3>${esc(t('privacyRequestTitle'))}</h3><p>${esc(t('privacyRequestText'))}</p><div class="privacy-request-actions"><button class="btn secondary" data-privacy-request="access">${esc(t('privacyRequestAccess'))}</button><button class="btn secondary" data-privacy-request="correction">${esc(t('privacyRequestCorrection'))}</button><button class="btn secondary" data-privacy-request="erasure">${esc(t('privacyRequestErasure'))}</button></div><p class="privacy-rights">${esc(t('privacyRightsNotice'))}</p><strong>${esc(t('privacyContactController'))}: ${esc(ADMIN_EMAIL)}</strong></div><div class="privacy-legal-note">${esc(t('privacyLegalDraft'))}</div>`},
+
+ home:()=>{const day=dailyStats(),review=reviewStats(),next=roadmapNextAction();return `${profileReminderHtml()}<section class="premium-home-welcome"><div><span>${esc(t('premiumWelcomeBack'))}</span><h2>${esc(premiumUserName())}</h2><p>${esc(t('premiumTrust'))}</p></div><div class="premium-home-badge">MDM</div></section><section class="premium-focus-card"><div><span>${esc(t('premiumTodayFocus'))}</span><h3>${next.icon} ${esc(t(next.title))}</h3><p>${esc(t(next.reason))}</p></div><button class="btn" data-go="${esc(next.route)}">${esc(t('premiumContinue'))}</button></section><section class="hero"><h1>${esc(t('brandSlogan'))}</h1><p>${esc(t('welcome'))}</p><div class="malta-line"><span class="malta-dot"></span><span>Malta • English • Italiano • Malti</span></div></section><button class="daily-banner ${day.complete?'complete':''}" data-go="dailysetup"><div class="daily-ring" style="--daily:${Math.round(day.done/day.goal*100)}"><strong>${day.done}/${day.goal}</strong></div><div><span>${esc(t('today'))}</span><h2>${esc(day.complete?t('dailyComplete'):t('dailyPlan'))}</h2><p>${esc(t('dailyPlanSub'))}</p></div><strong class="daily-streak">🔥 ${day.streak}</strong></button><div class="section-title"><div><h2>${esc(t('continue'))}</h2><p>${esc(t('database'))}: ${Q.length} ${esc(t('questions'))}</p></div><span class="badge official">${esc(t('official'))}</span></div><section class="grid"><button class="home-card" data-go="lptv"><span class="card-icon">🚘</span><div><h3>${esc(t('lptv'))}</h3><p>${esc(t('lptvSub'))}</p></div></button><button class="home-card guided-home" data-go="studysetup"><span class="card-icon">📘</span><div><h3>${esc(t('guidedStudy'))}</h3><p>${esc(t('guidedStudyDetail'))}</p></div></button><button class="home-card review-home" data-go="reviewsetup"><span class="card-icon">⏳</span><div><h3>${esc(t('scheduledReview'))}</h3><p>${review.due} ${esc(t('dueNow'))}</p></div></button><button class="home-card library-home" data-go="questionlibrary"><span class="card-icon">🗂️</span><div><h3>${esc(t('questionLibrary'))}</h3><p>${esc(t('questionLibrarySub'))}</p></div></button><button class="home-card bridge-home" data-go="bridgesetup"><span class="card-icon">🌉</span><div><h3>${esc(t('bridgeTest'))}</h3><p>${esc(t('bridgeTestSub'))}</p></div></button><button class="home-card coach-home" data-go="coach"><span class="card-icon">🧠</span><div><h3>${esc(t('mdmCoach'))}</h3><p>${esc(t('mdmCoachSub'))}</p></div></button><button class="home-card recovery-home" data-go="recoverycoach"><span class="card-icon">🩺</span><div><h3>${esc(t('coachRecovery'))}</h3><p>${esc(t('coachRecoverySub'))}</p></div></button><button class="home-card exam-day-home" data-go="examday"><span class="card-icon">🎯</span><div><h3>${esc(t('examDayMode'))}</h3><p>${esc(t('examDayModeSub'))}</p></div></button><button class="home-card zero-error-home" data-go="zeroerror"><span class="card-icon">🚦</span><div><h3>${esc(t('zeroErrorMode'))}</h3><p>${esc(t('zeroErrorSub'))}</p></div></button><button class="home-card roadmap-home" data-go="roadmap"><span class="card-icon">🗺️</span><div><h3>${esc(t('personalRoadmap'))}</h3><p>${esc(t('personalRoadmapSub'))}</p></div></button><button class="home-card passport-home" data-go="passport"><span class="card-icon">🧭</span><div><h3>${esc(t('lptvPassport'))}</h3><p>${esc(t('lptvPassportSub'))}</p></div></button><button class="home-card school-home" data-go="schools"><span class="card-icon">🏫</span><div><h3>${esc(t('findSchool'))}</h3><p>${esc(t('findSchoolSub'))}</p></div></button><button class="home-card school-partner-home" data-go="schoolpartner"><span class="card-icon">🤝</span><div><h3>${esc(t('schoolPartner'))}</h3><p>${esc(t('schoolPartnerSub'))}</p></div></button><button class="home-card school-dashboard-home" data-go="schooldashboard"><span class="card-icon">🏢</span><div><h3>${esc(t('schoolDashboard'))}</h3><p>${esc(t('schoolDashboardSub'))}</p></div></button><button class="home-card school-portal2-home" data-go="schoolportal2"><span class="card-icon">🏫</span><div><h3>${esc(t('schoolPortal2'))}</h3><p>${esc(t('schoolPortal2Sub'))}</p></div></button><button class="home-card error-replay-home" data-go="errorreplay"><span class="card-icon replay-card-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 10h24a6 6 0 0 1 6 6v20a6 6 0 0 1-6 6H12a6 6 0 0 1-6-6V16a6 6 0 0 1 6-6Z"/><path d="m20 18 12 8-12 8Z"/></svg></span><div><h3>${esc(t('errorReplay'))}</h3><p>${esc(t('errorReplaySub'))}</p></div></button><button class="home-card cloud-ready-home" data-go="cloudready"><span class="card-icon">☁️</span><div><h3>${esc(t('cloudReady'))}</h3><p>${esc(t('cloudReadySub'))}</p></div></button><button class="home-card missions-home" data-go="missions"><span class="card-icon">🎯</span><div><h3>${esc(t('missions'))}</h3><p>${esc(t('missionsSub'))}</p></div></button><button class="home-card ai-instructor-home" data-go="aiinstructor"><span class="card-icon">🧠</span><div><h3>${esc(t('aiInstructor'))}</h3><p>${esc(t('aiInstructorSub'))}</p></div></button><button class="home-card instructor-portal-home" data-go="instructorportal"><span class="card-icon">👨‍🏫</span><div><h3>${esc(t('instructorPortal'))}</h3><p>${esc(t('instructorPortalSub'))}</p></div></button><button class="home-card coach" data-go="vocabulary"><span class="card-icon">🔤</span><div><h3>${esc(t('englishCoach'))}</h3><p>${esc(t('englishCoachSub'))}</p></div></button><button class="home-card saved" data-go="favourites"><span class="card-icon">★</span><div><h3>${esc(t('savedQuestions'))}</h3><p>${progress.favourites.length} ${esc(t('questions'))}</p></div></button><button class="home-card red" data-go="licences"><span class="card-icon">🪪</span><div><h3>${esc(t('licences'))}</h3><p>${esc(t('licencesSub'))}</p></div></button><button class="home-card stone" data-go="roadcode"><span class="card-icon">📘</span><div><h3>${esc(t('roadCode'))}</h3><p>${esc(t('roadCodeSub'))}</p></div></button><button class="home-card green" data-go="regulations"><span class="card-icon">⚖️</span><div><h3>${esc(t('regulations'))}</h3><p>${esc(t('regulationsSub'))}</p></div></button><button class="home-card purple" data-go="assistant"><span class="card-icon">✦</span><div><h3>${esc(t('ai'))}</h3><p>${esc(t('aiSub'))}</p></div></button><button class="home-card" data-go="profile"><span class="card-icon">◎</span><div><h3>${esc(t('profile'))}</h3><p>${esc(t('progress'))} • ${esc(t('language'))}</p></div></button><button class="home-card help-home" data-go="help"><span class="card-icon">?</span><div><h3>${esc(t('helpSupport'))}</h3><p>${esc(t('helpSupportSub'))}</p></div></button></section>`},
+ lptv:()=>{const session=load(SESSION,null),ready=readinessStats(),day=dailyStats(),review=reviewStats();return `<div class="section-title"><div><h2>${esc(t('lptv'))}</h2><p>${Q.length} ${esc(t('questions'))}</p></div><span class="readiness-mini">${ready.score}%</span></div><div class="stack">${session&&session.list?.length?`<button class="big-action green" id="resumeBtn"><div>${esc(t('resume'))}<small>${esc(modeLabel(session.mode))} • ${session.index+1}/${session.list.length}</small></div><span>▶</span></button>`:''}<button class="big-action daily-action" data-go="dailysetup"><div>${esc(t('dailyPlan'))}<small>${day.done}/${day.goal} • 🔥 ${day.streak} ${esc(t('days'))}</small></div><span>${day.complete?'✓':'☀️'}</span></button><button class="big-action green guided-primary" data-go="studysetup"><div>${esc(t('guidedStudy'))}<small>${esc(t('guidedStudyDetail'))}</small></div><span>📘</span></button><button class="big-action bridge-action" data-go="bridgesetup"><div>${esc(t('bridgeTest'))}<small>${esc(t('bridgeTestSub'))}</small></div><span>🌉</span></button><button class="big-action review-action" data-go="reviewsetup"><div>${esc(t('scheduledReview'))}<small>${review.due} ${esc(t('dueNow'))} • ${review.mastered} ${esc(t('mastered'))}</small></div><span>⏳</span></button><button class="big-action library-action" data-go="questionlibrary"><div>${esc(t('questionLibrary'))}<small>${esc(t('questionLibrarySub'))}</small></div><span>🗂️</span></button><button class="big-action chapter-action" data-go="chapters"><div>${esc(t('fourChapters'))}<small>${esc(t('fourChaptersSub'))}</small></div><span>🧭</span></button><button class="big-action weak-action" data-go="weaksetup"><div>${esc(t('weakAttack'))}<small>${esc(t('weakAttackSub'))}</small></div><span>⚡</span></button><button class="big-action coach-action" data-go="vocabulary"><div>${esc(t('englishCoach'))}<small>${progress.knownWords.length}/${GLOSSARY.length} ${esc(t('words'))}</small></div><span>🔤</span></button><button class="big-action saved-action" data-go="favourites"><div>${esc(t('savedQuestions'))}<small>${progress.favourites.length} ${esc(t('questions'))}</small></div><span>★</span></button><button class="big-action assisted" data-go="assistedsetup"><div>${esc(t('assistedSimulation'))}<small>${esc(t('assistedDetail'))}</small></div><span>📝</span></button><button class="big-action red" data-go="examsetup"><div>${esc(t('examCentre'))}<small>${esc(t('examCentreSub'))}</small></div><span>🎯</span></button><button class="big-action secondary" id="wrongBtn"><div>${esc(t('errors'))}<small>${countWrong()} ${esc(t('questions'))}</small></div><span>↻</span></button><button class="big-action secondary" data-go="progress"><div>${esc(t('progress'))}<small>${ready.score}% • ${esc(t(ready.label))}</small></div><span>📊</span></button></div>`},
+ examsetup:()=>`<div class="card exam-setup-card"><span class="mode-pill exam">🎯 ${esc(t('examCentre'))}</span><h2>${esc(t('realExamPieta'))}</h2><p class="muted">${esc(t('examCentreSub'))}</p><div class="exam-rule-grid"><div><strong>35</strong><span>${esc(t('examRuleQuestions'))}</span></div><div><strong>45:00</strong><span>${esc(t('examRuleTime'))}</span></div><div><strong>30/35</strong><span>${esc(t('examRulePass'))}</span></div></div><div class="bank-audit"><h3>✓ ${esc(t('bankAuditTitle'))}</h3><p>${esc(t('bankAuditText'))}</p><p>${esc(t('bankExcludedText'))}</p><small>${esc(t('bankDisclaimer'))}</small></div><div class="exam-instructions"><h3>${esc(t('examInstructions'))}</h3><p>✓ ${esc(t('examRuleEnglish'))}</p><p>✓ ${esc(t('examRuleNavigation'))}</p><p>✓ ${esc(t('examPassTarget'))}</p></div><button class="big-action red" id="startRealExam"><div>${esc(t('startRealExam'))}</div><span>▶</span></button></div>`,
+ studysetup:()=>{const cats=[...new Set(Q.map(q=>q.category))].sort();return `<div class="card setup-card"><span class="mode-pill guided">${esc(t('guidedMode'))}</span><h2>${esc(t('guidedStudy'))}</h2><p class="muted">${esc(t('guidedStudyDetail'))}</p><label>${esc(t('bankScope'))}</label><select id="studyBank"><option value="all">${esc(t('bankAll'))} (${Q.length})</option><option value="core">${esc(t('bankCore'))} (${CORE_Q.length})</option><option value="road">${esc(t('bankRoad'))} (${ROAD_SAFETY_Q.length})</option></select><label>${esc(t('chooseTopic'))}</label><select id="studyCategory"><option value="ALL">${esc(t('allTopics'))}</option>${cats.map(c=>`<option>${esc(c)}</option>`).join('')}</select><label>${esc(t('questions'))}</label><select id="studyCount"><option>10</option><option selected>20</option><option>35</option><option>50</option></select><button class="big-action green" id="startStudy"><div>${esc(t('start'))}</div><span>▶</span></button></div>`},
+
+ assistedsetup:()=>`<div class="card setup-card"><span class="mode-pill assisted">${esc(t('assistedMode'))}</span><h2>${esc(t('assistedSimulation'))}</h2><p class="muted">${esc(t('assistedDetail'))}</p><div class="exam-rules"><div><span>${esc(t('questions'))}</span><strong>35</strong></div><div><span>${esc(t('translate'))} + ${esc(t('listen'))}</span><strong>✓</strong></div></div><label>${esc(t('chooseTimer'))}</label><select id="assistedTimer"><option value="0">${esc(t('noTimer'))}</option><option value="1800">${esc(t('timer30'))}</option><option value="2700">${esc(t('timer45'))}</option></select><button class="big-action assisted" id="startAssisted"><div>${esc(t('startSimulation'))}</div><span>▶</span></button></div>`,
+ chapters:()=>`<div class="section-title"><div><h2>${esc(t('fourChapters'))}</h2><p>${esc(t('fourChaptersSub'))}</p></div></div><div class="topic-grid">${TOPIC_GROUPS.map(topic=>{const st=topicStats(topic.id);return `<button class="topic-card" data-topic="${topic.id}"><div class="topic-icon">${topic.icon}</div><div class="topic-content"><h3>${esc(t(topic.title))}</h3><p>${esc(t(topic.desc))}</p><div class="topic-numbers"><span>${st.seen}/${st.total} ${esc(t('seen'))}</span><strong>${st.accuracy}%</strong></div><div class="mini-bar"><span style="width:${st.coverage}%"></span></div></div><span class="chev">›</span></button>`}).join('')}</div>`,
+ chaptersetup:(id)=>{const topic=topicDefinition(id),st=topicStats(id);return `<div class="card setup-card"><span class="mode-pill chapter">${topic.icon} ${esc(t('chapterProgress'))}</span><h2>${esc(t(topic.title))}</h2><p class="muted">${esc(t(topic.desc))}</p><div class="chapter-summary"><div><span>${esc(t('chapterQuestions'))}</span><strong>${st.total}</strong></div><div><span>${esc(t('seen'))}</span><strong>${st.seen}</strong></div><div><span>${esc(t('chapterAccuracy'))}</span><strong>${st.accuracy}%</strong></div></div><label>${esc(t('questions'))}</label><select id="chapterCount"><option value="10">10</option><option value="20" selected>20</option><option value="35">35</option><option value="all">${esc(t('allChapterQuestions'))}</option></select><button class="big-action chapter-action" id="startChapter" data-topic="${topic.id}"><div>${esc(t('startChapter'))}</div><span>▶</span></button></div>`},
+ weaksetup:()=>{const pool=adaptivePool(35);return `<div class="card setup-card"><span class="mode-pill weak">⚡ ${esc(t('diagnostic'))}</span><h2>${esc(t('adaptiveTraining'))}</h2><p class="muted">${esc(t('adaptiveTrainingDesc'))}</p><div class="chapter-summary"><div><span>${esc(t('availableWeak'))}</span><strong>${pool.length}</strong></div><div><span>${esc(t('errors'))}</span><strong>${countWrong()}</strong></div><div><span>${esc(t('accuracy'))}</span><strong>${stats().accuracy}%</strong></div></div><label>${esc(t('questions'))}</label><select id="weakCount"><option value="10">10</option><option value="20" selected>20</option><option value="35">35</option></select><button class="big-action weak-action" id="startWeak"><div>${esc(t('startWeak'))}</div><span>⚡</span></button></div>`},
+ dailysetup:()=>{const day=dailyStats();return `<div class="card setup-card"><span class="mode-pill daily">☀️ ${esc(t('dailyPlan'))}</span><h2>${esc(day.complete?t('dailyComplete'):t('dailyPlanSub'))}</h2><div class="daily-detail"><div class="daily-ring large" style="--daily:${Math.round(day.done/day.goal*100)}"><strong>${day.done}/${day.goal}</strong><span>${esc(t('dailyGoal'))}</span></div><div><p><b>${esc(t('dailyDone'))}:</b> ${day.done}/${day.goal}</p><p><b>${esc(t('streak'))}:</b> 🔥 ${day.streak} ${esc(t('days'))}</p><p class="muted">${esc(t('adaptiveTrainingDesc'))}</p></div></div><button class="big-action daily-action" id="startDaily"><div>${esc(day.complete?t('repeatDaily'):t('startDaily'))}</div><span>▶</span></button></div>`},
+ vocabulary:()=>`<div class="section-title"><div><h2>${esc(t('englishCoach'))}</h2><p>${progress.knownWords.length}/${GLOSSARY.length} ${esc(t('knownWords'))}</p></div></div><div class="coach-menu"><button class="coach-menu-card" data-go="phrasebook"><span>💬</span><div><h3>${esc(t('phrasebook'))}</h3><p>${esc(t('phrasebookSub'))}</p></div></button><button class="coach-menu-card" data-go="flashcards"><span>🃏</span><div><h3>${esc(t('flashcards'))}</h3><p>${esc(t('flashcardsSub'))}</p></div></button></div><div class="search-box"><input id="vocabularySearch" placeholder="${esc(t('vocabularySearch'))}" autocomplete="off"><button id="vocabularySearchBtn">⌕</button></div><div class="vocabulary-chips"><button data-vocabulary-chip="road">Road</button><button data-vocabulary-chip="brake">Brake</button><button data-vocabulary-chip="passenger">Passenger</button><button data-vocabulary-chip="hazard">Hazard</button><button data-vocabulary-chip="">Tutte</button></div><div id="vocabularyResults" class="vocabulary-list"></div>`,
+ favourites:()=>{const list=savedQuestions();return `<div class="section-title"><div><h2>${esc(t('savedQuestions'))}</h2><p>${list.length} ${esc(t('questions'))}</p></div></div>`+(list.length?`<div class="list">${list.map(q=>`<article class="saved-question"><button class="saved-open" data-qid="${esc(q.id)}"><span class="badge">${esc(q.category)}</span><h3>${esc(q.question)}</h3><p>${esc(q.question_it)}</p></button><button class="saved-remove" data-remove-saved="${esc(q.id)}" aria-label="${esc(t('removeSaved'))}">★</button></article>`).join('')}</div>`:`<div class="card empty-state"><div>☆</div><h3>${esc(t('noSavedQuestions'))}</h3><p>${esc(t('savedQuestionsSub'))}</p></div>`)},
+ reviewsetup:()=>{const stats=reviewStats(),due=dueQuestions(),preview=due.slice(0,5);return `<div class="section-title"><div><h2>${esc(t('scheduledReview'))}</h2><p>${esc(t('scheduledReviewSub'))}</p></div><span class="review-count">${stats.due}</span></div><div class="review-overview"><div><span>${esc(t('dueNow'))}</span><strong>${stats.due}</strong></div><div><span>${esc(t('masteredQuestions'))}</span><strong>${stats.mastered}</strong></div><div><span>${esc(t('reviewedQuestions'))}</span><strong>${stats.scheduled}</strong></div></div><div class="card review-system-card"><h3>${esc(t('reviewSystem'))}</h3><p>${esc(t('reviewSystemSub'))}</p>${stats.due?`<button class="big-action review-action" id="startScheduledReview"><div>${esc(t('startReview'))}</div><span>▶</span></button>`:`<div class="review-empty"><span>✓</span><h3>${esc(t('noReviewDue'))}</h3><p>${esc(stats.next?reviewDateLabel(stats.next):t('nextReviewNone'))}</p></div>`}</div>${preview.length?`<div class="card" style="margin-top:14px"><h3>${esc(t('reviewReady'))}</h3>${preview.map(q=>`<button class="review-preview" data-review-question="${esc(q.id)}"><span>${esc(q.category)}</span><strong>${esc(q.question)}</strong><small>${esc(q.question_it)}</small></button>`).join('')}</div>`:''}<button class="big-action library-action" data-go="questionlibrary"><div>${esc(t('questionLibrary'))}</div><span>🗂️</span></button>`},
+ questionlibrary:()=>`<div class="section-title"><div><h2>${esc(t('questionLibrary'))}</h2><p>${esc(t('questionLibrarySub'))}</p></div></div><div class="library-controls"><div class="search-box"><input id="librarySearch" placeholder="${esc(t('librarySearch'))}" autocomplete="off"><button id="librarySearchButton">⌕</button></div><div class="library-filter-grid"><label>${esc(t('filterBank'))}<select id="libraryBank"><option value="all">${esc(t('bankAll'))} (${Q.length})</option><option value="core">${esc(t('bankCore'))} (${CORE_Q.length})</option><option value="road">${esc(t('bankRoad'))} (${ROAD_SAFETY_Q.length})</option></select></label><label>${esc(t('filterChapter'))}<select id="libraryTopic"><option value="all">${esc(t('allChapters'))}</option>${TOPIC_GROUPS.map(topic=>`<option value="${topic.id}">${topic.icon} ${esc(t(topic.title))}</option>`).join('')}</select></label><label>${esc(t('filterStatus'))}<select id="libraryStatus"><option value="all">${esc(t('statusAll'))}</option><option value="unseen">${esc(t('statusUnseen'))}</option><option value="wrong">${esc(t('statusWrong'))}</option><option value="saved">${esc(t('statusSaved'))}</option><option value="due">${esc(t('statusDue'))}</option><option value="mastered">${esc(t('statusMastered'))}</option></select></label></div><button class="btn secondary library-reset" id="libraryReset">${esc(t('resetFilters'))}</button></div><div class="library-result-head"><strong id="libraryResultCount"></strong><span>${esc(t('resultsCount'))}</span></div><div id="libraryResults" class="question-library-list"></div><button class="btn secondary library-more hidden" id="libraryMore">${esc(t('loadMore'))}</button>`,
+ phrasebook:()=>`<div class="section-title"><div><h2>${esc(t('phrasebook'))}</h2><p>${progress.knownPhrases.length}/${PHRASEBOOK.length} ${esc(t('learnedPhrases'))}</p></div></div><div class="search-box"><input id="phraseSearch" placeholder="${esc(t('phraseSearch'))}" autocomplete="off"><button id="phraseSearchButton">⌕</button></div><div id="phraseResults" class="phrase-list"></div>`,
+ flashcards:()=>`<div class="section-title"><div><h2>${esc(t('flashcards'))}</h2><p>${esc(t('flashcardsSub'))}</p></div></div><div class="flash-direction"><button data-flash-direction="en-it">${esc(t('englishToItalian'))}</button><button data-flash-direction="it-en">${esc(t('italianToEnglish'))}</button></div><div id="flashcardHost"></div>`,
+ examdetail:()=>{const index=Number(route.data),exam=(progress.exams||[])[index];if(!exam)return `<div class="card"><h2>${esc(t('examNotFound'))}</h2><button class="btn" data-go="progress">${esc(t('backToProgress'))}</button></div>`;const items=examDetailItems(exam),wrongItems=items.filter(item=>!item.ok),correctItems=items.filter(item=>item.ok),flaggedItems=items.filter(item=>item.flagged);return `<div class="section-title"><div><h2>${esc(t('examDetails'))}</h2><p>${esc(formatExamDate(exam.date))}</p></div><span class="exam-score-pill ${exam.score>=30?'pass':'fail'}">${exam.score}/${exam.total}</span></div><div class="exam-detail-summary"><div><strong>${correctItems.length||exam.score}</strong><span>${esc(t('correctQuestions'))}</span></div><div><strong>${wrongItems.length||(exam.total-exam.score)}</strong><span>${esc(t('wrongQuestions'))}</span></div><div><strong>${exam.unanswered||0}</strong><span>${esc(t('unansweredQuestions'))}</span></div><div><strong>${flaggedItems.length||exam.flagged||0}</strong><span>${esc(t('flaggedQuestions'))}</span></div></div><div class="report-actions"><button class="btn" id="shareExamReport">↗ ${esc(t('shareExamReport'))}</button><button class="btn secondary" id="copyExamReport">⧉ ${esc(t('copyProgressReport'))}</button></div>${items.length?`<div class="exam-detail-list">${items.map((item,position)=>{const selected=item.selected.length?item.selected.map(i=>item.q.answers[i]).join(' • '):t('noAnswerSelected');const correct=item.q.correct.map(i=>item.q.answers[i]).join(' • ');return `<article class="exam-answer-card ${item.ok?'correct':'wrong'}"><div class="exam-answer-head"><span>${position+1}</span><div><small>${esc(item.q.id)} • ${esc(item.q.category)}</small><strong>${item.ok?'✓ '+esc(t('correct')):'✗ '+esc(item.answered?t('wrong'):t('unanswered'))}</strong></div>${item.flagged?'<b>★</b>':''}</div><h3>${esc(item.q.question)}</h3><p class="exam-answer-it">🇮🇹 ${esc(item.q.question_it)}</p><div class="exam-choice selected"><span>${esc(t('selectedAnswer'))}</span><strong>${esc(selected)}</strong></div>${!item.ok?`<div class="exam-choice correct"><span>${esc(t('rightAnswer'))}</span><strong>${esc(correct)}</strong></div>`:''}</article>`}).join('')}</div>`:`<div class="card old-exam-notice"><span>ℹ</span><p>${esc(t('oldExamSummary'))}</p></div>`}<div class="exam-detail-actions"><button class="btn secondary" data-go="progress">${esc(t('backToProgress'))}</button><button class="btn" id="retryExamMistakes">${esc(t('retryExamErrors'))}</button>${wrongItems.length?`<button class="btn secondary" id="examDetailAiCoach">🧠 AI Driving Coach</button>`:''}</div>`},
+ bridgesetup:()=>{const latest=latestBridgeResult();return `<div class="section-title"><div><h2>🌉 ${esc(t('bridgeTest'))}</h2><p>${esc(t('bridgeTestSub'))}</p></div></div><div class="card bridge-intro-card"><p>${esc(t('bridgeIntro'))}</p><div class="bridge-flow"><div><span>1</span><strong>🇮🇹 ${esc(t('italianPhase'))}</strong></div><b>→</b><div><span>2</span><strong>🇬🇧 ${esc(t('englishPhase'))}</strong></div><b>→</b><div><span>3</span><strong>🧭 ${esc(t('bridgeMeaning'))}</strong></div></div><label>${esc(t('bridgeQuestions'))}</label><select id="bridgeCount"><option value="10" selected>10</option><option value="20">20</option></select><button class="big-action bridge-action" id="startBridge"><div>${esc(t('bridgeStart'))}</div><span>▶</span></button><p class="bridge-disclaimer">${esc(t('bridgeNotOfficial'))}</p></div>${latest?bridgeProgressHtml():''}`},
+ bridgequiz:()=>`<div class="card bridge-quiz-card"><div class="bridge-quiz-head"><span id="bridgePhase" class="mode-label"></span><b id="bridgeCounter"></b></div><div class="progress"><span id="bridgeProgress"></span></div><p class="bridge-no-help">${esc(t('bridgeNoHelp'))}</p><div id="bridgeQuestion" class="question"></div><div id="bridgeInstruction" class="quiz-instruction"></div><div id="bridgeOptions"></div><div class="actions quiz-footer"><button class="btn secondary" id="bridgeExit">${esc(t('exit'))}</button><button class="btn" id="bridgeConfirm">${esc(t('confirmBridge'))}</button></div></div>`,
+ bridgeresult:()=>{const r=bridgeResultById(route.data);if(!r)return `<div class="card"><h2>${esc(t('noBridgeYet'))}</h2><button class="btn" data-go="bridgesetup">${esc(t('bridgeStart'))}</button></div>`;return `<div class="section-title"><div><h2>🌉 ${esc(t('bridgeResults'))}</h2><p>${esc(formatExamDate(r.date))}</p></div><span class="bridge-result-score">${r.masteredPct}%</span></div><div class="bridge-result-grid"><div><strong>${r.knowledgePct}%</strong><span>${esc(t('knowledgeScore'))}</span></div><div><strong>${r.englishPct}%</strong><span>${esc(t('englishScore'))}</span></div><div><strong>${r.masteredIds.length}/${r.total}</strong><span>${esc(t('masteredConcepts'))}</span></div><div><strong>${r.languageIds.length}</strong><span>${esc(t('languageBarrier'))}</span></div><div><strong>${r.ruleIds.length}</strong><span>${esc(t('ruleGap'))}</span></div><div><strong>${r.recoveredIds.length}</strong><span>${esc(t('recoveredEnglish'))}</span></div></div><div class="bridge-diagnosis"><article class="mastered"><span>✓</span><div><h3>${esc(t('masteredConcepts'))}</h3><p>${esc(t('bridgeMasteredMeaning'))}</p></div></article><article class="language"><span>🔤</span><div><h3>${esc(t('languageBarrier'))}: ${r.languageIds.length}</h3><p>${esc(t('bridgeLanguageMeaning'))}</p></div></article><article class="rule"><span>📘</span><div><h3>${esc(t('ruleGap'))}: ${r.ruleIds.length}</h3><p>${esc(t('bridgeRuleMeaning'))}</p></div></article></div><div class="bridge-result-actions">${r.languageIds.length?`<button class="btn" id="trainBridgeLanguage">${esc(t('trainLanguageBarrier'))}</button>`:''}${r.ruleIds.length?`<button class="btn" id="trainBridgeRules">${esc(t('trainRuleGaps'))}</button>`:''}<button class="btn secondary" data-go="bridgesetup">${esc(t('repeatBridge'))}</button><button class="btn secondary" data-go="progress">${esc(t('backToProgress'))}</button></div><p class="bridge-disclaimer">${esc(t('bridgeNotOfficial'))}</p>`},
+ help:()=>{const installed=isStandaloneMode();return `<div class="section-title"><div><h2>${esc(t('helpSupport'))}</h2><p>${esc(t('helpSupportSub'))}</p></div><span class="badge official">Build ${esc(BUILD_VERSION)}</span></div>${helpInstallHtml()}<div class="card quick-guide-card" style="margin-top:14px"><div class="help-card-title"><div><h3>${esc(t('quickGuide'))}</h3><p>${esc(t('quickGuideSub'))}</p></div><span>↗</span></div><div class="quick-guide-grid"><button data-go="studysetup"><span>📘</span><strong>${esc(t('openStudy'))}</strong><small>${esc(t('guideStudy'))}</small></button><button data-go="examsetup"><span>🎯</span><strong>${esc(t('openExam'))}</strong><small>${esc(t('guideExam'))}</small></button><button data-go="progress"><span>📊</span><strong>${esc(t('openProgress'))}</strong><small>${esc(t('guideProgress'))}</small></button><button data-go="profile"><span>👤</span><strong>${esc(t('openProfile'))}</strong><small>${esc(t('guideProfile'))}</small></button></div></div><div class="card faq-card" style="margin-top:14px"><h3>${esc(t('frequentQuestions'))}</h3><details><summary>${esc(t('faqBankQ'))}</summary><p>${esc(t('faqBankA'))}</p></details><details><summary>${esc(t('faqOfflineQ'))}</summary><p>${esc(t('faqOfflineA'))}</p></details><details><summary>${esc(t('faqDataQ'))}</summary><p>${esc(t('faqDataA'))}</p></details><details><summary>${esc(t('faqUpdateQ'))}</summary><p>${esc(t('faqUpdateA'))}</p></details><details><summary>${esc(t('faqDeleteQ'))}</summary><p>${esc(t('faqDeleteA'))}</p></details></div><div class="card support-card" style="margin-top:14px"><div class="help-card-title"><div><h3>${esc(t('reportProblem'))}</h3><p>${esc(t('reportProblemSub'))}</p></div><span>🛠</span></div><div class="support-form"><label><span>${esc(t('supportCategory'))}</span><select id="supportCategory"><option value="technical">${esc(t('supportTechnical'))}</option><option value="question">${esc(t('supportQuestion'))}</option><option value="registration">${esc(t('supportRegistration'))}</option><option value="suggestion">${esc(t('supportSuggestion'))}</option></select></label><label><span>${esc(t('questionIdOptional'))}</span><input id="supportQuestionId" maxlength="40" placeholder="LPTV.188"></label><label class="full"><span>${esc(t('problemDescription'))}</span><textarea id="supportDescription" maxlength="1800" placeholder="${esc(t('problemPlaceholder'))}"></textarea></label></div><div class="support-method-grid"><button class="btn" id="shareSupportReport">↗ ${esc(t('shareReport'))}</button><button class="btn secondary" id="openSupportGmail">G ${esc(t('openSupportGmail'))}</button><button class="btn secondary" id="openSupportMail">✉ ${esc(t('openSupportMail'))}</button><button class="btn secondary" id="copySupportReport">⧉ ${esc(t('copySupportReport'))}</button></div><p class="support-contact">${esc(t('contactSupport'))}: <strong>${esc(ADMIN_EMAIL)}</strong></p></div><div class="card privacy-summary-card" style="margin-top:14px"><span>🔒</span><div><h3>${esc(t('privacySummary'))}</h3><p>${esc(t('privacySummaryText'))}</p></div><button class="btn secondary" data-go="profile">${esc(t('openProfile'))}</button></div>`},
+
+
+
+ roadmap:()=>{const component=roadmapComponentStats(),action=roadmapNextAction(),target=roadmapTargetState(),pace=roadmapStudyPace(),weak=roadmapWeakestTopic(),bridge=latestBridgeResult(),passport=passportRequiredStats(),achievements=roadmapAchievements(),doneAchievements=achievements.filter(item=>item.done).length,week=roadmapWeekPlan();return `<div class="section-title"><div><h2>🗺️ ${esc(t('personalRoadmap'))}</h2><p>${esc(t('personalRoadmapSub'))}</p></div><span class="roadmap-version">Build 14</span></div><div class="roadmap-disclaimer">${esc(t('roadmapInternalEstimate'))}</div><section class="roadmap-hero"><div class="roadmap-main-score" style="--roadmap-score:${component.overall}"><div><strong>${component.overall}%</strong><span>${esc(t('roadmapJourneyScore'))}</span></div></div><div class="roadmap-hero-copy"><span>${esc(t(roadmapOverallLabel(component.overall)))}</span><h3>${esc(t(action.title))}</h3><p>${esc(t(action.reason))}</p><button class="btn" data-go="${esc(action.route)}">${action.icon} ${esc(t('roadmapDoNow'))}</button></div></section><section class="roadmap-component-grid"><article><span>📘</span><div><strong>${component.readiness.score}%</strong><small>${esc(t('roadmapStudyScore'))}</small></div><i><b style="width:${component.readiness.score}%"></b></i></article><article><span>🌉</span><div><strong>${component.bridgeScore}%</strong><small>${esc(t('roadmapEnglishScore'))}</small></div><i><b style="width:${component.bridgeScore}%"></b></i></article><article><span>🧭</span><div><strong>${component.passport.pct}%</strong><small>${esc(t('roadmapPassportScore'))}</small></div><i><b style="width:${component.passport.pct}%"></b></i></article><article><span>🔥</span><div><strong>${component.dailyScore}%</strong><small>${esc(t('roadmapDailyScore'))}</small></div><i><b style="width:${component.dailyScore}%"></b></i></article></section><div class="roadmap-detail-grid"><article class="card roadmap-next-card"><div class="roadmap-card-heading"><div><span>${esc(t('roadmapNextAction'))}</span><h3>${action.icon} ${esc(t(action.title))}</h3></div>${action.detail?`<strong>${esc(action.detail)}</strong>`:''}</div><p><b>${esc(t('roadmapWhy'))}:</b> ${esc(t(action.reason))}</p><button class="btn" data-go="${esc(action.route)}">${esc(t('roadmapDoNow'))}</button></article><article class="card roadmap-target-card"><span>${esc(t('roadmapTargetDate'))}</span><strong>${personalRoadmap.targetDate?esc(passportDateLabel(personalRoadmap.targetDate)):esc(t('roadmapNoTarget'))}</strong><p class="${target.type}">${esc(target.text)}</p><div class="roadmap-pace"><b>${pace.remaining}</b><span>${esc(t('roadmapQuestionsLeft'))}</span><b>${pace.sessions}</b><span>${esc(t('roadmapSessions'))}</span></div></article></div><div class="card roadmap-metrics-card"><h3>${esc(t('roadmapCurrentProgress'))}</h3><div class="roadmap-metrics"><div><span>${esc(t('roadmapCoverage'))}</span><strong>${component.readiness.coverage}%</strong></div><div><span>${esc(t('roadmapAccuracy'))}</span><strong>${component.readiness.accuracy}%</strong></div><div><span>${esc(t('roadmapExamAverage'))}</span><strong>${component.readiness.examAverage}%</strong></div><div><span>${esc(t('roadmapBridgeProgress'))}</span><strong>${bridge?bridge.masteredPct+'%':'—'}</strong></div><div><span>${esc(t('roadmapPassportProgress'))}</span><strong>${passport.done}/${passport.total}</strong></div><div><span>${esc(t('roadmapWeakestTopic'))}</span><strong>${esc(t(weak.topic.title))}</strong><small>${weak.values.accuracy}%</small></div></div></div><div class="section-title roadmap-week-title"><div><h2>${esc(t('roadmapWeek'))}</h2><p>${esc(t('roadmapWeekSub'))}</p></div></div><div class="roadmap-week-list">${week.map(item=>`<button class="roadmap-day ${item.recommended?'recommended':''}" data-go="${esc(item.route)}"><span class="roadmap-day-date">${esc(roadmapDayLabel(item.day))}</span><i>${item.icon}</i><div><strong>${esc(t(item.title))}</strong>${item.detail?`<small>${esc(item.detail)}</small>`:''}</div>${item.recommended?`<b>${esc(t('roadmapRecommended'))}</b>`:'<em>›</em>'}</button>`).join('')}</div><div class="card roadmap-achievements-card"><div class="roadmap-card-heading"><div><span>${esc(t('roadmapAchievementsSub'))}</span><h3>${esc(t('roadmapAchievements'))}</h3></div><strong>${doneAchievements}/${achievements.length}</strong></div><div class="roadmap-achievements">${achievements.map(item=>`<div class="${item.done?'done':'locked'}"><i>${item.icon}</i><span>${esc(t(item.label))}</span><small>${item.done?'✓':esc(t('roadmapLocked'))}</small></div>`).join('')}</div></div><div class="card roadmap-settings-card"><h3>${esc(t('roadmapSettings'))}</h3><div class="roadmap-settings-grid"><label><span>${esc(t('roadmapTargetDate'))}</span><input id="roadmapTargetDate" type="date" value="${esc(personalRoadmap.targetDate)}"></label><label><span>${esc(t('roadmapDailyMinutes'))}</span><select id="roadmapDailyMinutes">${[10,15,20,30,45,60,90,120].map(value=>`<option value="${value}" ${Number(personalRoadmap.dailyMinutes)===value?'selected':''}>${value}</option>`).join('')}</select></label><label><span>${esc(t('roadmapStudyDays'))}</span><select id="roadmapStudyDays">${[1,2,3,4,5,6,7].map(value=>`<option value="${value}" ${Number(personalRoadmap.studyDays)===value?'selected':''}>${value}</option>`).join('')}</select></label><label><span>${esc(t('roadmapMainGoal'))}</span><select id="roadmapMainGoal"><option value="exam" ${personalRoadmap.mainGoal==='exam'?'selected':''}>${esc(t('roadmapGoalExam'))}</option><option value="tag" ${personalRoadmap.mainGoal==='tag'?'selected':''}>${esc(t('roadmapGoalTag'))}</option></select></label></div><div class="roadmap-settings-actions"><button class="btn" id="saveRoadmap">${esc(t('roadmapSavePlan'))}</button><button class="btn secondary" id="shareRoadmap">↗ ${esc(t('roadmapShare'))}</button><button class="btn secondary" id="copyRoadmap">⧉ ${esc(t('roadmapCopy'))}</button></div></div><button class="text-danger-button roadmap-reset" id="resetRoadmap">${esc(t('roadmapReset'))}</button>`},
+ passport:()=>{const stats=passportRequiredStats(),eligibility=passportLicenceEligibility(),earliest=passportEarliestExpiry(),days=earliest?passportDaysUntil(earliest.value):null;const eligibilityText=eligibility.state==='unknown'?t('passportEligibilityUnknown'):eligibility.state==='licence'?t('passportLicenceTooNew'):eligibility.state==='points'?t('passportPointsBlocked'):t('passportBasicEligible');return `<div class="section-title"><div><h2>🧭 ${esc(t('lptvPassport'))}</h2><p>${esc(t('lptvPassportSub'))}</p></div><span class="passport-build">Build 13</span></div><div class="passport-update"><span>!</span><div><strong>${esc(t('passportOfficialUpdate'))}</strong><p>${esc(t('passportOfficialUpdateText'))}</p><small>${esc(t('passportChecked'))}: ${PASSPORT_OFFICIAL_CHECKED}</small></div></div><div class="card passport-config-card"><div class="passport-config-grid"><label><span>${esc(t('passportMode'))}</span><select id="passportMode"><option value="new" ${lptvPassport.mode==='new'?'selected':''}>${esc(t('passportNew'))}</option><option value="renewal" ${lptvPassport.mode==='renewal'?'selected':''}>${esc(t('passportRenewal'))}</option></select></label><label><span>${esc(t('passportApplicantType'))}</span><select id="passportApplicantType"><option value="maltese" ${lptvPassport.applicantType==='maltese'?'selected':''}>${esc(t('passportMaltese'))}</option><option value="eu" ${lptvPassport.applicantType==='eu'?'selected':''}>${esc(t('passportEU'))}</option><option value="tcn" ${lptvPassport.applicantType==='tcn'?'selected':''}>${esc(t('passportTCN'))}</option></select></label><label class="full"><span>${esc(t('passportStatus'))}</span><select id="passportStatus"><option value="planning" ${lptvPassport.status==='planning'?'selected':''}>${esc(t('passportPlanning'))}</option><option value="collecting" ${lptvPassport.status==='collecting'?'selected':''}>${esc(t('passportCollecting'))}</option><option value="ready" ${lptvPassport.status==='ready'?'selected':''}>${esc(t('passportReady'))}</option><option value="submitted" ${lptvPassport.status==='submitted'?'selected':''}>${esc(t('passportSubmitted'))}</option><option value="eligibility" ${lptvPassport.status==='eligibility'?'selected':''}>${esc(t('passportEligibilityLetter'))}</option><option value="waiting" ${lptvPassport.status==='waiting'?'selected':''}>${esc(t('passportWaiting'))}</option><option value="issued" ${lptvPassport.status==='issued'?'selected':''}>${esc(t('passportIssued'))}</option></select></label></div></div><div class="passport-progress-card"><div><span>${esc(t('passportCurrentProgress'))}</span><strong id="passportProgressValue">${stats.done}/${stats.total} • ${stats.pct}%</strong></div><div class="passport-progress-track"><span id="passportProgressBar" style="width:${stats.pct}%"></span></div><small>${esc(t('passportRequiredComplete'))}</small></div>${lptvPassport.mode==='new'?`<div class="card passport-eligibility-card ${eligibility.eligible?'good':'attention'}"><div class="passport-card-heading"><div><h3>${esc(t('passportEligibility'))}</h3><p>${esc(eligibilityText)}</p></div><span>${eligibility.eligible?'✓':'!'}</span></div><div class="passport-eligibility-grid"><label><span>${esc(t('passportLicenceSince'))}</span><input id="passportLicenceSince" type="date" value="${esc(lptvPassport.licenceSince)}"></label><label><span>${esc(t('passportPenaltyPoints'))}</span><input id="passportPenaltyPoints" type="number" min="0" max="99" inputmode="numeric" value="${esc(lptvPassport.penaltyPoints)}"></label></div>${eligibility.date?`<div class="eligible-date"><span>${esc(t('passportEligibleDate'))}</span><strong>${esc(passportDateLabel(eligibility.date))}</strong></div>`:''}</div>`:''}<div class="card passport-checklist-card"><div class="passport-card-heading"><div><h3>${esc(t('passportChecklist'))}</h3><p>${esc(t('passportChecklistSub'))}</p></div><span>✓</span></div>${passportChecklistHtml()}</div><div class="card passport-dates-card"><div class="passport-card-heading"><div><h3>${esc(t('passportDates'))}</h3><p>${esc(t('passportDatesSub'))}</p></div><span>📅</span></div><div class="passport-date-grid"><label><span>${esc(t('passportDrivingExpiry'))}</span><input id="passportDrivingExpiry" type="date" value="${esc(lptvPassport.dates.drivingLicence)}"></label><label><span>${esc(t('passportResidenceExpiry'))}</span><input id="passportResidenceExpiry" type="date" value="${esc(lptvPassport.dates.residence)}"></label><label><span>${esc(t('passportEmploymentExpiry'))}</span><input id="passportEmploymentExpiry" type="date" value="${esc(lptvPassport.dates.employment)}"></label><label><span>${esc(t('passportOperatorExpiry'))}</span><input id="passportOperatorExpiry" type="date" value="${esc(lptvPassport.dates.operatorLicence)}"></label><label><span>${esc(t('passportTagExpiry'))}</span><input id="passportTagExpiry" type="date" value="${esc(lptvPassport.dates.tagExpiry)}"></label><label><span>${esc(t('passportMedicalDate'))}</span><input id="passportMedicalDate" type="date" value="${esc(lptvPassport.dates.medical)}"></label><label><span>${esc(t('passportApplicationDate'))}</span><input id="passportApplicationDate" type="date" value="${esc(lptvPassport.dates.application)}"></label></div><div class="passport-earliest ${days!==null&&days<30?'urgent':''}"><span>${esc(t('passportEarliestExpiry'))}</span><strong>${earliest?`${esc(t(earliest.label))}: ${esc(passportDateLabel(earliest.value))}`:esc(t('passportNoExpiry'))}</strong>${earliest?`<small>${days<0?Math.abs(days)+' '+esc(t('days'))+' '+esc(t('passportExpired')):days+' '+esc(t('passportDaysRemaining'))}</small>`:''}</div><button class="btn passport-calendar-btn" id="createPassportCalendar">📅 ${esc(t('passportCalendar'))}</button><p class="muted">${esc(t('passportCalendarSub'))}</p><p class="passport-koder-note"><strong>${esc(t('passportKoderFix'))}:</strong> ${esc(t('passportCalendarOpenSafariNote'))}</p></div><div class="passport-rule-grid"><article><span>⚖️</span><p>${esc(t('passportValidityRule'))}</p></article><article><span>ℹ</span><p>${esc(lptvPassport.mode==='new'?t('passportFeeNew'):t('passportFeeRenew'))}</p></article>${lptvPassport.applicantType==='tcn'?`<article><span>!</span><p>${esc(t('passportTagNotPermission'))}</p></article>`:''}</div><div class="card passport-notes-card"><h3>${esc(t('passportNotes'))}</h3><textarea id="passportNotes" maxlength="3000">${esc(lptvPassport.notes)}</textarea><p class="muted">${esc(t('passportNoBackend'))}</p></div><div class="passport-actions"><button class="btn" id="savePassport">${esc(t('passportSave'))}</button><button class="btn secondary" id="sharePassport">↗ ${esc(t('passportShare'))}</button><button class="btn secondary" id="copyPassport">⧉ ${esc(t('passportCopy'))}</button></div><div class="card passport-official-card"><h3>${esc(t('passportOfficialDocuments'))}</h3><p>${esc(t('passportOfficialWarning'))}</p><div class="passport-official-grid">${passportOfficialLinksHtml()}</div><div class="passport-office-box"><strong>${esc(t('passportSubmissionOffices'))}</strong><p>${esc(t('passportSubmissionText'))}</p></div></div><button class="text-danger-button passport-reset" id="resetPassport">${esc(t('passportReset'))}</button>`},
+ schools:()=>`<div class="section-title"><div><h2>🏫 ${esc(t('findSchool'))}</h2><p>${esc(t('schoolMarketplaceSub'))}</p></div><span class="badge demo-school">${esc(t('studentArea'))}</span></div><div class="school-demo-notice"><span>ℹ</span><p>${esc(t('schoolDemoNotice'))}</p></div><div class="card school-filter-card"><div class="school-filter-title"><div><h3>${esc(t('yourPreferences'))}</h3><p>${esc(t('smartMatchDiagnosis'))}</p></div><span>🧭</span></div><div class="school-filter-grid"><label><span>${esc(t('preferredArea'))}</span><select id="schoolAreaFilter"><option value="all">${esc(t('areaAll'))}</option><option value="north">${esc(t('areaNorth'))}</option><option value="central">${esc(t('areaCentral'))}</option><option value="south">${esc(t('areaSouth'))}</option><option value="gozo">${esc(t('areaGozo'))}</option></select></label><label><span>${esc(t('preferredLanguage'))}</span><select id="schoolLanguageFilter"><option value="any">${esc(t('languageAny'))}</option><option value="en">English</option><option value="it">Italiano</option><option value="mt">Malti</option></select></label><label><span>${esc(t('courseNeeded'))}</span><select id="schoolCourseFilter"><option value="any">${esc(t('allTopics'))}</option><option value="lptv">${esc(t('courseLptv'))}</option><option value="b">${esc(t('courseB'))}</option></select></label><label><span>${esc(t('transmission'))}</span><select id="schoolTransmissionFilter"><option value="any">${esc(t('transmissionAny'))}</option><option value="automatic">${esc(t('automatic'))}</option><option value="manual">${esc(t('manual'))}</option></select></label><label><span>${esc(t('preferredSchedule'))}</span><select id="schoolScheduleFilter"><option value="any">${esc(t('scheduleAny'))}</option><option value="day">${esc(t('daytime'))}</option><option value="evening">${esc(t('evening'))}</option><option value="weekend">${esc(t('weekend'))}</option></select></label></div><div class="school-support-checks"><label><input type="checkbox" id="schoolEnglishFilter"><span>${esc(t('englishSupport'))}</span></label><label><input type="checkbox" id="schoolDocumentFilter"><span>${esc(t('documentSupport'))}</span></label></div><div class="school-filter-actions"><button class="btn" id="updateSchoolMatches">${esc(t('updateMatches'))}</button><button class="btn secondary" id="openSchoolCompare">${esc(t('compareSchools'))} (${schoolCompare.length}/3)</button></div></div><div class="smart-match-trust"><div><strong>${esc(t('smartMatch'))}</strong><span>${esc(t('smartMatchSub'))}</span></div><b>${esc(t('sponsoredExplanation'))}</b></div><div class="school-result-heading"><strong id="schoolCount">0</strong><span>${esc(t('schoolsFound'))}</span></div><div id="schoolResults" class="school-list"></div>`,
+ schooldetail:()=>{const school=schoolById(route.data);if(!school)return `<div class="card"><h2>${esc(t('noResults'))}</h2><button class="btn" data-go="schools">${esc(t('back'))}</button></div>`;const match=schoolMatchDetails(school),selected=schoolCompare.includes(school.id);return `<div class="section-title"><div><h2>${esc(t('schoolDetails'))}</h2><p>${esc(schoolAreaLabel(school.area))}</p></div><div class="match-score large"><strong>${match.score}%</strong><span>${esc(t('matchScore'))}</span></div></div><div class="school-demo-notice"><span>ℹ</span><p>${esc(t('schoolDemoNotice'))}</p></div><article class="school-detail-card"><div class="school-badges"><span class="badge demo-school">${esc(t('demoProfile'))}</span>${school.sponsored?`<span class="badge sponsored-school">${esc(t('sponsored'))}</span>`:''}</div><h2>${esc(school.name)}</h2><p class="school-description">${esc(schoolDescription(school))}</p>${match.reasons.length?`<div class="detail-match-reasons"><h3>${esc(t('whyMatched'))}</h3>${match.reasons.map(reason=>`<span>✓ ${esc(reason)}</span>`).join('')}</div>`:''}<div class="school-detail-grid"><div><span>${esc(t('languagesSpoken'))}</span><strong>${school.languages.map(schoolLanguageLabel).join(', ')}</strong></div><div><span>${esc(t('coursesOffered'))}</span><strong>${school.courses.map(schoolCourseLabel).join(', ')}</strong></div><div><span>${esc(t('transmission'))}</span><strong>${school.transmission.map(schoolTransmissionLabel).join(', ')}</strong></div><div><span>${esc(t('availability'))}</span><strong>${school.schedule.map(schoolScheduleLabel).join(', ')}</strong></div></div><div class="detail-services"><h3>${esc(t('servicesOffered'))}</h3>${school.services.map(service=>`<span>✓ ${esc(schoolServiceLabel(service))}</span>`).join('')}</div><div class="school-pricing-box"><span>${esc(t('pricingBySchool'))}</span><strong>${esc(t('pricingPending'))}</strong></div><button class="btn secondary compare-detail-button ${selected?'selected':''}" id="detailSchoolCompare">${selected?'✓ '+esc(t('removeFromCompare')):esc(t('addToCompare'))}</button></article><div class="card school-request-card"><h3>${esc(t('requestInformation'))}</h3><p>${esc(t('pilotRequestNotice'))}</p><div class="request-method-grid"><button class="btn" id="shareSchoolRequest">↗ ${esc(t('shareRegistration'))}</button><button class="btn secondary" id="gmailSchoolRequest">G ${esc(t('openGmail'))}</button><button class="btn secondary" id="mailSchoolRequest">✉ ${esc(t('openMail'))}</button><button class="btn secondary" id="copySchoolRequest">⧉ ${esc(t('copyRegistration'))}</button></div></div>`},
+ schoolcompare:()=>{const schools=schoolCompare.map(schoolById).filter(Boolean);return `<div class="section-title"><div><h2>${esc(t('compareSchools'))}</h2><p>${schools.length}/3</p></div><span class="badge official">${esc(t('smartMatch'))}</span></div>${schools.length?`<div class="school-compare-grid">${schools.map(school=>{const match=schoolMatchDetails(school);return `<article class="compare-school-card"><button class="compare-remove" data-remove-compare="${esc(school.id)}">×</button><span class="badge demo-school">${esc(t('demoProfile'))}</span><h3>${esc(school.name)}</h3><div class="match-score"><strong>${match.score}%</strong><span>${esc(t('matchScore'))}</span></div><dl><dt>${esc(t('schoolAreaTitle'))}</dt><dd>${esc(schoolAreaLabel(school.area))}</dd><dt>${esc(t('languagesSpoken'))}</dt><dd>${esc(school.languages.map(schoolLanguageLabel).join(', '))}</dd><dt>${esc(t('coursesOffered'))}</dt><dd>${esc(school.courses.map(schoolCourseLabel).join(', '))}</dd><dt>${esc(t('transmission'))}</dt><dd>${esc(school.transmission.map(schoolTransmissionLabel).join(', '))}</dd><dt>${esc(t('availability'))}</dt><dd>${esc(school.schedule.map(schoolScheduleLabel).join(', '))}</dd><dt>${esc(t('servicesOffered'))}</dt><dd>${esc(school.services.map(schoolServiceLabel).join(', '))}</dd></dl><button class="btn" data-go="schooldetail" data-id="${esc(school.id)}">${esc(t('schoolDetails'))}</button></article>`}).join('')}</div><button class="btn secondary clear-school-comparison" id="clearSchoolComparison">${esc(t('clearComparison'))}</button>`:`<div class="card comparison-empty"><span>⚖️</span><h3>${esc(t('comparisonEmpty'))}</h3><button class="btn" data-go="schools">${esc(t('findSchool'))}</button></div>`}`},
+
+ schooldashboard:()=>{const profile=dashboardProfileCompletion(),stats=dashboardStats();return `<div class="section-title"><div><h2>🏢 ${esc(t('schoolDashboard'))}</h2><p>${esc(t('schoolDashboardSub'))}</p></div><span class="badge partner-badge">${esc(t('schoolDashboardLocal'))}</span></div><button class="school-portal2-launch" data-go="schoolportal2"><span>🏫</span><div><strong>${esc(t('schoolPortal2'))}</strong><small>${esc(t('schoolPortal2Sub'))}</small></div><b>›</b></button><div class="school-dashboard-notice"><span>🔒</span><div><strong>${esc(t('schoolDashboardLocal'))}</strong><p>${esc(t('schoolDashboardNotice'))}</p></div></div><section class="dashboard-profile-card"><div class="dashboard-profile-top"><div><span>${esc(t('dashboardProfile'))}</span><h2>${esc(dashboardSchoolName())}</h2><p>${esc(t('dashboardReviewNeeded'))}</p></div><div class="dashboard-profile-ring" style="--profile:${profile.pct}"><strong>${profile.pct}%</strong><span>${esc(t('dashboardProfileCompletion'))}</span></div></div><div class="dashboard-verification-row"><span>${esc(t('dashboardVerification'))}</span><strong>${esc(t('dashboardNotVerified'))}</strong><em>${esc(profile.pct>=80?t('dashboardReadyReview'):t('dashboardDraftStatus'))}</em></div><div class="dashboard-profile-actions"><button class="btn" data-go="schoolpartner">${esc(t('dashboardEditProfile'))}</button></div></section><div class="dashboard-stat-grid"><article><span>👤</span><strong>${stats.students}</strong><small>${esc(t('dashboardStudents'))}</small></article><article><span>👥</span><strong>${stats.groups}</strong><small>${esc(t('dashboardGroups'))}</small></article><article><span>✉</span><strong>${stats.invites}</strong><small>${esc(t('dashboardInvites'))}</small></article><article><span>📈</span><strong>${stats.average}%</strong><small>${esc(t('dashboardAverage'))}</small></article></div><div class="card dashboard-preview-card"><div class="dashboard-section-heading"><div><h3>${esc(t('dashboardPublicPreview'))}</h3><p>${esc(t('dashboardPublicPreviewSub'))}</p></div><span>👁</span></div>${dashboardProfilePreviewHtml()}</div><div class="card dashboard-groups-card"><div class="dashboard-section-heading"><div><h3>${esc(t('dashboardGroups'))}</h3><p>${esc(t('dashboardGroupCount'))}: ${stats.groups}</p></div><span>👥</span></div><div class="dashboard-create-group"><div class="dashboard-form-grid"><label><span>${esc(t('dashboardGroupName'))} *</span><input id="dashboardGroupName" maxlength="100"></label><label><span>${esc(t('dashboardGroupLanguage'))}</span><select id="dashboardGroupLanguage"><option value="en">English</option><option value="it">Italiano</option><option value="mt">Malti</option></select></label><label><span>${esc(t('dashboardGroupSchedule'))}</span><select id="dashboardGroupSchedule"><option value="day">${esc(t('daytime'))}</option><option value="evening">${esc(t('evening'))}</option><option value="weekend">${esc(t('weekend'))}</option></select></label><label><span>${esc(t('dashboardGroupNotes'))}</span><input id="dashboardGroupNotes" maxlength="600"></label></div><button class="btn" id="dashboardSaveGroup">${esc(t('dashboardSaveGroup'))}</button></div><div class="dashboard-group-list">${dashboardGroupCardsHtml()}</div></div><div class="card dashboard-students-card"><div class="dashboard-section-heading"><div><h3>${esc(t('dashboardStudents'))}</h3><p>${esc(t('dashboardManualData'))}</p></div><span>🎓</span></div><details class="dashboard-add-details"><summary>${esc(t('dashboardAddStudent'))}</summary>${dashboardStudentFormHtml()}</details><div class="dashboard-student-list">${dashboardStudentCardsHtml()}</div></div><div class="card dashboard-invites-card"><div class="dashboard-section-heading"><div><h3>${esc(t('dashboardGenerateInvite'))}</h3><p>${esc(t('dashboardInviteWarning'))}</p></div><span>✉</span></div><div class="dashboard-invite-create"><label><span>${esc(t('dashboardInviteGroup'))}</span><select id="dashboardInviteGroup">${dashboardGroupOptions()}</select></label><button class="btn" id="dashboardCreateInvite">${esc(t('dashboardCreateInvite'))}</button></div><div class="dashboard-invite-list">${dashboardInviteCardsHtml()}</div></div><div class="card dashboard-notes-card"><h3>${esc(t('dashboardSchoolNotes'))}</h3><textarea id="dashboardSchoolNotes" maxlength="3000">${esc(schoolDashboard.schoolNotes||'')}</textarea><button class="btn secondary" id="dashboardSaveNotes">${esc(t('dashboardSaveNotes'))}</button></div><div class="card dashboard-reports-card"><div class="dashboard-section-heading"><div><h3>${esc(t('dashboardReports'))}</h3><p>${esc(t('dashboardReportsSub'))}</p></div><span>📊</span></div><div class="dashboard-report-actions"><button class="btn" id="dashboardShareReport">↗ ${esc(t('dashboardShareReport'))}</button><button class="btn secondary" id="dashboardCopyReport">⧉ ${esc(t('dashboardCopyReport'))}</button><button class="btn secondary" id="dashboardExportCsv">CSV ${esc(t('dashboardExportCsv'))}</button></div></div><div class="dashboard-privacy-box"><span>🛡</span><div><strong>${esc(t('dashboardPrivacy'))}</strong><p>${esc(t('dashboardPrivacyText'))}</p></div></div><div class="card dashboard-demo-card"><div><h3>${esc(t('dashboardDemoData'))}</h3><p>${esc(t('dashboardDemoDataSub'))}</p></div><button class="btn secondary" id="dashboardLoadDemo">${esc(t('dashboardLoadDemo'))}</button></div><button class="text-danger-button dashboard-clear" id="dashboardClear">${esc(t('dashboardClear'))}</button>`},
+ schoolpartner:()=>`<div class="section-title"><div><h2>🤝 ${esc(t('schoolPartner'))}</h2><p>${esc(t('schoolPartnerSub'))}</p></div><span class="badge partner-badge">${esc(t('schoolAreaTitle'))}</span></div><div class="school-demo-notice partner"><span>🔒</span><p>${esc(t('noRealSchoolYet'))} ${esc(t('commercialTerms'))}.</p></div><button class="dashboard-partner-launch" data-go="schooldashboard"><span>🏢</span><div><strong>${esc(t('openDashboard'))}</strong><small>${esc(t('schoolDashboardSub'))}</small></div><b>›</b></button><div class="partner-plan-grid"><article><span>FREE</span><h3>${esc(t('basicPlan'))}</h3><p>${esc(t('basicPlanSub'))}</p></article><article class="pro"><span>PRO</span><h3>${esc(t('proPlan'))}</h3><p>${esc(t('proPlanSub'))}</p></article><article class="featured"><span>${esc(t('paidServiceLabel'))}</span><h3>${esc(t('featuredPlan'))}</h3><p>${esc(t('featuredPlanSub'))}</p></article></div><div class="card partner-principles"><h3>${esc(t('partnerPrinciples'))}</h3><p>✓ ${esc(t('partnerPrincipleVerify'))}</p><p>✓ ${esc(t('partnerPrincipleFair'))}</p><p>✓ ${esc(t('partnerPrincipleControl'))}</p></div><div class="card partner-form-card"><h3>${esc(t('applySchoolPartner'))}</h3><div class="partner-form-grid"><label><span>${esc(t('schoolName'))} *</span><input id="partnerSchoolName" maxlength="100" value="${esc(schoolPartnerDraft.schoolName)}"></label><label><span>${esc(t('permitReference'))} *</span><input id="partnerPermit" maxlength="100" value="${esc(schoolPartnerDraft.permit)}"></label><label><span>${esc(t('schoolEmail'))} *</span><input id="partnerEmail" type="email" maxlength="120" value="${esc(schoolPartnerDraft.email)}"></label><label><span>${esc(t('schoolPhone'))}</span><input id="partnerPhone" maxlength="60" value="${esc(schoolPartnerDraft.phone)}"></label><label><span>${esc(t('schoolArea'))}</span><select id="partnerArea"><option value="north" ${schoolPartnerDraft.area==='north'?'selected':''}>${esc(t('areaNorth'))}</option><option value="central" ${schoolPartnerDraft.area==='central'?'selected':''}>${esc(t('areaCentral'))}</option><option value="south" ${schoolPartnerDraft.area==='south'?'selected':''}>${esc(t('areaSouth'))}</option><option value="gozo" ${schoolPartnerDraft.area==='gozo'?'selected':''}>${esc(t('areaGozo'))}</option></select></label><label><span>${esc(t('choosePlan'))}</span><select id="partnerPlan"><option value="basic" ${schoolPartnerDraft.plan==='basic'?'selected':''}>${esc(t('basicPlan'))}</option><option value="pro" ${schoolPartnerDraft.plan==='pro'?'selected':''}>${esc(t('proPlan'))}</option><option value="featured" ${schoolPartnerDraft.plan==='featured'?'selected':''}>${esc(t('featuredPlan'))}</option></select></label></div><fieldset class="partner-checks"><legend>${esc(t('schoolLanguages'))}</legend>${['en','it','mt'].map(code=>`<label><input type="checkbox" value="${code}" data-partner-language ${schoolPartnerDraft.languages.includes(code)?'checked':''}><span>${schoolLanguageLabel(code)}</span></label>`).join('')}</fieldset><fieldset class="partner-checks"><legend>${esc(t('schoolServices'))}</legend>${['english','documents','bridge','progress','vulnerable','pickup'].map(code=>`<label><input type="checkbox" value="${code}" data-partner-service ${schoolPartnerDraft.services.includes(code)?'checked':''}><span>${esc(schoolServiceLabel(code))}</span></label>`).join('')}</fieldset><label class="partner-long-field"><span>${esc(t('schoolPrices'))}</span><textarea id="partnerPrices" maxlength="1000">${esc(schoolPartnerDraft.prices)}</textarea></label><label class="partner-long-field"><span>${esc(t('schoolAvailability'))}</span><textarea id="partnerAvailability" maxlength="600">${esc(schoolPartnerDraft.availability)}</textarea></label><label class="partner-long-field"><span>${esc(t('schoolDescription'))}</span><textarea id="partnerDescription" maxlength="1200">${esc(schoolPartnerDraft.description)}</textarea></label><label class="partner-consent"><input type="checkbox" id="partnerConsent" ${schoolPartnerDraft.consent?'checked':''}><span>${esc(t('partnerConsent'))}</span></label><div class="partner-form-actions"><button class="btn secondary" id="saveSchoolDraft">${esc(t('saveSchoolDraft'))}</button><button class="btn" id="shareSchoolPartner">↗ ${esc(t('sendPartnerApplication'))}</button><button class="btn secondary" id="gmailSchoolPartner">G ${esc(t('openGmail'))}</button><button class="btn secondary" id="mailSchoolPartner">✉ ${esc(t('openMail'))}</button><button class="btn secondary" id="copySchoolPartner">⧉ ${esc(t('copyRegistration'))}</button></div></div>`,
+ licences:()=>`<div class="section-title"><div><h2>${esc(t('licences'))}</h2><p>Malta</p></div></div><div class="category-grid">${C.licences.map(x=>`<button class="licence-card" data-licence="${esc(x.code)}"><div style="font-size:27px">${x.icon}</div><strong>${esc(x.code)}</strong><span>${esc(x[settings.lang]||x.en)}</span></button>`).join('')}</div><div class="card" style="margin-top:14px"><span class="badge official">${esc(t('officialSource'))}</span><p class="muted">${esc(t('assistantDisclaimer'))}</p><a class="source-link" href="https://www.transport.gov.mt/land/driving-licence-783" target="_blank" rel="noopener">${esc(t('openSource'))} ↗</a></div>`,
+ roadcode:()=>`<div class="section-title"><div><h2>${esc(t('roadCode'))}</h2><p>${esc(t('categories'))}</p></div></div><div class="list">${C.roadCode.map(x=>`<button class="list-card" data-road="${esc(x.id)}"><span class="list-icon">${x.icon}</span><div><h3>${esc(x[settings.lang]||x.en)}</h3><p>${esc(localized(x,'summary'))}</p></div><span class="chev">›</span></button>`).join('')}</div><div class="card"><span class="badge official">${esc(t('officialSource'))}</span><p class="muted">${esc(t('lastVerified'))}: ${esc(C.meta.verified)}</p><a class="source-link" href="https://www.transport.gov.mt/land/roads-and-traffic-management/road-code-7389" target="_blank" rel="noopener">${esc(t('openSource'))} ↗</a></div>`,
+ regulations:()=>`<div class="section-title"><div><h2>${esc(t('regulations'))}</h2><p>${esc(t('lastVerified'))}: ${esc(C.meta.verified)}</p></div></div><div class="list">${C.regulations.map(x=>`<article class="list-card"><span class="list-icon">${x.icon}</span><div style="flex:1"><span class="badge official">${esc(t('officialSource'))}</span><h3>${esc(x[settings.lang]||x.en)}</h3><p>${esc(localized(x,'desc'))}</p><a class="source-link" href="${esc(x.url)}" target="_blank" rel="noopener">${esc(t('openSource'))} ↗</a></div></article>`).join('')}</div>`,
+ search:()=>`<div class="section-title"><div><h2>${esc(t('search'))}</h2><p>${Q.length} ${esc(t('questions'))}</p></div></div><div class="search-box"><input id="globalSearch" placeholder="${esc(t('searchPlaceholder'))}" autocomplete="off"><button id="searchBtn">⌕</button></div><div id="searchResults" class="list" style="margin-top:14px"></div>`,
+ assistant:()=>`<div class="section-title"><div><h2>${esc(t('ai'))}</h2><p>${esc(t('assistantLocal'))}</p></div><span class="badge assistant-offline">${esc(t('assistantOffline'))}</span></div><div class="assistant-trust"><span>🔎</span><p>${esc(t('assistantDisclaimer'))}</p></div><div class="card"><p>${esc(t('assistantIntro'))}</p><strong class="assistant-try">${esc(t('assistantTry'))}:</strong><div class="prompt-chips"><button data-prompt="precedenza rotatoria">${settings.lang==='it'?'Precedenza in rotatoria':'Roundabout priority'}</button><button data-prompt="passeggero anziano">${settings.lang==='it'?'Passeggero anziano':'Elderly passenger'}</button><button data-prompt="guasto tunnel">${settings.lang==='it'?'Guasto nel tunnel':'Tunnel breakdown'}</button><button data-prompt="freni ABS">ABS</button></div><div class="assistant-log" id="assistantLog"><div class="assistant-bubble bot">${esc(t('assistantIntro'))}</div></div><textarea id="assistantInput" placeholder="${esc(t('assistantPlaceholder'))}"></textarea><button class="big-action" id="assistantSend"><div>${esc(t('send'))}</div><span>➤</span></button></div>`,
+ profile:()=>{const st=stats(),day=dailyStats(),review=reviewStats();return `<div class="section-title"><div><h2>${esc(t('profileTitle'))}</h2><p>Malta Driving Master</p></div></div>${personalProfileHtml()}<div class="card installed-version-card"><div><span>${esc(t('installedVersion'))}</span><h3>Malta Driving Master — Build ${esc(BUILD_VERSION)}</h3><p>✓ ${esc(t('allModulesUpdated'))}</p></div><strong>${esc(t('releaseDate'))}<br>${esc(BUILD_RELEASE_DATE)}</strong></div><div class="stat-grid"><div class="stat-card"><strong>${st.seen}</strong><span>${esc(t('seen'))}</span></div><div class="stat-card"><strong>${st.accuracy}%</strong><span>${esc(t('accuracy'))}</span></div><div class="stat-card"><strong>${day.streak}</strong><span>${esc(t('streak'))}</span></div><div class="stat-card"><strong>${review.due}</strong><span>${esc(t('dueNow'))}</span></div><div class="stat-card"><strong>${review.mastered}</strong><span>${esc(t('masteredQuestions'))}</span></div><div class="stat-card"><strong>${progress.knownPhrases.length}</strong><span>${esc(t('learnedPhrases'))}</span></div><div class="stat-card"><strong>${st.best ?? '—'}</strong><span>${esc(t('best'))}</span></div></div><div class="card" style="margin-top:14px"><h3>${esc(t('language'))}</h3><select id="profileLang"><option value="en">English</option><option value="it">Italiano</option><option value="mt">Malti</option></select><h3>${esc(t('theme'))}</h3><select id="profileTheme"><option value="system">${esc(t('system'))}</option><option value="light">${esc(t('light'))}</option><option value="dark">${esc(t('dark'))}</option></select></div><div class="card profile-help-card" style="margin-top:14px"><div><h3>${esc(t('helpSupport'))}</h3><p class="muted">${esc(t('installAppSub'))}</p></div><button class="btn" data-go="help">${esc(t('menuHelp'))} ›</button></div><div class="card investor-profile-card" style="margin-top:14px"><div><h3>${esc(t('investorPreview'))}</h3><p class="muted">${esc(t('investorPreviewSub'))}</p></div><button class="btn" data-go="investorpreview">${esc(t('investorOpen'))} ›</button></div><div class="card profile-privacy-card" style="margin-top:14px"><div><h3>${esc(t('privacyCenter'))}</h3><p class="muted">${esc(t('privacyCenterSub'))}</p></div><div class="profile-privacy-actions"><button class="btn" data-go="privacycenter">${esc(t('privacyOpenCenter'))} ›</button><button class="btn secondary" id="replayPremiumIntro">${esc(t('premiumReplay'))}</button></div></div><div class="card backup-card" style="margin-top:14px"><h3>${esc(t('backup'))}</h3><p class="muted">${esc(t('backupSub'))}</p><div class="actions"><button class="btn" id="exportBackup">${esc(t('exportBackup'))}</button><button class="btn secondary" id="importBackup">${esc(t('importBackup'))}</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div></div><div class="card" style="margin-top:14px"><button class="btn danger" id="clearProgress" style="width:100%">${esc(t('clear'))}</button></div>`},
+ progress:()=>{const st=stats(),ready=readinessStats(),by=categoryStats(),examEntries=(progress.exams||[]).map((exam,index)=>({exam,index})).slice(-8).reverse();return `<div class="section-title"><div><h2>${esc(t('progress'))}</h2><p>${st.seen}/${Q.length}</p></div></div><div class="stats-fix-note"><span>✓</span><div><strong>${esc(t('statisticsCorrection'))}</strong><small>${esc(t('statisticsCorrectionSub'))}</small></div></div>${bridgeProgressHtml()}${errorDnaHtml()}<div class="readiness-card"><div class="readiness-circle" style="--score:${ready.score}"><div><strong>${ready.score}%</strong><span>${esc(t('readiness'))}</span></div></div><div class="readiness-copy"><h3>${esc(t(ready.label))}</h3><p>${esc(t(ready.recommend))}</p><button class="btn" data-go="${ready.score<68?'weaksetup':'lptv'}">${esc(t('recommended'))}</button></div></div><div class="report-actions"><button class="btn" id="shareProgressReport">↗ ${esc(t('shareProgressReport'))}</button><button class="btn secondary" id="copyProgressReport">⧉ ${esc(t('copyProgressReport'))}</button></div><div class="metric-bars"><div><div class="label"><span>${esc(t('coverage'))}</span><strong>${ready.coverage}%</strong></div><div class="mini-bar"><span style="width:${ready.coverage}%"></span></div></div><div><div class="label"><span>${esc(t('accuracy'))}</span><strong>${ready.accuracy}%</strong></div><div class="mini-bar"><span style="width:${ready.accuracy}%"></span></div></div><div><div class="label"><span>${esc(t('recentAverage'))}</span><strong>${ready.examAverage}%</strong></div><div class="mini-bar"><span style="width:${ready.examAverage}%"></span></div></div></div><div class="stat-grid"><div class="stat-card"><strong>${st.seen}</strong><span>${esc(t('seen'))}</span></div><div class="stat-card"><strong>${st.accuracy}%</strong><span>${esc(t('accuracy'))}</span></div><div class="stat-card"><strong>${st.exams}</strong><span>${esc(t('exams'))}</span></div><div class="stat-card"><strong>${examPassRate()}%</strong><span>${esc(t('passRate'))}</span></div><div class="stat-card"><strong>${st.last ?? '—'}</strong><span>${esc(t('last'))}</span></div></div><div class="card" style="margin-top:14px"><h3>${esc(t('fourChapters'))}</h3>${TOPIC_GROUPS.map(topic=>{const x=topicStats(topic.id);return `<button class="progress-topic" data-go="chaptersetup" data-id="${topic.id}"><span>${topic.icon} ${esc(t(topic.title))}</span><strong>${x.accuracy}%</strong><div class="mini-bar"><span style="width:${x.coverage}%"></span></div></button>`}).join('')}</div><div class="card detailed-history-card" style="margin-top:14px"><div class="history-heading"><div><h3>${esc(t('detailedHistory'))}</h3><p>${esc(t('examDetailsSub'))}</p></div><span>${examEntries.length}</span></div>${examEntries.length?`<div class="exam-history detailed">${examEntries.map(({exam,index})=>{const passed=exam.score>=30;return `<button class="exam-row exam-detail-row" data-exam-index="${index}"><span>${formatExamDate(exam.date)}</span><strong>${exam.score}/${exam.total}</strong><em class="${passed?'pass':'fail'}">${esc(t(passed?'passedSmall':'failedSmall'))}</em><b>${esc(t('viewDetails'))} ›</b></button>`}).join('')}</div>`:`<p class="muted">${esc(t('noExamHistory'))}</p>`}</div><div class="card" style="margin-top:14px"><h3>${esc(t('categories'))}</h3>${by.length?by.map(x=>`<div class="bar-row"><div class="label"><span>${esc(x.category)}</span><strong>${x.pct}%</strong></div><div class="mini-bar"><span style="width:${x.pct}%"></span></div></div>`).join(''):`<p class="muted">${esc(t('noResults'))}</p>`}</div>`},
+ quiz:()=>`<div class="card quiz-card"><div class="quiz-head"><span class="badge counter-badge" id="qCounter"></span><span class="timer" id="quizTimer"></span></div><div class="progress"><span id="quizProgress"></span></div><div id="examStatus" class="exam-status hidden"></div><div class="quiz-mode-row"><span class="mode-label" id="quizModeBadge"></span><span id="quizMeta" class="muted small"></span></div><div id="quizQuestion" class="question"></div><div id="quizHelp"></div><div id="quizInstruction" class="quiz-instruction"></div><div id="quizOptions"></div><div id="quizExplanation" class="explanation hidden"></div><div class="actions quiz-footer"><button class="btn secondary" id="quizExit">${esc(t('exit'))}</button><button class="btn secondary hidden" id="examPrev">‹ ${esc(t('previous'))}</button><button class="btn flag hidden" id="examFlag">☆ ${esc(t('flagQuestion'))}</button><button class="btn secondary hidden" id="examNavigator">☷ ${esc(t('navigator'))}</button><button class="btn" id="quizConfirm">${esc(t('confirm'))}</button><button class="btn hidden" id="quizNext">${esc(t('next'))}</button><button class="btn finish hidden" id="examFinish">${esc(t('finishExam'))}</button></div></div>`,
+
+ result:()=>{const r=route.data;return `<div class="card result-card"><div class="result-hero ${r.mode==='exam'?(r.pass?'pass':'fail'):'complete'}"><span>${r.mode==='exam'?(r.pass?'✓':'!'):'✓'}</span><h2>${esc(r.title)}</h2><div class="score">${r.correct}/${r.total}</div><p>${Math.round(r.correct/r.total*100)}%</p></div>${r.mode==='exam'?`<div class="result-metrics"><div><span>${esc(t('timeUsed'))}</span><strong>${formatDuration(r.timeUsed)}</strong></div><div><span>${esc(t('unanswered'))}</span><strong>${r.unanswered}</strong></div><div><span>${esc(t('flagged'))}</span><strong>${r.flagged}</strong></div></div><div class="card inset-card"><h3>${esc(t('topicResults'))}</h3>${r.breakdown.map(x=>`<div class="topic-result"><span>${x.icon} ${esc(t(x.title))}</span><strong>${x.correct}/${x.total}</strong><div class="mini-bar"><span style="width:${x.pct}%"></span></div></div>`).join('')}</div>`:''}<div class="actions result-actions"><button class="btn secondary" data-go="lptv">${esc(t('close'))}</button>${r.mode==='exam'?`<button class="btn secondary" data-go="examsetup">${esc(t('newRealExam'))}</button>`:''}${r.wrongIds.length?`<button class="btn" id="reviewWrong">${esc(t('resultReview'))}</button><button class="btn secondary" id="resultAiCoach">🧠 AI Driving Coach</button>`:''}</div></div>`}
+
+};
+
+function bindViewSpecific(){
+ if(route.name==='lptv'){
+   $('#wrongBtn').onclick=()=>{const pool=Q.filter(q=>(progress.wrong[q.id]||0)>0);if(!pool.length)return toast(t('noErrors'));startQuiz(shuffle(pool).slice(0,35),'guided')};
+   const r=$('#resumeBtn');if(r)r.onclick=resumeQuiz;
+ }
+ if(route.name==='examsetup')$('#startRealExam').onclick=()=>startQuiz(buildExam(),'exam',{timerSeconds:2700});
+ if(route.name==='studysetup')$('#startStudy').onclick=()=>{
+   const bank=$('#studyBank').value,cat=$('#studyCategory').value,n=Number($('#studyCount').value);
+   const bankPool=bank==='core'?CORE_Q:bank==='road'?ROAD_SAFETY_Q:Q;
+   const pool=cat==='ALL'?bankPool:bankPool.filter(q=>q.category===cat);
+   startQuiz(shuffle(pool).slice(0,Math.min(n,pool.length)),'guided')
+ };
+ if(route.name==='assistedsetup')$('#startAssisted').onclick=()=>{const seconds=Number($('#assistedTimer').value);startQuiz(buildExam(),'assisted',{timerSeconds:seconds})};
+ if(route.name==='chapters')screen.querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>go('chaptersetup',b.dataset.topic));
+ if(route.name==='chaptersetup')$('#startChapter').onclick=()=>{const id=$('#startChapter').dataset.topic;const pool=topicQuestions(id);const value=$('#chapterCount').value;const n=value==='all'?pool.length:Number(value);startQuiz(shuffle(pool).slice(0,Math.min(n,pool.length)),'guided')};
+ if(route.name==='weaksetup')$('#startWeak').onclick=()=>{const n=Number($('#weakCount').value);startQuiz(adaptivePool(n),'guided')};
+ if(route.name==='dailysetup')$('#startDaily').onclick=()=>startQuiz(dailyPool(),'guided');
+ if(route.name==='reviewsetup'){
+   const start=$('#startScheduledReview');
+   if(start)start.onclick=()=>startQuiz(dueQuestions().slice(0,35),'guided');
+   screen.querySelectorAll('[data-review-question]').forEach(button=>button.onclick=()=>startQuiz([Q.find(q=>q.id===button.dataset.reviewQuestion)],'guided'));
+ }
+ if(route.name==='questionlibrary')bindQuestionLibrary();
+ if(route.name==='roadmap')bindRoadmap();
+ if(route.name==='passport')bindPassport();
+ if(route.name==='schools')bindSchoolDirectory();
+ if(route.name==='schooldetail')bindSchoolDetail();
+ if(route.name==='schoolcompare')bindSchoolCompare();
+ if(route.name==='schooldashboard')bindSchoolDashboard();
+ if(route.name==='schoolpartner')bindSchoolPartner();
+ if(route.name==='bridgesetup')$('#startBridge').onclick=()=>startBridgeTest(Number($('#bridgeCount').value));
+ if(route.name==='bridgequiz')renderBridgeQuiz();
+ if(route.name==='bridgeresult'){
+   const result=bridgeResultById(route.data);
+   const language=$('#trainBridgeLanguage'),rules=$('#trainBridgeRules');
+   if(language)language.onclick=()=>startBridgeTest(Math.min(10,Math.max(5,result.languageIds.length)),result.languageIds);
+   if(rules)rules.onclick=()=>{const list=result.ruleIds.map(id=>Q.find(q=>q.id===id)).filter(Boolean);if(list.length)startQuiz(list,'guided')};
+ }
+ if(route.name==='progress'){
+   $('#shareProgressReport').onclick=()=>shareTextReport(t('reportTitle'),progressReportText(),t('progressReportCopied'));
+   $('#copyProgressReport').onclick=()=>copyTextSafe(progressReportText(),t('progressReportCopied'));
+   screen.querySelectorAll('[data-dna-reason]').forEach(button=>button.onclick=()=>trainErrorReason(button.dataset.dnaReason));
+   screen.querySelectorAll('[data-exam-index]').forEach(button=>button.onclick=()=>go('examdetail',button.dataset.examIndex));
+ }
+ if(route.name==='examdetail'){
+   const index=Number(route.data),exam=(progress.exams||[])[index];
+   $('#shareExamReport').onclick=()=>shareTextReport(t('examDetails'),examReportText(exam,index),t('examReportCopied'));
+   $('#copyExamReport').onclick=()=>copyTextSafe(examReportText(exam,index),t('examReportCopied'));
+   $('#retryExamMistakes').onclick=()=>{
+     const wrong=examDetailItems(exam).filter(item=>!item.ok).map(item=>item.q);
+     if(!wrong.length)return toast(t('noMistakesInExam'));
+     startQuiz(wrong,'guided');
+   };
+   const examCoach=$('#examDetailAiCoach');
+   if(examCoach)examCoach.onclick=()=>aiCoachReviewStart(aiExamWrongIds(exam),'examdetail');
+ }
+ if(route.name==='vocabulary')bindVocabulary();
+ if(route.name==='phrasebook')bindPhrasebook();
+ if(route.name==='flashcards')bindFlashcards();
+ if(route.name==='favourites'){
+   screen.querySelectorAll('[data-qid]').forEach(b=>b.onclick=()=>startQuiz([Q.find(q=>q.id===b.dataset.qid)],'guided'));
+   screen.querySelectorAll('[data-remove-saved]').forEach(b=>b.onclick=()=>{toggleFavourite(b.dataset.removeSaved);render()});
+ }
+ if(route.name==='licences')screen.querySelectorAll('[data-licence]').forEach(b=>b.onclick=()=>showLicence(b.dataset.licence));
+ if(route.name==='roadcode')screen.querySelectorAll('[data-road]').forEach(b=>b.onclick=()=>showRoad(b.dataset.road));
+ if(route.name==='search'){const run=()=>renderSearch($('#globalSearch').value);$('#searchBtn').onclick=run;$('#globalSearch').oninput=run;renderSearch('')}
+ if(route.name==='help'){
+   $('#installAppBtn').onclick=promptInstallApp;
+   $('#refreshAppBtn').onclick=refreshApplication;
+   $('#shareSupportReport').onclick=shareSupportReport;
+   $('#openSupportGmail').onclick=openSupportGmail;
+   $('#openSupportMail').onclick=openSupportMail;
+   $('#copySupportReport').onclick=copySupportReport;
+ }
+ if(route.name==='profile'){
+   const replayPremium=$('#replayPremiumIntro');
+   if(replayPremium)replayPremium.onclick=replayPremiumSplash;
+   const l=$('#profileLang'),th=$('#profileTheme'),file=$('#backupFile');
+   $('#savePersonalProfile').onclick=()=>{
+     const form=collectProfileForm();
+     const error=validatePersonalProfile(form);
+     if(error){toast(error);return}
+     savePersonalProfile(form);
+     toast(t('profileSaved'));
+     render();
+   };
+   const registrationOptions=$('#registrationOptions');
+   $('#showRegistrationOptions').onclick=()=>{
+     const form=collectProfileForm();
+     const error=validatePersonalProfile(form);

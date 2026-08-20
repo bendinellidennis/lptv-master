@@ -1,0 +1,6 @@
+MALTA DRIVING MASTER 39.12.44 — Replay175 upfront freeze fix
+Base: 39.12.43 content / 39.12.40 stable lineage
+Fix: 15 Replay171-175 freeze JPEGs injected into initial REPLAY_FREEZE_INLINE object.
+Targets: CARS5.6, CARS5.10, CARS2.1, CARS2.2, CARS2.3
+Reason: prevents generic __fallback police/ambulance image when later appended assignments are not reached.
+Patch files: index.html, app-3994.js, malta-scene-library.js, malta-scene-assets.js, replay-scenes.js

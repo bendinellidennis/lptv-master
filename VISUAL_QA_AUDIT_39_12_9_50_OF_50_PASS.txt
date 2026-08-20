@@ -1,0 +1,35 @@
+MALTA DRIVING MASTER — VISUAL / TECHNICAL QA
+BUILD 39.12.9 — REPLAY LIBRARY 50 READY
+
+RESULT: PASS
+
+BASE
+- Base: Build 39.12.8
+- 45 previously READY Replays preserved semantically unchanged.
+- Core database/content/Replay Engine/Coach/styles unchanged.
+
+NEW REPLAYS
+- CARS1.26 — check speed and position of following traffic before overtaking
+- CARS2.7 — always keep the zebra crossing clear in traffic queues
+- CARS2.8 — if waiting pedestrians hesitate, be patient and wait
+- CARS2.26 — if a heavy lorry takes a long time to overtake, slow down
+- CARS4.10 — two-second rule for a safe following distance
+
+VISUAL QA
+- 50/50 READY Replays have approved real-footage assets.
+- 150 freeze references checked across READY Replays: no fallback reference used.
+- New block: 15/15 phase 01–03 photographs are real Pexels photographic frames.
+- New block: all 15 photographs are distinct; no photo reused inside the new block.
+- New block: 5/5 phase 04 videos are dedicated real driving/pedestrian footage matched to the question.
+- New video IDs: 27551715, 5834617, 3657621, 8371306, 35186910.
+- No new phase-04 video re-use introduced against the 39.12.8 base.
+
+TECHNICAL QA
+- New video download URLs verified to resolve to direct videos.pexels.com MP4 files during source validation.
+- Direct MP4 URLs embedded as primary video source, with Pexels download URL retained as fallback source.
+- JavaScript syntax check: PASS on app-3994.js, malta-scene-assets.js, malta-scene-library.js, replay-scenes.js.
+- New question -> scene -> asset linkage: PASS 5/5.
+- Correct-answer mapping against database.js: PASS 5/5.
+- Cache-busting version 391209: PASS.
+- Patch contains exactly 5 modified files.
+- Applying the 5-file patch over 39.12.8 reproduces the 39.12.9 application files: PASS.

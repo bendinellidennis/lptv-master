@@ -1,0 +1,29 @@
+MALTA DRIVING MASTER — BUILD 40.0 — AI DRIVING COACH FOUNDATION
+
+BASE
+- Build 39.12.69 Replay250 FINAL ENGINE/UI
+- Replay Library 1–250 preserved byte-for-byte in protected Replay files.
+
+NEW
+- Visible AI Instructor renamed/upgraded to AI Driving Coach.
+- Guided Study and Assisted Simulation keep contextual Coach access after answer correction.
+- Real Exam remains locked during the test: no Coach/translation/explanation is exposed while answering.
+- Exam/session results now include AI Driving Coach when mistakes exist.
+- Coach opens a guided mistake-review queue with Previous / Next mistake navigation.
+- Existing simple/technical explanation, Malta example, memory tip and Socratic understanding are reused.
+
+MODIFIED APP FILES
+- index.html
+- app-3994.js
+
+PROTECTED REPLAY FILES UNCHANGED
+- malta-scene-library.js
+- malta-scene-assets.js
+- replay-scenes.js
+- replay-engine.js
+- replay-coach.js
+
+CHECKS
+- JavaScript syntax: PASS (node --check)
+- app-3994.js size: 18655346 bytes
+- Browser/iPhone functional test: NOT CLAIMED; must be tested on Koder/GitHub Pages.

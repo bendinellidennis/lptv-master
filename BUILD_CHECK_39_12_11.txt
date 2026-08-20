@@ -1,0 +1,7 @@
+MALTA DRIVING MASTER BUILD 39.12.11
+Replay Library: 55 READY
+Base: 39.12.10
+Added: CARS4.25, CARS6.24, CARS6.4, CARS6.36, CARS6.37
+01-03: real frozen video frames from each dedicated real clip
+04: dedicated real moving footage
+Already approved 50 Replay entries preserved.

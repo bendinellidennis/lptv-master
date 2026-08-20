@@ -1,0 +1,37 @@
+MALTA DRIVING MASTER — VISUAL QA AUDIT 39.12.19
+Replay Library: 90 READY
+Base verified: 39.12.18 Replay85
+
+NEW REPLAYS
+- CARS6.15 — elderlyPelicanWait — PASS
+  01-03: real elderly pedestrians at/on marked crossings
+  04: real elderly couple crossing a zebra crossing
+- CARS9.1 — dualCarriagewayJoinLeft — PASS
+  01-03: real UK motorway / multi-lane left-driving context
+  04: real UK motorway traffic; Replay marks the normal left lane
+- CARS13.1 — accidentProtectYourself — PASS
+  01-03: real street first-aid / protected responder context
+  04: real paramedics assisting an injured person on a street
+- CARS6.64 — antiDazzleInteriorMirror — PASS
+  01-03: real mirror glare / rear-view mirror adjustment imagery
+  04: real driver physically adjusting the interior rear-view mirror
+- CARS13.7 — unconsciousCasualtyAbc — PASS
+  01-03: real CPR, breathing and pulse-check imagery
+  04: real CPR/lifesaving training footage
+
+REGRESSION CHECK
+- Previous READY count: 85
+- New READY count: 90
+- Previous 85 catalog entries changed: 0
+- Previous 85 approved assets changed: 0
+- Previous 85 replay scenes changed: 0
+- New primary video duplicates against the previous build: 0
+- Visual generic-fallback risk across all 90 READY replays: 0
+
+PATCH CONTRACT
+Exactly 5 functional files:
+index.html
+app-3994.js
+malta-scene-library.js
+malta-scene-assets.js
+replay-scenes.js

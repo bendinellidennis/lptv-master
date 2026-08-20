@@ -1,0 +1,61 @@
+MALTA DRIVING MASTER — VISUAL QA AUDIT 39.12.15
+Target: Replay Library 70 READY
+Base: 39.12.14 Replay65
+
+NEW REPLAYS — 5/5 PASS
+
+1. CARS6.22 — whiteStickBlindPedestrian — PASS
+   Question: white stick carried by a pedestrian.
+   Correct answer: the person is blind.
+   01-03: real image/video poster visibly centred on a white mobility cane and visually-impaired pedestrian.
+   04: unique real footage of a visually-impaired pedestrian using a walking stick.
+   Semantic match: DIRECT.
+
+2. CARS5.3 — correctiveGlassesAlwaysDriving — PASS
+   Question: driver can meet required number-plate reading distance only with glasses; when wear them?
+   Correct answer: all the time when driving.
+   01-03: real close-up photo of a driver visibly wearing glasses while driving.
+   04: unique real driving footage explicitly associated with eyeglasses/driver/driving.
+   Semantic match: DIRECT.
+
+3. CARS5.5 — eyesightStandardCorrectiveLenses — PASS
+   Question: when glasses/contact lenses are compulsory while driving.
+   Correct answer: when the driver cannot read a number plate from 20.5 metres without them.
+   01-03: real driver photo with glasses clearly visible.
+   04: unique real footage of a female driver wearing glasses in live traffic.
+   Semantic match: DIRECT.
+
+4. CARS9.7 — hardShoulderEmergencyOnly — PASS
+   Question: what should the hard shoulder be used for?
+   Correct answer: stopping in an emergency.
+   01-03: real highway roadside emergency / flat-tyre scene.
+   04: unique real moving footage of a roadside flat-tyre emergency with highway/police assistance.
+   Semantic match: DIRECT.
+
+5. CARS2.12 — doNotFollowTooClosely — PASS
+   Question: when following another vehicle, what should you NOT do?
+   Correct answer: follow the vehicle too closely.
+   01-03: real windshield view with vehicles ahead and a clearly visible safety gap.
+   04: unique real POV traffic footage showing vehicles ahead and following-space context.
+   Semantic match: DIRECT.
+
+TECHNICAL CHECKS
+- SceneCatalog ready count: 70.
+- Each of the 5 new entries validates individually: PASS.
+- New entries in global audit errors: 0.
+- Duplicate video among the 5 new entries or against the existing library: 0.
+- Existing approved catalog entries changed: 0.
+- Existing approved assets changed: 0.
+- Existing approved replay scenes changed: 0.
+- JavaScript syntax check on all modified JS files: PASS.
+- 01-03 phaseImages explicitly set on all 5 new scenes; generic fallback is not used by these scenes.
+- 04 uses a dedicated unique real video on all 5 new scenes.
+
+BASELINE PARITY NOTE
+The internal full-library metadata audit reports the same 24 legacy metadata exceptions in both 39.12.14 and 39.12.15. No new exception was introduced. These pre-existing entries were deliberately not altered because the 65 previously approved Replays must remain untouched.
+
+RESULT: NEW BLOCK PASS — NO REGRESSION AGAINST APPROVED REPLAY65 BASE.
+
+PATCH DELIVERY CHECK:
+PASS — app-3994.js included as fifth functional replacement file.
+PASS — index.html cache reference updated to app-3994.js?v=391215.

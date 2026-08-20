@@ -1,0 +1,22 @@
+MALTA DRIVING MASTER — BUILD 40.2 TARGETED RECOVERY
+Base: Build 40.1.1 approved
+
+Added:
+- AI Driving Coach automatic recovery priority from recent exam mistakes + saved mistake history.
+- Up to 4 weak-topic rankings with weighted recent errors.
+- Automatic priority review session (up to 10 questions).
+- Most critical questions open directly in AI Driving Coach.
+- Compact priority recovery card in Exam Day Mode.
+
+Protected:
+- Replay 1–250 unchanged.
+- malta-scene-library.js unchanged.
+- malta-scene-assets.js unchanged.
+- replay-scenes.js unchanged.
+- replay-engine.js unchanged.
+
+Validation:
+- JavaScript syntax: PASS (node --check)
+- app-3994.js below 25 MiB: PASS
+- protected file SHA-256 equality vs Build 40.1.1: PASS
+- Real iPhone/Koder/GitHub interaction test: pending user verification.

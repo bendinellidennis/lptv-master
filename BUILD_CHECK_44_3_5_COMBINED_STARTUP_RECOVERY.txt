@@ -1,0 +1,7 @@
+Malta Driving Master — Build 44.3.5 COMBINED STARTUP RECOVERY
+
+Fix combinato verificato:
+- definisce ACCOUNT_ENROLLMENT_SCOPED_PREFIX e accountEnrollmentBoundUserId prima del primo uso;
+- corregge le stringhe non escapate in replay-scenes.js che causavano SyntaxError;
+- nessuna modifica a database domande, Replay logic, media, Twin, Roster o SQL Supabase;
+- tutti i file JavaScript passano node --check.

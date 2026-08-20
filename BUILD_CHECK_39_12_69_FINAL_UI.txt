@@ -1,0 +1,28 @@
+MALTA DRIVING MASTER - BUILD 39.12.69 - REPLAY250 FINAL ENGINE/UI REFINEMENT
+Base: Build 39.12.68 Replay250 GitHub Definitive.
+
+Scope: engine/UI only. No approved Replay scene, freeze image, question, answer or video changed.
+
+Implemented:
+- Manual progression hardened: future stages 02/03/04 are disabled until unlocked.
+- Automatic stage progression removed from the legacy analysis controls.
+- Mobile Continue dock added for iPhone-size layouts after hazard success and in phases 02/03.
+- Inline Continue remains available on larger screens; mobile duplicate is hidden while the dock is active.
+- Restart control resets the Replay to phase 01 without changing content.
+- Existing explanation-below-scene/video behavior preserved.
+- Existing inline video / iOS presentation logic preserved.
+- Cache-bust updated to 391269finalui.
+
+Structural verification performed:
+- app-3994.js JavaScript syntax: OK (node --check).
+- malta-scene-library.js syntax: OK.
+- malta-scene-assets.js syntax: OK.
+- replay-scenes.js syntax: OK.
+- replay-scenes.js contains 250 unique scene IDs.
+- All 250 registered scene definitions contain a phase-04 video URL.
+- All 250 registered scene definitions contain phase 02/03/04 teaching copy.
+- app-3994.js JPEG data payload hash is unchanged from Build 39.12.68.
+- malta-scene-library.js, malta-scene-assets.js and replay-scenes.js are byte-identical to Build 39.12.68.
+- app-3994.js size remains below 25 MB with margin.
+
+Important: this is a structural/code verification. Real iPhone/Koder/GitHub Pages runtime verification must still be performed on the delivered PATCH before declaring the final runtime audit complete.

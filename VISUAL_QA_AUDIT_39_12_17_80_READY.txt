@@ -1,0 +1,9 @@
+MALTA DRIVING MASTER — VISUAL QA 39.12.17
+80 READY
+New strict-match Replay checks:
+CARS9.8 — hard-shoulder rejoin / build speed before merging — PASS
+CARS9.11 — missed exit / continue to next exit — PASS
+CARS4.16 — driver-induced skid — PASS
+CARS13.11 — shock / stay and reassure — PASS
+CARS13.8 — ABC first aid / airway, breathing, circulation — PASS
+No new video URL duplicates. Previous 75 scene definitions preserved.

@@ -1,0 +1,7 @@
+MALTA DRIVING MASTER 39.12.48 — Replay175 CLEAN PHOTO MOBILE FIX
+Base: 39.12.44 Replay175 UPFRONT FREEZE FIX FULL only.
+Targets only: CARS5.6, CARS5.10, CARS2.1, CARS2.2, CARS2.3.
+Fix: the 15 Replay175 inline JPEG freezes were re-prepared as 900x560 mobile-safe photographic frames.
+Removed the baked-in bottom instructional caption cards that were being enlarged/cropped by the existing object-fit:cover mobile stage.
+No global CSS change. No Replay 1-170 media/key/logic change. Coach/Continua/questions/answers unchanged.
+Patch files: index.html, app-3994.js, malta-scene-library.js, malta-scene-assets.js, replay-scenes.js

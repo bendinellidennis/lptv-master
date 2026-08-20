@@ -1,0 +1,16 @@
+MALTA DRIVING MASTER — VISUAL QA AUDIT 39.12.11
+Result: PASS for new block and regression preservation
+Base: 39.12.10 — 50 READY
+Build: 39.12.11 — 55 READY
+New: CARS4.25, CARS6.24, CARS6.4, CARS6.36, CARS6.37
+
+Checks:
+- Correct-answer indexes match database for all 5 new Replay entries.
+- 5 unique real-video sources; none reused from the 39.12.10 approved base.
+- 01-03 for the 5 new Replay scenes use three real frozen frames from each dedicated real clip (no generic fallback).
+- 04 uses the dedicated live real clip.
+- All previous 50 ready catalog entries/scenes/assets preserved object-for-object.
+- Modified JavaScript passes node --check.
+- Patch-over-base application reproduces all five full-build code files exactly and passes audit.
+
+Inherited base note: 39.12.10 already contains one duplicate primary video across two previously approved Replay entries. It was not modified because approved Replays are frozen by project rule. The new 39.12.11 block introduces no reused video.

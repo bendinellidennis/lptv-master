@@ -1,0 +1,7 @@
+Malta Driving Master — Build 44.3.4 STARTUP SCOPE FIX
+
+Fix mirato su 44.3.1 FULL fornita dall'utente.
+- Definita ACCOUNT_ENROLLMENT_SCOPED_PREFIX, usata dal sistema di stato enrollment per Supabase UID.
+- Definita accountEnrollmentBoundUserId prima del primo uso.
+- Nessuna modifica a Replay, database domande, media, Twin, Roster o SQL Supabase.
+- Cache bust app-3994.js aggiornato a 4434startupscopefix.

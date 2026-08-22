@@ -2446,3 +2446,29 @@ body.replay-fullscreen-open{
 .option.option-with-visual{align-items:center;gap:12px}.answer-visual{width:92px;height:72px;object-fit:contain;border-radius:10px;background:#fff;border:1px solid var(--line,#e5e7eb);padding:4px;flex:0 0 auto}
 .license-b-visual-pipeline{border:1px solid rgba(245,158,11,.28);background:linear-gradient(180deg,rgba(255,251,235,.95),rgba(255,255,255,.98))}.license-b-visual-pipeline .locked{color:#92400e;background:#fef3c7;border-radius:999px;padding:7px 10px}
 @media(max-width:520px){.answer-visual{width:78px;height:62px}.question-visual img{max-height:300px}}
+
+/* 45.2.2 Moto category mobile layout */
+.moto-category-grid{display:grid;gap:8px;margin-top:14px}
+.moto-category-row{display:grid;grid-template-columns:48px minmax(0,1fr) auto 18px;gap:12px;align-items:center;width:100%;min-height:76px;text-align:left;border:1px solid #dde6ea;background:#f7fafb;border-radius:18px;padding:10px 14px;color:#0c2940}
+.moto-category-num{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:#e2f8f0;font-weight:900;font-size:20px;line-height:1;color:#0c2940}
+.moto-category-main{min-width:0;display:flex;flex-direction:column;gap:2px}
+.moto-category-main b{display:block;font-size:18px;line-height:1.15;color:#0c2940;overflow-wrap:anywhere}
+.moto-category-main small{display:block;font-size:15px;line-height:1.2;color:#657986}
+.moto-category-code{white-space:nowrap;font-size:16px;line-height:1;color:#0c2940;align-self:center}
+.moto-category-arrow{font-size:28px;line-height:1;color:#0c2940;text-align:right}
+@media(max-width:520px){
+ .moto-category-card{padding-left:18px;padding-right:18px}
+ .moto-category-row{grid-template-columns:42px minmax(0,1fr) auto 14px;gap:9px;min-height:70px;padding:9px 10px}
+ .moto-category-num{width:38px;height:38px;border-radius:12px;font-size:18px}
+ .moto-category-main b{font-size:16px;line-height:1.12}
+ .moto-category-main small{font-size:14px}
+ .moto-category-code{font-size:14px}
+ .moto-category-arrow{font-size:24px}
+}
+@media(max-width:390px){
+ .moto-category-row{grid-template-columns:38px minmax(0,1fr) auto 12px;gap:7px;padding:8px}
+ .moto-category-num{width:34px;height:34px;font-size:16px}
+ .moto-category-main b{font-size:15px}
+ .moto-category-main small{font-size:13px}
+ .moto-category-code{font-size:13px}
+}

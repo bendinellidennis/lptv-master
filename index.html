@@ -106,7 +106,7 @@ html{background:#04121f}
 body{background:radial-gradient(circle at 82% -5%,rgba(13,182,200,.08),transparent 28%),var(--bg);letter-spacing:-.01em}
 .app-shell{background:transparent}
 .app-header{height:calc(80px + env(safe-area-inset-top));padding:calc(9px + env(safe-area-inset-top)) 16px 9px;background:linear-gradient(145deg,#061a2b 0%,#092c47 72%,#0a3850 100%);box-shadow:0 12px 30px rgba(2,17,29,.24);border-bottom:1px solid rgba(75,205,219,.12)}
-.brand{gap:10px}.brand strong{font-size:19px;font-weight:900;letter-spacing:-.025em}.brand span{font-size:10px;color:#9fc2d2}.brand-symbol{width:43px;height:43px}.brand-symbol .sea-line{stroke:#15c4d1;stroke-width:3.4}
+.brand{gap:10px;cursor:pointer;touch-action:manipulation;position:relative;z-index:4;-webkit-user-select:none;user-select:none}.brand strong{font-size:19px;font-weight:900;letter-spacing:-.025em}.brand span{font-size:10px;color:#9fc2d2}.brand-symbol{width:43px;height:43px}.brand-symbol .sea-line{stroke:#15c4d1;stroke-width:3.4}
 .icon-btn,.lang-chip{min-width:43px;height:43px;border-radius:15px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 1px rgba(255,255,255,.08)}
 .lang-chip{font-size:14px}
 main{max-width:980px;padding:18px 16px 38px}
@@ -541,7 +541,7 @@ html,body,.app-shell,main,#screen{max-width:100%;overflow-x:hidden!important}
 <script src="replay-scenes.js?v=450adeepverify"></script>
 <script src="scene-audit.js?v=39137"></script>
 <script src="replay-coach.js?v=39137"></script>
-<script src="app-3994.js?v=4561busdfinalfix"></script>
+<script src="app-3994.js?v=4562exitnavfix"></script>
 <script id="mdm-startup-splash-controller">
 (function(){
  const splash=document.getElementById('mdmStartupSplash');

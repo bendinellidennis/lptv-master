@@ -59,5 +59,21 @@
  ],
  replayPolicy:'shared-only-when-semantically-relevant',twinPolicy:'license-aware',evidencePolicy:'license-aware',missionPolicy:'license-aware'
 });
- register({id:'MT-D',countryPackId:'MT-LPTV-TAG',countryCode:'MT',licenceType:'D',programme:'Bus D',status:'planned',payloadInstalled:false,questionBank:{installed:false},examRules:null});
+ register({
+ id:'MT-D',countryPackId:'MT-LPTV-TAG',countryCode:'MT',licenceType:'D',programme:'Bus D',status:'audit-required',payloadInstalled:false,
+ questionBank:{installed:false,sourceAcquired:true,officialCount:208,currentCanonicalMatches:0,missingOfficial:208,officialSource:'Transport Malta · Passenger Vehicles Version 4',officialSourceI18n:{it:'Transport Malta · Veicoli per trasporto passeggeri Versione 4',en:'Transport Malta · Passenger Vehicles Version 4',mt:'Transport Malta · Vetturi kbar għall-Ġarr tal-Passiġġieri Verżjoni 4'},officialDocuments:{d_d1:{en:true,mt:true,version:4,detectedQuestionBlocks:208,idPrefix:'BUSCOACH',malteseIdPrefix:'MBUSCOACH',idSetsMatch:true}},sourceAuditDate:'2026-08-23'},
+ examRules:{installed:true,verified:true,questions:35,durationMinutes:45,passCorrect:30,source:'Transport Malta · Applying for the Theory Test'},
+ audit:{classification:'Bus D official-source foundation · source + exam rules verified',noteI18n:{it:'Avviato il License Pack Bus D dalla banca ufficiale Transport Malta Passenger Vehicles Versione 4. Le versioni inglese e maltese contengono entrambe 208 ID canonici corrispondenti (BUSCOACH / MBUSCOACH). Fonte e regole d’esame sono verificate; nessuna domanda viene attivata finché audit, answer key, visuali e import runtime non sono completati.',en:'Bus D License Pack started from the official Transport Malta Passenger Vehicles Version 4 bank. The English and Maltese versions both contain 208 matching canonical IDs (BUSCOACH / MBUSCOACH). Source and exam rules are verified; no questions activate until audit, answer keys, visuals and runtime import are complete.',mt:'Il-License Pack Bus D beda mill-bank uffiċjali ta’ Transport Malta Passenger Vehicles Verżjoni 4. Il-verżjonijiet bl-Ingliż u bil-Malti t-tnejn fihom 208 ID kanoniku li jaqblu (BUSCOACH / MBUSCOACH). Is-sors u r-regoli tal-eżami huma vverifikati; l-ebda mistoqsija ma tiġi attivata sakemm jitlestew l-audit, iċ-ċwievet tat-tweġibiet, il-viżwali u l-importazzjoni fir-runtime.'}},
+ categoryTaxonomy:[
+  {id:'weights-dimensions',it:'Pesi e dimensioni del veicolo',en:'Vehicle weights and dimensions',mt:'Piżijiet u dimensjonijiet tal-vettura'},
+  {id:'braking-systems',it:'Sistemi di frenata',en:'Braking systems',mt:'Sistemi tal-ibbrejkjar'},
+  {id:'passenger-safety',it:'Trasporto, sicurezza e comfort passeggeri',en:'Passenger carrying, safety and comfort',mt:'Ġarr, sigurtà u kumdità tal-passiġġieri'},
+  {id:'road-procedure',it:'Strada, fermate e manovre',en:'Road procedure, stops and manoeuvres',mt:'Proċedura fit-triq, waqfiet u manuvri'},
+  {id:'accident-handling',it:'Gestione incidenti ed emergenze',en:'Accident and emergency handling',mt:'Ġestjoni ta’ inċidenti u emerġenzi'},
+  {id:'vehicle-condition',it:'Condizioni e controlli del veicolo',en:'Vehicle condition and checks',mt:'Kundizzjoni u kontrolli tal-vettura'},
+  {id:'restricted-view',it:'Visibilità, specchi e angoli ciechi',en:'Restricted view, mirrors and blind spots',mt:'Viżibbiltà, mirja u blind spots'},
+  {id:'environment',it:'Guida professionale ed ambiente',en:'Professional driving and environment',mt:'Sewqan professjonali u ambjent'}
+ ],
+ replayPolicy:'shared-only-when-semantically-relevant',twinPolicy:'license-aware',evidencePolicy:'license-aware',missionPolicy:'license-aware'
+});
 })(window);

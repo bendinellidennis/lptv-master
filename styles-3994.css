@@ -2506,3 +2506,13 @@ body.replay-fullscreen-open{
 .driving-twin-next-evidence>div>span{display:inline-flex;align-items:center;min-height:32px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.1);color:#fff;font-size:12px;font-weight:750;line-height:1.25}
 .driving-twin-next-evidence>p{margin:9px 0 0!important;color:rgba(255,255,255,.72)!important;font-size:11px!important;line-height:1.35!important}
 @media(max-width:520px){.driving-twin-next-evidence{padding:12px}.driving-twin-next-evidence>div{display:grid;grid-template-columns:1fr}.driving-twin-next-evidence>div>span{border-radius:12px}}
+
+
+/* Build 45.8.5 — Next Best Action Measurement Contract */
+.driving-twin-next-measurement{margin-top:12px;padding:14px 16px;border:1px solid rgba(103,220,211,.22);border-radius:18px;background:rgba(3,44,61,.20)}
+.driving-twin-next-measurement>small{display:block;color:#b8f4ef;font-size:11px;font-weight:900;letter-spacing:.13em;margin-bottom:9px}
+.driving-twin-next-measurement>div{display:grid;gap:7px}
+.driving-twin-next-measurement>div>span{display:grid;grid-template-columns:24px 1fr;align-items:center;gap:8px;min-height:34px;padding:7px 9px;border-radius:12px;background:rgba(255,255,255,.075);color:#fff;font-size:12px;font-weight:700;line-height:1.3}
+.driving-twin-next-measurement>div>span>b{display:grid;place-items:center;width:22px;height:22px;border-radius:8px;background:rgba(103,220,211,.16);color:#8ef0e8;font-size:10px}
+.driving-twin-next-measurement>p{margin:9px 0 0!important;color:rgba(255,255,255,.68)!important;font-size:11px!important;line-height:1.35!important}
+@media(max-width:520px){.driving-twin-next-measurement{padding:12px}.driving-twin-next-measurement>div>span{font-size:11.5px}}

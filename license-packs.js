@@ -74,6 +74,6 @@
   {id:'restricted-view',it:'Visibilità, specchi e angoli ciechi',en:'Restricted view, mirrors and blind spots',mt:'Viżibbiltà, mirja u blind spots'},
   {id:'environment',it:'Guida professionale ed ambiente',en:'Professional driving and environment',mt:'Sewqan professjonali u ambjent'}
  ],
- replayPolicy:'shared-only-when-semantically-relevant',twinPolicy:'license-aware',evidencePolicy:'license-aware',missionPolicy:'license-aware'
+ replayPolicy:'shared-only-when-semantically-relevant',twinPolicy:'license-aware',evidencePolicy:'license-aware',missionPolicy:'license-aware',intelligenceBridge:{build:'45.7.0',enabled:true,chain:['error','replay','twin','recovery','readiness'],noGenericReplayFallback:true}
 });
 })(window);

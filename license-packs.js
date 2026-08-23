@@ -57,7 +57,7 @@
   {id:'vehicle-checks',it:'Controlli, difetti e manutenzione',en:'Checks, defects and maintenance',mt:'Kontrolli, difetti u manutenzjoni'},
   {id:'professional-responsibility',it:'Responsabilità del conducente professionale',en:'Professional driver responsibility',mt:'Responsabbiltà tas-sewwieq professjonali'}
  ],
- replayPolicy:'shared-only-when-semantically-relevant',twinPolicy:'license-aware',evidencePolicy:'license-aware',missionPolicy:'license-aware'
+ replayPolicy:'shared-only-when-semantically-relevant',twinPolicy:'license-aware',evidencePolicy:'license-aware',missionPolicy:'license-aware',intelligenceBridge:{build:'45.7.2',enabled:true,chain:['error','replay','twin','recovery','readiness'],noGenericReplayFallback:true,visibleInActivePack:true}
 });
  register({
  id:'MT-D',countryPackId:'MT-LPTV-TAG',countryCode:'MT',licenceType:'D',programme:'Bus D',status:'verified',payloadInstalled:true,

@@ -2516,3 +2516,19 @@ body.replay-fullscreen-open{
 .driving-twin-next-measurement>div>span>b{display:grid;place-items:center;width:22px;height:22px;border-radius:8px;background:rgba(103,220,211,.16);color:#8ef0e8;font-size:10px}
 .driving-twin-next-measurement>p{margin:9px 0 0!important;color:rgba(255,255,255,.68)!important;font-size:11px!important;line-height:1.35!important}
 @media(max-width:520px){.driving-twin-next-measurement{padding:12px}.driving-twin-next-measurement>div>span{font-size:11.5px}}
+
+
+/* Build 45.8.6 — Measurement Closure / Verified Outcome */
+.driving-twin-measurement-closure{margin-top:12px;padding:14px 16px;border:1px solid rgba(103,220,211,.24);border-radius:18px;background:rgba(255,255,255,.075)}
+.driving-twin-measurement-closure-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.driving-twin-measurement-closure-head small{display:block;color:#b8f4ef;font-size:11px;font-weight:900;letter-spacing:.13em;margin-bottom:5px}
+.driving-twin-measurement-closure-head h3{margin:0;color:#fff;font-size:15px;line-height:1.25}
+.driving-twin-measurement-closure-head>span{flex:0 0 auto;padding:6px 9px;border-radius:999px;font-size:10.5px;font-weight:850;line-height:1.15;text-align:center;background:rgba(255,255,255,.09);color:#e9f7f6}
+.driving-twin-measurement-closure-head>span.verified{background:rgba(103,220,211,.17);color:#9df3eb}
+.driving-twin-measurement-closure-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.driving-twin-measurement-closure-grid article{min-width:0;padding:9px;border-radius:12px;background:rgba(1,35,48,.22)}
+.driving-twin-measurement-closure-grid small{display:block;color:rgba(255,255,255,.66);font-size:9px;font-weight:900;letter-spacing:.08em;margin-bottom:5px}
+.driving-twin-measurement-closure-grid b{display:block;color:#fff;font-size:13px;line-height:1.2;overflow-wrap:anywhere}
+.driving-twin-measurement-closure-grid p{margin:4px 0 0!important;color:rgba(255,255,255,.67)!important;font-size:9.5px!important;line-height:1.25!important}
+.driving-twin-measurement-closure-foot{margin:9px 0 0!important;color:rgba(255,255,255,.67)!important;font-size:10.5px!important;line-height:1.35!important}
+@media(max-width:520px){.driving-twin-measurement-closure{padding:12px}.driving-twin-measurement-closure-head{flex-direction:column}.driving-twin-measurement-closure-grid{grid-template-columns:1fr}.driving-twin-measurement-closure-grid article{display:grid;grid-template-columns:1fr auto;column-gap:8px;align-items:center}.driving-twin-measurement-closure-grid article small,.driving-twin-measurement-closure-grid article p{grid-column:1/-1}.driving-twin-measurement-closure-grid b{text-align:left}}

@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.29.7';
+const BUILD_VERSION = '45.8.29.8';
 const BUILD_RELEASE_DATE = '25/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -1252,7 +1252,8 @@ function licenseCCEViewHtml(){
  <section class="card license-b-id-card hidden" id="licenseCCEBankCard"><div class="license-pack-head"><div><small>386 ${esc(lang3('ID VERIFICATI','VERIFIED IDS','IDs IVVERIFIKATI'))}</small><h2>Transport Malta · C/C1 + C1E/CE · Version 4</h2></div><button class="btn secondary" id="licenseCCECloseBank">×</button></div><div class="license-b-id-grid">${CCE_Q.map(q=>`<button data-license-cce-q="${esc(q.id)}"><b>${esc(q.id)}</b><span>${esc(questionText(q))}</span></button>`).join('')}</div></section>`;
 }
 function bindLicenseCCE(){
- licensePackEngineState.activeId='MT-C-CE';licensePackEngineState.inspectedId='MT-C-CE';save(LICENSE_PACK_ENGINE_KEY,licensePackEngineState);
+ autonomousPackSetActive('MT-C-CE');
+ bindAutonomousPackResume('licensecce');
  const study=$('#licenseCCEStudy');if(study)study.onclick=()=>startQuiz(shuffle(CCE_Q).slice(0,35),'guided',{returnRoute:'licensecce'});
  const exam=$('#licenseCCEExam');if(exam)exam.onclick=()=>startQuiz(shuffle(CCE_Q).slice(0,35),'exam',{timerSeconds:45*60,returnRoute:'licensecce'});
  const bank=$('#licenseCCEBank');if(bank)bank.onclick=()=>{$('#licenseCCEBankCard')?.classList.remove('hidden');$('#licenseCCEBankCard')?.scrollIntoView({behavior:'smooth',block:'start'})};
@@ -1355,7 +1356,8 @@ function licenseDViewHtml(){
  <section class="card license-b-id-card hidden" id="licenseDBankCard"><div class="license-pack-head"><div><small>208 ${esc(lang3('ID VERIFICATI','VERIFIED IDS','IDs IVVERIFIKATI'))}</small><h2>Transport Malta · Passenger Vehicles · Version 4</h2></div><button class="btn secondary" id="licenseDCloseBank">×</button></div><div class="license-b-id-grid">${BUS_D_Q.map(q=>`<button data-license-d-q="${esc(q.id)}"><b>${esc(q.id)}</b><span>${esc(questionText(q))}</span></button>`).join('')}</div></section>`;
 }
 function bindLicenseD(){
- licensePackEngineState.activeId='MT-D';licensePackEngineState.inspectedId='MT-D';save(LICENSE_PACK_ENGINE_KEY,licensePackEngineState);
+ autonomousPackSetActive('MT-D');
+ bindAutonomousPackResume('licensed');
  const study=$('#licenseDStudy');if(study)study.onclick=()=>startQuiz(shuffle(BUS_D_Q).slice(0,35),'guided',{returnRoute:'licensed'});
  const exam=$('#licenseDExam');if(exam)exam.onclick=()=>startQuiz(shuffle(BUS_D_Q).slice(0,35),'exam',{timerSeconds:45*60,returnRoute:'licensed'});
  const bank=$('#licenseDBank');if(bank)bank.onclick=()=>{$('#licenseDBankCard')?.classList.remove('hidden');$('#licenseDBankCard')?.scrollIntoView({behavior:'smooth',block:'start'})};
@@ -1399,6 +1401,42 @@ function licensePackViewHtml(){
  ${globalMultiLicenseIntelligenceAuditHtml()} <section class="card license-pack-health"><div class="license-pack-head"><div><small>${esc(lang3('CONTROLLO SALUTE ARCHITETTURA','ARCHITECTURE HEALTH CHECK','KONTROLL TAL-INTEGRITÀ TAL-ARKITETTURA'))}</small><h2>${check.passed}/${check.gates.length} ${esc(lang3('gate superati','gates passed','kontrolli mgħoddija'))}</h2></div><span>🛡️</span></div><div class="license-pack-gates">${check.gates.map(g=>`<article class="${g.pass?'pass':'fail'}"><span>${g.pass?'✓':'!'}</span><div><b>${esc(g.label)}</b><small>${esc(g.detail)}</small></div></article>`).join('')}</div><button class="btn" id="licensePackRecheck">${esc(lang3('Riesegui controllo','Run check again','Erġa’ agħmel il-kontroll'))}</button></section>`;
 }
 
+function autonomousPackPoolForRoute(routeName){
+ if(routeName==='licenselptv')return Q.slice();
+ if(routeName==='licenseb')return licenseBVerifiedPool();
+ if(routeName==='licensea')return licenseAVerifiedPool();
+ if(routeName==='licensecce')return CCE_Q.slice();
+ if(routeName==='licensed')return BUS_D_Q.slice();
+ return Q.slice();
+}
+function autonomousPackSetActive(packId){
+ if(!packId)return;
+ licensePackEngineState.activeId=packId;
+ licensePackEngineState.inspectedId=packId;
+ save(LICENSE_PACK_ENGINE_KEY,licensePackEngineState);
+}
+function autonomousPackResumeSession(routeName){
+ const s=load(SESSION,null);
+ return s&&Array.isArray(s.list)&&s.list.length&&String(s.returnRoute||'')===String(routeName||'')?s:null;
+}
+function bindAutonomousPackResume(routeName){
+ const s=autonomousPackResumeSession(routeName),host=screen.querySelector('.license-b-actions');
+ if(!s||!host||$('#autonomousPackResume'))return;
+ const button=document.createElement('button');
+ button.id='autonomousPackResume';
+ button.className='big-action green';
+ button.innerHTML=`<div>${esc(t('resume'))}<small>${esc(modeLabel(s.mode))} · ${Math.min(Number(s.index||0)+1,s.list.length)}/${s.list.length}</small></div><span>▶</span>`;
+ button.onclick=resumeQuiz;
+ host.insertBefore(button,host.firstChild);
+}
+function autonomousPackResultRoute(data){
+ const name=String(data?.returnRoute||'');
+ return ['licenselptv','licenseb','licensea','licensecce','licensed'].includes(name)?name:'lptv';
+}
+function autonomousPackAiCoachSupported(data){
+ const name=String(data?.returnRoute||'');
+ return !name||name==='lptv'||name==='licenselptv';
+}
 function licenseLptvPack(){return window.LicensePacks?.get?.('MT-LPTV')||null}
 function licenseLptvPool(){return Q.slice()}
 function licenseLptvProgressStats(){
@@ -1466,8 +1504,10 @@ function licenseLptvViewHtml(){
 }
 function bindLicenseLptv(){
  const pool=licenseLptvPool();
- const study=$('#licenseLptvStudy');if(study)study.onclick=()=>startQuiz(shuffle(pool).slice(0,Math.min(35,pool.length)),'guided');
- const exam=$('#licenseLptvExam');if(exam)exam.onclick=()=>startQuiz(buildExam(),'exam',{timerSeconds:countryPackExamSeconds()});
+ autonomousPackSetActive('MT-LPTV');
+ bindAutonomousPackResume('licenselptv');
+ const study=$('#licenseLptvStudy');if(study)study.onclick=()=>startQuiz(shuffle(pool).slice(0,Math.min(35,pool.length)),'guided',{returnRoute:'licenselptv'});
+ const exam=$('#licenseLptvExam');if(exam)exam.onclick=()=>startQuiz(buildExam(),'exam',{timerSeconds:countryPackExamSeconds(),returnRoute:'licenselptv'});
  const bank=$('#licenseLptvBank');if(bank)bank.onclick=()=>go('questionlibrary');
  const orig=$('#licenseLptvOriginal');if(orig)orig.onclick=()=>go('lptv');
  screen.querySelectorAll('[data-license-lptv-cat]').forEach(btn=>btn.onclick=()=>{const cat=btn.dataset.licenseLptvCat;const list=pool.filter(q=>String(q.category||'')===cat);if(list.length)startQuiz(shuffle(list).slice(0,Math.min(35,list.length)),'guided',{returnRoute:'licenselptv'})});
@@ -1551,15 +1591,16 @@ function licenseAViewHtml(){
 }
 function bindLicenseA(){
  const st=licenseAStats();
- licensePackEngineState.activeId='MT-A';licensePackEngineState.inspectedId='MT-A';save(LICENSE_PACK_ENGINE_KEY,licensePackEngineState);
- const study=$('#licenseAStudy');if(study)study.onclick=()=>startQuiz(shuffle(st.pool).slice(0,35),'guided');
- const exam=$('#licenseAExam');if(exam)exam.onclick=()=>startQuiz(shuffle(st.pool).slice(0,35),'exam');
+ autonomousPackSetActive('MT-A');
+ bindAutonomousPackResume('licensea');
+ const study=$('#licenseAStudy');if(study)study.onclick=()=>startQuiz(shuffle(st.pool).slice(0,35),'guided',{returnRoute:'licensea'});
+ const exam=$('#licenseAExam');if(exam)exam.onclick=()=>startQuiz(shuffle(st.pool).slice(0,35),'exam',{returnRoute:'licensea'});
  const list=$('#licenseAList');if(list)list.onclick=()=>{$('#licenseAIdCard')?.classList.remove('hidden');$('#licenseAIdCard')?.scrollIntoView({behavior:'smooth',block:'start'})};
  const close=$('#licenseACloseList');if(close)close.onclick=()=>$('#licenseAIdCard')?.classList.add('hidden');
- screen.querySelectorAll('[data-license-a-cat]').forEach(btn=>btn.onclick=()=>{const row=licenseACategoryRows().find(x=>x.key===btn.dataset.licenseACat);if(row?.list?.length)startQuiz(shuffle(row.list).slice(0,Math.min(35,row.list.length)),'guided')});
- screen.querySelectorAll('[data-license-a-q]').forEach(btn=>btn.onclick=()=>{const x=ALL_Q.find(v=>v.id===btn.dataset.licenseAQ);if(x)startQuiz([x],'guided')});
+ screen.querySelectorAll('[data-license-a-cat]').forEach(btn=>btn.onclick=()=>{const row=licenseACategoryRows().find(x=>x.key===btn.dataset.licenseACat);if(row?.list?.length)startQuiz(shuffle(row.list).slice(0,Math.min(35,row.list.length)),'guided',{returnRoute:'licensea'})});
+ screen.querySelectorAll('[data-license-a-q]').forEach(btn=>btn.onclick=()=>{const x=ALL_Q.find(v=>v.id===btn.dataset.licenseAQ);if(x)startQuiz([x],'guided',{returnRoute:'licensea'})});
  const motoData=motoIntelligenceData();
- const motoRecovery=$('#motoStartRecovery');if(motoRecovery)motoRecovery.onclick=()=>{if(motoData.recovery.length)startQuiz(motoData.recovery,'guided')};
+ const motoRecovery=$('#motoStartRecovery');if(motoRecovery)motoRecovery.onclick=()=>{if(motoData.recovery.length)startQuiz(motoData.recovery,'guided',{returnRoute:'licensea'})};
  const motoReplay=$('#motoOpenReplay');if(motoReplay&&motoData.replayPairs[0])motoReplay.onclick=()=>errorReplayOpen(motoData.replayPairs[0].source.id);
 }
 function licenseBPack(){return window.LicensePacks?.get?.('MT-B')||null}
@@ -1632,6 +1673,8 @@ function licenseBViewHtml(){
 }
 function bindLicenseB(){
  const st=licenseBStats();
+ autonomousPackSetActive('MT-B');
+ bindAutonomousPackResume('licenseb');
  const study=$('#licenseBStudy');if(study)study.onclick=()=>startQuiz(shuffle(st.pool).slice(0,Math.min(35,st.pool.length)),'guided',{returnRoute:'licenseb'});
  const practice=$('#licenseBPractice');if(practice)practice.onclick=()=>startQuiz(shuffle(st.pool).slice(0,Math.min(35,st.pool.length)),'assisted',{returnRoute:'licenseb'});
  const list=$('#licenseBList');if(list)list.onclick=()=>{$('#licenseBIdCard')?.classList.remove('hidden');$('#licenseBIdCard')?.scrollIntoView({behavior:'smooth',block:'start'})};
@@ -12866,7 +12909,7 @@ const views={
  progress:()=>{const st=stats(),ready=readinessStats(),by=categoryStats(),examEntries=(progress.exams||[]).map((exam,index)=>({exam,index})).slice(-8).reverse();return `<div class="section-title"><div><h2>${esc(t('progress'))}</h2><p>${st.seen}/${Q.length}</p></div></div><div class="stats-fix-note"><span>✓</span><div><strong>${esc(t('statisticsCorrection'))}</strong><small>${esc(t('statisticsCorrectionSub'))}</small></div></div>${isItalianAssisted()?bridgeProgressHtml():''}${errorDnaHtml()}<div class="readiness-card"><div class="readiness-circle" style="--score:${ready.score}"><div><strong>${ready.score}%</strong><span>${esc(t('readiness'))}</span></div></div><div class="readiness-copy"><h3>${esc(t(ready.label))}</h3><p>${esc(t(ready.recommend))}</p><button class="btn" data-go="${ready.score<68?'weaksetup':'lptv'}">${esc(t('recommended'))}</button></div></div><div class="report-actions"><button class="btn" id="shareProgressReport">↗ ${esc(t('shareProgressReport'))}</button><button class="btn secondary" id="copyProgressReport">⧉ ${esc(t('copyProgressReport'))}</button></div><div class="metric-bars"><div><div class="label"><span>${esc(t('coverage'))}</span><strong>${ready.coverage}%</strong></div><div class="mini-bar"><span style="width:${ready.coverage}%"></span></div></div><div><div class="label"><span>${esc(t('accuracy'))}</span><strong>${ready.accuracy}%</strong></div><div class="mini-bar"><span style="width:${ready.accuracy}%"></span></div></div><div><div class="label"><span>${esc(t('recentAverage'))}</span><strong>${ready.examAverage}%</strong></div><div class="mini-bar"><span style="width:${ready.examAverage}%"></span></div></div></div><div class="stat-grid"><div class="stat-card"><strong>${st.seen}</strong><span>${esc(t('seen'))}</span></div><div class="stat-card"><strong>${st.accuracy}%</strong><span>${esc(t('accuracy'))}</span></div><div class="stat-card"><strong>${st.exams}</strong><span>${esc(t('exams'))}</span></div><div class="stat-card"><strong>${examPassRate()}%</strong><span>${esc(t('passRate'))}</span></div><div class="stat-card"><strong>${st.last ?? '—'}</strong><span>${esc(t('last'))}</span></div></div><div class="card" style="margin-top:14px"><h3>${esc(t('fourChapters'))}</h3>${TOPIC_GROUPS.map(topic=>{const x=topicStats(topic.id);return `<button class="progress-topic" data-go="chaptersetup" data-id="${topic.id}"><span>${topic.icon} ${esc(t(topic.title))}</span><strong>${x.accuracy}%</strong><div class="mini-bar"><span style="width:${x.coverage}%"></span></div></button>`}).join('')}</div><div class="card detailed-history-card" style="margin-top:14px"><div class="history-heading"><div><h3>${esc(t('detailedHistory'))}</h3><p>${esc(t('examDetailsSub'))}</p></div><span>${examEntries.length}</span></div>${examEntries.length?`<div class="exam-history detailed">${examEntries.map(({exam,index})=>{const passed=countryPackExamPassed(exam.score,exam.total);return `<button class="exam-row exam-detail-row" data-exam-index="${index}"><span>${formatExamDate(exam.date)}</span><strong>${exam.score}/${exam.total}</strong><em class="${passed?'pass':'fail'}">${esc(t(passed?'passedSmall':'failedSmall'))}</em><b>${esc(t('viewDetails'))} ›</b></button>`}).join('')}</div>`:`<p class="muted">${esc(t('noExamHistory'))}</p>`}</div><div class="card" style="margin-top:14px"><h3>${esc(t('categories'))}</h3>${by.length?by.map(x=>`<div class="bar-row"><div class="label"><span>${esc(categoryLabel(x.category))}</span><strong>${x.pct}%</strong></div><div class="mini-bar"><span style="width:${x.pct}%"></span></div></div>`).join(''):`<p class="muted">${esc(t('noResults'))}</p>`}</div>`},
  quiz:()=>`<div class="card quiz-card"><div class="quiz-head"><span class="badge counter-badge" id="qCounter"></span><span class="timer" id="quizTimer"></span></div><div class="progress"><span id="quizProgress"></span></div><div id="examStatus" class="exam-status hidden"></div><div class="quiz-mode-row"><span class="mode-label" id="quizModeBadge"></span><span id="quizMeta" class="muted small"></span></div><div id="quizQuestion" class="question"></div><div id="quizHelp"></div><div id="quizInstruction" class="quiz-instruction"></div><div id="quizOptions"></div><div id="quizExplanation" class="explanation hidden"></div><div class="actions quiz-footer"><button class="btn secondary" id="quizExit">${esc(t('exit'))}</button><button class="btn secondary hidden" id="examPrev">‹ ${esc(t('previous'))}</button><button class="btn flag hidden" id="examFlag">☆ ${esc(t('flagQuestion'))}</button><button class="btn secondary hidden" id="examNavigator">☷ ${esc(t('navigator'))}</button><button class="btn" id="quizConfirm">${esc(t('confirm'))}</button><button class="btn hidden" id="quizNext">${esc(t('next'))}</button><button class="btn finish hidden" id="examFinish">${esc(t('finishExam'))}</button></div></div>`,
 
- result:()=>{const r=route.data;const twin=r.drivingTwinLoop;return `<div class="card result-card"><div class="result-hero ${r.mode==='exam'?(r.pass?'pass':'fail'):'complete'}"><span>${r.mode==='exam'?(r.pass?'✓':'!'):'✓'}</span><h2>${esc(r.title)}</h2><div class="score">${r.correct}/${r.total}</div><p>${Math.round(r.correct/r.total*100)}%</p></div>${twin?`<div class="driving-twin-result-inline ${twin.passed?'passed':'retry'}"><small>🧬 TWIN ACTION LOOP</small><strong>${esc(twin.passed?lang3('Verifica superata','Verification passed','Il-verifika għaddiet'):lang3('Schema ricorrente ancora aperto','Pattern still open','Ix-xejra għadha miftuħa'))}</strong><p>${esc(twin.passed?lang3('Il ciclo è riuscito. Il Twin userà questa evidenza per decidere se serve un secondo controllo su domande diverse.','The cycle passed. The Twin will use this evidence to decide whether a second check on different questions is needed.','Iċ-ċiklu għadda. It-Twin juża din l-evidenza biex jiddeċiedi jekk hemmx bżonn it-tieni kontroll fuq mistoqsijiet differenti.'):lang3('Il Twin mantiene questa famiglia tra le priorità e userà il risultato nel prossimo ciclo.','The Twin keeps this family among the priorities and will use the result in the next cycle.','It-Twin iżomm din il-familja fost il-prijoritajiet u juża r-riżultat fiċ-ċiklu li jmiss.'))}</p><button class="btn" data-go="drivingtwinaction">${esc(lang3('Vedi risultato Twin','View Twin result','Ara r-riżultat Twin'))} →</button></div>`:''}${r.mode==='exam'?`<div class="result-metrics"><div><span>${esc(t('timeUsed'))}</span><strong>${formatDuration(r.timeUsed)}</strong></div><div><span>${esc(t('unanswered'))}</span><strong>${r.unanswered}</strong></div><div><span>${esc(t('flagged'))}</span><strong>${r.flagged}</strong></div></div><div class="card inset-card"><h3>${esc(t('topicResults'))}</h3>${r.breakdown.map(x=>`<div class="topic-result"><span>${x.icon} ${esc(t(x.title))}</span><strong>${x.correct}/${x.total}</strong><div class="mini-bar"><span style="width:${x.pct}%"></span></div></div>`).join('')}</div>`:''}<div class="actions result-actions"><button class="btn secondary" data-go="lptv">${esc(t('close'))}</button>${twin?`<button class="btn" data-go="drivingtwin">🧬 ${esc(lang3('Driving Twin','Driving Twin','Driving Twin'))}</button>`:''}${r.mode==='exam'?`<button class="btn secondary" data-go="examsetup">${esc(t('newRealExam'))}</button>`:''}${r.wrongIds.length?`<button class="btn" id="reviewWrong">${esc(t('resultReview'))}</button><button class="btn secondary" id="resultAiCoach">🧠 ${esc(t('aiInstructor'))}</button>`:''}</div></div>`}
+ result:()=>{const r=route.data;const twin=r.drivingTwinLoop;return `<div class="card result-card"><div class="result-hero ${r.mode==='exam'?(r.pass?'pass':'fail'):'complete'}"><span>${r.mode==='exam'?(r.pass?'✓':'!'):'✓'}</span><h2>${esc(r.title)}</h2><div class="score">${r.correct}/${r.total}</div><p>${Math.round(r.correct/r.total*100)}%</p></div>${twin?`<div class="driving-twin-result-inline ${twin.passed?'passed':'retry'}"><small>🧬 TWIN ACTION LOOP</small><strong>${esc(twin.passed?lang3('Verifica superata','Verification passed','Il-verifika għaddiet'):lang3('Schema ricorrente ancora aperto','Pattern still open','Ix-xejra għadha miftuħa'))}</strong><p>${esc(twin.passed?lang3('Il ciclo è riuscito. Il Twin userà questa evidenza per decidere se serve un secondo controllo su domande diverse.','The cycle passed. The Twin will use this evidence to decide whether a second check on different questions is needed.','Iċ-ċiklu għadda. It-Twin juża din l-evidenza biex jiddeċiedi jekk hemmx bżonn it-tieni kontroll fuq mistoqsijiet differenti.'):lang3('Il Twin mantiene questa famiglia tra le priorità e userà il risultato nel prossimo ciclo.','The Twin keeps this family among the priorities and will use the result in the next cycle.','It-Twin iżomm din il-familja fost il-prijoritajiet u juża r-riżultat fiċ-ċiklu li jmiss.'))}</p><button class="btn" data-go="drivingtwinaction">${esc(lang3('Vedi risultato Twin','View Twin result','Ara r-riżultat Twin'))} →</button></div>`:''}${r.mode==='exam'?`<div class="result-metrics"><div><span>${esc(t('timeUsed'))}</span><strong>${formatDuration(r.timeUsed)}</strong></div><div><span>${esc(t('unanswered'))}</span><strong>${r.unanswered}</strong></div><div><span>${esc(t('flagged'))}</span><strong>${r.flagged}</strong></div></div><div class="card inset-card"><h3>${esc(t('topicResults'))}</h3>${r.breakdown.map(x=>`<div class="topic-result"><span>${x.icon} ${esc(t(x.title))}</span><strong>${x.correct}/${x.total}</strong><div class="mini-bar"><span style="width:${x.pct}%"></span></div></div>`).join('')}</div>`:''}<div class="actions result-actions"><button class="btn secondary" data-go="${esc(autonomousPackResultRoute(r))}">${esc(t('close'))}</button>${twin?`<button class="btn" data-go="drivingtwinaction">🧬 ${esc(lang3('Driving Twin','Driving Twin','Driving Twin'))}</button>`:''}${r.mode==='exam'&&!r.returnRoute?`<button class="btn secondary" data-go="examsetup">${esc(t('newRealExam'))}</button>`:''}${r.wrongIds.length?`<button class="btn" id="reviewWrong">${esc(t('resultReview'))}</button>${autonomousPackAiCoachSupported(r)?`<button class="btn secondary" id="resultAiCoach">🧠 ${esc(t('aiInstructor'))}</button>`:''}`:''}</div></div>`}
 
 };
 
@@ -13018,7 +13061,7 @@ function bindViewSpecific(){
  }
  if(route.name==='result'){
   const b=$('#reviewWrong');
-  if(b)b.onclick=()=>{const list=route.data.wrongIds.map(id=>Q.find(q=>q.id===id)).filter(Boolean);startQuiz(list,'guided')};
+  if(b)b.onclick=()=>{const rr=String(route.data.returnRoute||''),pool=autonomousPackPoolForRoute(rr),list=route.data.wrongIds.map(id=>pool.find(q=>q.id===id)).filter(Boolean);if(list.length)startQuiz(list,'guided',{returnRoute:rr,returnData:route.data.returnData??null})};
   const coach=$('#resultAiCoach');
   if(coach)coach.onclick=()=>aiCoachReviewStart(route.data.wrongIds,route.data.mode||'result');
   if(route.data.recoveryPlan){
@@ -13153,7 +13196,7 @@ function renderQuiz(){
   $('#quizExit').onclick=(event)=>{
     if(event){event.preventDefault();event.stopPropagation();}
     if(isExam){
-      if(confirm(t('pauseExamConfirm'))){clearInterval(timerId);timerId=null;saveSession();go('lptv')}
+      if(confirm(t('pauseExamConfirm'))){const rr=quiz.returnRoute||'lptv',rd=quiz.returnData??null;clearInterval(timerId);timerId=null;saveSession();go(rr,rd)}
       return;
     }
     const rr=quiz.returnRoute||'lptv',rd=quiz.returnData??null;
@@ -13415,6 +13458,8 @@ function finishQuiz(autoSubmitted=false){
  const patternVerificationId=String(quiz.patternVerificationId||'');
  const patternVerificationSourceIds=Array.isArray(quiz.patternVerificationSourceIds)?quiz.patternVerificationSourceIds.map(String):[];
  const drivingTwinLoopId=String(quiz.drivingTwinLoopId||'');
+ const returnRoute=String(quiz.returnRoute||'');
+ const returnData=quiz.returnData??null;
  if(mode==='exam'){
    list.forEach(q=>{
      const a=answers[q.id];
@@ -13466,7 +13511,7 @@ function finishQuiz(autoSubmitted=false){
  save(STORAGE,progress);localStorage.removeItem(SESSION);
  const recoveryPlanResult=mode!=='exam'&&recoveryPlanStage?aiCompleteRecoveryPlanStage(recoveryPlanStage,{correct,total,planDate:recoveryPlanDate}):null;
  const title=mode==='exam'?(pass?t('passed'):t('failed')):t('completed');
- quiz=null;go('result',{correct,total,pass,title,wrongIds,mode,timeUsed,unanswered,flagged,breakdown,autoSubmitted,examId:examRecord?.id||null,recoveryPlan:recoveryPlanResult,patternVerification:patternVerificationResult,drivingTwinLoop:drivingTwinLoopResult});
+ quiz=null;go('result',{correct,total,pass,title,wrongIds,mode,timeUsed,unanswered,flagged,breakdown,autoSubmitted,examId:examRecord?.id||null,recoveryPlan:recoveryPlanResult,patternVerification:patternVerificationResult,drivingTwinLoop:drivingTwinLoopResult,returnRoute,returnData});
 }
 function speak(text){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=settings.lang==='mt'?'mt-MT':'en-GB';u.rate=.88;speechSynthesis.speak(u)}
 function speakQuestion(q){

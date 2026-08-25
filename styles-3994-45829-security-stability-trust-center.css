@@ -1,0 +1,37 @@
+
+/* Malta Driving Master — Build 45.8.29.0 — Security & Stability Trust Center */
+.security-trust-title{align-items:flex-start}
+.security-trust-hero{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:14px 0;padding:22px;border-radius:26px;background:linear-gradient(145deg,#09283d,#0d5267);color:#fff;box-shadow:0 16px 34px rgba(7,38,58,.16)}
+.security-trust-hero small,.security-trust-head small{display:block;font-size:11px;font-weight:950;letter-spacing:2px;opacity:.72}
+.security-trust-hero h1{margin:7px 0 1px;font-size:44px;line-height:1}
+.security-trust-hero p{margin:0;line-height:1.45;opacity:.88}
+.security-trust-ring{--trust:0;position:relative;display:grid;place-items:center;flex:0 0 94px;width:94px;height:94px;border-radius:50%;background:conic-gradient(#fff calc(var(--trust)*1%),rgba(255,255,255,.16) 0)}
+.security-trust-ring:before{content:"";position:absolute;inset:8px;border-radius:50%;background:#0c4156}
+.security-trust-ring strong,.security-trust-ring span{position:relative;z-index:1;display:block;text-align:center}
+.security-trust-ring strong{font-size:22px}.security-trust-ring span{font-size:9px;letter-spacing:2px;opacity:.72}
+.security-trust-actions,.security-trust-section,.security-trust-standards,.security-trust-share{margin-top:14px}
+.security-trust-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.security-trust-head h2{margin:5px 0 0;line-height:1.15}
+.security-trust-head>span{font-size:28px}
+.security-trust-actions>p,.security-trust-disclaimer{color:var(--muted);line-height:1.55}
+.security-trust-actions>.btn{width:100%;margin:8px 0 10px}
+.security-trust-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.security-trust-check{display:flex;align-items:flex-start;gap:10px;padding:13px;border:1px solid var(--line);border-radius:18px;background:var(--card)}
+.security-trust-check>span{display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;border-radius:50%;font-weight:950}
+.security-trust-check.pass{border-color:#7fd6b7;background:linear-gradient(145deg,#effaf6,#e6f7f1)}
+.security-trust-check.pass>span{background:#d6f5e9;color:#08785c}
+.security-trust-check.open{border-color:#d4dfe6;background:linear-gradient(145deg,#f7fafb,#eef3f6)}
+.security-trust-check.open>span{background:#e8eef2;color:#647b89}
+.security-trust-check strong,.security-trust-check small{display:block}.security-trust-check small{margin-top:4px;color:var(--muted);line-height:1.42}
+.security-trust-standard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}
+.security-trust-standard-grid article{padding:14px;border:1px solid var(--line);border-radius:18px;background:var(--card)}
+.security-trust-standard-grid b,.security-trust-standard-grid strong,.security-trust-standard-grid span{display:block}
+.security-trust-standard-grid b{font-size:10px;letter-spacing:1.5px;color:var(--muted)}.security-trust-standard-grid strong{margin:5px 0;font-size:17px}.security-trust-standard-grid span{font-size:12px;line-height:1.4;color:var(--muted)}
+.security-trust-external{margin-top:14px;padding:20px;border-radius:24px;background:linear-gradient(145deg,#162333,#26384a);color:#fff}
+.security-trust-external>small{font-size:10px;letter-spacing:2px;opacity:.67}.security-trust-external h2{margin:7px 0 12px}
+.security-trust-external .security-trust-check.open{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16);color:#fff}.security-trust-external .security-trust-check small{color:rgba(255,255,255,.72)}.security-trust-external .security-trust-check>span{background:rgba(255,255,255,.12);color:#fff}
+.security-trust-share-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+[data-theme="dark"] .security-trust-check.pass{background:#163b34;border-color:#347c69}
+[data-theme="dark"] .security-trust-check.open{background:#24323a;border-color:#3e5561}
+[data-theme="dark"] .security-trust-standard-grid article{background:#203039}
+@media(max-width:700px){.security-trust-grid,.security-trust-standard-grid,.security-trust-share-grid{grid-template-columns:1fr}.security-trust-hero{align-items:flex-start}.security-trust-ring{flex-basis:82px;width:82px;height:82px}.security-trust-hero h1{font-size:38px}}

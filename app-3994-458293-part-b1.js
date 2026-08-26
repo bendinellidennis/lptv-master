@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.30.11';
+const BUILD_VERSION = '45.8.30.12';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -2550,6 +2550,7 @@ function bindCommon(){
  if(route.name==='privacycenter')bindPrivacyCenter();
  if(route.name==='pilotanalytics')bindPilotAnalytics();
  if(route.name==='pilotreadiness')bindPilotReadiness();
+ if(route.name==='pentestprep')bindPenetrationTestPreparation();
  screen.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go,b.dataset.id||null));screen.querySelectorAll('[data-external]').forEach(b=>b.onclick=()=>window.open(b.dataset.external,'_blank','noopener'));const cceBatch=screen.querySelector('[data-go=\"licenseccebatch\"]');if(cceBatch)cceBatch.onclick=()=>startQuiz(CCE_Q.slice(),'guided',{returnRoute:'licensepacks',returnData:'MT-C-CE'});const busdBatch=screen.querySelector('[data-go=\"licensedbatch\"]');if(busdBatch)busdBatch.onclick=()=>startQuiz(BUS_D_Q.slice(),'guided',{returnRoute:'licensepacks',returnData:'MT-D'});}
 
 
@@ -7211,6 +7212,141 @@ function pilotAnalyticsSnapshot(){
   lastPackId:s.lastPackId
  };
 }
+function penetrationTestPreparationData(){
+ const readiness=pilotReadinessInternalData();
+ const backend=mdmBackendPublicConfig();
+ const auth=mdmAuthSummary();
+ const permission=mdmProductionPermissionState||{};
+ const trustClient=typeof securityTrustClientChecks==='function'?securityTrustClientChecks():[];
+ const trustServer=typeof securityTrustServerChecks==='function'?securityTrustServerChecks():[];
+ const trust=[...trustClient,...trustServer];
+ const trustPassed=trust.filter(x=>x.pass).length;
+ const analytics=pilotAnalyticsSummary();
+ const hostname=String(location.hostname||'');
+ return {
+  build:BUILD_VERSION,
+  appOrigin:location.origin,
+  hostClass:hostname==='localhost'?'localhost':(hostname.endsWith('github.io')?'github-pages':'web'),
+  backendProvider:String(backend.provider||'—'),
+  backendStatus:String(backend.status||'—'),
+  backendSchemaReady:Boolean(backend.schemaReady),
+  authenticated:Boolean(auth.authenticated),
+  authRole:String(auth.role||permission.role||permission.membershipRole||'—'),
+  permissionRevision:String(permission.revision||'—'),
+  permissionVerified:Boolean(permission.verified),
+  trustPassed,
+  trustTotal:trust.length,
+  runtimeErrors:Number(analytics.currentBuildRuntimeErrors||0),
+  internalReady:Boolean(readiness.internalReady),
+  internalPassed:readiness.passed,
+  internalTotal:readiness.total
+ };
+}
+function penetrationTestScopeItems(){
+ return [
+  {
+   id:'auth',
+   title:lang3('Autenticazione e gestione sessione','Authentication and session handling','Awtentikazzjoni u ġestjoni tas-sessjoni'),
+   detail:lang3('Login/logout, scadenza sessione, accesso non autenticato, escalation di ruolo e riuso della sessione.','Login/logout, session expiry, unauthenticated access, role escalation and session reuse.','Login/logout, skadenza tas-sessjoni, aċċess mhux awtentikat, escalation tar-rwol u ri-użu tas-sessjoni.')
+  },
+  {
+   id:'rls',
+   title:'RLS / Tenant Isolation',
+   detail:lang3('Tentativi di lettura/scrittura tra studenti, scuole e tenant diversi; accesso diretto alle tabelle e bypass dei filtri UI.','Cross-student, cross-school and cross-tenant read/write attempts; direct table access and UI-filter bypass.','Tentattivi ta’ qari/kitba bejn studenti, skejjel u tenants differenti; aċċess dirett għat-tabelli u bypass tal-filtri tal-UI.')
+  },
+  {
+   id:'rpc',
+   title:'RPC / Authorization',
+   detail:lang3('Chiamate RPC senza login, con ruolo errato, parametri manipolati e tentativi di accesso oltre il proprio scope.','RPC calls without login, with wrong role, manipulated parameters and attempts beyond the caller scope.','Sejħiet RPC mingħajr login, b’ruol ħażin, parametri manipulati u tentattivi lil hinn mill-iskop tal-utent.')
+  },
+  {
+   id:'idor',
+   title:'IDOR / Object Access',
+   detail:lang3('Modifica di ID studente, scuola, enrollment, snapshot o altri identificatori per verificare accessi orizzontali/verticali.','Modify student, school, enrollment, snapshot or other identifiers to test horizontal/vertical access.','Ibdel IDs ta’ student, skola, enrollment, snapshot jew identifikaturi oħra biex tittestja aċċess orizzontali/vertikali.')
+  },
+  {
+   id:'privacy',
+   title:lang3('Privacy / consenso / revoca','Privacy / consent / revocation','Privatezza / kunsens / revoka'),
+   detail:lang3('Verificare che Analytics OFF non invii metriche, che la revoca sostituisca il riepilogo server e che nessun dato minimizzato ecceda lo scope dichiarato.','Verify Analytics OFF sends no metrics, revocation replaces the server summary, and minimized data never exceeds declared scope.','Ivverifika li Analytics OFF ma jibgħatx metriċi, li r-revoka tissostitwixxi s-sommarju tas-server u li d-data minimizzata ma taqbiżx l-iskop iddikjarat.')
+  },
+  {
+   id:'telemetry',
+   title:lang3('Telemetria e consenso','Telemetry and consent','Telemetrija u kunsens'),
+   detail:lang3('Confermare che la telemetria stradale e i flussi sensibili non partano senza consenso/azione esplicita.','Confirm road telemetry and sensitive flows do not start without explicit consent/action.','Ikkonferma li t-telemetrija tat-triq u flussi sensittivi ma jibdewx mingħajr kunsens/azzjoni espliċita.')
+  },
+  {
+   id:'xss',
+   title:'XSS / Injection',
+   detail:lang3('Input profilo, supporto, ricerca, scuola, note e campi server: HTML/JS injection, URL injection e contenuti persistenti.','Profile, support, search, school, notes and server fields: HTML/JS injection, URL injection and stored content.','Input tal-profil, support, tfittxija, skola, noti u fields tas-server: HTML/JS injection, URL injection u kontenut maħżun.')
+  },
+  {
+   id:'pwa',
+   title:'PWA / Cache / Offline',
+   detail:lang3('Service Worker, cache stale, downgrade di asset, offline/online transition e caricamento di script inattesi.','Service Worker, stale cache, asset downgrade, offline/online transition and unexpected script loading.','Service Worker, cache qadima, downgrade ta’ assets, tranżizzjoni offline/online u tagħbija ta’ scripts mhux mistennija.')
+  },
+  {
+   id:'local',
+   title:lang3('Storage locale e backup','Local storage and backup','Ħażna lokali u backup'),
+   detail:lang3('Dati locali, export/import, cancellazione selettiva/totale, leakage tra profili e persistenza dopo logout.','Local data, export/import, selective/full deletion, cross-profile leakage and persistence after logout.','Data lokali, export/import, tħassir selettiv/sħiħ, leakage bejn profili u persistenza wara logout.')
+  },
+  {
+   id:'dos',
+   title:lang3('Abuso e robustezza','Abuse and robustness','Abbuż u robustezza'),
+   detail:lang3('Rate limiting, richieste ripetute, payload anomali, error handling e comportamento sotto rete instabile.','Rate limiting, repeated requests, malformed payloads, error handling and unstable-network behaviour.','Rate limiting, talbiet ripetuti, payloads mhux validi, error handling u mġiba taħt netwerk instabbli.')
+  }
+ ];
+}
+function penetrationTestPreparationReport(){
+ const d=penetrationTestPreparationData();
+ const scope=penetrationTestScopeItems();
+ const lines=[
+  'MALTA DRIVING MASTER — INDEPENDENT PENETRATION TEST BRIEF',
+  `Build ${d.build}`,
+  `${lang3('Origine app','App origin','Oriġini tal-app')}: ${d.appOrigin}`,
+  `${lang3('Ambiente','Environment','Ambjent')}: ${d.hostClass}`,
+  `${lang3('Backend','Backend','Backend')}: ${d.backendProvider} · ${d.backendStatus}`,
+  `${lang3('Schema backend verificato','Backend schema verified','Schema tal-backend ivverifikat')}: ${d.backendSchemaReady?'YES':'NO'}`,
+  `${lang3('Permission Scope','Permission Scope','Permission Scope')}: ${d.permissionRevision} · ${d.permissionVerified?'VERIFIED':'OPEN'}`,
+  `${lang3('Trust Center interno','Internal Trust Center','Trust Center intern')}: ${d.trustPassed}/${d.trustTotal}`,
+  `${lang3('Readiness interno','Internal readiness','Readiness intern')}: ${d.internalPassed}/${d.internalTotal}`,
+  `${lang3('Errori runtime build corrente','Current-build runtime errors','Żbalji runtime tal-build kurrenti')}: ${d.runtimeErrors}`,
+  '',
+  lang3('SCOPO MINIMO DA TESTARE','MINIMUM TEST SCOPE','SKOPU MINIMU GĦAT-TEST')
+ ];
+ scope.forEach((x,i)=>lines.push(`${i+1}. ${x.title}: ${x.detail}`));
+ lines.push(
+  '',
+  lang3('RISULTATI RICHIESTI AL TESTER','REQUIRED TESTER OUTPUT','RIŻULTATI MEĦTIEĠA MIT-TESTER'),
+  lang3(
+   'Per ogni finding: severità, prerequisiti, passi di riproduzione, evidenza, impatto, componente coinvolto e raccomandazione. Indicare esplicitamente anche i test eseguiti senza finding.',
+   'For each finding: severity, prerequisites, reproduction steps, evidence, impact, affected component and recommendation. Explicitly list tests completed with no finding as well.',
+   'Għal kull finding: severità, prerekwiżiti, passi ta’ riproduzzjoni, evidenza, impatt, komponent affettwat u rakkomandazzjoni. Elenka wkoll b’mod espliċitu t-testijiet li saru mingħajr finding.'
+  ),
+  '',
+  lang3('REGOLE DI PROVA','TEST RULES','REGOLI TAT-TEST'),
+  lang3(
+   'Usare account e dati di test dedicati. Non usare dati reali di studenti. Non eseguire DoS distruttivo o cancellazioni irreversibili senza autorizzazione scritta. Non considerare questo brief come esito del penetration test.',
+   'Use dedicated test accounts and test data. Do not use real learner data. Do not perform destructive DoS or irreversible deletion without written authorization. Do not treat this brief as the penetration-test result.',
+   'Uża kontijiet u data dedikati għat-test. Tużax data reali ta’ studenti. Tagħmilx DoS distruttiv jew tħassir irriversibbli mingħajr awtorizzazzjoni bil-miktub. Tqisx dan il-brief bħala r-riżultat tal-penetration test.'
+  )
+ );
+ return lines.join('\n');
+}
+function penetrationTestPreparationHtml(){
+ const d=penetrationTestPreparationData();
+ const scope=penetrationTestScopeItems();
+ return `<div class="section-title"><div><h2>🛡️ ${esc(lang3('Penetration Test Preparation','Penetration Test Preparation','Penetration Test Preparation'))}</h2><p>${esc(lang3('Brief tecnico per il tester indipendente. Non sostituisce il penetration test esterno.','Technical brief for the independent tester. It does not replace the external penetration test.','Brief tekniku għat-tester indipendenti. Ma jissostitwixxix il-penetration test estern.'))}</p></div><span class="badge official">Build ${esc(BUILD_VERSION)}</span></div>
+ <section class="card">
+  <div class="help-card-title"><div><h3>${esc(lang3('Baseline interna verificata','Verified internal baseline','Baseline interna vverifikata'))}</h3><p>${esc(lang3(`Readiness ${d.internalPassed}/${d.internalTotal} · Trust ${d.trustPassed}/${d.trustTotal} · Runtime ${d.runtimeErrors}`,`Readiness ${d.internalPassed}/${d.internalTotal} · Trust ${d.trustPassed}/${d.trustTotal} · Runtime ${d.runtimeErrors}`,`Readiness ${d.internalPassed}/${d.internalTotal} · Trust ${d.trustPassed}/${d.trustTotal} · Runtime ${d.runtimeErrors}`))}</p></div><span>${d.internalReady?'✓':'○'}</span></div>
+  <div class="security-trust-checks">${scope.map((x,i)=>`<article class="security-trust-check open"><span>${i+1}</span><div><strong>${esc(x.title)}</strong><small>${esc(x.detail)}</small></div></article>`).join('')}</div>
+  <div class="actions"><button class="btn" id="penetrationBriefCopy">⧉ ${esc(lang3('Copia brief per tester','Copy tester brief','Ikkopja l-brief għat-tester'))}</button><button class="btn secondary" data-go="pilotreadiness">🚦 Pilot Readiness</button><button class="btn secondary" data-go="securitytrust">🛡️ Trust Center</button></div>
+ </section>
+ <section class="card" style="margin-top:14px"><h3>${esc(lang3('Stato gate esterno','External gate status','Status tal-gate estern'))}</h3><p><strong>OPEN</strong> — ${esc(lang3('Il penetration test indipendente non viene marcato completato da questa pagina. Sarà chiuso solo con evidenza reale del tester esterno.','The independent penetration test is not marked complete by this page. It will close only with real evidence from the external tester.','Il-penetration test indipendenti ma jiġix immarkat komplut minn din il-paġna. Jingħalaq biss b’evidenza reali mit-tester estern.'))}</p></section>`;
+}
+function bindPenetrationTestPreparation(){
+ const copy=$('#penetrationBriefCopy');
+ if(copy)copy.onclick=()=>copyTextSafe(penetrationTestPreparationReport(),lang3('Brief penetration test copiato.','Penetration-test brief copied.','Il-brief tal-penetration test ġie kkupjat.'));
+}
 function pilotReadinessInternalData(){
  const packs=typeof investorProductionPackProof==='function'?investorProductionPackProof():[];
  const analytics=pilotAnalyticsSummary();
@@ -7389,7 +7525,7 @@ function pilotReadinessViewHtml(){
   <div class="actions"><button class="btn" id="pilotReadinessRefresh">↻ ${esc(lang3('Aggiorna controllo','Refresh check','Aġġorna l-kontroll'))}</button><button class="btn secondary" id="pilotReadinessCopy">⧉ ${esc(lang3('Copia report','Copy report','Ikkopja r-rapport'))}</button></div>
  </section>
  <section class="card" style="margin-top:14px"><div class="help-card-title"><div><h3>${esc(lang3('Gate esterni','External gates','Gates esterni'))}</h3><p>${esc(lang3('Non vengono mai marcati completati automaticamente dall’app.','They are never marked completed automatically by the app.','Qatt ma jiġu mmarkati kompluti awtomatikament mill-app.'))}</p></div><span>↗</span></div>
-  <div class="security-trust-checks">${d.external.map(x=>`<article class="security-trust-check open"><span>○</span><div><strong>${esc(x.label)}</strong><small>OPEN</small></div></article>`).join('')}</div>
+  <div class="security-trust-checks">${d.external.map((x,i)=>`<article class="security-trust-check open"><span>○</span><div><strong>${esc(x.label)}</strong><small>OPEN</small></div>${i===0?`<button class="btn secondary" data-go="pentestprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:''}</article>`).join('')}</div>
   <p class="muted">${esc(lang3('Ordine previsto: penetration test indipendente → pilot 10–30 studenti → pilot scuola → metriche reali / LOI.','Planned order: independent penetration test → 10–30 learner pilot → school pilot → real metrics / LOI.','Ordni ppjanat: penetration test indipendenti → pilot 10–30 student → pilot tal-iskola → metriċi reali / LOI.'))}</p>
  </section>`;
 }
@@ -13451,6 +13587,7 @@ function bindInvestorProduction(){
 /* === /Build 45.8.26 === */
 
 const views={
+ pentestprep:()=>penetrationTestPreparationHtml(),
  pilotreadiness:()=>pilotReadinessViewHtml(),
  pilotanalytics:()=>pilotAnalyticsViewHtml(),
  securitytrust:()=>securityTrustViewHtml(),

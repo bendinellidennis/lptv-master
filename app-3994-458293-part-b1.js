@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.30.13';
+const BUILD_VERSION = '45.8.30.14';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -2552,6 +2552,7 @@ function bindCommon(){
  if(route.name==='pilotreadiness')bindPilotReadiness();
  if(route.name==='pentestprep')bindPenetrationTestPreparation();
  if(route.name==='realpilotprep')bindRealPilotPreparation();
+ if(route.name==='schoolpilotprep')bindSchoolPilotPreparation();
  screen.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go,b.dataset.id||null));screen.querySelectorAll('[data-external]').forEach(b=>b.onclick=()=>window.open(b.dataset.external,'_blank','noopener'));const cceBatch=screen.querySelector('[data-go=\"licenseccebatch\"]');if(cceBatch)cceBatch.onclick=()=>startQuiz(CCE_Q.slice(),'guided',{returnRoute:'licensepacks',returnData:'MT-C-CE'});const busdBatch=screen.querySelector('[data-go=\"licensedbatch\"]');if(busdBatch)busdBatch.onclick=()=>startQuiz(BUS_D_Q.slice(),'guided',{returnRoute:'licensepacks',returnData:'MT-D'});}
 
 
@@ -7213,6 +7214,127 @@ function pilotAnalyticsSnapshot(){
   lastPackId:s.lastPackId
  };
 }
+function schoolPilotPreparationData(){
+ const readiness=pilotReadinessInternalData();
+ const analytics=pilotAnalyticsSummary();
+ const auth=mdmAuthSummary();
+ const permission=mdmProductionPermissionState||{};
+ const backend=mdmBackendPublicConfig();
+ const role=String(auth.role||permission.role||permission.membershipRole||'');
+ return {
+  build:BUILD_VERSION,
+  internalReady:Boolean(readiness.internalReady),
+  readinessPassed:readiness.passed,
+  readinessTotal:readiness.total,
+  runtimeErrors:Number(analytics.currentBuildRuntimeErrors||0),
+  backendReady:Boolean(backend.enabled&&backend.schemaReady),
+  authenticated:Boolean(auth.authenticated),
+  role,
+  permissionRevision:String(permission.revision||'—'),
+  permissionVerified:Boolean(permission.verified)
+ };
+}
+function schoolPilotChecklist(){
+ return [
+  {
+   id:'school',
+   title:lang3('Scuola pilota definita','Pilot school defined','Skola pilota definita'),
+   detail:lang3('Identificare una scuola guida reale disponibile a testare il flusso con account separati e dati di prova controllati.','Identify a real driving school willing to test the flow with separate accounts and controlled test data.','Identifika skola tas-sewqan reali lesta tittestja l-fluss b’kontijiet separati u data ta’ test ikkontrollata.')
+  },
+  {
+   id:'admin',
+   title:lang3('School Admin verificato','School Admin verified','School Admin ivverifikat'),
+   detail:lang3('Verificare login, ruolo School Admin, visibilità dashboard, roster e assenza di accesso oltre la propria scuola.','Verify login, School Admin role, dashboard visibility, roster and no access beyond the assigned school.','Ivverifika login, rwol School Admin, viżibbiltà tad-dashboard, roster u l-ebda aċċess lil hinn mill-iskola assenjata.')
+  },
+  {
+   id:'student',
+   title:lang3('Studente isolato verificato','Learner isolation verified','Iżolament tal-istudent ivverifikat'),
+   detail:lang3('Lo studente deve vedere solo il proprio percorso didattico e non i dati di altri studenti o della gestione scuola.','The learner must see only their own learning journey and never other learners or school-management data.','L-istudent għandu jara biss il-vjaġġ tiegħu u qatt data ta’ studenti oħra jew ġestjoni tal-iskola.')
+  },
+  {
+   id:'enrollment',
+   title:lang3('Enrollment scuola testato','School enrollment tested','Enrollment tal-iskola ttestjat'),
+   detail:lang3('Provare richiesta, stato PENDING/APPROVED/REJECTED se previsto e coerenza tra studente e scuola.','Test request flow, PENDING/APPROVED/REJECTED states where applicable, and learner-school consistency.','Ittestja t-talba, stati PENDING/APPROVED/REJECTED fejn applikabbli u konsistenza bejn student u skola.')
+  },
+  {
+   id:'assignment',
+   title:lang3('Assegnazione e monitoraggio verificati','Assignment and monitoring verified','Assenjazzjoni u monitoraġġ ivverifikati'),
+   detail:lang3('Controllare che eventuali assegnazioni, priorità, progressi e snapshot siano visibili solo agli attori autorizzati.','Check assignments, priorities, progress and snapshots are visible only to authorized actors.','Iċċekkja li assenjazzjonijiet, prijoritajiet, progress u snapshots jidhru biss lil atturi awtorizzati.')
+  },
+  {
+   id:'sync',
+   title:lang3('Sync studente → scuola controllata','Learner → school sync controlled','Sync student → skola kkontrollat'),
+   detail:lang3('La sincronizzazione deve avvenire solo nei flussi autorizzati e senza trasferire metriche Analytics dopo revoca consenso.','Sync must occur only through authorized flows and must not transfer Analytics metrics after consent revocation.','Is-sync għandu jseħħ biss fi flussi awtorizzati u ma għandux jittrasferixxi metriċi Analytics wara revoka tal-kunsens.')
+  },
+  {
+   id:'support',
+   title:lang3('Supporto scuola attivo','School support active','Appoġġ tal-iskola attiv'),
+   detail:lang3('Definire un referente scuola e usare il canale Feedback pilot per problemi, blocchi e richieste operative.','Define a school contact and use Pilot feedback for issues, blockers and operational requests.','Iddefinixxi kuntatt tal-iskola u uża Feedback tal-pilot għal problemi, blockers u talbiet operattivi.')
+  },
+  {
+   id:'session',
+   title:lang3('Sessione reale osservata','Real session observed','Sessjoni reali osservata'),
+   detail:lang3('Eseguire almeno una sessione completa con School Admin e almeno uno studente, dalla login al riepilogo finale.','Run at least one complete session with a School Admin and at least one learner, from login through final review.','Mexxi mill-inqas sessjoni sħiħa b’School Admin u student wieħed, mil-login sal-review finali.')
+  },
+  {
+   id:'findings',
+   title:lang3('Findings scuola documentati','School findings documented','Findings tal-iskola dokumentati'),
+   detail:lang3('Registrare problemi di usabilità, permessi, performance, contenuti e workflow; classificare blocker / major / minor.','Record usability, permission, performance, content and workflow issues; classify blocker / major / minor.','Irreġistra problemi ta’ usability, permessi, performance, kontenut u workflow; ikklassifika blocker / major / minor.')
+  },
+  {
+   id:'decision',
+   title:lang3('Decisione go/no-go scuola','School go/no-go decision','Deċiżjoni go/no-go tal-iskola'),
+   detail:lang3('Chiudere il gate solo con evidenza reale della scuola: data, partecipanti, risultato, findings e decisione go/no-go.','Close the gate only with real school evidence: date, participants, outcome, findings and go/no-go decision.','Agħlaq il-gate biss b’evidenza reali tal-iskola: data, parteċipanti, riżultat, findings u deċiżjoni go/no-go.')
+  }
+ ];
+}
+function schoolPilotPreparationReport(){
+ const d=schoolPilotPreparationData();
+ const items=schoolPilotChecklist();
+ const lines=[
+  'MALTA DRIVING MASTER — DRIVING SCHOOL PILOT LAUNCH PACK',
+  `Build ${d.build}`,
+  `${lang3('Readiness interno','Internal readiness','Readiness intern')}: ${d.readinessPassed}/${d.readinessTotal}`,
+  `${lang3('Runtime build corrente','Current-build runtime','Runtime tal-build kurrenti')}: ${d.runtimeErrors}`,
+  `${lang3('Backend','Backend','Backend')}: ${d.backendReady?'READY':'OPEN'}`,
+  `${lang3('Permission Scope','Permission Scope','Permission Scope')}: ${d.permissionRevision} · ${d.permissionVerified?'VERIFIED':'OPEN'}`,
+  '',
+  lang3('CHECKLIST PILOT SCUOLA','SCHOOL PILOT CHECKLIST','CHECKLIST TAL-PILOT TAL-ISKOLA')
+ ];
+ items.forEach((x,i)=>lines.push(`${i+1}. ${x.title}: ${x.detail}`));
+ lines.push(
+  '',
+  lang3('EVIDENZA MINIMA RICHIESTA','MINIMUM REQUIRED EVIDENCE','EVIDENZA MINIMA MEĦTIEĠA'),
+  lang3(
+   'Nome/ID interno scuola, data test, ruoli coinvolti, numero studenti, flussi provati, problemi trovati, eventuali blocker, feedback scuola e decisione go/no-go.',
+   'School internal name/ID, test date, roles involved, learner count, flows tested, findings, blockers, school feedback and go/no-go decision.',
+   'Isem/ID intern tal-iskola, data tat-test, rwoli involuti, numru ta’ studenti, flussi ttestjati, findings, blockers, feedback tal-iskola u deċiżjoni go/no-go.'
+  ),
+  '',
+  lang3('STATO GATE ESTERNO: OPEN','EXTERNAL GATE STATUS: OPEN','STATUS TAL-GATE ESTERN: OPEN'),
+  lang3(
+   'Questa pagina prepara il pilot con scuola guida ma non dichiara che sia stato eseguito. Il gate si chiude solo dopo una prova reale con una scuola e risultati documentati.',
+   'This page prepares the driving-school pilot but does not claim it has been run. The gate closes only after a real school test with documented results.',
+   'Din il-paġna tipprepara l-pilot tal-iskola iżda ma tiddikjarax li sar. Il-gate jingħalaq biss wara test reali ma’ skola u riżultati dokumentati.'
+  )
+ );
+ return lines.join('\n');
+}
+function schoolPilotPreparationHtml(){
+ const d=schoolPilotPreparationData();
+ const items=schoolPilotChecklist();
+ return `<div class="section-title"><div><h2>🏫 ${esc(lang3('Pilot con scuola guida','Driving School Pilot','Pilot ma’ Skola tas-Sewqan'))}</h2><p>${esc(lang3('Launch pack operativo per validare il flusso scuola + studente con evidenza reale.','Operational launch pack to validate the school + learner flow with real evidence.','Launch pack operattiv biex tivvalida l-fluss skola + student b’evidenza reali.'))}</p></div><span class="badge official">Build ${esc(BUILD_VERSION)}</span></div>
+ <section class="card">
+  <div class="help-card-title"><div><h3>${esc(lang3('Baseline pronta per la scuola','School baseline ready','Baseline lesta għall-iskola'))}</h3><p>${esc(`Readiness ${d.readinessPassed}/${d.readinessTotal} · Runtime ${d.runtimeErrors} · Permission ${d.permissionRevision}`)}</p></div><span>${d.internalReady&&d.backendReady&&d.permissionVerified?'✓':'○'}</span></div>
+  <div class="security-trust-checks">${items.map((x,i)=>`<article class="security-trust-check open"><span>${i+1}</span><div><strong>${esc(x.title)}</strong><small>${esc(x.detail)}</small></div></article>`).join('')}</div>
+  <div class="actions"><button class="btn" id="schoolPilotBriefCopy">⧉ ${esc(lang3('Copia launch pack scuola','Copy school launch pack','Ikkopja l-launch pack tal-iskola'))}</button><button class="btn secondary" data-go="pilotreadiness">🚦 Pilot Readiness</button><button class="btn secondary" data-go="schooldashboard">🏫 ${esc(lang3('Dashboard scuola','School dashboard','Dashboard tal-iskola'))}</button></div>
+ </section>
+ <section class="card" style="margin-top:14px"><h3>${esc(lang3('Stato gate esterno','External gate status','Status tal-gate estern'))}</h3><p><strong>OPEN</strong> — ${esc(lang3('Il pilot con scuola guida non viene mai marcato completato automaticamente. Serve una prova reale con scuola e studenti e risultati documentati.','The driving-school pilot is never marked complete automatically. A real school-and-learner test with documented results is required.','Il-pilot ma’ skola tas-sewqan qatt ma jiġi mmarkat komplut awtomatikament. Hu meħtieġ test reali ma’ skola u studenti b’riżultati dokumentati.'))}</p></section>`;
+}
+function bindSchoolPilotPreparation(){
+ const copy=$('#schoolPilotBriefCopy');
+ if(copy)copy.onclick=()=>copyTextSafe(schoolPilotPreparationReport(),lang3('Launch pack scuola copiato.','School launch pack copied.','Il-launch pack tal-iskola ġie kkupjat.'));
+}
 function realPilotPreparationData(){
  const readiness=pilotReadinessInternalData();
  const analytics=pilotAnalyticsSummary();
@@ -7648,7 +7770,7 @@ function pilotReadinessViewHtml(){
   <div class="actions"><button class="btn" id="pilotReadinessRefresh">↻ ${esc(lang3('Aggiorna controllo','Refresh check','Aġġorna l-kontroll'))}</button><button class="btn secondary" id="pilotReadinessCopy">⧉ ${esc(lang3('Copia report','Copy report','Ikkopja r-rapport'))}</button></div>
  </section>
  <section class="card" style="margin-top:14px"><div class="help-card-title"><div><h3>${esc(lang3('Gate esterni','External gates','Gates esterni'))}</h3><p>${esc(lang3('Non vengono mai marcati completati automaticamente dall’app.','They are never marked completed automatically by the app.','Qatt ma jiġu mmarkati kompluti awtomatikament mill-app.'))}</p></div><span>↗</span></div>
-  <div class="security-trust-checks">${d.external.map((x,i)=>`<article class="security-trust-check open"><span>○</span><div><strong>${esc(x.label)}</strong><small>OPEN</small></div>${i===0?`<button class="btn secondary" data-go="pentestprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:i===1?`<button class="btn secondary" data-go="realpilotprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:''}</article>`).join('')}</div>
+  <div class="security-trust-checks">${d.external.map((x,i)=>`<article class="security-trust-check open"><span>○</span><div><strong>${esc(x.label)}</strong><small>OPEN</small></div>${i===0?`<button class="btn secondary" data-go="pentestprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:i===1?`<button class="btn secondary" data-go="realpilotprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:i===2?`<button class="btn secondary" data-go="schoolpilotprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:''}</article>`).join('')}</div>
   <p class="muted">${esc(lang3('Ordine previsto: penetration test indipendente → pilot 10–30 studenti → pilot scuola → metriche reali / LOI.','Planned order: independent penetration test → 10–30 learner pilot → school pilot → real metrics / LOI.','Ordni ppjanat: penetration test indipendenti → pilot 10–30 student → pilot tal-iskola → metriċi reali / LOI.'))}</p>
  </section>`;
 }
@@ -13710,6 +13832,7 @@ function bindInvestorProduction(){
 /* === /Build 45.8.26 === */
 
 const views={
+ schoolpilotprep:()=>schoolPilotPreparationHtml(),
  realpilotprep:()=>realPilotPreparationHtml(),
  pentestprep:()=>penetrationTestPreparationHtml(),
  pilotreadiness:()=>pilotReadinessViewHtml(),

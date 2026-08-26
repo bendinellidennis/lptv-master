@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.30.15';
+const BUILD_VERSION = '45.8.30.16';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -2554,6 +2554,7 @@ function bindCommon(){
  if(route.name==='realpilotprep')bindRealPilotPreparation();
  if(route.name==='schoolpilotprep')bindSchoolPilotPreparation();
  if(route.name==='metricsloiprep')bindMetricsLoiPreparation();
+ if(route.name==='externalvalidation')bindExternalValidationCommand();
  screen.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go,b.dataset.id||null));screen.querySelectorAll('[data-external]').forEach(b=>b.onclick=()=>window.open(b.dataset.external,'_blank','noopener'));const cceBatch=screen.querySelector('[data-go=\"licenseccebatch\"]');if(cceBatch)cceBatch.onclick=()=>startQuiz(CCE_Q.slice(),'guided',{returnRoute:'licensepacks',returnData:'MT-C-CE'});const busdBatch=screen.querySelector('[data-go=\"licensedbatch\"]');if(busdBatch)busdBatch.onclick=()=>startQuiz(BUS_D_Q.slice(),'guided',{returnRoute:'licensepacks',returnData:'MT-D'});}
 
 
@@ -7215,6 +7216,120 @@ function pilotAnalyticsSnapshot(){
   lastPackId:s.lastPackId
  };
 }
+function externalValidationCommandData(){
+ const readiness=pilotReadinessInternalData();
+ const analytics=pilotAnalyticsSummary();
+ const trustClient=typeof securityTrustClientChecks==='function'?securityTrustClientChecks():[];
+ const trustServer=typeof securityTrustServerChecks==='function'?securityTrustServerChecks():[];
+ const trust=[...trustClient,...trustServer];
+ const trustPassed=trust.filter(x=>x.pass).length;
+ return {
+  build:BUILD_VERSION,
+  internalReady:Boolean(readiness.internalReady),
+  readinessPassed:readiness.passed,
+  readinessTotal:readiness.total,
+  trustPassed,
+  trustTotal:trust.length,
+  runtimeErrors:Number(analytics.currentBuildRuntimeErrors||0),
+  startupAverageMs:analytics.startupAverageMs,
+  startupMaxMs:analytics.startupMaxMs,
+  analyticsConsent:Boolean(analytics.consent),
+  activeDays:Number(analytics.activeDays||0),
+  sessionsStarted:Number(analytics.sessionsStarted||0),
+  sessionsCompleted:Number(analytics.sessionsCompleted||0),
+  examsCompleted:Number(analytics.examsCompleted||0),
+  replayCompleted:Number(analytics.replayCompleted||0),
+  feedbackActions:Number(analytics.pilotFeedbackActions||0)
+ };
+}
+function externalValidationSequence(){
+ return [
+  {
+   order:1,
+   id:'pentest',
+   icon:'🛡️',
+   label:lang3('Penetration test indipendente','Independent penetration test','Penetration test indipendenti'),
+   route:'pentestprep',
+   evidence:lang3('Report firmato/identificabile del tester, scope, findings, severità, remediation e retest.','Identifiable tester report, scope, findings, severity, remediation and retest.','Rapport identifikabbli tat-tester, scope, findings, severità, remediation u retest.'),
+   closeRule:lang3('Chiudere solo dopo test esterno reale e gestione dei finding critici/major.','Close only after a real external test and handling of critical/major findings.','Agħlaq biss wara test estern reali u ġestjoni tal-findings kritiċi/major.')
+  },
+  {
+   order:2,
+   id:'learnerpilot',
+   icon:'👥',
+   label:lang3('Pilot reale 10–30 studenti','Real pilot with 10–30 learners','Pilot reali b’10–30 student'),
+   route:'realpilotprep',
+   evidence:lang3('Numero partecipanti, periodo, Pack, baseline/finale, metriche aggregate, feedback e blocker.','Participant count, period, packs, baseline/final state, aggregate metrics, feedback and blockers.','Numru ta’ parteċipanti, perjodu, packs, baseline/finali, metriċi aggregati, feedback u blockers.'),
+   closeRule:lang3('Chiudere solo dopo finestra reale di utilizzo e risultati documentati.','Close only after a real usage window and documented results.','Agħlaq biss wara perjodu reali ta’ użu u riżultati dokumentati.')
+  },
+  {
+   order:3,
+   id:'schoolpilot',
+   icon:'🏫',
+   label:lang3('Pilot con scuola guida','Driving-school pilot','Pilot ma’ skola tas-sewqan'),
+   route:'schoolpilotprep',
+   evidence:lang3('Scuola reale, data, ruoli, studenti, flussi provati, findings, feedback e go/no-go.','Real school, date, roles, learners, tested flows, findings, feedback and go/no-go.','Skola reali, data, rwoli, studenti, flussi ttestjati, findings, feedback u go/no-go.'),
+   closeRule:lang3('Chiudere solo dopo sessione reale scuola + studente con evidenza verificabile.','Close only after a real school + learner session with verifiable evidence.','Agħlaq biss wara sessjoni reali skola + student b’evidenza verifikabbli.')
+  },
+  {
+   order:4,
+   id:'metricsloi',
+   icon:'📊',
+   label:lang3('Metriche reali / LOI','Real metrics / LOI','Metriċi reali / LOI'),
+   route:'metricsloiprep',
+   evidence:lang3('Metriche con periodo/fonte/definizione e, se presente, LOI reale firmata da una controparte.','Metrics with period/source/definition and, if applicable, a real LOI signed by a counterparty.','Metriċi b’perjodu/sors/definizzjoni u, jekk applikabbli, LOI reali ffirmata minn kontroparti.'),
+   closeRule:lang3('Chiudere solo con dati reali sufficienti e documentazione commerciale verificabile.','Close only with sufficient real data and verifiable commercial documentation.','Agħlaq biss b’data reali biżżejjed u dokumentazzjoni kummerċjali verifikabbli.')
+  }
+ ];
+}
+function externalValidationCommandReport(){
+ const d=externalValidationCommandData();
+ const seq=externalValidationSequence();
+ const lines=[
+  'MALTA DRIVING MASTER — EXTERNAL VALIDATION COMMAND CENTER',
+  `Build ${d.build}`,
+  `${lang3('Readiness interno','Internal readiness','Readiness intern')}: ${d.readinessPassed}/${d.readinessTotal}`,
+  `${lang3('Trust Center','Trust Center','Trust Center')}: ${d.trustPassed}/${d.trustTotal}`,
+  `${lang3('Runtime build corrente','Current-build runtime','Runtime tal-build kurrenti')}: ${d.runtimeErrors}`,
+  `${lang3('Avvio medio/max','Average/max startup','Startup medju/massimu')}: ${d.startupAverageMs===null?'—':d.startupAverageMs+' ms'} / ${d.startupMaxMs===null?'—':d.startupMaxMs+' ms'}`,
+  '',
+  lang3('SEQUENZA DI VALIDAZIONE ESTERNA','EXTERNAL VALIDATION SEQUENCE','SEKWENZA TA’ VALIDAZZJONI ESTERNA')
+ ];
+ seq.forEach(x=>{
+  lines.push(`${x.order}. ${x.label} — OPEN`);
+  lines.push(`   ${lang3('Evidenza richiesta','Required evidence','Evidenza meħtieġa')}: ${x.evidence}`);
+  lines.push(`   ${lang3('Regola chiusura','Closure rule','Regola tal-għeluq')}: ${x.closeRule}`);
+ });
+ lines.push(
+  '',
+  lang3('REGOLE DI VERITÀ','TRUTH RULES','REGOLI TAL-VERITÀ'),
+  lang3(
+   'Nessun gate esterno viene chiuso automaticamente. Nessun numero pilot, finding di pentest, interesse scuola, LOI, conversione o ricavo viene generato dall’app come se fosse reale. Ogni chiusura richiede evidenza esterna documentabile.',
+   'No external gate is closed automatically. No pilot number, pentest finding, school interest, LOI, conversion or revenue is generated by the app as if it were real. Every closure requires documentable external evidence.',
+   'L-ebda gate estern ma jingħalaq awtomatikament. L-ebda numru tal-pilot, finding tal-pentest, interess ta’ skola, LOI, conversion jew dħul ma jiġi ġġenerat mill-app bħallikieku kien reali. Kull għeluq jeħtieġ evidenza esterna dokumentabbli.'
+  )
+ );
+ return lines.join('\n');
+}
+function externalValidationCommandHtml(){
+ const d=externalValidationCommandData();
+ const seq=externalValidationSequence();
+ return `<div class="section-title"><div><h2>🧭 ${esc(lang3('External Validation Command Center','External Validation Command Center','External Validation Command Center'))}</h2><p>${esc(lang3('Un unico percorso operativo per eseguire e documentare i quattro gate esterni senza falsi positivi.','One operational path to execute and document all four external gates without false positives.','Mogħdija operattiva waħda biex twettaq u tiddokumenta l-erba’ gates esterni mingħajr false positives.'))}</p></div><span class="badge official">Build ${esc(BUILD_VERSION)}</span></div>
+ <section class="card">
+  <div class="help-card-title"><div><h3>${esc(lang3('Baseline interna pronta','Internal baseline ready','Baseline interna lesta'))}</h3><p>${esc(`Readiness ${d.readinessPassed}/${d.readinessTotal} · Trust ${d.trustPassed}/${d.trustTotal} · Runtime ${d.runtimeErrors}`)}</p></div><span>${d.internalReady?'✓':'○'}</span></div>
+  <div class="security-trust-checks">${seq.map(x=>`<article class="security-trust-check open"><span>${x.order}</span><div><strong>${esc(x.icon+' '+x.label)}</strong><small>OPEN · ${esc(x.evidence)}</small></div><button class="btn secondary" data-go="${esc(x.route)}">${esc(lang3('Apri','Open','Iftaħ'))}</button></article>`).join('')}</div>
+  <div class="actions"><button class="btn" id="externalValidationCopy">⧉ ${esc(lang3('Copia piano validazione','Copy validation plan','Ikkopja l-pjan ta’ validazzjoni'))}</button><button class="btn secondary" data-go="pilotreadiness">🚦 Pilot Readiness</button><button class="btn secondary" data-go="pilotanalytics">📈 Pilot Analytics</button></div>
+ </section>
+ <section class="card" style="margin-top:14px">
+  <h3>${esc(lang3('Ordine consigliato','Recommended order','Ordni rakkomandat'))}</h3>
+  <p>${esc(lang3('1 Penetration test → 2 Pilot studenti → 3 Pilot scuola → 4 Metriche/LOI. Se un gate evidenzia blocker, correggere e ripetere prima di avanzare.','1 Penetration test → 2 Learner pilot → 3 School pilot → 4 Metrics/LOI. If a gate reveals blockers, fix and repeat before advancing.','1 Penetration test → 2 Pilot studenti → 3 Pilot tal-iskola → 4 Metriċi/LOI. Jekk gate juri blockers, irranġahom u rrepeti qabel tavvanza.'))}</p>
+  <p><strong>${esc(lang3('Stato esterno complessivo','Overall external status','Status estern ġenerali'))}: OPEN</strong></p>
+ </section>`;
+}
+function bindExternalValidationCommand(){
+ const copy=$('#externalValidationCopy');
+ if(copy)copy.onclick=()=>copyTextSafe(externalValidationCommandReport(),lang3('Piano validazione copiato.','Validation plan copied.','Il-pjan ta’ validazzjoni ġie kkupjat.'));
+}
 function metricsLoiPreparationData(){
  const readiness=pilotReadinessInternalData();
  const analytics=pilotAnalyticsSummary();
@@ -7905,7 +8020,7 @@ function pilotReadinessViewHtml(){
  <section class="card">
   <div class="help-card-title"><div><h3>${esc(status)}</h3><p>${esc(lang3(`Gate interni: ${d.passed}/${d.total}. I gate esterni restano volutamente separati.`,`Internal gates: ${d.passed}/${d.total}. External gates deliberately remain separate.`,`Gates interni: ${d.passed}/${d.total}. Il-gates esterni jibqgħu separati apposta.`))}</p></div><span>${d.internalReady?'✓':'○'}</span></div>
   <div class="security-trust-checks">${d.gates.map(pilotReadinessGateHtml).join('')}</div>
-  <div class="actions"><button class="btn" id="pilotReadinessRefresh">↻ ${esc(lang3('Aggiorna controllo','Refresh check','Aġġorna l-kontroll'))}</button><button class="btn secondary" id="pilotReadinessCopy">⧉ ${esc(lang3('Copia report','Copy report','Ikkopja r-rapport'))}</button></div>
+  <div class="actions"><button class="btn" id="pilotReadinessRefresh">↻ ${esc(lang3('Aggiorna controllo','Refresh check','Aġġorna l-kontroll'))}</button><button class="btn secondary" id="pilotReadinessCopy">⧉ ${esc(lang3('Copia report','Copy report','Ikkopja r-rapport'))}</button><button class="btn secondary" data-go="externalvalidation">🧭 ${esc(lang3('Validazione esterna','External validation','Validazzjoni esterna'))}</button></div>
  </section>
  <section class="card" style="margin-top:14px"><div class="help-card-title"><div><h3>${esc(lang3('Gate esterni','External gates','Gates esterni'))}</h3><p>${esc(lang3('Non vengono mai marcati completati automaticamente dall’app.','They are never marked completed automatically by the app.','Qatt ma jiġu mmarkati kompluti awtomatikament mill-app.'))}</p></div><span>↗</span></div>
   <div class="security-trust-checks">${d.external.map((x,i)=>`<article class="security-trust-check open"><span>○</span><div><strong>${esc(x.label)}</strong><small>OPEN</small></div>${i===0?`<button class="btn secondary" data-go="pentestprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:i===1?`<button class="btn secondary" data-go="realpilotprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:i===2?`<button class="btn secondary" data-go="schoolpilotprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:i===3?`<button class="btn secondary" data-go="metricsloiprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:''}</article>`).join('')}</div>
@@ -13970,6 +14085,7 @@ function bindInvestorProduction(){
 /* === /Build 45.8.26 === */
 
 const views={
+ externalvalidation:()=>externalValidationCommandHtml(),
  metricsloiprep:()=>metricsLoiPreparationHtml(),
  schoolpilotprep:()=>schoolPilotPreparationHtml(),
  realpilotprep:()=>realPilotPreparationHtml(),
@@ -14046,7 +14162,7 @@ const views={
  bridgesetup:()=>{const latest=latestBridgeResult();return `<div class="section-title"><div><h2>🌉 ${esc(t('bridgeTest'))}</h2><p>${esc(t('bridgeTestSub'))}</p></div></div><div class="card bridge-intro-card"><p>${esc(t('bridgeIntro'))}</p><div class="bridge-flow"><div><span>1</span><strong>🇮🇹 ${esc(t('italianPhase'))}</strong></div><b>→</b><div><span>2</span><strong>🇬🇧 ${esc(t('englishPhase'))}</strong></div><b>→</b><div><span>3</span><strong>🧭 ${esc(t('bridgeMeaning'))}</strong></div></div><label>${esc(t('bridgeQuestions'))}</label><select id="bridgeCount"><option value="10" selected>10</option><option value="20">20</option></select><button class="big-action bridge-action" id="startBridge"><div>${esc(t('bridgeStart'))}</div><span>▶</span></button><p class="bridge-disclaimer">${esc(t('bridgeNotOfficial'))}</p></div>${latest?bridgeProgressHtml():''}`},
  bridgequiz:()=>`<div class="card bridge-quiz-card"><div class="bridge-quiz-head"><span id="bridgePhase" class="mode-label"></span><b id="bridgeCounter"></b></div><div class="progress"><span id="bridgeProgress"></span></div><p class="bridge-no-help">${esc(t('bridgeNoHelp'))}</p><div id="bridgeQuestion" class="question"></div><div id="bridgeInstruction" class="quiz-instruction"></div><div id="bridgeOptions"></div><div class="actions quiz-footer"><button class="btn secondary" id="bridgeExit">${esc(t('exit'))}</button><button class="btn" id="bridgeConfirm">${esc(t('confirmBridge'))}</button></div></div>`,
  bridgeresult:()=>{const r=bridgeResultById(route.data);if(!r)return `<div class="card"><h2>${esc(t('noBridgeYet'))}</h2><button class="btn" data-go="bridgesetup">${esc(t('bridgeStart'))}</button></div>`;return `<div class="section-title"><div><h2>🌉 ${esc(t('bridgeResults'))}</h2><p>${esc(formatExamDate(r.date))}</p></div><span class="bridge-result-score">${r.masteredPct}%</span></div><div class="bridge-result-grid"><div><strong>${r.knowledgePct}%</strong><span>${esc(t('knowledgeScore'))}</span></div><div><strong>${r.englishPct}%</strong><span>${esc(t('englishScore'))}</span></div><div><strong>${r.masteredIds.length}/${r.total}</strong><span>${esc(t('masteredConcepts'))}</span></div><div><strong>${r.languageIds.length}</strong><span>${esc(t('languageBarrier'))}</span></div><div><strong>${r.ruleIds.length}</strong><span>${esc(t('ruleGap'))}</span></div><div><strong>${r.recoveredIds.length}</strong><span>${esc(t('recoveredEnglish'))}</span></div></div><div class="bridge-diagnosis"><article class="mastered"><span>✓</span><div><h3>${esc(t('masteredConcepts'))}</h3><p>${esc(t('bridgeMasteredMeaning'))}</p></div></article><article class="language"><span>🔤</span><div><h3>${esc(t('languageBarrier'))}: ${r.languageIds.length}</h3><p>${esc(t('bridgeLanguageMeaning'))}</p></div></article><article class="rule"><span>📘</span><div><h3>${esc(t('ruleGap'))}: ${r.ruleIds.length}</h3><p>${esc(t('bridgeRuleMeaning'))}</p></div></article></div><div class="bridge-result-actions">${r.languageIds.length?`<button class="btn" id="trainBridgeLanguage">${esc(t('trainLanguageBarrier'))}</button>`:''}${r.ruleIds.length?`<button class="btn" id="trainBridgeRules">${esc(t('trainRuleGaps'))}</button>`:''}<button class="btn secondary" data-go="bridgesetup">${esc(t('repeatBridge'))}</button><button class="btn secondary" data-go="progress">${esc(t('backToProgress'))}</button></div><p class="bridge-disclaimer">${esc(t('bridgeNotOfficial'))}</p>`},
- help:()=>{const installed=isStandaloneMode(),pack=helpActivePackInfo();return `<div class="section-title"><div><h2>${esc(t('helpSupport'))}</h2><p>${esc(t('helpSupportSub'))}</p></div><span class="badge official">Build ${esc(BUILD_VERSION)}</span></div>${helpInstallHtml()}<div class="card quick-guide-card" style="margin-top:14px"><div class="help-card-title"><div><h3>${esc(t('quickGuide'))}</h3><p>${esc(t('quickGuideSub'))}</p></div><span>↗</span></div><div class="quick-guide-grid"><button data-go="${esc(pack.route)}"><span>🪪</span><strong>${esc(pack.label)}</strong><small>${esc(lang3('Apri il tuo percorso autonomo','Open your autonomous pathway','Iftaħ il-mogħdija awtonoma tiegħek'))}</small></button><button data-go="licences"><span>🔁</span><strong>${esc(lang3('Cambia patente','Change licence','Ibdel il-liċenzja'))}</strong><small>${esc(lang3('Scegli uno dei 5 Pack verificati','Choose one of 5 verified packs','Agħżel wieħed minn 5 packs ivverifikati'))}</small></button><button data-go="progress"><span>📊</span><strong>${esc(t('openProgress'))}</strong><small>${esc(t('guideProgress'))}</small></button><button data-go="pilotanalytics"><span>📈</span><strong>Pilot Analytics</strong><small>${esc(lang3('Misura uso, sessioni, esami e stabilità con consenso','Measure usage, sessions, exams and stability with consent','Kejjel użu, sessjonijiet, eżamijiet u stabbiltà bil-kunsens'))}</small></button><button data-go="pilotreadiness"><span>🚦</span><strong>Pilot Readiness</strong><small>${esc(lang3('Verifica i prerequisiti interni prima del pilot reale','Check internal prerequisites before the real pilot','Iċċekkja l-prerekwiżiti interni qabel il-pilot reali'))}</small></button><button data-go="securitytrust"><span>🛡️</span><strong>Trust Center</strong><small>${esc(lang3('Controlli tecnici e confini di sicurezza','Technical checks and security boundaries','Kontrolli tekniċi u limiti tas-sigurtà'))}</small></button></div></div><div class="card faq-card" style="margin-top:14px"><h3>${esc(t('frequentQuestions'))}</h3><details><summary>${esc(t('faqBankQ'))}</summary><p>${esc(t('faqBankA'))}</p></details><details><summary>${esc(t('faqOfflineQ'))}</summary><p>${esc(t('faqOfflineA'))}</p></details><details><summary>${esc(t('faqDataQ'))}</summary><p>${esc(t('faqDataA'))}</p></details><details><summary>${esc(t('faqUpdateQ'))}</summary><p>${esc(t('faqUpdateA'))}</p></details><details><summary>${esc(t('faqDeleteQ'))}</summary><p>${esc(t('faqDeleteA'))}</p></details></div><div class="card support-card" style="margin-top:14px"><div class="help-card-title"><div><h3>${esc(t('reportProblem'))}</h3><p>${esc(t('reportProblemSub'))}</p></div><span>🛠</span></div><div class="support-form"><label><span>${esc(t('supportCategory'))}</span><select id="supportCategory"><option value="technical">${esc(t('supportTechnical'))}</option><option value="pilot">${esc(lang3('Feedback pilot','Pilot feedback','Feedback tal-pilot'))}</option><option value="question">${esc(t('supportQuestion'))}</option><option value="registration">${esc(t('supportRegistration'))}</option><option value="suggestion">${esc(t('supportSuggestion'))}</option></select></label><label><span>${esc(t('questionIdOptional'))}</span><input id="supportQuestionId" maxlength="40" placeholder="LPTV.188 / BUSCOACH4.19"></label><label class="full"><span>${esc(t('problemDescription'))}</span><textarea id="supportDescription" maxlength="1800" placeholder="${esc(t('problemPlaceholder'))}"></textarea></label></div><div class="support-method-grid"><button class="btn" id="shareSupportReport">↗ ${esc(t('shareReport'))}</button><button class="btn secondary" id="openSupportGmail">G ${esc(t('openSupportGmail'))}</button><button class="btn secondary" id="openSupportMail">✉ ${esc(t('openSupportMail'))}</button><button class="btn secondary" id="copySupportReport">⧉ ${esc(t('copySupportReport'))}</button></div><p class="support-contact">${esc(t('contactSupport'))}: <strong>${esc(ADMIN_EMAIL)}</strong></p><p class="muted">${esc(lang3(`Diagnostica inclusa: Build ${BUILD_VERSION}, ${pack.label}, ruolo, connessione, dispositivo e pagina corrente.`,`Included diagnostics: Build ${BUILD_VERSION}, ${pack.label}, role, connection, device and current page.`,`Dijanjostika inkluża: Build ${BUILD_VERSION}, ${pack.label}, rwol, konnessjoni, apparat u paġna kurrenti.`))}</p></div><div class="card privacy-summary-card" style="margin-top:14px"><span>🔒</span><div><h3>${esc(t('privacySummary'))}</h3><p>${esc(t('privacySummaryText'))}</p></div><button class="btn secondary" data-go="privacycenter">${esc(t('privacyOpenCenter'))}</button></div>`},
+ help:()=>{const installed=isStandaloneMode(),pack=helpActivePackInfo();return `<div class="section-title"><div><h2>${esc(t('helpSupport'))}</h2><p>${esc(t('helpSupportSub'))}</p></div><span class="badge official">Build ${esc(BUILD_VERSION)}</span></div>${helpInstallHtml()}<div class="card quick-guide-card" style="margin-top:14px"><div class="help-card-title"><div><h3>${esc(t('quickGuide'))}</h3><p>${esc(t('quickGuideSub'))}</p></div><span>↗</span></div><div class="quick-guide-grid"><button data-go="${esc(pack.route)}"><span>🪪</span><strong>${esc(pack.label)}</strong><small>${esc(lang3('Apri il tuo percorso autonomo','Open your autonomous pathway','Iftaħ il-mogħdija awtonoma tiegħek'))}</small></button><button data-go="licences"><span>🔁</span><strong>${esc(lang3('Cambia patente','Change licence','Ibdel il-liċenzja'))}</strong><small>${esc(lang3('Scegli uno dei 5 Pack verificati','Choose one of 5 verified packs','Agħżel wieħed minn 5 packs ivverifikati'))}</small></button><button data-go="progress"><span>📊</span><strong>${esc(t('openProgress'))}</strong><small>${esc(t('guideProgress'))}</small></button><button data-go="pilotanalytics"><span>📈</span><strong>Pilot Analytics</strong><small>${esc(lang3('Misura uso, sessioni, esami e stabilità con consenso','Measure usage, sessions, exams and stability with consent','Kejjel użu, sessjonijiet, eżamijiet u stabbiltà bil-kunsens'))}</small></button><button data-go="pilotreadiness"><span>🚦</span><strong>Pilot Readiness</strong><small>${esc(lang3('Verifica i prerequisiti interni prima del pilot reale','Check internal prerequisites before the real pilot','Iċċekkja l-prerekwiżiti interni qabel il-pilot reali'))}</small></button><button data-go="externalvalidation"><span>🧭</span><strong>External Validation</strong><small>${esc(lang3('Coordina i 4 gate esterni in ordine','Coordinate the 4 external gates in order','Ikkoordina l-4 gates esterni fl-ordni'))}</small></button><button data-go="securitytrust"><span>🛡️</span><strong>Trust Center</strong><small>${esc(lang3('Controlli tecnici e confini di sicurezza','Technical checks and security boundaries','Kontrolli tekniċi u limiti tas-sigurtà'))}</small></button></div></div><div class="card faq-card" style="margin-top:14px"><h3>${esc(t('frequentQuestions'))}</h3><details><summary>${esc(t('faqBankQ'))}</summary><p>${esc(t('faqBankA'))}</p></details><details><summary>${esc(t('faqOfflineQ'))}</summary><p>${esc(t('faqOfflineA'))}</p></details><details><summary>${esc(t('faqDataQ'))}</summary><p>${esc(t('faqDataA'))}</p></details><details><summary>${esc(t('faqUpdateQ'))}</summary><p>${esc(t('faqUpdateA'))}</p></details><details><summary>${esc(t('faqDeleteQ'))}</summary><p>${esc(t('faqDeleteA'))}</p></details></div><div class="card support-card" style="margin-top:14px"><div class="help-card-title"><div><h3>${esc(t('reportProblem'))}</h3><p>${esc(t('reportProblemSub'))}</p></div><span>🛠</span></div><div class="support-form"><label><span>${esc(t('supportCategory'))}</span><select id="supportCategory"><option value="technical">${esc(t('supportTechnical'))}</option><option value="pilot">${esc(lang3('Feedback pilot','Pilot feedback','Feedback tal-pilot'))}</option><option value="question">${esc(t('supportQuestion'))}</option><option value="registration">${esc(t('supportRegistration'))}</option><option value="suggestion">${esc(t('supportSuggestion'))}</option></select></label><label><span>${esc(t('questionIdOptional'))}</span><input id="supportQuestionId" maxlength="40" placeholder="LPTV.188 / BUSCOACH4.19"></label><label class="full"><span>${esc(t('problemDescription'))}</span><textarea id="supportDescription" maxlength="1800" placeholder="${esc(t('problemPlaceholder'))}"></textarea></label></div><div class="support-method-grid"><button class="btn" id="shareSupportReport">↗ ${esc(t('shareReport'))}</button><button class="btn secondary" id="openSupportGmail">G ${esc(t('openSupportGmail'))}</button><button class="btn secondary" id="openSupportMail">✉ ${esc(t('openSupportMail'))}</button><button class="btn secondary" id="copySupportReport">⧉ ${esc(t('copySupportReport'))}</button></div><p class="support-contact">${esc(t('contactSupport'))}: <strong>${esc(ADMIN_EMAIL)}</strong></p><p class="muted">${esc(lang3(`Diagnostica inclusa: Build ${BUILD_VERSION}, ${pack.label}, ruolo, connessione, dispositivo e pagina corrente.`,`Included diagnostics: Build ${BUILD_VERSION}, ${pack.label}, role, connection, device and current page.`,`Dijanjostika inkluża: Build ${BUILD_VERSION}, ${pack.label}, rwol, konnessjoni, apparat u paġna kurrenti.`))}</p></div><div class="card privacy-summary-card" style="margin-top:14px"><span>🔒</span><div><h3>${esc(t('privacySummary'))}</h3><p>${esc(t('privacySummaryText'))}</p></div><button class="btn secondary" data-go="privacycenter">${esc(t('privacyOpenCenter'))}</button></div>`},
 
 
 

@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.30.12';
+const BUILD_VERSION = '45.8.30.13';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -2551,6 +2551,7 @@ function bindCommon(){
  if(route.name==='pilotanalytics')bindPilotAnalytics();
  if(route.name==='pilotreadiness')bindPilotReadiness();
  if(route.name==='pentestprep')bindPenetrationTestPreparation();
+ if(route.name==='realpilotprep')bindRealPilotPreparation();
  screen.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go,b.dataset.id||null));screen.querySelectorAll('[data-external]').forEach(b=>b.onclick=()=>window.open(b.dataset.external,'_blank','noopener'));const cceBatch=screen.querySelector('[data-go=\"licenseccebatch\"]');if(cceBatch)cceBatch.onclick=()=>startQuiz(CCE_Q.slice(),'guided',{returnRoute:'licensepacks',returnData:'MT-C-CE'});const busdBatch=screen.querySelector('[data-go=\"licensedbatch\"]');if(busdBatch)busdBatch.onclick=()=>startQuiz(BUS_D_Q.slice(),'guided',{returnRoute:'licensepacks',returnData:'MT-D'});}
 
 
@@ -7212,6 +7213,128 @@ function pilotAnalyticsSnapshot(){
   lastPackId:s.lastPackId
  };
 }
+function realPilotPreparationData(){
+ const readiness=pilotReadinessInternalData();
+ const analytics=pilotAnalyticsSummary();
+ const auth=mdmAuthSummary();
+ const packs=typeof investorProductionPackProof==='function'?investorProductionPackProof():[];
+ const packMap={};
+ packs.forEach(x=>packMap[x.id]={installed:x.installed,expected:x.expected,pass:x.pass});
+ return {
+  build:BUILD_VERSION,
+  internalReady:Boolean(readiness.internalReady),
+  readinessPassed:readiness.passed,
+  readinessTotal:readiness.total,
+  trustPassed:(typeof securityTrustClientChecks==='function'?securityTrustClientChecks():[]).filter(x=>x.pass).length+(typeof securityTrustServerChecks==='function'?securityTrustServerChecks():[]).filter(x=>x.pass).length,
+  trustTotal:(typeof securityTrustClientChecks==='function'?securityTrustClientChecks():[]).length+(typeof securityTrustServerChecks==='function'?securityTrustServerChecks():[]).length,
+  runtimeErrors:Number(analytics.currentBuildRuntimeErrors||0),
+  startupAverageMs:analytics.startupAverageMs,
+  analyticsConsent:Boolean(analytics.consent),
+  authenticated:Boolean(auth.authenticated),
+  packs:packMap
+ };
+}
+function realPilotChecklist(){
+ return [
+  {
+   id:'cohort',
+   title:lang3('Cohort 10–30 studenti definita','10–30 learner cohort defined','Cohort ta’ 10–30 student definit'),
+   detail:lang3('Preparare un elenco di partecipanti di test con identificativi interni, senza inserire dati sensibili nel report tecnico.','Prepare a test-participant list using internal identifiers, without placing sensitive data in the technical report.','Ipprepara lista ta’ parteċipanti tat-test b’identifikaturi interni, mingħajr data sensittiva fir-rapport tekniku.')
+  },
+  {
+   id:'accounts',
+   title:lang3('Account e ruoli verificati','Accounts and roles verified','Kontijiet u rwoli vverifikati'),
+   detail:lang3('Ogni studente usa il proprio account; eventuali scuole/tester usano ruoli separati. Nessuna condivisione di credenziali.','Each learner uses their own account; schools/testers use separate roles. No credential sharing.','Kull student juża l-kont tiegħu; skejjel/testers jużaw rwoli separati. L-ebda qsim ta’ kredenzjali.')
+  },
+  {
+   id:'consent',
+   title:lang3('Consenso Analytics esplicito','Explicit Analytics consent','Kunsens Analytics espliċitu'),
+   detail:lang3('Analytics resta OFF di default. Attivarlo solo per chi accetta; verificare anche il percorso di revoca.','Analytics stays OFF by default. Enable it only for participants who agree; verify revocation as well.','Analytics jibqa’ OFF b’mod awtomatiku. Attivah biss għal min jaċċetta; ivverifika wkoll ir-revoka.')
+  },
+  {
+   id:'packs',
+   title:lang3('License Pack assegnato','Licence Pack assigned','License Pack assenjat'),
+   detail:lang3('Ogni partecipante parte dal Pack corretto; evitare cambi casuali che falsino le metriche del pilot.','Each participant starts from the correct pack; avoid random switching that would distort pilot metrics.','Kull parteċipant jibda mill-pack korrett; evita tibdil każwali li jfixkel il-metriċi tal-pilot.')
+  },
+  {
+   id:'baseline',
+   title:lang3('Baseline iniziale registrata','Initial baseline recorded','Baseline inizjali rreġistrata'),
+   detail:lang3('Prima dell’uso intensivo registrare stato iniziale: progressi, esami completati, readiness e Pack attivo.','Before intensive use, record initial state: progress, completed exams, readiness and active pack.','Qabel l-użu intensiv irreġistra l-istat inizjali: progress, eżamijiet kompluti, readiness u pack attiv.')
+  },
+  {
+   id:'tasks',
+   title:lang3('Percorso pilot standardizzato','Standardized pilot flow','Fluss tal-pilot standardizzat'),
+   detail:lang3('Usare una sequenza comune: studio → quiz → esame → Replay/Recovery → ritorno nell’app → feedback.','Use one common sequence: study → quiz → exam → Replay/Recovery → return to app → feedback.','Uża sekwenza komuni: studju → quiz → eżami → Replay/Recovery → ritorn fl-app → feedback.')
+  },
+  {
+   id:'support',
+   title:lang3('Supporto pilot attivo','Pilot support active','Appoġġ tal-pilot attiv'),
+   detail:lang3('Far usare la categoria Feedback pilot e raccogliere segnalazioni con Build, Pack, ruolo, pagina e dispositivo.','Use the Pilot feedback category and collect reports with Build, Pack, role, page and device.','Uża l-kategorija Feedback tal-pilot u iġbor rapporti b’Build, Pack, rwol, paġna u apparat.')
+  },
+  {
+   id:'metrics',
+   title:lang3('Metriche da osservare definite','Metrics to observe defined','Metriċi li għandhom jiġu osservati definiti'),
+   detail:lang3('Giorni attivi, sessioni iniziate/completate, esami, media, Replay, feedback, errori runtime e tempi di avvio.','Active days, sessions started/completed, exams, average score, Replay, feedback, runtime errors and startup times.','Jiem attivi, sessjonijiet mibdija/kompluti, eżamijiet, medja, Replay, feedback, żbalji runtime u ħinijiet tal-bidu.')
+  },
+  {
+   id:'exit',
+   title:lang3('Criteri di uscita definiti','Exit criteria defined','Kriterji ta’ ħruġ definiti'),
+   detail:lang3('Chiudere il pilot solo dopo finestra di prova concordata, raccolta feedback, controllo errori e confronto baseline/finale.','Close the pilot only after the agreed test window, feedback collection, error review and baseline/final comparison.','Agħlaq il-pilot biss wara l-perjodu miftiehem, ġbir ta’ feedback, reviżjoni tal-iżbalji u tqabbil baseline/finali.')
+  },
+  {
+   id:'external',
+   title:lang3('Esito pilot documentato esternamente','Pilot outcome documented externally','Riżultat tal-pilot dokumentat esternament'),
+   detail:lang3('Il gate si chiude solo con evidenza reale: numero partecipanti, periodo, metriche aggregate, problemi trovati e decisione go/no-go.','The gate closes only with real evidence: participant count, period, aggregate metrics, findings and go/no-go decision.','Il-gate jingħalaq biss b’evidenza reali: numru ta’ parteċipanti, perjodu, metriċi aggregati, findings u deċiżjoni go/no-go.')
+  }
+ ];
+}
+function realPilotPreparationReport(){
+ const d=realPilotPreparationData();
+ const items=realPilotChecklist();
+ const lines=[
+  'MALTA DRIVING MASTER — REAL PILOT 10–30 LEARNERS LAUNCH PACK',
+  `Build ${d.build}`,
+  `${lang3('Readiness interno','Internal readiness','Readiness intern')}: ${d.readinessPassed}/${d.readinessTotal}`,
+  `${lang3('Trust Center','Trust Center','Trust Center')}: ${d.trustPassed}/${d.trustTotal}`,
+  `${lang3('Errori runtime build corrente','Current-build runtime errors','Żbalji runtime tal-build kurrenti')}: ${d.runtimeErrors}`,
+  `${lang3('Avvio app medio','Average app startup','Medja tal-bidu tal-app')}: ${d.startupAverageMs===null?'—':d.startupAverageMs+' ms'}`,
+  '',
+  lang3('CHECKLIST OPERATIVA PILOT','PILOT OPERATIONS CHECKLIST','CHECKLIST OPERATTIVA TAL-PILOT')
+ ];
+ items.forEach((x,i)=>lines.push(`${i+1}. ${x.title}: ${x.detail}`));
+ lines.push(
+  '',
+  lang3('METRICHE MINIME DA RIPORTARE','MINIMUM METRICS TO REPORT','METRIĊI MINIMI GĦAR-RAPPORT'),
+  lang3(
+   'Partecipanti effettivi; giorni attivi; sessioni iniziate/completate; esami completati e media; Replay/Recovery usati; feedback inviati; errori runtime; startup medio/max; problemi bloccanti; abbandoni; decisione go/no-go.',
+   'Actual participants; active days; sessions started/completed; exams completed and average score; Replay/Recovery used; feedback sent; runtime errors; average/max startup; blocking issues; dropouts; go/no-go decision.',
+   'Parteċipanti effettivi; jiem attivi; sessjonijiet mibdija/kompluti; eżamijiet kompluti u medja; Replay/Recovery użati; feedback mibgħut; żbalji runtime; bidu medju/massimu; problemi li jimblukkaw; dropouts; deċiżjoni go/no-go.'
+  ),
+  '',
+  lang3('STATO GATE ESTERNO: OPEN','EXTERNAL GATE STATUS: OPEN','STATUS TAL-GATE ESTERN: OPEN'),
+  lang3(
+   'Questa pagina prepara il pilot ma non dichiara che sia stato eseguito. Il gate può essere chiuso solo dopo un pilot reale con 10–30 studenti e risultati documentati.',
+   'This page prepares the pilot but does not claim it has been run. The gate can close only after a real 10–30 learner pilot with documented results.',
+   'Din il-paġna tipprepara l-pilot iżda ma tiddikjarax li sar. Il-gate jista’ jingħalaq biss wara pilot reali b’10–30 student u riżultati dokumentati.'
+  )
+ );
+ return lines.join('\n');
+}
+function realPilotPreparationHtml(){
+ const d=realPilotPreparationData();
+ const items=realPilotChecklist();
+ return `<div class="section-title"><div><h2>👥 ${esc(lang3('Pilot reale 10–30 studenti','Real Pilot 10–30 Learners','Pilot reali 10–30 Student'))}</h2><p>${esc(lang3('Launch pack operativo per organizzare il pilot senza confonderlo con un risultato già ottenuto.','Operational launch pack to organize the pilot without confusing preparation with a completed result.','Launch pack operattiv biex torganizza l-pilot mingħajr ma tħallat il-preparazzjoni ma’ riżultat diġà miksub.'))}</p></div><span class="badge official">Build ${esc(BUILD_VERSION)}</span></div>
+ <section class="card">
+  <div class="help-card-title"><div><h3>${esc(lang3('Baseline pronta per il pilot','Pilot baseline ready','Baseline lesta għall-pilot'))}</h3><p>${esc(`Readiness ${d.readinessPassed}/${d.readinessTotal} · Trust ${d.trustPassed}/${d.trustTotal} · Runtime ${d.runtimeErrors}`)}</p></div><span>${d.internalReady?'✓':'○'}</span></div>
+  <div class="security-trust-checks">${items.map((x,i)=>`<article class="security-trust-check open"><span>${i+1}</span><div><strong>${esc(x.title)}</strong><small>${esc(x.detail)}</small></div></article>`).join('')}</div>
+  <div class="actions"><button class="btn" id="realPilotBriefCopy">⧉ ${esc(lang3('Copia launch pack pilot','Copy pilot launch pack','Ikkopja l-launch pack tal-pilot'))}</button><button class="btn secondary" data-go="pilotanalytics">📈 Pilot Analytics</button><button class="btn secondary" data-go="pilotreadiness">🚦 Pilot Readiness</button></div>
+ </section>
+ <section class="card" style="margin-top:14px"><h3>${esc(lang3('Stato gate esterno','External gate status','Status tal-gate estern'))}</h3><p><strong>OPEN</strong> — ${esc(lang3('Il pilot reale 10–30 studenti non viene marcato completato automaticamente. Servono partecipanti reali e risultati documentati.','The real 10–30 learner pilot is never marked complete automatically. Real participants and documented results are required.','Il-pilot reali b’10–30 student qatt ma jiġi mmarkat komplut awtomatikament. Huma meħtieġa parteċipanti reali u riżultati dokumentati.'))}</p></section>`;
+}
+function bindRealPilotPreparation(){
+ const copy=$('#realPilotBriefCopy');
+ if(copy)copy.onclick=()=>copyTextSafe(realPilotPreparationReport(),lang3('Launch pack pilot copiato.','Pilot launch pack copied.','Il-launch pack tal-pilot ġie kkupjat.'));
+}
 function penetrationTestPreparationData(){
  const readiness=pilotReadinessInternalData();
  const backend=mdmBackendPublicConfig();
@@ -7525,7 +7648,7 @@ function pilotReadinessViewHtml(){
   <div class="actions"><button class="btn" id="pilotReadinessRefresh">↻ ${esc(lang3('Aggiorna controllo','Refresh check','Aġġorna l-kontroll'))}</button><button class="btn secondary" id="pilotReadinessCopy">⧉ ${esc(lang3('Copia report','Copy report','Ikkopja r-rapport'))}</button></div>
  </section>
  <section class="card" style="margin-top:14px"><div class="help-card-title"><div><h3>${esc(lang3('Gate esterni','External gates','Gates esterni'))}</h3><p>${esc(lang3('Non vengono mai marcati completati automaticamente dall’app.','They are never marked completed automatically by the app.','Qatt ma jiġu mmarkati kompluti awtomatikament mill-app.'))}</p></div><span>↗</span></div>
-  <div class="security-trust-checks">${d.external.map((x,i)=>`<article class="security-trust-check open"><span>○</span><div><strong>${esc(x.label)}</strong><small>OPEN</small></div>${i===0?`<button class="btn secondary" data-go="pentestprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:''}</article>`).join('')}</div>
+  <div class="security-trust-checks">${d.external.map((x,i)=>`<article class="security-trust-check open"><span>○</span><div><strong>${esc(x.label)}</strong><small>OPEN</small></div>${i===0?`<button class="btn secondary" data-go="pentestprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:i===1?`<button class="btn secondary" data-go="realpilotprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:''}</article>`).join('')}</div>
   <p class="muted">${esc(lang3('Ordine previsto: penetration test indipendente → pilot 10–30 studenti → pilot scuola → metriche reali / LOI.','Planned order: independent penetration test → 10–30 learner pilot → school pilot → real metrics / LOI.','Ordni ppjanat: penetration test indipendenti → pilot 10–30 student → pilot tal-iskola → metriċi reali / LOI.'))}</p>
  </section>`;
 }
@@ -13587,6 +13710,7 @@ function bindInvestorProduction(){
 /* === /Build 45.8.26 === */
 
 const views={
+ realpilotprep:()=>realPilotPreparationHtml(),
  pentestprep:()=>penetrationTestPreparationHtml(),
  pilotreadiness:()=>pilotReadinessViewHtml(),
  pilotanalytics:()=>pilotAnalyticsViewHtml(),

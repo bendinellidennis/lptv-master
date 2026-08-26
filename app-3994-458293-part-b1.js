@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.30.14';
+const BUILD_VERSION = '45.8.30.15';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -2553,6 +2553,7 @@ function bindCommon(){
  if(route.name==='pentestprep')bindPenetrationTestPreparation();
  if(route.name==='realpilotprep')bindRealPilotPreparation();
  if(route.name==='schoolpilotprep')bindSchoolPilotPreparation();
+ if(route.name==='metricsloiprep')bindMetricsLoiPreparation();
  screen.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go,b.dataset.id||null));screen.querySelectorAll('[data-external]').forEach(b=>b.onclick=()=>window.open(b.dataset.external,'_blank','noopener'));const cceBatch=screen.querySelector('[data-go=\"licenseccebatch\"]');if(cceBatch)cceBatch.onclick=()=>startQuiz(CCE_Q.slice(),'guided',{returnRoute:'licensepacks',returnData:'MT-C-CE'});const busdBatch=screen.querySelector('[data-go=\"licensedbatch\"]');if(busdBatch)busdBatch.onclick=()=>startQuiz(BUS_D_Q.slice(),'guided',{returnRoute:'licensepacks',returnData:'MT-D'});}
 
 
@@ -7214,6 +7215,143 @@ function pilotAnalyticsSnapshot(){
   lastPackId:s.lastPackId
  };
 }
+function metricsLoiPreparationData(){
+ const readiness=pilotReadinessInternalData();
+ const analytics=pilotAnalyticsSummary();
+ const auth=mdmAuthSummary();
+ const backend=mdmBackendPublicConfig();
+ const permission=mdmProductionPermissionState||{};
+ return {
+  build:BUILD_VERSION,
+  internalReady:Boolean(readiness.internalReady),
+  readinessPassed:readiness.passed,
+  readinessTotal:readiness.total,
+  runtimeErrors:Number(analytics.currentBuildRuntimeErrors||0),
+  startupAverageMs:analytics.startupAverageMs,
+  startupMaxMs:analytics.startupMaxMs,
+  activeDays:Number(analytics.activeDays||0),
+  sessionsStarted:Number(analytics.sessionsStarted||0),
+  sessionsCompleted:Number(analytics.sessionsCompleted||0),
+  examsCompleted:Number(analytics.examsCompleted||0),
+  examAverage:analytics.examAverage,
+  replayCompleted:Number(analytics.replayCompleted||0),
+  feedbackActions:Number(analytics.pilotFeedbackActions||0),
+  packs:Array.isArray(analytics.packs)?analytics.packs:[],
+  analyticsConsent:Boolean(analytics.consent),
+  authenticated:Boolean(auth.authenticated),
+  backendReady:Boolean(backend.enabled&&backend.schemaReady),
+  permissionVerified:Boolean(permission.verified),
+  permissionRevision:String(permission.revision||'—')
+ };
+}
+function metricsLoiChecklist(){
+ return [
+  {
+   id:'cohort',
+   title:lang3('Cohort reale documentata','Real cohort documented','Cohort reali dokumentata'),
+   detail:lang3('Numero partecipanti effettivi, periodo del pilot e Pack utilizzati devono provenire da evidenza reale, non da stime.','Actual participant count, pilot period and packs used must come from real evidence, not estimates.','In-numru reali ta’ parteċipanti, il-perjodu tal-pilot u l-packs użati għandhom jiġu minn evidenza reali, mhux stimi.')
+  },
+  {
+   id:'usage',
+   title:lang3('Uso reale misurato','Real usage measured','Użu reali mkejjel'),
+   detail:lang3('Riportare giorni attivi, sessioni, completamenti, esami e ritorno nell’app usando solo dati effettivamente raccolti con consenso.','Report active days, sessions, completions, exams and return usage using only data actually collected with consent.','Irrapporta jiem attivi, sessjonijiet, completions, eżamijiet u ritorn fl-app billi tuża biss data realment miġbura bil-kunsens.')
+  },
+  {
+   id:'learning',
+   title:lang3('Risultati didattici osservati','Observed learning outcomes','Riżultati tat-tagħlim osservati'),
+   detail:lang3('Confrontare baseline e finale: progressi, esami, media, Recovery/Replay e readiness. Nessuna causalità va dichiarata senza evidenza.','Compare baseline and final state: progress, exams, average score, Recovery/Replay and readiness. Do not claim causality without evidence.','Qabbel baseline u finali: progress, eżamijiet, medja, Recovery/Replay u readiness. Tiddikjarax kawżalità mingħajr evidenza.')
+  },
+  {
+   id:'stability',
+   title:lang3('Stabilità tecnica documentata','Technical stability documented','Stabbiltà teknika dokumentata'),
+   detail:lang3('Riportare errori runtime della build, startup medio/max e qualsiasi blocker tecnico emerso nel periodo.','Report current-build runtime errors, average/max startup and any technical blocker found during the period.','Irrapporta żbalji runtime tal-build, startup medju/massimu u kwalunkwe blocker tekniku li deher fil-perjodu.')
+  },
+  {
+   id:'feedback',
+   title:lang3('Feedback qualitativo sintetizzato','Qualitative feedback summarized','Feedback kwalitattiv miġbur'),
+   detail:lang3('Raggruppare feedback reali in temi ricorrenti senza inventare citazioni o percentuali non misurate.','Group real feedback into recurring themes without inventing quotes or unmeasured percentages.','Għaqad feedback reali f’temi rikorrenti mingħajr ma tivvinta kwotazzjonijiet jew perċentwali mhux imkejla.')
+  },
+  {
+   id:'school',
+   title:lang3('Evidenza scuola separata','School evidence separated','Evidenza tal-iskola separata'),
+   detail:lang3('Distinguere chiaramente risultati studenti, osservazioni School Admin e decisioni della scuola.','Clearly separate learner results, School Admin observations and school decisions.','Ifred b’mod ċar ir-riżultati tal-istudenti, osservazzjonijiet tas-School Admin u deċiżjonijiet tal-iskola.')
+  },
+  {
+   id:'loi',
+   title:lang3('LOI basata su interesse reale','LOI based on real interest','LOI ibbażata fuq interess reali'),
+   detail:lang3('Una Letter of Intent deve essere firmata da una controparte reale e descrivere interesse, condizioni e limiti; l’app non la genera come prova di trazione.','A Letter of Intent must be signed by a real counterparty and describe interest, conditions and limits; the app does not generate it as proof of traction.','Letter of Intent għandha tkun iffirmata minn kontroparti reali u tiddeskrivi interess, kundizzjonijiet u limiti; l-app ma tiġġenerahiex bħala prova ta’ traction.')
+  },
+  {
+   id:'commercial',
+   title:lang3('Segnali commerciali verificabili','Verifiable commercial signals','Sinjali kummerċjali verifikabbli'),
+   detail:lang3('Riportare solo incontri, richieste pilot, follow-up, LOI o impegni realmente avvenuti e documentabili.','Report only meetings, pilot requests, follow-ups, LOIs or commitments that actually occurred and can be documented.','Irrapporta biss laqgħat, talbiet għal pilot, follow-ups, LOIs jew impenji li verament seħħew u jistgħu jiġu dokumentati.')
+  },
+  {
+   id:'investor',
+   title:lang3('Investor evidence pack coerente','Consistent investor evidence pack','Investor evidence pack konsistenti'),
+   detail:lang3('Ogni numero deve avere origine, periodo e definizione. Separare dati live, evidenze esterne e ipotesi future.','Every number must have a source, period and definition. Separate live data, external evidence and future assumptions.','Kull numru għandu jkollu sors, perjodu u definizzjoni. Ifred data live, evidenza esterna u assunzjonijiet futuri.')
+  },
+  {
+   id:'close',
+   title:lang3('Chiusura gate solo con prova reale','Close gate only with real proof','Agħlaq il-gate biss bi prova reali'),
+   detail:lang3('Il gate Metriche reali / LOI resta OPEN finché non esistono dati pilot sufficienti e, se prevista, una LOI reale verificabile.','The Real Metrics / LOI gate remains OPEN until sufficient pilot data exists and, where applicable, a real verifiable LOI exists.','Il-gate Metriċi reali / LOI jibqa’ OPEN sakemm ikun hemm biżżejjed data tal-pilot u, fejn applikabbli, LOI reali verifikabbli.')
+  }
+ ];
+}
+function metricsLoiPreparationReport(){
+ const d=metricsLoiPreparationData();
+ const items=metricsLoiChecklist();
+ const lines=[
+  'MALTA DRIVING MASTER — REAL METRICS / LOI EVIDENCE PACK',
+  `Build ${d.build}`,
+  `${lang3('Readiness interno','Internal readiness','Readiness intern')}: ${d.readinessPassed}/${d.readinessTotal}`,
+  `${lang3('Runtime build corrente','Current-build runtime','Runtime tal-build kurrenti')}: ${d.runtimeErrors}`,
+  `${lang3('Avvio medio','Average startup','Startup medju')}: ${d.startupAverageMs===null?'—':d.startupAverageMs+' ms'}`,
+  `${lang3('Avvio massimo','Maximum startup','Startup massimu')}: ${d.startupMaxMs===null?'—':d.startupMaxMs+' ms'}`,
+  `${lang3('Giorni attivi locali','Local active days','Jiem attivi lokali')}: ${d.activeDays}`,
+  `${lang3('Sessioni','Sessions','Sessjonijiet')}: ${d.sessionsCompleted}/${d.sessionsStarted}`,
+  `${lang3('Esami completati','Exams completed','Eżamijiet kompluti')}: ${d.examsCompleted}`,
+  `${lang3('Media esami','Exam average','Medja tal-eżamijiet')}: ${d.examAverage===null?'—':d.examAverage}`,
+  `${lang3('Replay completati','Replay completed','Replay kompluti')}: ${d.replayCompleted}`,
+  `${lang3('Feedback pilot','Pilot feedback','Feedback tal-pilot')}: ${d.feedbackActions}`,
+  `${lang3('Pack osservati','Observed packs','Packs osservati')}: ${d.packs.join(', ')||'—'}`,
+  '',
+  lang3('CHECKLIST EVIDENZE','EVIDENCE CHECKLIST','CHECKLIST TAL-EVIDENZA')
+ ];
+ items.forEach((x,i)=>lines.push(`${i+1}. ${x.title}: ${x.detail}`));
+ lines.push(
+  '',
+  lang3('REGOLE PER INVESTITORI','INVESTOR EVIDENCE RULES','REGOLI TAL-EVIDENZA GĦALL-INVESTITURI'),
+  lang3(
+   'Non presentare utenti, retention, conversioni, scuole interessate, ricavi, LOI o risultati didattici come reali se non sono documentati. Ogni metrica deve indicare periodo, definizione e fonte.',
+   'Do not present users, retention, conversions, interested schools, revenue, LOIs or learning outcomes as real unless documented. Every metric must state period, definition and source.',
+   'Tippreżentax utenti, retention, conversions, skejjel interessati, dħul, LOIs jew riżultati tat-tagħlim bħala reali jekk mhumiex dokumentati. Kull metrika għandha tindika perjodu, definizzjoni u sors.'
+  ),
+  '',
+  lang3('STATO GATE ESTERNO: OPEN','EXTERNAL GATE STATUS: OPEN','STATUS TAL-GATE ESTERN: OPEN'),
+  lang3(
+   'Questo modulo prepara il pacchetto evidenze ma non crea metriche reali o una LOI. Il gate si chiude solo dopo risultati reali documentati.',
+   'This module prepares the evidence pack but does not create real metrics or a LOI. The gate closes only after documented real-world results.',
+   'Dan il-modulu jipprepara l-evidence pack iżda ma joħloqx metriċi reali jew LOI. Il-gate jingħalaq biss wara riżultati reali dokumentati.'
+  )
+ );
+ return lines.join('\n');
+}
+function metricsLoiPreparationHtml(){
+ const d=metricsLoiPreparationData();
+ const items=metricsLoiChecklist();
+ return `<div class="section-title"><div><h2>📊 ${esc(lang3('Metriche reali / LOI','Real Metrics / LOI','Metriċi reali / LOI'))}</h2><p>${esc(lang3('Evidence pack per trasformare i pilot in prove verificabili senza inventare trazione.','Evidence pack to turn pilots into verifiable proof without inventing traction.','Evidence pack biex il-pilots jinbidlu fi prova verifikabbli mingħajr traction ivvintata.'))}</p></div><span class="badge official">Build ${esc(BUILD_VERSION)}</span></div>
+ <section class="card">
+  <div class="help-card-title"><div><h3>${esc(lang3('Baseline evidenze disponibile','Evidence baseline available','Baseline tal-evidenza disponibbli'))}</h3><p>${esc(`Readiness ${d.readinessPassed}/${d.readinessTotal} · Runtime ${d.runtimeErrors} · ${lang3('Sessioni','Sessions','Sessjonijiet')} ${d.sessionsCompleted}/${d.sessionsStarted}`)}</p></div><span>${d.internalReady?'✓':'○'}</span></div>
+  <div class="security-trust-checks">${items.map((x,i)=>`<article class="security-trust-check open"><span>${i+1}</span><div><strong>${esc(x.title)}</strong><small>${esc(x.detail)}</small></div></article>`).join('')}</div>
+  <div class="actions"><button class="btn" id="metricsLoiBriefCopy">⧉ ${esc(lang3('Copia evidence pack','Copy evidence pack','Ikkopja l-evidence pack'))}</button><button class="btn secondary" data-go="pilotanalytics">📈 Pilot Analytics</button><button class="btn secondary" data-go="pilotreadiness">🚦 Pilot Readiness</button></div>
+ </section>
+ <section class="card" style="margin-top:14px"><h3>${esc(lang3('Stato gate esterno','External gate status','Status tal-gate estern'))}</h3><p><strong>OPEN</strong> — ${esc(lang3('Metriche reali / LOI non vengono mai marcate completate automaticamente. Servono dati pilot documentati e, se prevista, una LOI reale verificabile.','Real Metrics / LOI are never marked complete automatically. Documented pilot data and, where applicable, a real verifiable LOI are required.','Metriċi reali / LOI qatt ma jiġu mmarkati kompluti awtomatikament. Huma meħtieġa data tal-pilot dokumentata u, fejn applikabbli, LOI reali verifikabbli.'))}</p></section>`;
+}
+function bindMetricsLoiPreparation(){
+ const copy=$('#metricsLoiBriefCopy');
+ if(copy)copy.onclick=()=>copyTextSafe(metricsLoiPreparationReport(),lang3('Evidence pack copiato.','Evidence pack copied.','L-evidence pack ġie kkupjat.'));
+}
 function schoolPilotPreparationData(){
  const readiness=pilotReadinessInternalData();
  const analytics=pilotAnalyticsSummary();
@@ -7770,7 +7908,7 @@ function pilotReadinessViewHtml(){
   <div class="actions"><button class="btn" id="pilotReadinessRefresh">↻ ${esc(lang3('Aggiorna controllo','Refresh check','Aġġorna l-kontroll'))}</button><button class="btn secondary" id="pilotReadinessCopy">⧉ ${esc(lang3('Copia report','Copy report','Ikkopja r-rapport'))}</button></div>
  </section>
  <section class="card" style="margin-top:14px"><div class="help-card-title"><div><h3>${esc(lang3('Gate esterni','External gates','Gates esterni'))}</h3><p>${esc(lang3('Non vengono mai marcati completati automaticamente dall’app.','They are never marked completed automatically by the app.','Qatt ma jiġu mmarkati kompluti awtomatikament mill-app.'))}</p></div><span>↗</span></div>
-  <div class="security-trust-checks">${d.external.map((x,i)=>`<article class="security-trust-check open"><span>○</span><div><strong>${esc(x.label)}</strong><small>OPEN</small></div>${i===0?`<button class="btn secondary" data-go="pentestprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:i===1?`<button class="btn secondary" data-go="realpilotprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:i===2?`<button class="btn secondary" data-go="schoolpilotprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:''}</article>`).join('')}</div>
+  <div class="security-trust-checks">${d.external.map((x,i)=>`<article class="security-trust-check open"><span>○</span><div><strong>${esc(x.label)}</strong><small>OPEN</small></div>${i===0?`<button class="btn secondary" data-go="pentestprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:i===1?`<button class="btn secondary" data-go="realpilotprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:i===2?`<button class="btn secondary" data-go="schoolpilotprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:i===3?`<button class="btn secondary" data-go="metricsloiprep">${esc(lang3('Prepara','Prepare','Ipprepara'))}</button>`:''}</article>`).join('')}</div>
   <p class="muted">${esc(lang3('Ordine previsto: penetration test indipendente → pilot 10–30 studenti → pilot scuola → metriche reali / LOI.','Planned order: independent penetration test → 10–30 learner pilot → school pilot → real metrics / LOI.','Ordni ppjanat: penetration test indipendenti → pilot 10–30 student → pilot tal-iskola → metriċi reali / LOI.'))}</p>
  </section>`;
 }
@@ -13832,6 +13970,7 @@ function bindInvestorProduction(){
 /* === /Build 45.8.26 === */
 
 const views={
+ metricsloiprep:()=>metricsLoiPreparationHtml(),
  schoolpilotprep:()=>schoolPilotPreparationHtml(),
  realpilotprep:()=>realPilotPreparationHtml(),
  pentestprep:()=>penetrationTestPreparationHtml(),

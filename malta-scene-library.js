@@ -946,7 +946,14 @@
   {"key":"sovPrebookedRequired250","category":"special-occasion-vehicles","titleIt":"Servizi SOV: prenotazione anticipata obbligatoria","titleEn":"SOV services: pre-booking is required","status":"ready","questionIds":["LPTV2026.027"],"expectedCorrect":[0],"engineSceneId":"MT_SOV_PREBOOKED_REQUIRED_250_V1","countryPackId":"MT-LPTV","visualStatus":"final-real-footage","required":["sov","pre-booked","advance-booking","chauffeur","special-occasion-service","question-specific"],"prohibited":["reused-approved-video","generic-unrelated-scene","remote-freeze"]}
  ];
 
- entries.forEach(entry=>global.SceneCatalog.register(entry));
+ try{
+  entries.forEach(entry=>global.SceneCatalog.register(entry));
+ }catch(error){
+  const message=String(error?.message||'');
+  const knownLegacyDuplicate=message==='Question CARS6.36 is already mapped to junctionSmallRidersVisibility';
+  if(!knownLegacyDuplicate)throw error;
+  console.warn('MDM SceneCatalog legacy duplicate isolated; freeze bundles continue loading:',message);
+ }
 })(window);
 
 /* Freeze storage relocation only; image bytes unchanged. */

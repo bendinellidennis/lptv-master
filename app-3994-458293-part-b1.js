@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.19';
+const BUILD_VERSION = '45.8.31.20';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12510,6 +12510,18 @@ function backendRealViewHtml(){
   </article>
   <button class="btn secondary" id="mdmReadinessSampleQualityCheck">🧬 ${esc(lang3('Verifica Qualità Campione','Verify Sample Quality','Ivverifika l-Kwalità tal-Kampjun'))}</button>
   <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.driftVerified?(mdmProtectedContentStatus.driftResult?.stable?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>📉 ${esc(lang3('Readiness Drift Guard','Readiness Drift Guard','Readiness Drift Guard'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.driftVerified&&mdmProtectedContentStatus.driftResult
+    ?lang3(
+      `${mdmProtectedContentStatus.driftResult.stable?'STABILE':'NON STABILE'} · campioni ${mdmProtectedContentStatus.driftResult.sampleCount} · media recente ${mdmProtectedContentStatus.driftResult.latestMean} · media precedente ${mdmProtectedContentStatus.driftResult.previousMean} · drift ${mdmProtectedContentStatus.driftResult.drift}`,
+      `${mdmProtectedContentStatus.driftResult.stable?'STABLE':'NOT STABLE'} · samples ${mdmProtectedContentStatus.driftResult.sampleCount} · recent mean ${mdmProtectedContentStatus.driftResult.latestMean} · previous mean ${mdmProtectedContentStatus.driftResult.previousMean} · drift ${mdmProtectedContentStatus.driftResult.drift}`,
+      `${mdmProtectedContentStatus.driftResult.stable?'STABBLI':'MHUX STABBLI'} · kampjuni ${mdmProtectedContentStatus.driftResult.sampleCount} · medja riċenti ${mdmProtectedContentStatus.driftResult.latestMean} · medja preċedenti ${mdmProtectedContentStatus.driftResult.previousMean} · drift ${mdmProtectedContentStatus.driftResult.drift}`
+     )
+    :lang3('Controlla se la divergenza locale/server sta diventando stabile nel tempo prima di qualunque passaggio live.','Checks whether local/server divergence is becoming stable over time before any live transition.','Jiċċekkja jekk id-diverġenza lokali/server hix qed issir stabbli maż-żmien qabel kwalunkwe pass live.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessDriftGuardCheck">📉 ${esc(lang3('Verifica Drift Guard','Verify Drift Guard','Ivverifika Drift Guard'))}</button>
+  <div style="height:12px"></div>
   <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
    <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
    <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
@@ -12545,6 +12557,7 @@ function bindBackendReal(){
  const runtimeShadow=$('#mdmRuntimeShadowCheck');if(runtimeShadow)runtimeShadow.onclick=()=>mdmVerifyRuntimeIntelligenceShadow({silent:false});
  const liveCanary=$('#mdmReadinessLiveCanary');if(liveCanary)liveCanary.onclick=()=>mdmVerifyReadinessLiveCanary({silent:false});
  const sampleQuality=$('#mdmReadinessSampleQualityCheck');if(sampleQuality)sampleQuality.onclick=()=>mdmVerifyReadinessSampleQuality({silent:false});
+ const driftGuard=$('#mdmReadinessDriftGuardCheck');if(driftGuard)driftGuard.onclick=()=>mdmVerifyReadinessDriftGuard({silent:false});
  const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
  const calibrationCheck=$('#mdmReadinessCalibrationCheck');if(calibrationCheck)calibrationCheck.onclick=()=>mdmVerifyReadinessCalibration({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
@@ -12682,7 +12695,7 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
@@ -12754,6 +12767,45 @@ function mdmReadinessSampleSignature(){
   Number((progress.wrong||[]).length||0),
   Number(stats().seen||0)
  ].join(':');
+}
+
+async function mdmVerifyReadinessDriftGuard({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Drift Guard riservato all’Owner.','Drift Guard is reserved for the Owner.','Drift Guard huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  let result=await mdmDataRpc('mdm_readiness_drift_guard',{});
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_readiness_drift_guard',{});
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,driftVerified:false,driftResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'drift_guard_failed')};
+   if(!silent)toast(lang3('Drift Guard non verificato.','Drift Guard was not verified.','Drift Guard ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   driftVerified:true,
+   driftResult:{
+    sampleCount:Number(data.sample_count||0),
+    latestMean:Number(data.latest_mean||0),
+    previousMean:Number(data.previous_mean||0),
+    drift:Number(data.drift||0),
+    stable:Boolean(data.stable),
+    reason:String(data.reason||'')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.stable
+   ?lang3('Drift Guard stabile.','Drift Guard stable.','Drift Guard stabbli.')
+   :lang3('Drift Guard: variazione ancora troppo alta, resta shadow.','Drift Guard: variation still too high, remain in shadow.','Drift Guard: il-varjazzjoni għadha għolja wisq, ibqa’ shadow.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
 }
 async function mdmVerifyReadinessSampleQuality({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;

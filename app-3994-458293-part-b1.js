@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.30.37';
+const BUILD_VERSION = '45.8.31.18';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -2510,8 +2510,75 @@ function updateChrome(){
  if(brand)brand.setAttribute('aria-label',`${t('home')} — Malta Driving Master`);
  applyStrictLanguageUiLiterals(document.body);
 }
-function go(name,data=null,push=true){if(!routeAllowedForLanguage(name)){name='lptv';data=null}if(timerId&&name!=='quiz'){clearInterval(timerId);timerId=null}if(errorReplayTimer&&name!=='errorreplay'){clearInterval(errorReplayTimer);errorReplayTimer=null}if(name!=='errorreplay'&&window.ReplayEngine)ReplayEngine.stop();route={name,data};if(push)history.pushState({name,data},'',`#${name}`);render();}
+
+const MDM_OWNER_ONLY_ROUTES=new Set([
+ 'backendreal','externalvalidation','pilotanalytics','securitytrust',
+ 'pentestprep','realpilotprep','schoolpilotprep','metricsloiprep',
+ 'investorproduction','pilotreadiness'
+]);
+const MDM_SCHOOL_ADMIN_ROUTES=new Set([
+ 'schooloperations','schoolroster','schooldashboard',
+ 'instructorassignments','instructorintelligence',
+ 'schoolcommandcenter','instructorstudio'
+]);
+function mdmSchoolAdminServerAllowed(){
+ const auth=mdmAuthSummary();
+ return Boolean(
+  auth.authenticated &&
+  auth.userId &&
+  mdmSchoolAdminConsole &&
+  mdmSchoolAdminConsole.authorized===true &&
+  String(mdmSchoolAdminConsole.loadedForUserId||'')===String(auth.userId)
+ );
+}
+function mdmProtectedRouteDecision(name){
+ const routeName=String(name||'');
+ if(MDM_OWNER_ONLY_ROUTES.has(routeName)){
+  return mdmPlatformOwnerAllowed()
+   ? {ok:true}
+   : {ok:false,target:'accountenrollment',reason:'owner'};
+ }
+ if(MDM_SCHOOL_ADMIN_ROUTES.has(routeName)){
+  return mdmSchoolAdminServerAllowed()
+   ? {ok:true}
+   : {ok:false,target:'accountenrollment',reason:'school_admin'};
+ }
+ return {ok:true};
+}
+function mdmApplyProtectedRouteGate(name,data=null){
+ const decision=mdmProtectedRouteDecision(name);
+ if(decision.ok)return {name,data,blocked:false};
+ if(decision.reason==='owner'){
+  toast(lang3(
+   'Area tecnica riservata al proprietario MDM verificato dal server.',
+   'Technical area reserved for the server-verified MDM owner.',
+   'Żona teknika riservata għas-sid ta’ MDM ivverifikat mis-server.'
+  ));
+ }else{
+  toast(lang3(
+   'Questa funzione richiede un permesso School Admin ACTIVE verificato dal server.',
+   'This function requires an ACTIVE School Admin permission verified by the server.',
+   'Din il-funzjoni teħtieġ permess School Admin ATTIV ivverifikat mis-server.'
+  ));
+  const auth=mdmAuthSummary();
+  if(auth.authenticated&&!mdmSchoolAdminInFlight){
+   setTimeout(()=>accountRefreshSchoolAdminConsole({silent:true}),0);
+  }
+ }
+ return {name:decision.target,data:null,blocked:true};
+}
+
+function go(name,data=null,push=true){
+ const gated=mdmApplyProtectedRouteGate(name,data);
+ name=gated.name;data=gated.data;
+ if(!routeAllowedForLanguage(name)){name='lptv';data=null}if(timerId&&name!=='quiz'){clearInterval(timerId);timerId=null}if(errorReplayTimer&&name!=='errorreplay'){clearInterval(errorReplayTimer);errorReplayTimer=null}if(name!=='errorreplay'&&window.ReplayEngine)ReplayEngine.stop();route={name,data};if(push)history.pushState({name,data},'',`#${name}`);render();}
 function render(options={}){
+ const _ownerAuth=mdmAuthSummary();if(_ownerAuth.authenticated&&mdmPlatformOwnerGate.status==='unknown'&&!mdmPlatformOwnerGateInFlight)setTimeout(()=>mdmRefreshPlatformOwnerGate({silent:true}),0);
+ const _routeGate=mdmProtectedRouteDecision(route.name);
+ if(!_routeGate.ok){
+  route={name:_routeGate.target,data:null};
+  try{history.replaceState({name:route.name,data:null},'',`#${route.name}`)}catch{}
+ }
  document.body.classList.toggle('hm30-active',route.name==='home');
  if(route.name!=='quiz'&&timerId){clearInterval(timerId);timerId=null}
  updateChrome();
@@ -12243,9 +12310,35 @@ function backendRealXhrProbe(probeUrl){
   }catch(err){resolve({kind:'exception',status:0,body:'',ms:Date.now()-started,error:`${err?.name||'Error'}: ${err?.message||String(err)}`})}
  });
 }
+async function backendOwnerConfirmCriticalAction(actionLabel=''){
+ if(!mdmAuthSummary().authenticated){
+  toast(lang3('Accedi con l’account proprietario MDM.','Sign in with the MDM owner account.','Idħol bil-kont tas-sid ta’ MDM.'));
+  return false;
+ }
+ mdmPlatformOwnerReset('critical_action_recheck');
+ const allowed=await mdmRefreshPlatformOwnerGate({silent:true});
+ if(!allowed){
+  toast(lang3('Autorizzazione proprietario non verificata. Operazione bloccata.','Owner authorization was not verified. Operation blocked.','L-awtorizzazzjoni tas-sid ma ġietx ivverifikata. L-operazzjoni ġiet imblukkata.'));
+  return false;
+ }
+ const answer=prompt(lang3(
+  `Operazione critica: ${actionLabel}. Scrivi MDM OWNER per confermare.`,
+  `Critical operation: ${actionLabel}. Type MDM OWNER to confirm.`,
+  `Operazzjoni kritika: ${actionLabel}. Ikteb MDM OWNER biex tikkonferma.`
+ ));
+ return String(answer||'').trim().toUpperCase()==='MDM OWNER';
+}
 async function backendRealTestConnection(){
  const url=backendRealSafeUrl($('#backendProjectUrl')?.value||mdmBackendSetup.endpoint);
  const key=String($('#backendPublishableKey')?.value||mdmBackendSetup.publishableKey||'').trim();
+ const changingConfig=Boolean(
+  String(url||'')!==String(mdmBackendSetup.endpoint||'') ||
+  String(key||'')!==String(mdmBackendSetup.publishableKey||'')
+ );
+ if(changingConfig){
+  const ok=await backendOwnerConfirmCriticalAction(lang3('modifica configurazione Supabase','change Supabase configuration','bidla fil-konfigurazzjoni ta’ Supabase'));
+  if(!ok)return toast(lang3('Modifica annullata. Configurazione invariata.','Change cancelled. Configuration unchanged.','Il-bidla ġiet ikkanċellata. Il-konfigurazzjoni baqgħet l-istess.'));
+ }
  if(!url)return toast(lang3('Inserisci un Project URL HTTPS valido.','Enter a valid HTTPS Project URL.','Daħħal Project URL HTTPS validu.'));
  if(/^sb_secret_/i.test(key))return toast(lang3('NON usare una Secret key nel browser. Usa solo la Publishable key.','Do NOT use a Secret key in the browser. Use only the Publishable key.','TUŻAX Secret key fil-browser. Uża Publishable key biss.'));
  if(!backendRealKeyValid(key))return toast(lang3('Inserisci la Publishable key Supabase (o legacy anon).','Enter the Supabase Publishable key (or legacy anon).','Daħħal il-Publishable key ta’ Supabase (jew legacy anon).'));
@@ -12306,11 +12399,17 @@ async function backendRealTestConnection(){
  backendRealSave();render();
  toast(lang3('Il test è terminato senza risposta HTTP. La schermata non resterà più bloccata: apri la diagnostica tecnica.','The test ended without an HTTP response. The screen will no longer stay stuck: open technical diagnostics.','It-test intemm mingħajr risposta HTTP. L-iskrin mhux se jibqa’ mwaħħal: iftaħ id-dijanjostika teknika.'));
 }
-function backendRealDisconnect(){
- if(!confirm(lang3('Rimuovere la configurazione backend salvata su questo dispositivo?','Remove the backend configuration saved on this device?','Tneħħi l-konfigurazzjoni tal-backend minn dan l-apparat?')))return;
+async function backendRealDisconnect(){
+ const ok=await backendOwnerConfirmCriticalAction(lang3('rimozione configurazione backend','remove backend configuration','tneħħija tal-konfigurazzjoni tal-backend'));
+ if(!ok)return toast(lang3('Rimozione annullata.','Removal cancelled.','It-tneħħija ġiet ikkanċellata.'));
  mdmBackendSetup={provider:'supabase',endpoint:'',publishableKey:'',status:'unconfigured',verifiedAt:'',schemaReady:false,lastHttpStatus:0,lastMessage:'',lastDiagnostic:null};backendRealSave();render();
 }
+function backendRealOwnerDeniedHtml(){
+ const auth=mdmAuthSummary();
+ return `<div class="section-title"><div><h2>🔒 ${esc(lang3('Area tecnica privata','Private technical area','Żona teknika privata'))}</h2><p>${esc(lang3('Configurazione Supabase riservata esclusivamente al proprietario MDM.','Supabase configuration reserved exclusively for the MDM owner.','Il-konfigurazzjoni ta’ Supabase hija riservata biss għas-sid ta’ MDM.'))}</p></div></div><section class="card"><h3>${esc(lang3('Accesso negato','Access denied','Aċċess miċħud'))}</h3><p class="muted">${esc(auth.authenticated?lang3('Questo account non è autorizzato a modificare il backend.','This account is not authorized to modify the backend.','Dan il-kont mhux awtorizzat jimmodifika l-backend.'):lang3('Accedi prima con l’account proprietario MDM.','Sign in first with the MDM owner account.','L-ewwel idħol bil-kont tas-sid ta’ MDM.'))}</p><div class="actions"><button class="btn" data-go="accountenrollment">🔐 ${esc(lang3('Accedi','Sign in','Idħol'))}</button><button class="btn secondary" data-go="home">${esc(lang3('Torna alla Home','Back to Home','Lura għall-Home'))}</button></div></section></div>`;
+}
 function backendRealViewHtml(){
+ if(!mdmPlatformOwnerAllowed())return backendRealOwnerDeniedHtml();
  const cfg=mdmBackendPublicConfig(),status=backendRealStatusLabel(),klass=backendRealStatusClass();
  const verifiedDate=mdmBackendSetup.verifiedAt?dashboardDate(mdmBackendSetup.verifiedAt):lang3('Mai','Never','Qatt');
  const endpoint=mdmBackendSetup.endpoint||'';
@@ -12337,11 +12436,104 @@ function backendRealViewHtml(){
  ${mdmProductionSyncPanelHtml()}
  ${mdmProductionPermissionPanelHtml()}
  ${diagHtml}
+ <section class="card backend-real-gates">
+  <div class="backend-real-head">
+   <div>
+    <small>${esc(lang3('IP SHIELD · SERVER FOUNDATION','IP SHIELD · SERVER FOUNDATION','IP SHIELD · PEDAMENT TAS-SERVER'))}</small>
+    <h2>${mdmProtectedContentStatus.ready?'✅ '+esc(lang3('PRONTO','READY','LEST')):'🔒 '+esc(lang3('DA VERIFICARE','TO VERIFY','BIEX JIĠI VVERIFIKAT'))}</h2>
+   </div><span>🧬</span>
+  </div>
+  <p>${esc(lang3(
+   'Prepara il trasferimento futuro di logica e contenuti proprietari fuori dal frontend pubblico, senza modificare ancora le banche domanda approvate.',
+   'Prepares the future move of proprietary logic and content out of the public frontend, without changing the approved question banks yet.',
+   'Jipprepara t-trasferiment futur tal-loġika u l-kontenut proprjetarju barra mill-frontend pubbliku, mingħajr ma jbiddel il-banek tal-mistoqsijiet approvati.'
+  ))}</p>
+  <div class="backend-real-gate-list">
+   <article class="${mdmProtectedContentStatus.ready?'pass':'locked'}">
+    <span>${mdmProtectedContentStatus.ready?'✓':'🔒'}</span>
+    <div><strong>${esc(lang3('Vault server privato','Private server vault','Vault privat tas-server'))}</strong>
+    <small>${esc(mdmProtectedContentStatus.ready?lang3('RLS attiva · accesso diretto negato','RLS active · direct access denied','RLS attiva · aċċess dirett miċħud'):lang3('Verifica necessaria','Verification required','Verifika meħtieġa'))}</small></div>
+   </article>
+   <article class="${mdmProtectedContentStatus.ready?'pass':'locked'}">
+    <span>${mdmProtectedContentStatus.ready?'✓':'🔒'}</span>
+    <div><strong>${esc(lang3('API contenuti protetti','Protected content API','API tal-kontenut protett'))}</strong>
+    <small>${esc(mdmProtectedContentStatus.schemaVersion||'—')}</small></div>
+   </article>
+  </div>
+  <button class="btn secondary" id="mdmProtectedContentCheck">🧬 ${esc(lang3('Verifica IP Shield','Verify IP Shield','Ivverifika IP Shield'))}</button>
+  <div style="height:10px"></div>
+  <article class="${mdmProtectedContentStatus.pilotLoaded?'pass':'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🔐 ${esc(lang3('Pilot server-side 3/3','Server-side pilot 3/3','Pilot server-side 3/3'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.pilotLoaded
+    ?lang3(`3 contenuti protetti caricati · digest ${mdmProtectedContentStatus.pilotDigest||'OK'}`,`3 protected items loaded · digest ${mdmProtectedContentStatus.pilotDigest||'OK'}`,`3 kontenuti protetti mgħobbija · digest ${mdmProtectedContentStatus.pilotDigest||'OK'}`)
+    :lang3('Nessun contenuto pilot è incorporato nel frontend: viene richiesto al server solo dall’Owner.','No pilot content is embedded in the frontend: it is requested from the server only by the Owner.','L-ebda kontenut pilot mhu inkorporat fil-frontend: jintalab mis-server biss mis-sid.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmProtectedPilotLoad">🔐 ${esc(lang3('Carica Pilot Protetto','Load Protected Pilot','Għabbi Pilot Protett'))}</button>
+  <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.executionVerified?'pass':'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🧠 ${esc(lang3('Esecuzione intelligence server-side','Server-side intelligence execution','Eżekuzzjoni intelligence server-side'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.executionVerified
+     ?lang3(`3/3 motori verificati · firma ${mdmProtectedContentStatus.executionDigest}`,`3/3 engines verified · signature ${mdmProtectedContentStatus.executionDigest}`,`3/3 magni vverifikati · firma ${mdmProtectedContentStatus.executionDigest}`)
+     :lang3('I pesi e le regole restano nel vault: il browser invia solo segnali e riceve il risultato.','Weights and rules stay in the vault: the browser sends only signals and receives the result.','Il-piżijiet u r-regoli jibqgħu fil-vault: il-browser jibgħat biss sinjali u jirċievi r-riżultat.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmProtectedExecutionCheck">🧠 ${esc(lang3('Verifica esecuzione server-side','Verify server-side execution','Ivverifika eżekuzzjoni server-side'))}</button>
+  <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.runtimeShadowVerified?'pass':'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🛰️ ${esc(lang3('Runtime Intelligence · Shadow Mode','Runtime Intelligence · Shadow Mode','Runtime Intelligence · Shadow Mode'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.runtimeShadowVerified
+     ?lang3(`3/3 API runtime verificate · firma ${mdmProtectedContentStatus.runtimeShadowDigest}`,`3/3 runtime APIs verified · signature ${mdmProtectedContentStatus.runtimeShadowDigest}`,`3/3 APIs runtime ivverifikati · firma ${mdmProtectedContentStatus.runtimeShadowDigest}`)
+     :lang3('Il runtime protetto è disponibile agli utenti autenticati, ma in shadow mode non modifica ancora nessuna decisione dell’app.','The protected runtime is available to authenticated users, but shadow mode does not yet change any app decision.','Ir-runtime protett huwa disponibbli għall-utenti awtentikati, iżda shadow mode għadu ma jbiddel l-ebda deċiżjoni tal-app.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmRuntimeShadowCheck">🛰️ ${esc(lang3('Verifica Runtime Shadow','Verify Runtime Shadow','Ivverifika Runtime Shadow'))}</button>
+  <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.liveCanaryVerified?'pass':'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🎯 ${esc(lang3('Readiness Live Canary','Readiness Live Canary','Readiness Live Canary'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.liveCanaryVerified&&mdmProtectedContentStatus.liveCanaryResult
+    ?lang3(
+      `Dati reali: locale ${mdmProtectedContentStatus.liveCanaryResult.localScore} · server ${mdmProtectedContentStatus.liveCanaryResult.serverScore} · Δ ${mdmProtectedContentStatus.liveCanaryResult.delta} · ${mdmProtectedContentStatus.liveCanaryResult.band}`,
+      `Real data: local ${mdmProtectedContentStatus.liveCanaryResult.localScore} · server ${mdmProtectedContentStatus.liveCanaryResult.serverScore} · Δ ${mdmProtectedContentStatus.liveCanaryResult.delta} · ${mdmProtectedContentStatus.liveCanaryResult.band}`,
+      `Data reali: lokali ${mdmProtectedContentStatus.liveCanaryResult.localScore} · server ${mdmProtectedContentStatus.liveCanaryResult.serverScore} · Δ ${mdmProtectedContentStatus.liveCanaryResult.delta} · ${mdmProtectedContentStatus.liveCanaryResult.band}`
+     )
+    :lang3('Usa i tuoi dati Readiness reali, ma resta in canary/shadow: nessuna decisione dell’app viene ancora sostituita.','Uses your real Readiness data, but remains canary/shadow: no app decision is replaced yet.','Juża d-data Readiness reali tiegħek, iżda jibqa’ canary/shadow: l-ebda deċiżjoni tal-app għadha ma tinbidel.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessLiveCanary">🎯 ${esc(lang3('Verifica Readiness Live Canary','Verify Readiness Live Canary','Ivverifika Readiness Live Canary'))}</button>
+  <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
+    ?lang3(
+      `${mdmProtectedContentStatus.convergenceResult.eligible?'SUPERATO':'NON ANCORA'} · campioni ${mdmProtectedContentStatus.convergenceResult.sampleCount} · Δ medio ${mdmProtectedContentStatus.convergenceResult.meanAbsDelta} · Δ max ${mdmProtectedContentStatus.convergenceResult.maxAbsDelta}`,
+      `${mdmProtectedContentStatus.convergenceResult.eligible?'PASSED':'NOT YET'} · samples ${mdmProtectedContentStatus.convergenceResult.sampleCount} · mean Δ ${mdmProtectedContentStatus.convergenceResult.meanAbsDelta} · max Δ ${mdmProtectedContentStatus.convergenceResult.maxAbsDelta}`,
+      `${mdmProtectedContentStatus.convergenceResult.eligible?'GĦADDA':'GĦADU LE'} · kampjuni ${mdmProtectedContentStatus.convergenceResult.sampleCount} · Δ medju ${mdmProtectedContentStatus.convergenceResult.meanAbsDelta} · Δ max ${mdmProtectedContentStatus.convergenceResult.maxAbsDelta}`
+     )
+    :lang3('Registra e misura più confronti reali prima di permettere qualunque passaggio dal shadow al runtime reale.','Records and measures multiple real comparisons before any move from shadow to live runtime.','Jirreġistra u jkejjel diversi paraguni reali qabel kwalunkwe bidla minn shadow għal runtime reali.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessConvergenceGate">🧪 ${esc(lang3('Verifica Gate Convergenza','Verify Convergence Gate','Ivverifika Gate Konverġenza'))}</button>
+  <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.calibrationVerified?'pass':'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🧭 ${esc(lang3('Readiness Calibration Diagnostics','Readiness Calibration Diagnostics','Readiness Calibration Diagnostics'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.calibrationVerified&&mdmProtectedContentStatus.calibrationResult
+    ?lang3(
+      `Gap dominante ${mdmProtectedContentStatus.calibrationResult.dominantGap} · Δ ${mdmProtectedContentStatus.calibrationResult.delta} · campioni ${mdmProtectedContentStatus.calibrationResult.sampleCount} · ${mdmProtectedContentStatus.calibrationResult.recommendation}`,
+      `Dominant gap ${mdmProtectedContentStatus.calibrationResult.dominantGap} · Δ ${mdmProtectedContentStatus.calibrationResult.delta} · samples ${mdmProtectedContentStatus.calibrationResult.sampleCount} · ${mdmProtectedContentStatus.calibrationResult.recommendation}`,
+      `Gap dominanti ${mdmProtectedContentStatus.calibrationResult.dominantGap} · Δ ${mdmProtectedContentStatus.calibrationResult.delta} · kampjuni ${mdmProtectedContentStatus.calibrationResult.sampleCount} · ${mdmProtectedContentStatus.calibrationResult.recommendation}`
+     )
+    :lang3('Analizza perché locale e server divergono, senza esporre i pesi proprietari e senza cambiare ancora alcun punteggio reale.','Analyzes why local and server differ, without exposing proprietary weights or changing any live score.','Janalizza għaliex il-lokali u s-server ivarjaw, mingħajr ma jesponi l-piżijiet proprjetarji jew ibiddel xi punteġġ reali.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessCalibrationCheck">🧭 ${esc(lang3('Analizza Calibrazione','Analyze Calibration','Analizza l-Kalibrazzjoni'))}</button>
+ </section>
  <section class="backend-real-next"><small>${esc(lang3('PROSSIMO TEST REALE','NEXT REAL TEST','IT-TEST REALI LI JMISS'))}</small><h2>${esc(lang3('Lo schema MDM 44.0 è già installato: ora verifichiamo la chiamata browser senza rifarlo','The MDM 44.0 schema is already installed: now we verify the browser call without reinstalling it','L-schema MDM 44.0 diġà installat: issa nivverifikaw is-sejħa tal-browser mingħajr ma nerġgħu ninstallawh'))}</h2><p>${esc(lang3('Il test usa prima un GET semplice e, solo se fetch non riceve alcun HTTP, prova lo stesso endpoint con XHR. Il gate 5/5 si apre soltanto con HTTP 2xx e record health id=mdm, version=44.0.0.','The test first uses a simple GET and, only if fetch receives no HTTP response, retries the same endpoint with XHR. The 5/5 gate opens only with HTTP 2xx and health record id=mdm, version=44.0.0.','It-test l-ewwel juża GET sempliċi u, biss jekk fetch ma jirċievi l-ebda HTTP, jerġa’ jipprova l-istess endpoint b’XHR. Il-gate 5/5 jinfetaħ biss b’HTTP 2xx u health record id=mdm, version=44.0.0.'))}</p></section>
  <div class="backend-real-links"><button class="btn" data-go="accountenrollment">👤 Account & Enrollment</button><button class="btn secondary" data-go="cloudready">☁️ Cloud Ready</button><button class="btn secondary" data-go="schoolroster">👥 School Roster</button><button class="btn secondary" data-go="instructorassignments">🎯 Instructor Assignments</button></div>`;
 }
 function bindBackendReal(){
  const test=$('#backendTestConnection');if(test)test.onclick=backendRealTestConnection;
+ const ipCheck=$('#mdmProtectedContentCheck');if(ipCheck)ipCheck.onclick=()=>mdmRefreshProtectedContentStatus({silent:false});
+ const pilotLoad=$('#mdmProtectedPilotLoad');if(pilotLoad)pilotLoad.onclick=()=>mdmLoadProtectedPilot({silent:false});
+ const executionCheck=$('#mdmProtectedExecutionCheck');if(executionCheck)executionCheck.onclick=()=>mdmVerifyProtectedIntelligenceExecution({silent:false});
+ const runtimeShadow=$('#mdmRuntimeShadowCheck');if(runtimeShadow)runtimeShadow.onclick=()=>mdmVerifyRuntimeIntelligenceShadow({silent:false});
+ const liveCanary=$('#mdmReadinessLiveCanary');if(liveCanary)liveCanary.onclick=()=>mdmVerifyReadinessLiveCanary({silent:false});
+ const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
+ const calibrationCheck=$('#mdmReadinessCalibrationCheck');if(calibrationCheck)calibrationCheck.onclick=()=>mdmVerifyReadinessCalibration({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
  const copy=$('#backendCopyDiagnostic');if(copy)copy.onclick=()=>copyTextSafe(backendRealDiagnosticText(),lang3('Diagnostica backend copiata.','Backend diagnostics copied.','Id-dijanjostika tal-backend ġiet ikkupjata.'));
  bindMdmProductionSync();
@@ -12432,6 +12624,27 @@ const MDM_AUTH_EMPTY={status:'signed_out',email:'',user:null,accessToken:'',refr
 let mdmAuthSession=Object.assign({},MDM_AUTH_EMPTY,load(MDM_AUTH_SESSION_KEY,{}));
 accountEnrollmentBindToAuthUser(String(mdmAuthSession.user?.id||''),String(mdmAuthSession.user?.email||mdmAuthSession.email||''));
 let mdmAuthInFlight=false;
+const MDM_AUTH_ATTEMPT_KEY='mdm_auth_attempt_guard_v458319';
+function mdmAuthAttemptState(){
+ const raw=load(MDM_AUTH_ATTEMPT_KEY,{fails:[],blockedUntil:0});
+ raw.fails=Array.isArray(raw.fails)?raw.fails.filter(x=>Number(x)>Date.now()-15*60*1000):[];
+ raw.blockedUntil=Number(raw.blockedUntil||0);
+ return raw;
+}
+function mdmAuthAttemptSave(v){save(MDM_AUTH_ATTEMPT_KEY,v)}
+function mdmAuthAttemptAllowed(){
+ const v=mdmAuthAttemptState();
+ if(v.blockedUntil>Date.now())return {ok:false,wait:Math.ceil((v.blockedUntil-Date.now())/1000)};
+ return {ok:true,wait:0};
+}
+function mdmAuthAttemptFail(){
+ const v=mdmAuthAttemptState();
+ v.fails.push(Date.now());
+ if(v.fails.length>=5)v.blockedUntil=Date.now()+5*60*1000;
+ mdmAuthAttemptSave(v);
+}
+function mdmAuthAttemptSuccess(){mdmAuthAttemptSave({fails:[],blockedUntil:0})}
+
 function mdmAuthSave(){save(MDM_AUTH_SESSION_KEY,mdmAuthSession)}
 function mdmAuthParse(body){try{return JSON.parse(String(body||''))}catch{return null}}
 function mdmAuthErrorMessage(result){
@@ -12451,6 +12664,360 @@ function mdmAuthSummary(){
   verifiedAt:String(mdmAuthSession.verifiedAt||''),
   lastMessage:String(mdmAuthSession.lastMessage||'')
  };
+}
+
+const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
+let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
+let mdmPlatformOwnerGateInFlight=false;
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,lastMessage:''};
+let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
+let mdmProtectedContentInFlight=false;
+
+
+
+
+
+
+async function mdmVerifyReadinessCalibration({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Diagnostica calibrazione riservata all’Owner.','Calibration diagnostics are reserved for the Owner.','Id-dijanjostika tal-kalibrazzjoni hija riservata għas-sid.'));
+  return false;
+ }
+ if(!mdmProtectedContentStatus.liveCanaryVerified||!mdmProtectedContentStatus.liveCanaryResult){
+  if(!silent)toast(lang3('Esegui prima Readiness Live Canary.','Run Readiness Live Canary first.','L-ewwel ħaddem Readiness Live Canary.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const local=mdmReadinessLiveCanarySignals();
+  let result=await mdmDataRpc('mdm_readiness_calibration_diagnostics',{
+   p_local_score:Number(local.localScore||0),
+   p_signals:local.signals
+  });
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_readiness_calibration_diagnostics',{
+    p_local_score:Number(local.localScore||0),
+    p_signals:local.signals
+   });
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,calibrationVerified:false,calibrationResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'calibration_failed')};
+   if(!silent)toast(lang3('Diagnostica calibrazione non verificata.','Calibration diagnostics were not verified.','Id-dijanjostika tal-kalibrazzjoni ma ġietx ivverifikata.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   calibrationVerified:true,
+   calibrationResult:{
+    localScore:Number(data.local_score||0),
+    serverScore:Number(data.server_score||0),
+    delta:Number(data.delta||0),
+    dominantGap:String(data.dominant_gap||''),
+    recommendation:String(data.recommendation||''),
+    sampleCount:Number(data.sample_count||0)
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(lang3('Diagnostica calibrazione completata.','Calibration diagnostics completed.','Id-dijanjostika tal-kalibrazzjoni tlestiet.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
+async function mdmVerifyReadinessConvergenceGate({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Gate convergenza riservato all’Owner.','Convergence gate is reserved for the Owner.','Il-gate tal-konverġenza huwa riservat għas-sid.'));
+  return false;
+ }
+ if(!mdmProtectedContentStatus.liveCanaryVerified||!mdmProtectedContentStatus.liveCanaryResult){
+  if(!silent)toast(lang3('Esegui prima Readiness Live Canary.','Run Readiness Live Canary first.','L-ewwel ħaddem Readiness Live Canary.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const local=Number(mdmProtectedContentStatus.liveCanaryResult.localScore);
+  const server=Number(mdmProtectedContentStatus.liveCanaryResult.serverScore);
+  let result=await mdmDataRpc('mdm_readiness_convergence_gate',{p_local_score:local,p_server_score:server});
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_readiness_convergence_gate',{p_local_score:local,p_server_score:server});
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,convergenceVerified:false,convergenceResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'convergence_failed')};
+   if(!silent)toast(lang3('Gate convergenza non verificato.','Convergence gate was not verified.','Il-gate tal-konverġenza ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   convergenceVerified:true,
+   convergenceResult:{
+    eligible:Boolean(data.eligible),
+    sampleCount:Number(data.sample_count||0),
+    meanAbsDelta:Number(data.mean_abs_delta||0),
+    maxAbsDelta:Number(data.max_abs_delta||0),
+    currentAbsDelta:Number(data.current_abs_delta||0),
+    reason:String(data.reason||'')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.eligible
+   ?lang3('Gate convergenza superato: candidato pronto per il prossimo stadio.','Convergence gate passed: candidate ready for the next stage.','Il-gate tal-konverġenza għadda: kandidat lest għall-istadju li jmiss.')
+   :lang3('Gate convergenza non ancora superato: il runtime resta in shadow.','Convergence gate not yet passed: runtime remains in shadow.','Il-gate tal-konverġenza għadu ma għaddiex: ir-runtime jibqa’ shadow.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
+function mdmReadinessLiveCanarySignals(){
+ const r=readinessStats();
+ const exams=Array.isArray(progress.exams)?progress.exams:[];
+ const last=exams.length?exams[exams.length-1]:null;
+ let recency=20;
+ if(last&&last.date){
+  const ageDays=Math.max(0,(Date.now()-Date.parse(last.date))/(24*60*60*1000));
+  recency=ageDays<=7?100:ageDays<=14?85:ageDays<=30?65:40;
+ }
+ return {
+  localScore:Number(r.score||0),
+  localLabel:String(r.label||''),
+  signals:{
+   accuracy:Number(r.accuracy||0),
+   coverage:Number(r.coverage||0),
+   stability:Number(r.examAverage||0),
+   recency:Number(recency||0)
+  }
+ };
+}
+async function mdmVerifyReadinessLiveCanary({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Canary Readiness riservato all’Owner.','Readiness Canary is reserved for the Owner.','Readiness Canary huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const local=mdmReadinessLiveCanarySignals();
+  let result=await mdmDataRpc('mdm_intelligence_runtime_execute',{
+   p_policy:'readiness-signal-policy-v1',
+   p_signals:local.signals,
+   p_mode:'shadow'
+  });
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_intelligence_runtime_execute',{
+    p_policy:'readiness-signal-policy-v1',
+    p_signals:local.signals,
+    p_mode:'shadow'
+   });
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true||!Number.isFinite(Number(data.score))){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,liveCanaryVerified:false,liveCanaryResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'readiness_canary_failed')};
+   if(!silent)toast(lang3('Canary Readiness non verificato.','Readiness Canary was not verified.','Readiness Canary ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  const serverScore=Number(data.score);
+  const delta=Math.round((serverScore-local.localScore)*100)/100;
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   liveCanaryVerified:true,
+   liveCanaryResult:{
+    localScore:local.localScore,
+    serverScore,
+    delta,
+    band:String(data.band||''),
+    decision:String(data.decision||''),
+    mode:String(data.mode||'shadow')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(lang3('Readiness reale confrontata con il motore protetto.','Real Readiness compared with the protected engine.','Readiness reali tqabblet mal-magna protetta.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
+async function mdmVerifyRuntimeIntelligenceShadow({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Test runtime protetto riservato all’Owner.','Protected runtime test is reserved for the Owner.','It-test tar-runtime protett huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const vectors=[
+   {policy:'readiness-signal-policy-v1',signals:{accuracy:82,coverage:76,stability:68,recency:90}},
+   {policy:'recovery-priority-policy-v1',signals:{wrong:7,recurrence:5,due:3,language:2}},
+   {policy:'pattern-evidence-policy-v1',signals:{frequency:6,spread:4,stability:2,recent:5}}
+  ];
+  const results=[];
+  for(const item of vectors){
+   let result=await mdmDataRpc('mdm_intelligence_runtime_execute',{p_policy:item.policy,p_signals:item.signals,p_mode:'shadow'});
+   if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_intelligence_runtime_execute',{p_policy:item.policy,p_signals:item.signals,p_mode:'shadow'});
+   const data=mdmAuthParse(result.body)||{};
+   if(result.status<200||result.status>=300||data.ok!==true||data.mode!=='shadow'||!Number.isFinite(Number(data.score))){
+    mdmProtectedContentStatus={...mdmProtectedContentStatus,runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',lastMessage:mdmDataErrorMessage(result)||String(data.error||'runtime_shadow_failed')};
+    if(!silent)toast(lang3('Runtime shadow non verificato.','Runtime shadow was not verified.','Runtime shadow ma ġiex ivverifikat.'));
+    render({preserveScroll:true});
+    return false;
+   }
+   results.push({policy:String(data.policy||item.policy),score:Number(data.score),band:String(data.band||''),decision:String(data.decision||''),mode:String(data.mode||'')});
+  }
+  const signature=results.map(x=>`${x.policy}:${x.score}:${x.band}:${x.mode}`).join('|');
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   runtimeShadowVerified:results.length===3,
+   runtimeShadowResults:results,
+   runtimeShadowDigest:String(signature.length)+'-'+results.reduce((a,x)=>a+Math.round(x.score),0),
+   lastMessage:''
+  };
+  if(!silent)toast(lang3('Runtime protetto shadow 3/3 verificato.','Protected runtime shadow 3/3 verified.','Runtime protett shadow 3/3 ivverifikat.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
+async function mdmVerifyProtectedIntelligenceExecution({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Test intelligence protetta riservato all’Owner.','Protected intelligence test is reserved for the Owner.','It-test tal-intelliġenza protetta huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const vectors=[
+   {policy:'readiness-signal-policy-v1',signals:{accuracy:82,coverage:76,stability:68,recency:90}},
+   {policy:'recovery-priority-policy-v1',signals:{wrong:7,recurrence:5,due:3,language:2}},
+   {policy:'pattern-evidence-policy-v1',signals:{frequency:6,spread:4,stability:2,recent:5}}
+  ];
+  const results=[];
+  for(const item of vectors){
+   let result=await mdmDataRpc('mdm_protected_intelligence_execute',{p_policy:item.policy,p_signals:item.signals});
+   if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_protected_intelligence_execute',{p_policy:item.policy,p_signals:item.signals});
+   const data=mdmAuthParse(result.body)||{};
+   if(result.status<200||result.status>=300||data.ok!==true||!Number.isFinite(Number(data.score))){
+    mdmProtectedContentStatus={...mdmProtectedContentStatus,executionVerified:false,executionResults:[],executionDigest:'',lastMessage:mdmDataErrorMessage(result)||String(data.error||'execution_failed')};
+    if(!silent)toast(lang3('Esecuzione server-side non verificata.','Server-side execution was not verified.','L-eżekuzzjoni server-side ma ġietx ivverifikata.'));
+    render({preserveScroll:true});
+    return false;
+   }
+   results.push({policy:String(data.policy||item.policy),score:Number(data.score),band:String(data.band||''),decision:String(data.decision||'')});
+  }
+  const signature=results.map(x=>`${x.policy}:${x.score}:${x.band}`).join('|');
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   executionVerified:results.length===3,
+   executionResults:results,
+   executionDigest:String(signature.length)+'-'+results.reduce((a,x)=>a+Math.round(x.score),0),
+   lastMessage:''
+  };
+  if(!silent)toast(lang3('3/3 motori intelligence eseguiti realmente sul server.','3/3 intelligence engines executed on the server.','3/3 magni ta’ intelligence ġew eżegwiti fuq is-server.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
+async function mdmLoadProtectedPilot({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Pilot IP riservato al proprietario MDM.','IP pilot is reserved for the MDM owner.','Il-pilot tal-IP huwa riservat għas-sid ta’ MDM.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  let result=await mdmDataRpc('mdm_protected_content_get_pilot',{});
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_protected_content_get_pilot',{});
+  const data=mdmAuthParse(result.body)||{};
+  const items=Array.isArray(data.items)?data.items:[];
+  if(result.status>=200&&result.status<300&&data.ok===true&&items.length===3){
+   mdmProtectedContentStatus={
+    ...mdmProtectedContentStatus,
+    status:'ready',
+    ready:true,
+    pilotLoaded:true,
+    pilotItems:items,
+    pilotDigest:String(data.digest||''),
+    lastMessage:''
+   };
+   if(!silent)toast(lang3('Pilot contenuti protetti caricato dal server.','Protected-content pilot loaded from server.','Il-pilot tal-kontenut protett tgħabba mis-server.'));
+   render({preserveScroll:true});
+   return true;
+  }
+  mdmProtectedContentStatus={...mdmProtectedContentStatus,pilotLoaded:false,pilotItems:[],pilotDigest:'',lastMessage:mdmDataErrorMessage(result)||String(data.error||'pilot_failed')};
+  if(!silent)toast(lang3('Caricamento pilot protetto non riuscito.','Protected pilot loading failed.','It-tagħbija tal-pilot protett falliet.'));
+  render({preserveScroll:true});
+  return false;
+ }finally{mdmProtectedContentInFlight=false}
+}
+async function mdmRefreshProtectedContentStatus({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY,status:'denied',lastMessage:'owner_required'};
+  if(!silent)toast(lang3('Verifica IP riservata al proprietario MDM.','IP verification is reserved for the MDM owner.','Il-verifika tal-IP hija riservata għas-sid ta’ MDM.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData())){
+   mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY,status:'error',lastMessage:'session_not_verified'};
+   return false;
+  }
+  let result=await mdmDataRpc('mdm_protected_content_status',{});
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_protected_content_status',{});
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status>=200&&result.status<300&&data.ok!==false){
+   mdmProtectedContentStatus={
+    ...mdmProtectedContentStatus,
+    status:'ready',
+    ready:Boolean(data.ready),
+    schemaVersion:String(data.schema_version||''),
+    contentCount:Number(data.content_count||0),
+    lastMessage:''
+   };
+   if(!silent)toast(lang3('Fondazione contenuti protetti verificata.','Protected-content foundation verified.','Il-pedament tal-kontenut protett ġie vverifikat.'));
+  }else{
+   mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY,status:'error',lastMessage:mdmDataErrorMessage(result)||String(data.error||'status_failed')};
+   if(!silent)toast(lang3('Verifica contenuti protetti non riuscita.','Protected-content verification failed.','Il-verifika tal-kontenut protett falliet.'));
+  }
+  render({preserveScroll:true});
+  return mdmProtectedContentStatus.ready;
+ }finally{mdmProtectedContentInFlight=false}
+}
+
+function mdmPlatformOwnerAllowed(){
+ const auth=mdmAuthSummary();
+ return Boolean(auth.authenticated&&auth.userId&&mdmPlatformOwnerGate.status==='verified'&&mdmPlatformOwnerGate.allowed===true&&mdmPlatformOwnerGate.userId===auth.userId);
+}
+function mdmPlatformOwnerReset(message=''){
+ mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY,lastMessage:String(message||'')};
+}
+async function mdmRefreshPlatformOwnerGate({silent=true}={}){
+ if(mdmPlatformOwnerGateInFlight)return mdmPlatformOwnerAllowed();
+ const auth=mdmAuthSummary();
+ if(!auth.authenticated||!auth.userId){mdmPlatformOwnerReset('authentication_required');return false}
+ mdmPlatformOwnerGateInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData())){mdmPlatformOwnerReset('session_not_verified');return false}
+  let result=await mdmDataRpc('mdm_is_platform_owner',{});
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_is_platform_owner',{});
+  let payload=mdmAuthParse(result.body);
+  if(Array.isArray(payload))payload=payload[0];
+  const allowed=(payload===true)||(payload&&payload.allowed===true)||(payload&&payload.mdm_is_platform_owner===true);
+  if(result.status>=200&&result.status<300){
+   mdmPlatformOwnerGate={status:'verified',allowed:Boolean(allowed),userId:String(mdmAuthSummary().userId||''),checkedAt:new Date().toISOString(),lastMessage:allowed?'platform_owner_verified':'platform_owner_denied'};
+  }else{
+   mdmPlatformOwnerGate={status:'error',allowed:false,userId:String(auth.userId||''),checkedAt:new Date().toISOString(),lastMessage:mdmDataErrorMessage(result)};
+  }
+  if(!silent&&!allowed)toast(lang3('Accesso riservato al proprietario MDM.','Access reserved for the MDM owner.','Aċċess riservat għas-sid ta’ MDM.'));
+  render({preserveScroll:true});
+  return mdmPlatformOwnerAllowed();
+ }finally{mdmPlatformOwnerGateInFlight=false}
 }
 function mdmAuthStoreResponse(payload,emailHint=''){
  const user=payload?.user&&typeof payload.user==='object'?payload.user:(payload?.id?payload:null);
@@ -12508,7 +13075,9 @@ function mdmAuthRequest(path,{method='GET',body=null,accessToken=''}={}){
 let mdmEnrollmentInFlight=false;
 function mdmDataErrorMessage(result){
  const payload=mdmAuthParse(result?.body);
- return String(payload?.message||payload?.details||payload?.hint||payload?.error_description||payload?.error||result?.error||(`HTTP ${Number(result?.status)||0}`)).slice(0,260);
+ const raw=String(payload?.message||payload?.details||payload?.hint||payload?.error_description||payload?.error||result?.error||(`HTTP ${Number(result?.status)||0}`)).slice(0,260);
+ if(raw.includes('mdm_rate_limited'))return lang3('Protezione anti-abuso attiva: troppe richieste. Attendi e riprova.','Anti-abuse protection active: too many requests. Wait and try again.','Protezzjoni kontra l-abbuż attiva: wisq talbiet. Stenna u erġa’ pprova.');
+ return raw;
 }
 function mdmDataRpc(name,payload={}){
  return new Promise(resolve=>{
@@ -12786,6 +13355,8 @@ async function mdmAuthSignUp(){
 }
 async function mdmAuthSignIn(){
  if(mdmAuthInFlight)return;
+ const attempt=mdmAuthAttemptAllowed();
+ if(!attempt.ok)return toast(lang3(`Troppi tentativi. Riprova tra ${attempt.wait} secondi.`,`Too many attempts. Try again in ${attempt.wait} seconds.`,`Wisq tentattivi. Erġa’ pprova fi ${attempt.wait} sekondi.`));
  const cfg=mdmBackendPublicConfig();if(!cfg.enabled)return toast(lang3('Prima verifica il backend reale 5/5.','Verify the real backend 5/5 first.','L-ewwel ivverifika l-backend reali 5/5.'));
  const {email,password}=mdmAuthReadCredentials();
  if(!/^\S+@\S+\.\S+$/.test(email)||!password)return toast(lang3('Inserisci e-mail e password.','Enter email and password.','Daħħal email u password.'));
@@ -12794,11 +13365,11 @@ async function mdmAuthSignIn(){
   const result=await mdmAuthRequest('/token?grant_type=password',{method:'POST',body:{email,password}});
   const payload=mdmAuthParse(result.body)||{};
   if(result.status>=200&&result.status<300&&payload.access_token&&payload.user?.id){
-   mdmAuthStoreResponse(payload,email);mdmSchoolAdminReset();render();setTimeout(()=>accountRefreshSchoolAdminConsole({silent:true}),25);
+   mdmAuthAttemptSuccess();mdmAuthStoreResponse(payload,email);mdmSchoolAdminReset();render();setTimeout(()=>{accountRefreshSchoolAdminConsole({silent:true});mdmRefreshPlatformOwnerGate({silent:true});},25);
    toast(lang3('Accesso reale riuscito. Utente Supabase autenticato.','Real sign-in successful. Supabase user authenticated.','Id-dħul reali rnexxa. L-utent Supabase ġie awtentikat.'));
    return;
   }
-  const msg=mdmAuthErrorMessage(result);mdmAuthSession={...mdmAuthSession,status:'error',email,lastHttpStatus:result.status,lastMessage:msg,lastAction:'signin'};mdmAuthSave();render();toast(lang3('Accesso non riuscito: '+msg,'Sign-in failed: '+msg,'Id-dħul falla: '+msg));
+  mdmAuthAttemptFail();const msg=mdmAuthErrorMessage(result);mdmAuthSession={...mdmAuthSession,status:'error',email,lastHttpStatus:result.status,lastMessage:msg,lastAction:'signin'};mdmAuthSave();render();toast(lang3('Accesso non riuscito: '+msg,'Sign-in failed: '+msg,'Id-dħul falla: '+msg));
  }finally{mdmAuthInFlight=false}
 }
 async function mdmAuthSignOut(){
@@ -12810,6 +13381,7 @@ async function mdmAuthSignOut(){
   const serverOk=result.status===204||(result.status>=200&&result.status<300);
   mdmAuthClear(serverOk?'Logout Supabase completato':'Sessione locale rimossa; logout server non confermato');
   mdmSchoolAdminReset();
+  mdmPlatformOwnerReset('signed_out');
   render();
   toast(serverOk?lang3('Logout Supabase completato.','Supabase sign-out completed.','Il-logout minn Supabase tlesta.'):lang3('Sessione locale rimossa. Il server non ha confermato il logout.','Local session removed. Server logout was not confirmed.','Is-sessjoni lokali tneħħiet. Il-logout mis-server ma ġiex ikkonfermat.'));
  }finally{mdmAuthInFlight=false}
@@ -12837,7 +13409,7 @@ function accountSchoolCodeValid(value){return /^[A-Z0-9][A-Z0-9-]{5,31}$/.test(S
 function accountRequestJson(){return accountEnrollment.pendingRequest?JSON.stringify(accountEnrollment.pendingRequest,null,2):''}
 function accountSetRole(role){
  if(!['student','instructor','school'].includes(role))return;
- accountEnrollment.role=role;
+ accountEnrollment.role=role; // UI preference only; never an authorization source.
  if(role!=='school')mdmSchoolAdminReset();
  accountEnrollmentSave();
  render();
@@ -14164,7 +14736,7 @@ function schoolHomeViewHtml(){
 
    <button class="sch35-card blue" data-go="schooldashboard"><i>📊</i><h3>School Dashboard</h3><p>${esc(lang3('Panoramica completa della scuola','Complete school overview','Ħarsa ġenerali tal-iskola'))}</p></button>
    <button class="sch35-card green" data-go="instructorassignments"><i>🎯</i><h3>${esc(lang3('Assegnazioni','Assignments','Assenjazzjonijiet'))}</h3><p>${esc(lang3('Missioni e priorità agli studenti','Missions and student priorities','Missjonijiet u prijoritajiet tal-istudenti'))}</p></button>
-   <button class="sch35-card purple" data-go="pilotanalytics"><i>📈</i><h3>Analytics</h3><p>${esc(lang3('Statistiche e trend della scuola','School statistics and trends','Statistika u xejriet tal-iskola'))}</p></button>
+   ${mdmPlatformOwnerAllowed()?`<button class="sch35-card purple" data-go="pilotanalytics"><i>📈</i><h3>Analytics</h3><p>${esc(lang3('Statistiche e trend della scuola','School statistics and trends','Statistika u xejriet tal-iskola'))}</p></button>`:''}
    <button class="sch35-card yellow" data-go="schoolpartner"><i>✉️</i><h3>${esc(lang3('Messaggi','Messages','Messaġġi'))}</h3><p>${esc(lang3('Comunicazioni con studenti e team','Communications with students and team','Komunikazzjoni ma’ studenti u tim'))}</p></button>
   </section>
 
@@ -14173,7 +14745,7 @@ function schoolHomeViewHtml(){
    <button class="sch35-card green" data-go="instructorintelligence"><i>🧠</i><h3>${esc(lang3('Intelligenza Istruttore','Instructor Intelligence','Intelliġenza tal-Istruttur'))}</h3><p>${esc(lang3('Brief automatici, priorità ed evidenze','Automatic briefs, priorities and evidence','Briefs awtomatiċi, prijoritajiet u evidenza'))}</p></button>
    <button class="sch35-card blue" data-go="instructorstudio"><i>🧑‍🏫</i><h3>Instructor Studio</h3><p>${esc(lang3('Preparazione lezioni e coaching','Lesson preparation and coaching','Tħejjija tal-lezzjonijiet u coaching'))}</p></button>
    <button class="sch35-card purple" data-go="schoolcommandcenter"><i>🎛️</i><h3>${esc(lang3('Centro di Comando','Command Center','Ċentru ta’ Kmand'))}</h3><p>${esc(lang3('Controllo operativo centralizzato','Centralized operational control','Kontroll operattiv ċentralizzat'))}</p></button>
-   <button class="sch35-card yellow" data-go="securitytrust"><i>🛡️</i><h3>Trust Center</h3><p>${esc(lang3('Sicurezza, privacy e ruoli','Security, privacy and roles','Sigurtà, privatezza u rwoli'))}</p></button>
+   ${mdmPlatformOwnerAllowed()?`<button class="sch35-card yellow" data-go="securitytrust"><i>🛡️</i><h3>Trust Center</h3><p>${esc(lang3('Sicurezza, privacy e ruoli','Security, privacy and roles','Sigurtà, privatezza u rwoli'))}</p></button>`:''}
   </section>
  </div>`;
 }
@@ -14281,7 +14853,7 @@ const views={
  <button class="hm30-card c-blue" data-go="schools"><i>🏫</i><h3>${esc(lang3('La mia Scuola','My School','L-Iskola Tiegħi'))}</h3><p>${esc(lang3('Entra nella tua scuola guida','Enter your driving school','Idħol fl-iskola tas-sewqan'))}</p></button>
  <button class="hm30-card c-green" data-go="practicallesson"><i>🚘</i><h3>${esc(lang3('Lezioni Pratiche','Practical Lessons','Lezzjonijiet Prattiċi'))}</h3><p>${esc(lang3('Traccia e gestisci le tue guide','Track and manage your lessons','Immaniġġja l-lezzjonijiet tiegħek'))}</p></button>
  <button class="hm30-card c-purple" data-go="schoolpartner"><i>✉️</i><h3>${esc(lang3('Messaggi','Messages','Messaġġi'))}</h3><p>${esc(lang3('Comunicazioni con la scuola','School communications','Komunikazzjoni mal-iskola'))}</p></button>
- <button class="hm30-card c-yellow" data-go="schooldashboard"><i>📊</i><h3>School Dashboard</h3><p>${esc(lang3('Area riservata scuola','School reserved area','Żona riservata għall-iskola'))}</p></button>
+ ${mdmPlatformOwnerAllowed()?`<button class="hm30-card c-yellow" data-go="schooldashboard"><i>📊</i><h3>School Dashboard</h3><p>${esc(lang3('Area riservata scuola','School reserved area','Żona riservata għall-iskola'))}</p></button>`:''}
 </section>
 
 <h2 class="hm30-title">⚙ ${esc(lang3('STRUMENTI AVANZATI','ADVANCED TOOLS','GĦODOD AVVANZATI'))}</h2>
@@ -14289,9 +14861,13 @@ const views={
  <button class="hm30-card c-blue" data-go="questionlibrary"><i>🗄️</i><h3>Database</h3><p>${esc(lang3('Tutte le domande e filtri avanzati','All questions and advanced filters','Il-mistoqsijiet u filtri avvanzati'))}</p></button>
  <button class="hm30-card c-yellow" data-go="favourites"><i>🔖</i><h3>${esc(lang3('Segnalibri','Bookmarks','Bookmarks'))}</h3><p>${esc(lang3('Le domande segnalate','Saved questions','Mistoqsijiet salvati'))}</p></button>
  <button class="hm30-card c-green" data-go="progress"><i>⌁</i><h3>Analytics</h3><p>${esc(lang3('Dati e trend dettagliati','Detailed data and trends','Data u xejriet dettaljati'))}</p></button>
- <button class="hm30-card c-purple" data-go="pilotanalytics"><i>👥</i><h3>Pilot Analytics</h3><p>${esc(lang3('Dati anonimi pilot (10–30)','Anonymous pilot data (10–30)','Data anonima tal-pilot (10–30)'))}</p></button>
- <button class="hm30-card c-pink" data-go="securitytrust"><i>🛡️</i><h3>Trust Center</h3><p>${esc(lang3('Sicurezza e trasparenza','Security and transparency','Sigurtà u trasparenza'))}</p></button>
- <button class="hm30-card c-blue new" data-go="externalvalidation"><i>🎯</i><em>NEW</em><h3>Validation Center</h3><p>${esc(lang3('4 gate esterni in tempo reale','4 external gates in real time','4 gates esterni f’ħin reali'))}</p></button>
+ ${mdmPlatformOwnerAllowed()?`<button class="hm30-card c-purple" data-go="pilotanalytics"><i>👥</i><h3>Pilot Analytics</h3><p>${esc(lang3('Dati anonimi pilot (10–30)','Anonymous pilot data (10–30)','Data anonima tal-pilot (10–30)'))}</p></button>`:''}
+ ${mdmPlatformOwnerAllowed()?`<button class="hm30-card c-pink" data-go="securitytrust"><i>🛡️</i><h3>Trust Center</h3><p>${esc(lang3('Sicurezza e trasparenza','Security and transparency','Sigurtà u trasparenza'))}</p></button>`:''}
+ ${mdmPlatformOwnerAllowed()?`<button class="hm30-card c-blue new" data-go="externalvalidation"><i>🎯</i><em>NEW</em><h3>Validation Center</h3><p>${esc(lang3('4 gate esterni in tempo reale','4 external gates in real time','4 gates esterni f’ħin reali'))}</p></button>`:''}${mdmPlatformOwnerAllowed()?`<button class="hm30-card hm30-backend-card" data-go="backendreal">
+  <span class="hm30-icon">🔌</span>
+  <h3>${esc(lang3('Real Backend','Real Backend','Backend Reali'))}</h3>
+  <p>${esc(lang3('Supabase: connessione e configurazione reale','Supabase: real connection and configuration','Supabase: konnessjoni u konfigurazzjoni reali'))}</p>
+</button>`:''}
 </section>
 
 <h2 class="hm30-title">••• ${esc(lang3('ALTRO','MORE','AKTAR'))}</h2>
@@ -14347,7 +14923,16 @@ const views={
  regulations:()=>`<div class="section-title"><div><h2>${esc(t('regulations'))}</h2><p>${esc(t('lastVerified'))}: ${esc(C.meta.verified)}</p></div></div><div class="list">${C.regulations.map(x=>`<article class="list-card"><span class="list-icon">${x.icon}</span><div style="flex:1"><span class="badge official">${esc(t('officialSource'))}</span><h3>${esc(x[settings.lang]||x.en)}</h3><p>${esc(localized(x,'desc'))}</p><a class="source-link" href="${esc(x.url)}" target="${location.hostname==="localhost"?"_self":"_blank"}" rel="noopener">${esc(t('openSource'))} ↗</a></div></article>`).join('')}</div>`,
  search:()=>`<div class="section-title"><div><h2>${esc(t('search'))}</h2><p>${Q.length} ${esc(t('questions'))}</p></div></div><div class="search-box"><input id="globalSearch" placeholder="${esc(t('searchPlaceholder'))}" autocomplete="off"><button id="searchBtn">⌕</button></div><div id="searchResults" class="list" style="margin-top:14px"></div>`,
  assistant:()=>`<div class="section-title"><div><h2>${esc(t('ai'))}</h2><p>${esc(t('assistantLocal'))}</p></div><span class="badge assistant-offline">${esc(t('assistantOffline'))}</span></div><div class="assistant-trust"><span>🔎</span><p>${esc(t('assistantDisclaimer'))}</p></div><div class="card"><p>${esc(t('assistantIntro'))}</p><strong class="assistant-try">${esc(t('assistantTry'))}:</strong><div class="prompt-chips"><button data-prompt="precedenza rotatoria">${lang3('Precedenza in rotatoria','Roundabout priority','Prijorità fir-roundabout')}</button><button data-prompt="passeggero anziano">${lang3('Passeggero anziano','Elderly passenger','Passiġġier anzjan')}</button><button data-prompt="guasto tunnel">${lang3('Guasto nel tunnel','Tunnel breakdown','Ħsara fil-mina')}</button><button data-prompt="freni ABS">ABS</button></div><div class="assistant-log" id="assistantLog"><div class="assistant-bubble bot">${esc(t('assistantIntro'))}</div></div><textarea id="assistantInput" placeholder="${esc(t('assistantPlaceholder'))}"></textarea><button class="big-action" id="assistantSend"><div>${esc(t('send'))}</div><span>➤</span></button></div>`,
- profile:()=>{const st=stats(),day=dailyStats(),review=reviewStats();return `<div class="section-title"><div><h2>${esc(t('profileTitle'))}</h2><p>Malta Driving Master</p></div></div>${personalProfileHtml()}<div class="card sch35-switch-card" style="margin-top:14px"><h3>${esc(lang3('Area MDM','MDM Area','Żona MDM'))}</h3><p class="muted">${esc(lang3('Passa alla Home dedicata alla scuola guida oppure torna alla Home studente.','Open the dedicated driving school Home or return to the Student Home.','Iftaħ il-Home dedikata tal-iskola tas-sewqan jew erġa’ lura għall-Home tal-istudent.'))}</p><div class="sch35-switch-actions"><button class="btn secondary" id="sch35StudentArea">🎓 ${esc(lang3('Area Studente','Student Area','Żona Student'))}</button><button class="btn" id="sch35SchoolArea">🏫 ${esc(lang3('Area Scuola','School Area','Żona Skola'))}</button></div></div><div class="card installed-version-card"><div><span>${esc(t('installedVersion'))}</span><h3>Malta Driving Master — Build ${esc(BUILD_VERSION)}</h3><p>✓ ${esc(t('allModulesUpdated'))}</p></div><strong>${esc(t('releaseDate'))}<br>${esc(BUILD_RELEASE_DATE)}</strong></div><div class="stat-grid"><div class="stat-card"><strong>${st.seen}</strong><span>${esc(t('seen'))}</span></div><div class="stat-card"><strong>${st.accuracy}%</strong><span>${esc(t('accuracy'))}</span></div><div class="stat-card"><strong>${day.streak}</strong><span>${esc(t('streak'))}</span></div><div class="stat-card"><strong>${review.due}</strong><span>${esc(t('dueNow'))}</span></div><div class="stat-card"><strong>${review.mastered}</strong><span>${esc(t('masteredQuestions'))}</span></div><div class="stat-card"><strong>${progress.knownPhrases.length}</strong><span>${esc(t('learnedPhrases'))}</span></div><div class="stat-card"><strong>${st.best ?? '—'}</strong><span>${esc(t('best'))}</span></div></div><div class="card" style="margin-top:14px"><h3>${esc(t('language'))}</h3><select id="profileLang"><option value="en">English</option><option value="it">Italiano</option><option value="mt">Malti</option></select><h3>${esc(t('theme'))}</h3><select id="profileTheme"><option value="system">${esc(t('system'))}</option><option value="light">${esc(t('light'))}</option><option value="dark">${esc(t('dark'))}</option></select></div><div class="card profile-help-card" style="margin-top:14px"><div><h3>${esc(t('helpSupport'))}</h3><p class="muted">${esc(t('installAppSub'))}</p></div><button class="btn" data-go="help">${esc(t('menuHelp'))} ›</button></div><div class="card investor-profile-card" style="margin-top:14px"><div><h3>${esc(t('investorPreview'))}</h3><p class="muted">${esc(t('investorPreviewSub'))}</p></div><button class="btn" data-go="investorpreview">${esc(t('investorOpen'))} ›</button></div><div class="card profile-privacy-card" style="margin-top:14px"><div><h3>${esc(t('privacyCenter'))}</h3><p class="muted">${esc(t('privacyCenterSub'))}</p></div><div class="profile-privacy-actions"><button class="btn" data-go="privacycenter">${esc(t('privacyOpenCenter'))} ›</button><button class="btn secondary" id="replayPremiumIntro">${esc(t('premiumReplay'))}</button></div></div><div class="card backup-card" style="margin-top:14px"><h3>${esc(t('backup'))}</h3><p class="muted">${esc(t('backupSub'))}</p><div class="actions"><button class="btn" id="exportBackup">${esc(t('exportBackup'))}</button><button class="btn secondary" id="importBackup">${esc(t('importBackup'))}</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div></div><div class="card" style="margin-top:14px"><button class="btn danger" id="clearProgress" style="width:100%">${esc(t('clear'))}</button></div>`},
+ profile:()=>{const st=stats(),day=dailyStats(),review=reviewStats();return `<div class="section-title"><div><h2>${esc(t('profileTitle'))}</h2><p>Malta Driving Master</p></div></div>${personalProfileHtml()}<div class="card" style="margin-top:14px">
+  <div class="account-section-head">
+    <div>
+      <small>${esc(lang3('ACCOUNT E ACCESSO','ACCOUNT & SIGN IN','KONT U DĦUL'))}</small>
+      <h3>🔐 ${esc(lang3('Login reale','Real sign-in','Login reali'))}</h3>
+      <p>${esc(lang3('Accedi o cambia account tra Studente, Scuola guida e account proprietario MDM.','Sign in or switch account between Student, Driving School and MDM owner account.','Idħol jew ibdel il-kont bejn Student, Skola tas-Sewqan u l-kont tas-sid ta’ MDM.'))}</p>
+    </div>
+  </div>
+  <button class="btn" data-go="accountenrollment">🔐 ${esc(lang3('Apri Account / Login','Open Account / Sign in','Iftaħ Kont / Login'))}</button>
+</div><div class="card sch35-switch-card" style="margin-top:14px"><h3>${esc(lang3('Area MDM','MDM Area','Żona MDM'))}</h3><p class="muted">${esc(lang3('Passa alla Home dedicata alla scuola guida oppure torna alla Home studente.','Open the dedicated driving school Home or return to the Student Home.','Iftaħ il-Home dedikata tal-iskola tas-sewqan jew erġa’ lura għall-Home tal-istudent.'))}</p><div class="sch35-switch-actions"><button class="btn secondary" id="sch35StudentArea">🎓 ${esc(lang3('Area Studente','Student Area','Żona Student'))}</button><button class="btn" id="sch35SchoolArea">🏫 ${esc(lang3('Area Scuola','School Area','Żona Skola'))}</button></div></div><div class="card installed-version-card"><div><span>${esc(t('installedVersion'))}</span><h3>Malta Driving Master — Build ${esc(BUILD_VERSION)}</h3><p>✓ ${esc(t('allModulesUpdated'))}</p></div><strong>${esc(t('releaseDate'))}<br>${esc(BUILD_RELEASE_DATE)}</strong></div><div class="stat-grid"><div class="stat-card"><strong>${st.seen}</strong><span>${esc(t('seen'))}</span></div><div class="stat-card"><strong>${st.accuracy}%</strong><span>${esc(t('accuracy'))}</span></div><div class="stat-card"><strong>${day.streak}</strong><span>${esc(t('streak'))}</span></div><div class="stat-card"><strong>${review.due}</strong><span>${esc(t('dueNow'))}</span></div><div class="stat-card"><strong>${review.mastered}</strong><span>${esc(t('masteredQuestions'))}</span></div><div class="stat-card"><strong>${progress.knownPhrases.length}</strong><span>${esc(t('learnedPhrases'))}</span></div><div class="stat-card"><strong>${st.best ?? '—'}</strong><span>${esc(t('best'))}</span></div></div><div class="card" style="margin-top:14px"><h3>${esc(t('language'))}</h3><select id="profileLang"><option value="en">English</option><option value="it">Italiano</option><option value="mt">Malti</option></select><h3>${esc(t('theme'))}</h3><select id="profileTheme"><option value="system">${esc(t('system'))}</option><option value="light">${esc(t('light'))}</option><option value="dark">${esc(t('dark'))}</option></select></div><div class="card profile-help-card" style="margin-top:14px"><div><h3>${esc(t('helpSupport'))}</h3><p class="muted">${esc(t('installAppSub'))}</p></div><button class="btn" data-go="help">${esc(t('menuHelp'))} ›</button></div><div class="card investor-profile-card" style="margin-top:14px"><div><h3>${esc(t('investorPreview'))}</h3><p class="muted">${esc(t('investorPreviewSub'))}</p></div><button class="btn" data-go="investorpreview">${esc(t('investorOpen'))} ›</button></div><div class="card profile-privacy-card" style="margin-top:14px"><div><h3>${esc(t('privacyCenter'))}</h3><p class="muted">${esc(t('privacyCenterSub'))}</p></div><div class="profile-privacy-actions"><button class="btn" data-go="privacycenter">${esc(t('privacyOpenCenter'))} ›</button><button class="btn secondary" id="replayPremiumIntro">${esc(t('premiumReplay'))}</button></div></div><div class="card backup-card" style="margin-top:14px"><h3>${esc(t('backup'))}</h3><p class="muted">${esc(t('backupSub'))}</p><div class="actions"><button class="btn" id="exportBackup">${esc(t('exportBackup'))}</button><button class="btn secondary" id="importBackup">${esc(t('importBackup'))}</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div></div><div class="card" style="margin-top:14px"><button class="btn danger" id="clearProgress" style="width:100%">${esc(t('clear'))}</button></div>`},
  progress:()=>{const st=stats(),ready=readinessStats(),by=categoryStats(),examEntries=(progress.exams||[]).map((exam,index)=>({exam,index})).slice(-8).reverse();return `<div class="section-title"><div><h2>${esc(t('progress'))}</h2><p>${st.seen}/${Q.length}</p></div></div><div class="stats-fix-note"><span>✓</span><div><strong>${esc(t('statisticsCorrection'))}</strong><small>${esc(t('statisticsCorrectionSub'))}</small></div></div>${isItalianAssisted()?bridgeProgressHtml():''}${errorDnaHtml()}<div class="readiness-card"><div class="readiness-circle" style="--score:${ready.score}"><div><strong>${ready.score}%</strong><span>${esc(t('readiness'))}</span></div></div><div class="readiness-copy"><h3>${esc(t(ready.label))}</h3><p>${esc(t(ready.recommend))}</p><button class="btn" data-go="${ready.score<68?'weaksetup':'lptv'}">${esc(t('recommended'))}</button></div></div><div class="report-actions"><button class="btn" id="shareProgressReport">↗ ${esc(t('shareProgressReport'))}</button><button class="btn secondary" id="copyProgressReport">⧉ ${esc(t('copyProgressReport'))}</button></div><div class="metric-bars"><div><div class="label"><span>${esc(t('coverage'))}</span><strong>${ready.coverage}%</strong></div><div class="mini-bar"><span style="width:${ready.coverage}%"></span></div></div><div><div class="label"><span>${esc(t('accuracy'))}</span><strong>${ready.accuracy}%</strong></div><div class="mini-bar"><span style="width:${ready.accuracy}%"></span></div></div><div><div class="label"><span>${esc(t('recentAverage'))}</span><strong>${ready.examAverage}%</strong></div><div class="mini-bar"><span style="width:${ready.examAverage}%"></span></div></div></div><div class="stat-grid"><div class="stat-card"><strong>${st.seen}</strong><span>${esc(t('seen'))}</span></div><div class="stat-card"><strong>${st.accuracy}%</strong><span>${esc(t('accuracy'))}</span></div><div class="stat-card"><strong>${st.exams}</strong><span>${esc(t('exams'))}</span></div><div class="stat-card"><strong>${examPassRate()}%</strong><span>${esc(t('passRate'))}</span></div><div class="stat-card"><strong>${st.last ?? '—'}</strong><span>${esc(t('last'))}</span></div></div><div class="card" style="margin-top:14px"><h3>${esc(t('fourChapters'))}</h3>${TOPIC_GROUPS.map(topic=>{const x=topicStats(topic.id);return `<button class="progress-topic" data-go="chaptersetup" data-id="${topic.id}"><span>${topic.icon} ${esc(t(topic.title))}</span><strong>${x.accuracy}%</strong><div class="mini-bar"><span style="width:${x.coverage}%"></span></div></button>`}).join('')}</div><div class="card detailed-history-card" style="margin-top:14px"><div class="history-heading"><div><h3>${esc(t('detailedHistory'))}</h3><p>${esc(t('examDetailsSub'))}</p></div><span>${examEntries.length}</span></div>${examEntries.length?`<div class="exam-history detailed">${examEntries.map(({exam,index})=>{const passed=countryPackExamPassed(exam.score,exam.total);return `<button class="exam-row exam-detail-row" data-exam-index="${index}"><span>${formatExamDate(exam.date)}</span><strong>${exam.score}/${exam.total}</strong><em class="${passed?'pass':'fail'}">${esc(t(passed?'passedSmall':'failedSmall'))}</em><b>${esc(t('viewDetails'))} ›</b></button>`}).join('')}</div>`:`<p class="muted">${esc(t('noExamHistory'))}</p>`}</div><div class="card" style="margin-top:14px"><h3>${esc(t('categories'))}</h3>${by.length?by.map(x=>`<div class="bar-row"><div class="label"><span>${esc(categoryLabel(x.category))}</span><strong>${x.pct}%</strong></div><div class="mini-bar"><span style="width:${x.pct}%"></span></div></div>`).join(''):`<p class="muted">${esc(t('noResults'))}</p>`}</div>`},
  quiz:()=>`<div class="card quiz-card"><div class="quiz-head"><span class="badge counter-badge" id="qCounter"></span><span class="timer" id="quizTimer"></span></div><div class="progress"><span id="quizProgress"></span></div><div id="examStatus" class="exam-status hidden"></div><div class="quiz-mode-row"><span class="mode-label" id="quizModeBadge"></span><span id="quizMeta" class="muted small"></span></div><div id="quizQuestion" class="question"></div><div id="quizHelp"></div><div id="quizInstruction" class="quiz-instruction"></div><div id="quizOptions"></div><div id="quizExplanation" class="explanation hidden"></div><div class="actions quiz-footer"><button class="btn secondary" id="quizExit">${esc(t('exit'))}</button><button class="btn secondary hidden" id="examPrev">‹ ${esc(t('previous'))}</button><button class="btn flag hidden" id="examFlag">☆ ${esc(t('flagQuestion'))}</button><button class="btn secondary hidden" id="examNavigator">☷ ${esc(t('navigator'))}</button><button class="btn" id="quizConfirm">${esc(t('confirm'))}</button><button class="btn hidden" id="quizNext">${esc(t('next'))}</button><button class="btn finish hidden" id="examFinish">${esc(t('finishExam'))}</button></div></div>`,
 

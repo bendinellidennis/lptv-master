@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.4';
+const BUILD_VERSION = '45.8.31.7';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12249,9 +12249,35 @@ function backendRealXhrProbe(probeUrl){
   }catch(err){resolve({kind:'exception',status:0,body:'',ms:Date.now()-started,error:`${err?.name||'Error'}: ${err?.message||String(err)}`})}
  });
 }
+async function backendOwnerConfirmCriticalAction(actionLabel=''){
+ if(!mdmAuthSummary().authenticated){
+  toast(lang3('Accedi con l’account proprietario MDM.','Sign in with the MDM owner account.','Idħol bil-kont tas-sid ta’ MDM.'));
+  return false;
+ }
+ mdmPlatformOwnerReset('critical_action_recheck');
+ const allowed=await mdmRefreshPlatformOwnerGate({silent:true});
+ if(!allowed){
+  toast(lang3('Autorizzazione proprietario non verificata. Operazione bloccata.','Owner authorization was not verified. Operation blocked.','L-awtorizzazzjoni tas-sid ma ġietx ivverifikata. L-operazzjoni ġiet imblukkata.'));
+  return false;
+ }
+ const answer=prompt(lang3(
+  `Operazione critica: ${actionLabel}. Scrivi MDM OWNER per confermare.`,
+  `Critical operation: ${actionLabel}. Type MDM OWNER to confirm.`,
+  `Operazzjoni kritika: ${actionLabel}. Ikteb MDM OWNER biex tikkonferma.`
+ ));
+ return String(answer||'').trim().toUpperCase()==='MDM OWNER';
+}
 async function backendRealTestConnection(){
  const url=backendRealSafeUrl($('#backendProjectUrl')?.value||mdmBackendSetup.endpoint);
  const key=String($('#backendPublishableKey')?.value||mdmBackendSetup.publishableKey||'').trim();
+ const changingConfig=Boolean(
+  String(url||'')!==String(mdmBackendSetup.endpoint||'') ||
+  String(key||'')!==String(mdmBackendSetup.publishableKey||'')
+ );
+ if(changingConfig){
+  const ok=await backendOwnerConfirmCriticalAction(lang3('modifica configurazione Supabase','change Supabase configuration','bidla fil-konfigurazzjoni ta’ Supabase'));
+  if(!ok)return toast(lang3('Modifica annullata. Configurazione invariata.','Change cancelled. Configuration unchanged.','Il-bidla ġiet ikkanċellata. Il-konfigurazzjoni baqgħet l-istess.'));
+ }
  if(!url)return toast(lang3('Inserisci un Project URL HTTPS valido.','Enter a valid HTTPS Project URL.','Daħħal Project URL HTTPS validu.'));
  if(/^sb_secret_/i.test(key))return toast(lang3('NON usare una Secret key nel browser. Usa solo la Publishable key.','Do NOT use a Secret key in the browser. Use only the Publishable key.','TUŻAX Secret key fil-browser. Uża Publishable key biss.'));
  if(!backendRealKeyValid(key))return toast(lang3('Inserisci la Publishable key Supabase (o legacy anon).','Enter the Supabase Publishable key (or legacy anon).','Daħħal il-Publishable key ta’ Supabase (jew legacy anon).'));
@@ -12312,8 +12338,9 @@ async function backendRealTestConnection(){
  backendRealSave();render();
  toast(lang3('Il test è terminato senza risposta HTTP. La schermata non resterà più bloccata: apri la diagnostica tecnica.','The test ended without an HTTP response. The screen will no longer stay stuck: open technical diagnostics.','It-test intemm mingħajr risposta HTTP. L-iskrin mhux se jibqa’ mwaħħal: iftaħ id-dijanjostika teknika.'));
 }
-function backendRealDisconnect(){
- if(!confirm(lang3('Rimuovere la configurazione backend salvata su questo dispositivo?','Remove the backend configuration saved on this device?','Tneħħi l-konfigurazzjoni tal-backend minn dan l-apparat?')))return;
+async function backendRealDisconnect(){
+ const ok=await backendOwnerConfirmCriticalAction(lang3('rimozione configurazione backend','remove backend configuration','tneħħija tal-konfigurazzjoni tal-backend'));
+ if(!ok)return toast(lang3('Rimozione annullata.','Removal cancelled.','It-tneħħija ġiet ikkanċellata.'));
  mdmBackendSetup={provider:'supabase',endpoint:'',publishableKey:'',status:'unconfigured',verifiedAt:'',schemaReady:false,lastHttpStatus:0,lastMessage:'',lastDiagnostic:null};backendRealSave();render();
 }
 function backendRealOwnerDeniedHtml(){

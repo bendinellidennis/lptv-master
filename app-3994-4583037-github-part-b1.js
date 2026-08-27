@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.15';
+const BUILD_VERSION = '45.8.31.16';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12484,6 +12484,18 @@ function backendRealViewHtml(){
      :lang3('Il runtime protetto è disponibile agli utenti autenticati, ma in shadow mode non modifica ancora nessuna decisione dell’app.','The protected runtime is available to authenticated users, but shadow mode does not yet change any app decision.','Ir-runtime protett huwa disponibbli għall-utenti awtentikati, iżda shadow mode għadu ma jbiddel l-ebda deċiżjoni tal-app.'))}</small></div>
   </article>
   <button class="btn secondary" id="mdmRuntimeShadowCheck">🛰️ ${esc(lang3('Verifica Runtime Shadow','Verify Runtime Shadow','Ivverifika Runtime Shadow'))}</button>
+  <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.liveCanaryVerified?'pass':'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🎯 ${esc(lang3('Readiness Live Canary','Readiness Live Canary','Readiness Live Canary'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.liveCanaryVerified&&mdmProtectedContentStatus.liveCanaryResult
+    ?lang3(
+      `Dati reali: locale ${mdmProtectedContentStatus.liveCanaryResult.localScore} · server ${mdmProtectedContentStatus.liveCanaryResult.serverScore} · Δ ${mdmProtectedContentStatus.liveCanaryResult.delta} · ${mdmProtectedContentStatus.liveCanaryResult.band}`,
+      `Real data: local ${mdmProtectedContentStatus.liveCanaryResult.localScore} · server ${mdmProtectedContentStatus.liveCanaryResult.serverScore} · Δ ${mdmProtectedContentStatus.liveCanaryResult.delta} · ${mdmProtectedContentStatus.liveCanaryResult.band}`,
+      `Data reali: lokali ${mdmProtectedContentStatus.liveCanaryResult.localScore} · server ${mdmProtectedContentStatus.liveCanaryResult.serverScore} · Δ ${mdmProtectedContentStatus.liveCanaryResult.delta} · ${mdmProtectedContentStatus.liveCanaryResult.band}`
+     )
+    :lang3('Usa i tuoi dati Readiness reali, ma resta in canary/shadow: nessuna decisione dell’app viene ancora sostituita.','Uses your real Readiness data, but remains canary/shadow: no app decision is replaced yet.','Juża d-data Readiness reali tiegħek, iżda jibqa’ canary/shadow: l-ebda deċiżjoni tal-app għadha ma tinbidel.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessLiveCanary">🎯 ${esc(lang3('Verifica Readiness Live Canary','Verify Readiness Live Canary','Ivverifika Readiness Live Canary'))}</button>
  </section>
  <section class="backend-real-next"><small>${esc(lang3('PROSSIMO TEST REALE','NEXT REAL TEST','IT-TEST REALI LI JMISS'))}</small><h2>${esc(lang3('Lo schema MDM 44.0 è già installato: ora verifichiamo la chiamata browser senza rifarlo','The MDM 44.0 schema is already installed: now we verify the browser call without reinstalling it','L-schema MDM 44.0 diġà installat: issa nivverifikaw is-sejħa tal-browser mingħajr ma nerġgħu ninstallawh'))}</h2><p>${esc(lang3('Il test usa prima un GET semplice e, solo se fetch non riceve alcun HTTP, prova lo stesso endpoint con XHR. Il gate 5/5 si apre soltanto con HTTP 2xx e record health id=mdm, version=44.0.0.','The test first uses a simple GET and, only if fetch receives no HTTP response, retries the same endpoint with XHR. The 5/5 gate opens only with HTTP 2xx and health record id=mdm, version=44.0.0.','It-test l-ewwel juża GET sempliċi u, biss jekk fetch ma jirċievi l-ebda HTTP, jerġa’ jipprova l-istess endpoint b’XHR. Il-gate 5/5 jinfetaħ biss b’HTTP 2xx u health record id=mdm, version=44.0.0.'))}</p></section>
  <div class="backend-real-links"><button class="btn" data-go="accountenrollment">👤 Account & Enrollment</button><button class="btn secondary" data-go="cloudready">☁️ Cloud Ready</button><button class="btn secondary" data-go="schoolroster">👥 School Roster</button><button class="btn secondary" data-go="instructorassignments">🎯 Instructor Assignments</button></div>`;
@@ -12494,6 +12506,7 @@ function bindBackendReal(){
  const pilotLoad=$('#mdmProtectedPilotLoad');if(pilotLoad)pilotLoad.onclick=()=>mdmLoadProtectedPilot({silent:false});
  const executionCheck=$('#mdmProtectedExecutionCheck');if(executionCheck)executionCheck.onclick=()=>mdmVerifyProtectedIntelligenceExecution({silent:false});
  const runtimeShadow=$('#mdmRuntimeShadowCheck');if(runtimeShadow)runtimeShadow.onclick=()=>mdmVerifyRuntimeIntelligenceShadow({silent:false});
+ const liveCanary=$('#mdmReadinessLiveCanary');if(liveCanary)liveCanary.onclick=()=>mdmVerifyReadinessLiveCanary({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
  const copy=$('#backendCopyDiagnostic');if(copy)copy.onclick=()=>copyTextSafe(backendRealDiagnosticText(),lang3('Diagnostica backend copiata.','Backend diagnostics copied.','Id-dijanjostika tal-backend ġiet ikkupjata.'));
  bindMdmProductionSync();
@@ -12636,12 +12649,82 @@ function mdmPlatformOwnerAllowed(){
 function mdmPlatformOwnerReset(message=''){
  mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY,lastMessage:String(message||'')};
 }
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
 
 
+
+function mdmReadinessLiveCanarySignals(){
+ const r=readinessStats();
+ const exams=Array.isArray(progress.exams)?progress.exams:[];
+ const last=exams.length?exams[exams.length-1]:null;
+ let recency=20;
+ if(last&&last.date){
+  const ageDays=Math.max(0,(Date.now()-Date.parse(last.date))/(24*60*60*1000));
+  recency=ageDays<=7?100:ageDays<=14?85:ageDays<=30?65:40;
+ }
+ return {
+  localScore:Number(r.score||0),
+  localLabel:String(r.label||''),
+  signals:{
+   accuracy:Number(r.accuracy||0),
+   coverage:Number(r.coverage||0),
+   stability:Number(r.examAverage||0),
+   recency:Number(recency||0)
+  }
+ };
+}
+async function mdmVerifyReadinessLiveCanary({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Canary Readiness riservato all’Owner.','Readiness Canary is reserved for the Owner.','Readiness Canary huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const local=mdmReadinessLiveCanarySignals();
+  let result=await mdmDataRpc('mdm_intelligence_runtime_execute',{
+   p_policy:'readiness-signal-policy-v1',
+   p_signals:local.signals,
+   p_mode:'shadow'
+  });
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_intelligence_runtime_execute',{
+    p_policy:'readiness-signal-policy-v1',
+    p_signals:local.signals,
+    p_mode:'shadow'
+   });
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true||!Number.isFinite(Number(data.score))){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,liveCanaryVerified:false,liveCanaryResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'readiness_canary_failed')};
+   if(!silent)toast(lang3('Canary Readiness non verificato.','Readiness Canary was not verified.','Readiness Canary ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  const serverScore=Number(data.score);
+  const delta=Math.round((serverScore-local.localScore)*100)/100;
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   liveCanaryVerified:true,
+   liveCanaryResult:{
+    localScore:local.localScore,
+    serverScore,
+    delta,
+    band:String(data.band||''),
+    decision:String(data.decision||''),
+    mode:String(data.mode||'shadow')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(lang3('Readiness reale confrontata con il motore protetto.','Real Readiness compared with the protected engine.','Readiness reali tqabblet mal-magna protetta.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
 async function mdmVerifyRuntimeIntelligenceShadow({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;
  if(!mdmPlatformOwnerAllowed()){

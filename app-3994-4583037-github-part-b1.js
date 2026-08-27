@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.7';
+const BUILD_VERSION = '45.8.31.10';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12470,6 +12470,27 @@ const MDM_AUTH_EMPTY={status:'signed_out',email:'',user:null,accessToken:'',refr
 let mdmAuthSession=Object.assign({},MDM_AUTH_EMPTY,load(MDM_AUTH_SESSION_KEY,{}));
 accountEnrollmentBindToAuthUser(String(mdmAuthSession.user?.id||''),String(mdmAuthSession.user?.email||mdmAuthSession.email||''));
 let mdmAuthInFlight=false;
+const MDM_AUTH_ATTEMPT_KEY='mdm_auth_attempt_guard_v458319';
+function mdmAuthAttemptState(){
+ const raw=load(MDM_AUTH_ATTEMPT_KEY,{fails:[],blockedUntil:0});
+ raw.fails=Array.isArray(raw.fails)?raw.fails.filter(x=>Number(x)>Date.now()-15*60*1000):[];
+ raw.blockedUntil=Number(raw.blockedUntil||0);
+ return raw;
+}
+function mdmAuthAttemptSave(v){save(MDM_AUTH_ATTEMPT_KEY,v)}
+function mdmAuthAttemptAllowed(){
+ const v=mdmAuthAttemptState();
+ if(v.blockedUntil>Date.now())return {ok:false,wait:Math.ceil((v.blockedUntil-Date.now())/1000)};
+ return {ok:true,wait:0};
+}
+function mdmAuthAttemptFail(){
+ const v=mdmAuthAttemptState();
+ v.fails.push(Date.now());
+ if(v.fails.length>=5)v.blockedUntil=Date.now()+5*60*1000;
+ mdmAuthAttemptSave(v);
+}
+function mdmAuthAttemptSuccess(){mdmAuthAttemptSave({fails:[],blockedUntil:0})}
+
 function mdmAuthSave(){save(MDM_AUTH_SESSION_KEY,mdmAuthSession)}
 function mdmAuthParse(body){try{return JSON.parse(String(body||''))}catch{return null}}
 function mdmAuthErrorMessage(result){
@@ -12579,7 +12600,9 @@ function mdmAuthRequest(path,{method='GET',body=null,accessToken=''}={}){
 let mdmEnrollmentInFlight=false;
 function mdmDataErrorMessage(result){
  const payload=mdmAuthParse(result?.body);
- return String(payload?.message||payload?.details||payload?.hint||payload?.error_description||payload?.error||result?.error||(`HTTP ${Number(result?.status)||0}`)).slice(0,260);
+ const raw=String(payload?.message||payload?.details||payload?.hint||payload?.error_description||payload?.error||result?.error||(`HTTP ${Number(result?.status)||0}`)).slice(0,260);
+ if(raw.includes('mdm_rate_limited'))return lang3('Protezione anti-abuso attiva: troppe richieste. Attendi e riprova.','Anti-abuse protection active: too many requests. Wait and try again.','Protezzjoni kontra l-abbuż attiva: wisq talbiet. Stenna u erġa’ pprova.');
+ return raw;
 }
 function mdmDataRpc(name,payload={}){
  return new Promise(resolve=>{
@@ -12857,6 +12880,8 @@ async function mdmAuthSignUp(){
 }
 async function mdmAuthSignIn(){
  if(mdmAuthInFlight)return;
+ const attempt=mdmAuthAttemptAllowed();
+ if(!attempt.ok)return toast(lang3(`Troppi tentativi. Riprova tra ${attempt.wait} secondi.`,`Too many attempts. Try again in ${attempt.wait} seconds.`,`Wisq tentattivi. Erġa’ pprova fi ${attempt.wait} sekondi.`));
  const cfg=mdmBackendPublicConfig();if(!cfg.enabled)return toast(lang3('Prima verifica il backend reale 5/5.','Verify the real backend 5/5 first.','L-ewwel ivverifika l-backend reali 5/5.'));
  const {email,password}=mdmAuthReadCredentials();
  if(!/^\S+@\S+\.\S+$/.test(email)||!password)return toast(lang3('Inserisci e-mail e password.','Enter email and password.','Daħħal email u password.'));
@@ -12865,11 +12890,11 @@ async function mdmAuthSignIn(){
   const result=await mdmAuthRequest('/token?grant_type=password',{method:'POST',body:{email,password}});
   const payload=mdmAuthParse(result.body)||{};
   if(result.status>=200&&result.status<300&&payload.access_token&&payload.user?.id){
-   mdmAuthStoreResponse(payload,email);mdmSchoolAdminReset();render();setTimeout(()=>{accountRefreshSchoolAdminConsole({silent:true});mdmRefreshPlatformOwnerGate({silent:true});},25);
+   mdmAuthAttemptSuccess();mdmAuthStoreResponse(payload,email);mdmSchoolAdminReset();render();setTimeout(()=>{accountRefreshSchoolAdminConsole({silent:true});mdmRefreshPlatformOwnerGate({silent:true});},25);
    toast(lang3('Accesso reale riuscito. Utente Supabase autenticato.','Real sign-in successful. Supabase user authenticated.','Id-dħul reali rnexxa. L-utent Supabase ġie awtentikat.'));
    return;
   }
-  const msg=mdmAuthErrorMessage(result);mdmAuthSession={...mdmAuthSession,status:'error',email,lastHttpStatus:result.status,lastMessage:msg,lastAction:'signin'};mdmAuthSave();render();toast(lang3('Accesso non riuscito: '+msg,'Sign-in failed: '+msg,'Id-dħul falla: '+msg));
+  mdmAuthAttemptFail();const msg=mdmAuthErrorMessage(result);mdmAuthSession={...mdmAuthSession,status:'error',email,lastHttpStatus:result.status,lastMessage:msg,lastAction:'signin'};mdmAuthSave();render();toast(lang3('Accesso non riuscito: '+msg,'Sign-in failed: '+msg,'Id-dħul falla: '+msg));
  }finally{mdmAuthInFlight=false}
 }
 async function mdmAuthSignOut(){
@@ -14236,7 +14261,7 @@ function schoolHomeViewHtml(){
 
    <button class="sch35-card blue" data-go="schooldashboard"><i>📊</i><h3>School Dashboard</h3><p>${esc(lang3('Panoramica completa della scuola','Complete school overview','Ħarsa ġenerali tal-iskola'))}</p></button>
    <button class="sch35-card green" data-go="instructorassignments"><i>🎯</i><h3>${esc(lang3('Assegnazioni','Assignments','Assenjazzjonijiet'))}</h3><p>${esc(lang3('Missioni e priorità agli studenti','Missions and student priorities','Missjonijiet u prijoritajiet tal-istudenti'))}</p></button>
-   <button class="sch35-card purple" data-go="pilotanalytics"><i>📈</i><h3>Analytics</h3><p>${esc(lang3('Statistiche e trend della scuola','School statistics and trends','Statistika u xejriet tal-iskola'))}</p></button>
+   ${mdmPlatformOwnerAllowed()?`<button class="sch35-card purple" data-go="pilotanalytics"><i>📈</i><h3>Analytics</h3><p>${esc(lang3('Statistiche e trend della scuola','School statistics and trends','Statistika u xejriet tal-iskola'))}</p></button>`:''}
    <button class="sch35-card yellow" data-go="schoolpartner"><i>✉️</i><h3>${esc(lang3('Messaggi','Messages','Messaġġi'))}</h3><p>${esc(lang3('Comunicazioni con studenti e team','Communications with students and team','Komunikazzjoni ma’ studenti u tim'))}</p></button>
   </section>
 
@@ -14245,7 +14270,7 @@ function schoolHomeViewHtml(){
    <button class="sch35-card green" data-go="instructorintelligence"><i>🧠</i><h3>${esc(lang3('Intelligenza Istruttore','Instructor Intelligence','Intelliġenza tal-Istruttur'))}</h3><p>${esc(lang3('Brief automatici, priorità ed evidenze','Automatic briefs, priorities and evidence','Briefs awtomatiċi, prijoritajiet u evidenza'))}</p></button>
    <button class="sch35-card blue" data-go="instructorstudio"><i>🧑‍🏫</i><h3>Instructor Studio</h3><p>${esc(lang3('Preparazione lezioni e coaching','Lesson preparation and coaching','Tħejjija tal-lezzjonijiet u coaching'))}</p></button>
    <button class="sch35-card purple" data-go="schoolcommandcenter"><i>🎛️</i><h3>${esc(lang3('Centro di Comando','Command Center','Ċentru ta’ Kmand'))}</h3><p>${esc(lang3('Controllo operativo centralizzato','Centralized operational control','Kontroll operattiv ċentralizzat'))}</p></button>
-   <button class="sch35-card yellow" data-go="securitytrust"><i>🛡️</i><h3>Trust Center</h3><p>${esc(lang3('Sicurezza, privacy e ruoli','Security, privacy and roles','Sigurtà, privatezza u rwoli'))}</p></button>
+   ${mdmPlatformOwnerAllowed()?`<button class="sch35-card yellow" data-go="securitytrust"><i>🛡️</i><h3>Trust Center</h3><p>${esc(lang3('Sicurezza, privacy e ruoli','Security, privacy and roles','Sigurtà, privatezza u rwoli'))}</p></button>`:''}
   </section>
  </div>`;
 }
@@ -14353,7 +14378,7 @@ const views={
  <button class="hm30-card c-blue" data-go="schools"><i>🏫</i><h3>${esc(lang3('La mia Scuola','My School','L-Iskola Tiegħi'))}</h3><p>${esc(lang3('Entra nella tua scuola guida','Enter your driving school','Idħol fl-iskola tas-sewqan'))}</p></button>
  <button class="hm30-card c-green" data-go="practicallesson"><i>🚘</i><h3>${esc(lang3('Lezioni Pratiche','Practical Lessons','Lezzjonijiet Prattiċi'))}</h3><p>${esc(lang3('Traccia e gestisci le tue guide','Track and manage your lessons','Immaniġġja l-lezzjonijiet tiegħek'))}</p></button>
  <button class="hm30-card c-purple" data-go="schoolpartner"><i>✉️</i><h3>${esc(lang3('Messaggi','Messages','Messaġġi'))}</h3><p>${esc(lang3('Comunicazioni con la scuola','School communications','Komunikazzjoni mal-iskola'))}</p></button>
- <button class="hm30-card c-yellow" data-go="schooldashboard"><i>📊</i><h3>School Dashboard</h3><p>${esc(lang3('Area riservata scuola','School reserved area','Żona riservata għall-iskola'))}</p></button>
+ ${mdmPlatformOwnerAllowed()?`<button class="hm30-card c-yellow" data-go="schooldashboard"><i>📊</i><h3>School Dashboard</h3><p>${esc(lang3('Area riservata scuola','School reserved area','Żona riservata għall-iskola'))}</p></button>`:''}
 </section>
 
 <h2 class="hm30-title">⚙ ${esc(lang3('STRUMENTI AVANZATI','ADVANCED TOOLS','GĦODOD AVVANZATI'))}</h2>
@@ -14361,9 +14386,9 @@ const views={
  <button class="hm30-card c-blue" data-go="questionlibrary"><i>🗄️</i><h3>Database</h3><p>${esc(lang3('Tutte le domande e filtri avanzati','All questions and advanced filters','Il-mistoqsijiet u filtri avvanzati'))}</p></button>
  <button class="hm30-card c-yellow" data-go="favourites"><i>🔖</i><h3>${esc(lang3('Segnalibri','Bookmarks','Bookmarks'))}</h3><p>${esc(lang3('Le domande segnalate','Saved questions','Mistoqsijiet salvati'))}</p></button>
  <button class="hm30-card c-green" data-go="progress"><i>⌁</i><h3>Analytics</h3><p>${esc(lang3('Dati e trend dettagliati','Detailed data and trends','Data u xejriet dettaljati'))}</p></button>
- <button class="hm30-card c-purple" data-go="pilotanalytics"><i>👥</i><h3>Pilot Analytics</h3><p>${esc(lang3('Dati anonimi pilot (10–30)','Anonymous pilot data (10–30)','Data anonima tal-pilot (10–30)'))}</p></button>
- <button class="hm30-card c-pink" data-go="securitytrust"><i>🛡️</i><h3>Trust Center</h3><p>${esc(lang3('Sicurezza e trasparenza','Security and transparency','Sigurtà u trasparenza'))}</p></button>
- <button class="hm30-card c-blue new" data-go="externalvalidation"><i>🎯</i><em>NEW</em><h3>Validation Center</h3><p>${esc(lang3('4 gate esterni in tempo reale','4 external gates in real time','4 gates esterni f’ħin reali'))}</p></button>${mdmPlatformOwnerAllowed()?`<button class="hm30-card hm30-backend-card" data-go="backendreal">
+ ${mdmPlatformOwnerAllowed()?`<button class="hm30-card c-purple" data-go="pilotanalytics"><i>👥</i><h3>Pilot Analytics</h3><p>${esc(lang3('Dati anonimi pilot (10–30)','Anonymous pilot data (10–30)','Data anonima tal-pilot (10–30)'))}</p></button>`:''}
+ ${mdmPlatformOwnerAllowed()?`<button class="hm30-card c-pink" data-go="securitytrust"><i>🛡️</i><h3>Trust Center</h3><p>${esc(lang3('Sicurezza e trasparenza','Security and transparency','Sigurtà u trasparenza'))}</p></button>`:''}
+ ${mdmPlatformOwnerAllowed()?`<button class="hm30-card c-blue new" data-go="externalvalidation"><i>🎯</i><em>NEW</em><h3>Validation Center</h3><p>${esc(lang3('4 gate esterni in tempo reale','4 external gates in real time','4 gates esterni f’ħin reali'))}</p></button>`:''}${mdmPlatformOwnerAllowed()?`<button class="hm30-card hm30-backend-card" data-go="backendreal">
   <span class="hm30-icon">🔌</span>
   <h3>${esc(lang3('Real Backend','Real Backend','Backend Reali'))}</h3>
   <p>${esc(lang3('Supabase: connessione e configurazione reale','Supabase: real connection and configuration','Supabase: konnessjoni u konfigurazzjoni reali'))}</p>

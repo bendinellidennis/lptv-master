@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.16';
+const BUILD_VERSION = '45.8.31.17';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12496,6 +12496,18 @@ function backendRealViewHtml(){
     :lang3('Usa i tuoi dati Readiness reali, ma resta in canary/shadow: nessuna decisione dell’app viene ancora sostituita.','Uses your real Readiness data, but remains canary/shadow: no app decision is replaced yet.','Juża d-data Readiness reali tiegħek, iżda jibqa’ canary/shadow: l-ebda deċiżjoni tal-app għadha ma tinbidel.'))}</small></div>
   </article>
   <button class="btn secondary" id="mdmReadinessLiveCanary">🎯 ${esc(lang3('Verifica Readiness Live Canary','Verify Readiness Live Canary','Ivverifika Readiness Live Canary'))}</button>
+  <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
+    ?lang3(
+      `${mdmProtectedContentStatus.convergenceResult.eligible?'SUPERATO':'NON ANCORA'} · campioni ${mdmProtectedContentStatus.convergenceResult.sampleCount} · Δ medio ${mdmProtectedContentStatus.convergenceResult.meanAbsDelta} · Δ max ${mdmProtectedContentStatus.convergenceResult.maxAbsDelta}`,
+      `${mdmProtectedContentStatus.convergenceResult.eligible?'PASSED':'NOT YET'} · samples ${mdmProtectedContentStatus.convergenceResult.sampleCount} · mean Δ ${mdmProtectedContentStatus.convergenceResult.meanAbsDelta} · max Δ ${mdmProtectedContentStatus.convergenceResult.maxAbsDelta}`,
+      `${mdmProtectedContentStatus.convergenceResult.eligible?'GĦADDA':'GĦADU LE'} · kampjuni ${mdmProtectedContentStatus.convergenceResult.sampleCount} · Δ medju ${mdmProtectedContentStatus.convergenceResult.meanAbsDelta} · Δ max ${mdmProtectedContentStatus.convergenceResult.maxAbsDelta}`
+     )
+    :lang3('Registra e misura più confronti reali prima di permettere qualunque passaggio dal shadow al runtime reale.','Records and measures multiple real comparisons before any move from shadow to live runtime.','Jirreġistra u jkejjel diversi paraguni reali qabel kwalunkwe bidla minn shadow għal runtime reali.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessConvergenceGate">🧪 ${esc(lang3('Verifica Gate Convergenza','Verify Convergence Gate','Ivverifika Gate Konverġenza'))}</button>
  </section>
  <section class="backend-real-next"><small>${esc(lang3('PROSSIMO TEST REALE','NEXT REAL TEST','IT-TEST REALI LI JMISS'))}</small><h2>${esc(lang3('Lo schema MDM 44.0 è già installato: ora verifichiamo la chiamata browser senza rifarlo','The MDM 44.0 schema is already installed: now we verify the browser call without reinstalling it','L-schema MDM 44.0 diġà installat: issa nivverifikaw is-sejħa tal-browser mingħajr ma nerġgħu ninstallawh'))}</h2><p>${esc(lang3('Il test usa prima un GET semplice e, solo se fetch non riceve alcun HTTP, prova lo stesso endpoint con XHR. Il gate 5/5 si apre soltanto con HTTP 2xx e record health id=mdm, version=44.0.0.','The test first uses a simple GET and, only if fetch receives no HTTP response, retries the same endpoint with XHR. The 5/5 gate opens only with HTTP 2xx and health record id=mdm, version=44.0.0.','It-test l-ewwel juża GET sempliċi u, biss jekk fetch ma jirċievi l-ebda HTTP, jerġa’ jipprova l-istess endpoint b’XHR. Il-gate 5/5 jinfetaħ biss b’HTTP 2xx u health record id=mdm, version=44.0.0.'))}</p></section>
  <div class="backend-real-links"><button class="btn" data-go="accountenrollment">👤 Account & Enrollment</button><button class="btn secondary" data-go="cloudready">☁️ Cloud Ready</button><button class="btn secondary" data-go="schoolroster">👥 School Roster</button><button class="btn secondary" data-go="instructorassignments">🎯 Instructor Assignments</button></div>`;
@@ -12507,6 +12519,7 @@ function bindBackendReal(){
  const executionCheck=$('#mdmProtectedExecutionCheck');if(executionCheck)executionCheck.onclick=()=>mdmVerifyProtectedIntelligenceExecution({silent:false});
  const runtimeShadow=$('#mdmRuntimeShadowCheck');if(runtimeShadow)runtimeShadow.onclick=()=>mdmVerifyRuntimeIntelligenceShadow({silent:false});
  const liveCanary=$('#mdmReadinessLiveCanary');if(liveCanary)liveCanary.onclick=()=>mdmVerifyReadinessLiveCanary({silent:false});
+ const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
  const copy=$('#backendCopyDiagnostic');if(copy)copy.onclick=()=>copyTextSafe(backendRealDiagnosticText(),lang3('Diagnostica backend copiata.','Backend diagnostics copied.','Id-dijanjostika tal-backend ġiet ikkupjata.'));
  bindMdmProductionSync();
@@ -12649,13 +12662,60 @@ function mdmPlatformOwnerAllowed(){
 function mdmPlatformOwnerReset(message=''){
  mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY,lastMessage:String(message||'')};
 }
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
 
 
 
+
+async function mdmVerifyReadinessConvergenceGate({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Gate convergenza riservato all’Owner.','Convergence gate is reserved for the Owner.','Il-gate tal-konverġenza huwa riservat għas-sid.'));
+  return false;
+ }
+ if(!mdmProtectedContentStatus.liveCanaryVerified||!mdmProtectedContentStatus.liveCanaryResult){
+  if(!silent)toast(lang3('Esegui prima Readiness Live Canary.','Run Readiness Live Canary first.','L-ewwel ħaddem Readiness Live Canary.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const local=Number(mdmProtectedContentStatus.liveCanaryResult.localScore);
+  const server=Number(mdmProtectedContentStatus.liveCanaryResult.serverScore);
+  let result=await mdmDataRpc('mdm_readiness_convergence_gate',{p_local_score:local,p_server_score:server});
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_readiness_convergence_gate',{p_local_score:local,p_server_score:server});
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,convergenceVerified:false,convergenceResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'convergence_failed')};
+   if(!silent)toast(lang3('Gate convergenza non verificato.','Convergence gate was not verified.','Il-gate tal-konverġenza ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   convergenceVerified:true,
+   convergenceResult:{
+    eligible:Boolean(data.eligible),
+    sampleCount:Number(data.sample_count||0),
+    meanAbsDelta:Number(data.mean_abs_delta||0),
+    maxAbsDelta:Number(data.max_abs_delta||0),
+    currentAbsDelta:Number(data.current_abs_delta||0),
+    reason:String(data.reason||'')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.eligible
+   ?lang3('Gate convergenza superato: candidato pronto per il prossimo stadio.','Convergence gate passed: candidate ready for the next stage.','Il-gate tal-konverġenza għadda: kandidat lest għall-istadju li jmiss.')
+   :lang3('Gate convergenza non ancora superato: il runtime resta in shadow.','Convergence gate not yet passed: runtime remains in shadow.','Il-gate tal-konverġenza għadu ma għaddiex: ir-runtime jibqa’ shadow.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
 function mdmReadinessLiveCanarySignals(){
  const r=readinessStats();
  const exams=Array.isArray(progress.exams)?progress.exams:[];

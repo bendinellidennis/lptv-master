@@ -1,0 +1,44 @@
+
+.sch35,.sch35-profile{max-width:700px;margin:0 auto;padding-bottom:26px}
+.sch35-head{display:grid;grid-template-columns:64px 1fr auto;align-items:center;gap:14px;padding:17px;border-radius:22px;background:linear-gradient(145deg,#073a55,#0c536c);color:#fff;border:1px solid rgba(51,199,211,.28);box-shadow:0 10px 26px rgba(7,49,70,.12)}
+.sch35-logo{width:64px;height:64px;border-radius:16px;object-fit:cover;background:#fff}.sch35-logo-fallback{display:grid;place-items:center;font-size:34px}
+.sch35-head-copy span{display:block;font-size:10px;letter-spacing:.12em;font-weight:950;color:#3bd0da}.sch35-head-copy h1{font-size:22px;line-height:1.06;margin:4px 0}.sch35-head-copy p{font-size:12px;line-height:1.28;margin:0;color:#d7e8ef}
+.sch35-brand-btn{white-space:nowrap}
+.sch35-kpis,.sch35-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
+.sch35-kpis button,.sch35-card{border:1px solid #d5e3e9;border-radius:17px;text-align:left;color:#102b40;box-shadow:0 4px 12px rgba(20,55,74,.05)}
+.sch35-kpis button{background:#fff;min-height:102px;padding:12px}.sch35-kpis i,.sch35-card i{font-style:normal;display:block;font-size:23px;margin-bottom:7px}.sch35-kpis b{display:block;font-size:14px}.sch35-kpis small{font-size:10px;color:#60798a}
+.sch35-title{font-size:14px;color:#0d3049;margin:17px 0 0;font-weight:950}
+.sch35-card{padding:13px;min-height:136px}.sch35-card h3{font-size:15px;line-height:1.08;margin:0 0 6px}.sch35-card p{font-size:11px;line-height:1.25;color:#557083;margin:0}
+.sch35-card.blue{background:linear-gradient(145deg,#eef8fb,#d9eef6)}.sch35-card.green{background:linear-gradient(145deg,#eff9f5,#dcefe8)}.sch35-card.purple{background:linear-gradient(145deg,#f4f0ff,#e8e0fa)}.sch35-card.yellow{background:linear-gradient(145deg,#fff8e0,#f7e7ba)}
+.sch35-preview{margin:12px 0;width:110px;height:110px;border-radius:20px;border:1px dashed #9fb8c5;display:grid;place-items:center;overflow:hidden;background:#f8fbfc;font-size:48px}.sch35-preview img{width:100%;height:100%;object-fit:cover}
+.sch35-switch-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+@media(max-width:520px){.sch35-head{grid-template-columns:54px 1fr;padding:14px}.sch35-logo{width:54px;height:54px}.sch35-brand-btn{grid-column:1/3;width:100%}.sch35-kpis,.sch35-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sch35-card{min-height:128px}.sch35-switch-actions{grid-template-columns:1fr}}
+
+/* 45.8.30.36 — School Profile access fix only */
+body:has(.sch35) .bottom-nav,
+body:has(.sch35-profile) .bottom-nav{
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+}
+body:has(.sch35) .bottom-nav button,
+body:has(.sch35-profile) .bottom-nav button{
+  min-width:0!important;
+}
+.sch35-profile-entry{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:12px 0 0;
+  padding:13px 14px;
+  border:1px solid #d5e3e9;
+  border-radius:17px;
+  background:linear-gradient(145deg,#eef8fb,#d9eef6);
+  color:#102b40;
+  text-align:left;
+  width:100%;
+}
+.sch35-profile-entry span{font-size:24px}
+.sch35-profile-entry div{flex:1}
+.sch35-profile-entry b{display:block;font-size:14px}
+.sch35-profile-entry small{display:block;font-size:10px;color:#60798a;margin-top:2px}
+.sch35-profile-entry strong{font-size:20px}

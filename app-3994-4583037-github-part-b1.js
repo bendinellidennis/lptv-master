@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.12';
+const BUILD_VERSION = '45.8.31.13';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12460,6 +12460,14 @@ function backendRealViewHtml(){
    </article>
   </div>
   <button class="btn secondary" id="mdmProtectedContentCheck">🧬 ${esc(lang3('Verifica IP Shield','Verify IP Shield','Ivverifika IP Shield'))}</button>
+  <div style="height:10px"></div>
+  <article class="${mdmProtectedContentStatus.pilotLoaded?'pass':'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🔐 ${esc(lang3('Pilot server-side 3/3','Server-side pilot 3/3','Pilot server-side 3/3'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.pilotLoaded
+    ?lang3(`3 contenuti protetti caricati · digest ${mdmProtectedContentStatus.pilotDigest||'OK'}`,`3 protected items loaded · digest ${mdmProtectedContentStatus.pilotDigest||'OK'}`,`3 kontenuti protetti mgħobbija · digest ${mdmProtectedContentStatus.pilotDigest||'OK'}`)
+    :lang3('Nessun contenuto pilot è incorporato nel frontend: viene richiesto al server solo dall’Owner.','No pilot content is embedded in the frontend: it is requested from the server only by the Owner.','L-ebda kontenut pilot mhu inkorporat fil-frontend: jintalab mis-server biss mis-sid.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmProtectedPilotLoad">🔐 ${esc(lang3('Carica Pilot Protetto','Load Protected Pilot','Għabbi Pilot Protett'))}</button>
  </section>
  <section class="backend-real-next"><small>${esc(lang3('PROSSIMO TEST REALE','NEXT REAL TEST','IT-TEST REALI LI JMISS'))}</small><h2>${esc(lang3('Lo schema MDM 44.0 è già installato: ora verifichiamo la chiamata browser senza rifarlo','The MDM 44.0 schema is already installed: now we verify the browser call without reinstalling it','L-schema MDM 44.0 diġà installat: issa nivverifikaw is-sejħa tal-browser mingħajr ma nerġgħu ninstallawh'))}</h2><p>${esc(lang3('Il test usa prima un GET semplice e, solo se fetch non riceve alcun HTTP, prova lo stesso endpoint con XHR. Il gate 5/5 si apre soltanto con HTTP 2xx e record health id=mdm, version=44.0.0.','The test first uses a simple GET and, only if fetch receives no HTTP response, retries the same endpoint with XHR. The 5/5 gate opens only with HTTP 2xx and health record id=mdm, version=44.0.0.','It-test l-ewwel juża GET sempliċi u, biss jekk fetch ma jirċievi l-ebda HTTP, jerġa’ jipprova l-istess endpoint b’XHR. Il-gate 5/5 jinfetaħ biss b’HTTP 2xx u health record id=mdm, version=44.0.0.'))}</p></section>
  <div class="backend-real-links"><button class="btn" data-go="accountenrollment">👤 Account & Enrollment</button><button class="btn secondary" data-go="cloudready">☁️ Cloud Ready</button><button class="btn secondary" data-go="schoolroster">👥 School Roster</button><button class="btn secondary" data-go="instructorassignments">🎯 Instructor Assignments</button></div>`;
@@ -12467,6 +12475,7 @@ function backendRealViewHtml(){
 function bindBackendReal(){
  const test=$('#backendTestConnection');if(test)test.onclick=backendRealTestConnection;
  const ipCheck=$('#mdmProtectedContentCheck');if(ipCheck)ipCheck.onclick=()=>mdmRefreshProtectedContentStatus({silent:false});
+ const pilotLoad=$('#mdmProtectedPilotLoad');if(pilotLoad)pilotLoad.onclick=()=>mdmLoadProtectedPilot({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
  const copy=$('#backendCopyDiagnostic');if(copy)copy.onclick=()=>copyTextSafe(backendRealDiagnosticText(),lang3('Diagnostica backend copiata.','Backend diagnostics copied.','Id-dijanjostika tal-backend ġiet ikkupjata.'));
  bindMdmProductionSync();
@@ -12602,9 +12611,50 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,lastMessage:''};
+function mdmPlatformOwnerAllowed(){
+ const auth=mdmAuthSummary();
+ return Boolean(auth.authenticated&&auth.userId&&mdmPlatformOwnerGate.status==='verified'&&mdmPlatformOwnerGate.allowed===true&&mdmPlatformOwnerGate.userId===auth.userId);
+}
+function mdmPlatformOwnerReset(message=''){
+ mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY,lastMessage:String(message||'')};
+}
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
+
+async function mdmLoadProtectedPilot({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Pilot IP riservato al proprietario MDM.','IP pilot is reserved for the MDM owner.','Il-pilot tal-IP huwa riservat għas-sid ta’ MDM.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  let result=await mdmDataRpc('mdm_protected_content_get_pilot',{});
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_protected_content_get_pilot',{});
+  const data=mdmAuthParse(result.body)||{};
+  const items=Array.isArray(data.items)?data.items:[];
+  if(result.status>=200&&result.status<300&&data.ok===true&&items.length===3){
+   mdmProtectedContentStatus={
+    ...mdmProtectedContentStatus,
+    status:'ready',
+    ready:true,
+    pilotLoaded:true,
+    pilotItems:items,
+    pilotDigest:String(data.digest||''),
+    lastMessage:''
+   };
+   if(!silent)toast(lang3('Pilot contenuti protetti caricato dal server.','Protected-content pilot loaded from server.','Il-pilot tal-kontenut protett tgħabba mis-server.'));
+   render({preserveScroll:true});
+   return true;
+  }
+  mdmProtectedContentStatus={...mdmProtectedContentStatus,pilotLoaded:false,pilotItems:[],pilotDigest:'',lastMessage:mdmDataErrorMessage(result)||String(data.error||'pilot_failed')};
+  if(!silent)toast(lang3('Caricamento pilot protetto non riuscito.','Protected pilot loading failed.','It-tagħbija tal-pilot protett falliet.'));
+  render({preserveScroll:true});
+  return false;
+ }finally{mdmProtectedContentInFlight=false}
+}
 async function mdmRefreshProtectedContentStatus({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;
  if(!mdmPlatformOwnerAllowed()){
@@ -12623,6 +12673,7 @@ async function mdmRefreshProtectedContentStatus({silent=false}={}){
   const data=mdmAuthParse(result.body)||{};
   if(result.status>=200&&result.status<300&&data.ok!==false){
    mdmProtectedContentStatus={
+    ...mdmProtectedContentStatus,
     status:'ready',
     ready:Boolean(data.ready),
     schemaVersion:String(data.schema_version||''),

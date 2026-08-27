@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.11';
+const BUILD_VERSION = '45.8.31.12';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12435,11 +12435,38 @@ function backendRealViewHtml(){
  ${mdmProductionSyncPanelHtml()}
  ${mdmProductionPermissionPanelHtml()}
  ${diagHtml}
+ <section class="card backend-real-gates">
+  <div class="backend-real-head">
+   <div>
+    <small>${esc(lang3('IP SHIELD · SERVER FOUNDATION','IP SHIELD · SERVER FOUNDATION','IP SHIELD · PEDAMENT TAS-SERVER'))}</small>
+    <h2>${mdmProtectedContentStatus.ready?'✅ '+esc(lang3('PRONTO','READY','LEST')):'🔒 '+esc(lang3('DA VERIFICARE','TO VERIFY','BIEX JIĠI VVERIFIKAT'))}</h2>
+   </div><span>🧬</span>
+  </div>
+  <p>${esc(lang3(
+   'Prepara il trasferimento futuro di logica e contenuti proprietari fuori dal frontend pubblico, senza modificare ancora le banche domanda approvate.',
+   'Prepares the future move of proprietary logic and content out of the public frontend, without changing the approved question banks yet.',
+   'Jipprepara t-trasferiment futur tal-loġika u l-kontenut proprjetarju barra mill-frontend pubbliku, mingħajr ma jbiddel il-banek tal-mistoqsijiet approvati.'
+  ))}</p>
+  <div class="backend-real-gate-list">
+   <article class="${mdmProtectedContentStatus.ready?'pass':'locked'}">
+    <span>${mdmProtectedContentStatus.ready?'✓':'🔒'}</span>
+    <div><strong>${esc(lang3('Vault server privato','Private server vault','Vault privat tas-server'))}</strong>
+    <small>${esc(mdmProtectedContentStatus.ready?lang3('RLS attiva · accesso diretto negato','RLS active · direct access denied','RLS attiva · aċċess dirett miċħud'):lang3('Verifica necessaria','Verification required','Verifika meħtieġa'))}</small></div>
+   </article>
+   <article class="${mdmProtectedContentStatus.ready?'pass':'locked'}">
+    <span>${mdmProtectedContentStatus.ready?'✓':'🔒'}</span>
+    <div><strong>${esc(lang3('API contenuti protetti','Protected content API','API tal-kontenut protett'))}</strong>
+    <small>${esc(mdmProtectedContentStatus.schemaVersion||'—')}</small></div>
+   </article>
+  </div>
+  <button class="btn secondary" id="mdmProtectedContentCheck">🧬 ${esc(lang3('Verifica IP Shield','Verify IP Shield','Ivverifika IP Shield'))}</button>
+ </section>
  <section class="backend-real-next"><small>${esc(lang3('PROSSIMO TEST REALE','NEXT REAL TEST','IT-TEST REALI LI JMISS'))}</small><h2>${esc(lang3('Lo schema MDM 44.0 è già installato: ora verifichiamo la chiamata browser senza rifarlo','The MDM 44.0 schema is already installed: now we verify the browser call without reinstalling it','L-schema MDM 44.0 diġà installat: issa nivverifikaw is-sejħa tal-browser mingħajr ma nerġgħu ninstallawh'))}</h2><p>${esc(lang3('Il test usa prima un GET semplice e, solo se fetch non riceve alcun HTTP, prova lo stesso endpoint con XHR. Il gate 5/5 si apre soltanto con HTTP 2xx e record health id=mdm, version=44.0.0.','The test first uses a simple GET and, only if fetch receives no HTTP response, retries the same endpoint with XHR. The 5/5 gate opens only with HTTP 2xx and health record id=mdm, version=44.0.0.','It-test l-ewwel juża GET sempliċi u, biss jekk fetch ma jirċievi l-ebda HTTP, jerġa’ jipprova l-istess endpoint b’XHR. Il-gate 5/5 jinfetaħ biss b’HTTP 2xx u health record id=mdm, version=44.0.0.'))}</p></section>
  <div class="backend-real-links"><button class="btn" data-go="accountenrollment">👤 Account & Enrollment</button><button class="btn secondary" data-go="cloudready">☁️ Cloud Ready</button><button class="btn secondary" data-go="schoolroster">👥 School Roster</button><button class="btn secondary" data-go="instructorassignments">🎯 Instructor Assignments</button></div>`;
 }
 function bindBackendReal(){
  const test=$('#backendTestConnection');if(test)test.onclick=backendRealTestConnection;
+ const ipCheck=$('#mdmProtectedContentCheck');if(ipCheck)ipCheck.onclick=()=>mdmRefreshProtectedContentStatus({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
  const copy=$('#backendCopyDiagnostic');if(copy)copy.onclick=()=>copyTextSafe(backendRealDiagnosticText(),lang3('Diagnostica backend copiata.','Backend diagnostics copied.','Id-dijanjostika tal-backend ġiet ikkupjata.'));
  bindMdmProductionSync();
@@ -12575,6 +12602,43 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,lastMessage:''};
+let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
+let mdmProtectedContentInFlight=false;
+async function mdmRefreshProtectedContentStatus({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY,status:'denied',lastMessage:'owner_required'};
+  if(!silent)toast(lang3('Verifica IP riservata al proprietario MDM.','IP verification is reserved for the MDM owner.','Il-verifika tal-IP hija riservata għas-sid ta’ MDM.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData())){
+   mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY,status:'error',lastMessage:'session_not_verified'};
+   return false;
+  }
+  let result=await mdmDataRpc('mdm_protected_content_status',{});
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_protected_content_status',{});
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status>=200&&result.status<300&&data.ok!==false){
+   mdmProtectedContentStatus={
+    status:'ready',
+    ready:Boolean(data.ready),
+    schemaVersion:String(data.schema_version||''),
+    contentCount:Number(data.content_count||0),
+    lastMessage:''
+   };
+   if(!silent)toast(lang3('Fondazione contenuti protetti verificata.','Protected-content foundation verified.','Il-pedament tal-kontenut protett ġie vverifikat.'));
+  }else{
+   mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY,status:'error',lastMessage:mdmDataErrorMessage(result)||String(data.error||'status_failed')};
+   if(!silent)toast(lang3('Verifica contenuti protetti non riuscita.','Protected-content verification failed.','Il-verifika tal-kontenut protett falliet.'));
+  }
+  render({preserveScroll:true});
+  return mdmProtectedContentStatus.ready;
+ }finally{mdmProtectedContentInFlight=false}
+}
+
 function mdmPlatformOwnerAllowed(){
  const auth=mdmAuthSummary();
  return Boolean(auth.authenticated&&auth.userId&&mdmPlatformOwnerGate.status==='verified'&&mdmPlatformOwnerGate.allowed===true&&mdmPlatformOwnerGate.userId===auth.userId);

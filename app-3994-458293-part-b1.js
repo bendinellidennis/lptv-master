@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.18';
+const BUILD_VERSION = '45.8.31.19';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12498,6 +12498,18 @@ function backendRealViewHtml(){
   </article>
   <button class="btn secondary" id="mdmReadinessLiveCanary">🎯 ${esc(lang3('Verifica Readiness Live Canary','Verify Readiness Live Canary','Ivverifika Readiness Live Canary'))}</button>
   <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.sampleQualityVerified?(mdmProtectedContentStatus.sampleQualityResult?.accepted?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🧬 ${esc(lang3('Canary Sample Quality Guard','Canary Sample Quality Guard','Canary Sample Quality Guard'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.sampleQualityVerified&&mdmProtectedContentStatus.sampleQualityResult
+    ?lang3(
+      `${mdmProtectedContentStatus.sampleQualityResult.accepted?'ACCETTATO':'DUPLICATO / NON AGGIUNTO'} · campioni validi ${mdmProtectedContentStatus.sampleQualityResult.acceptedCount} · Δ ${mdmProtectedContentStatus.sampleQualityResult.currentAbsDelta}`,
+      `${mdmProtectedContentStatus.sampleQualityResult.accepted?'ACCEPTED':'DUPLICATE / NOT ADDED'} · valid samples ${mdmProtectedContentStatus.sampleQualityResult.acceptedCount} · Δ ${mdmProtectedContentStatus.sampleQualityResult.currentAbsDelta}`,
+      `${mdmProtectedContentStatus.sampleQualityResult.accepted?'AĊĊETTAT':'DUPLIKAT / MA ŻDIEDX'} · kampjuni validi ${mdmProtectedContentStatus.sampleQualityResult.acceptedCount} · Δ ${mdmProtectedContentStatus.sampleQualityResult.currentAbsDelta}`
+     )
+    :lang3('Impedisce di aumentare artificialmente i campioni premendo più volte con gli stessi dati.','Prevents artificially increasing the sample count by repeating the same data.','Jipprevjeni li jiżdied artifiċjalment in-numru ta’ kampjuni billi jiġu ripetuti l-istess data.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessSampleQualityCheck">🧬 ${esc(lang3('Verifica Qualità Campione','Verify Sample Quality','Ivverifika l-Kwalità tal-Kampjun'))}</button>
+  <div style="height:12px"></div>
   <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
    <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
    <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
@@ -12532,6 +12544,7 @@ function bindBackendReal(){
  const executionCheck=$('#mdmProtectedExecutionCheck');if(executionCheck)executionCheck.onclick=()=>mdmVerifyProtectedIntelligenceExecution({silent:false});
  const runtimeShadow=$('#mdmRuntimeShadowCheck');if(runtimeShadow)runtimeShadow.onclick=()=>mdmVerifyRuntimeIntelligenceShadow({silent:false});
  const liveCanary=$('#mdmReadinessLiveCanary');if(liveCanary)liveCanary.onclick=()=>mdmVerifyReadinessLiveCanary({silent:false});
+ const sampleQuality=$('#mdmReadinessSampleQualityCheck');if(sampleQuality)sampleQuality.onclick=()=>mdmVerifyReadinessSampleQuality({silent:false});
  const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
  const calibrationCheck=$('#mdmReadinessCalibrationCheck');if(calibrationCheck)calibrationCheck.onclick=()=>mdmVerifyReadinessCalibration({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
@@ -12669,7 +12682,7 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
@@ -12727,6 +12740,74 @@ async function mdmVerifyReadinessCalibration({silent=false}={}){
   return true;
  }finally{mdmProtectedContentInFlight=false}
 }
+
+function mdmReadinessSampleSignature(){
+ const local=mdmReadinessLiveCanarySignals();
+ const sig=local.signals||{};
+ return [
+  Math.round(Number(local.localScore||0)),
+  Math.round(Number(sig.accuracy||0)),
+  Math.round(Number(sig.coverage||0)),
+  Math.round(Number(sig.stability||0)),
+  Math.round(Number(sig.recency||0)),
+  Number((progress.exams||[]).length||0),
+  Number((progress.wrong||[]).length||0),
+  Number(stats().seen||0)
+ ].join(':');
+}
+async function mdmVerifyReadinessSampleQuality({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Qualità campioni riservata all’Owner.','Sample quality is reserved for the Owner.','Il-kwalità tal-kampjuni hija riservata għas-sid.'));
+  return false;
+ }
+ if(!mdmProtectedContentStatus.liveCanaryVerified||!mdmProtectedContentStatus.liveCanaryResult){
+  if(!silent)toast(lang3('Esegui prima Readiness Live Canary.','Run Readiness Live Canary first.','L-ewwel ħaddem Readiness Live Canary.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const current=mdmProtectedContentStatus.liveCanaryResult;
+  const signature=mdmReadinessSampleSignature();
+  let result=await mdmDataRpc('mdm_readiness_sample_quality_check',{
+   p_local_score:Number(current.localScore||0),
+   p_server_score:Number(current.serverScore||0),
+   p_signature:signature
+  });
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_readiness_sample_quality_check',{
+    p_local_score:Number(current.localScore||0),
+    p_server_score:Number(current.serverScore||0),
+    p_signature:signature
+   });
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,sampleQualityVerified:false,sampleQualityResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'sample_quality_failed')};
+   if(!silent)toast(lang3('Controllo qualità campione non riuscito.','Sample-quality check failed.','Il-kontroll tal-kwalità tal-kampjun falla.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   sampleQualityVerified:true,
+   sampleQualityResult:{
+    accepted:Boolean(data.accepted),
+    duplicate:Boolean(data.duplicate),
+    acceptedCount:Number(data.accepted_count||0),
+    currentAbsDelta:Number(data.current_abs_delta||0),
+    reason:String(data.reason||'')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.accepted
+   ?lang3('Campione reale accettato.','Real sample accepted.','Kampjun reali aċċettat.')
+   :lang3('Campione non aggiunto: dati troppo simili al precedente.','Sample not added: data too similar to the previous sample.','Il-kampjun ma żdiedx: id-data hija simili wisq għall-kampjun ta’ qabel.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
 async function mdmVerifyReadinessConvergenceGate({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;
  if(!mdmPlatformOwnerAllowed()){
@@ -12742,9 +12823,10 @@ async function mdmVerifyReadinessConvergenceGate({silent=false}={}){
   if(!(await mdmEnsureFreshAuthForData()))return false;
   const local=Number(mdmProtectedContentStatus.liveCanaryResult.localScore);
   const server=Number(mdmProtectedContentStatus.liveCanaryResult.serverScore);
-  let result=await mdmDataRpc('mdm_readiness_convergence_gate',{p_local_score:local,p_server_score:server});
+  const signature=mdmReadinessSampleSignature();
+  let result=await mdmDataRpc('mdm_readiness_convergence_gate_v2',{p_local_score:local,p_server_score:server,p_signature:signature});
   if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
-   result=await mdmDataRpc('mdm_readiness_convergence_gate',{p_local_score:local,p_server_score:server});
+   result=await mdmDataRpc('mdm_readiness_convergence_gate_v2',{p_local_score:local,p_server_score:server,p_signature:signature});
   }
   const data=mdmAuthParse(result.body)||{};
   if(result.status<200||result.status>=300||data.ok!==true){
@@ -12762,6 +12844,8 @@ async function mdmVerifyReadinessConvergenceGate({silent=false}={}){
     meanAbsDelta:Number(data.mean_abs_delta||0),
     maxAbsDelta:Number(data.max_abs_delta||0),
     currentAbsDelta:Number(data.current_abs_delta||0),
+    accepted:Boolean(data.accepted),
+    duplicate:Boolean(data.duplicate),
     reason:String(data.reason||'')
    },
    lastMessage:''

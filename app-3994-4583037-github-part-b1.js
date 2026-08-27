@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.10';
+const BUILD_VERSION = '45.8.31.11';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -2510,14 +2510,74 @@ function updateChrome(){
  if(brand)brand.setAttribute('aria-label',`${t('home')} — Malta Driving Master`);
  applyStrictLanguageUiLiterals(document.body);
 }
-function go(name,data=null,push=true){
- if(name==='backendreal'&&!mdmPlatformOwnerAllowed()){
-  toast(lang3('Configurazione backend riservata esclusivamente al proprietario MDM. Accedi con l’account proprietario.','Backend configuration is reserved exclusively for the MDM owner. Sign in with the owner account.','Il-konfigurazzjoni tal-backend hija riservata biss għas-sid ta’ MDM. Idħol bil-kont tas-sid.'));
-  name='accountenrollment';data=null;
+const MDM_OWNER_ONLY_ROUTES=new Set([
+ 'backendreal','externalvalidation','pilotanalytics','securitytrust',
+ 'pentestprep','realpilotprep','schoolpilotprep','metricsloiprep',
+ 'investorproduction','pilotreadiness'
+]);
+const MDM_SCHOOL_ADMIN_ROUTES=new Set([
+ 'schooloperations','schoolroster','schooldashboard',
+ 'instructorassignments','instructorintelligence',
+ 'schoolcommandcenter','instructorstudio'
+]);
+function mdmSchoolAdminServerAllowed(){
+ const auth=mdmAuthSummary();
+ return Boolean(
+  auth.authenticated &&
+  auth.userId &&
+  mdmSchoolAdminConsole &&
+  mdmSchoolAdminConsole.authorized===true &&
+  String(mdmSchoolAdminConsole.loadedForUserId||'')===String(auth.userId)
+ );
+}
+function mdmProtectedRouteDecision(name){
+ const routeName=String(name||'');
+ if(MDM_OWNER_ONLY_ROUTES.has(routeName)){
+  return mdmPlatformOwnerAllowed()
+   ? {ok:true}
+   : {ok:false,target:'accountenrollment',reason:'owner'};
  }
+ if(MDM_SCHOOL_ADMIN_ROUTES.has(routeName)){
+  return mdmSchoolAdminServerAllowed()
+   ? {ok:true}
+   : {ok:false,target:'accountenrollment',reason:'school_admin'};
+ }
+ return {ok:true};
+}
+function mdmApplyProtectedRouteGate(name,data=null){
+ const decision=mdmProtectedRouteDecision(name);
+ if(decision.ok)return {name,data,blocked:false};
+ if(decision.reason==='owner'){
+  toast(lang3(
+   'Area tecnica riservata al proprietario MDM verificato dal server.',
+   'Technical area reserved for the server-verified MDM owner.',
+   'Żona teknika riservata għas-sid ta’ MDM ivverifikat mis-server.'
+  ));
+ }else{
+  toast(lang3(
+   'Questa funzione richiede un permesso School Admin ACTIVE verificato dal server.',
+   'This function requires an ACTIVE School Admin permission verified by the server.',
+   'Din il-funzjoni teħtieġ permess School Admin ATTIV ivverifikat mis-server.'
+  ));
+  const auth=mdmAuthSummary();
+  if(auth.authenticated&&!mdmSchoolAdminInFlight){
+   setTimeout(()=>accountRefreshSchoolAdminConsole({silent:true}),0);
+  }
+ }
+ return {name:decision.target,data:null,blocked:true};
+}
+
+function go(name,data=null,push=true){
+ const gated=mdmApplyProtectedRouteGate(name,data);
+ name=gated.name;data=gated.data;
  if(!routeAllowedForLanguage(name)){name='lptv';data=null}if(timerId&&name!=='quiz'){clearInterval(timerId);timerId=null}if(errorReplayTimer&&name!=='errorreplay'){clearInterval(errorReplayTimer);errorReplayTimer=null}if(name!=='errorreplay'&&window.ReplayEngine)ReplayEngine.stop();route={name,data};if(push)history.pushState({name,data},'',`#${name}`);render();}
 function render(options={}){
  const _ownerAuth=mdmAuthSummary();if(_ownerAuth.authenticated&&mdmPlatformOwnerGate.status==='unknown'&&!mdmPlatformOwnerGateInFlight)setTimeout(()=>mdmRefreshPlatformOwnerGate({silent:true}),0);
+ const _routeGate=mdmProtectedRouteDecision(route.name);
+ if(!_routeGate.ok){
+  route={name:_routeGate.target,data:null};
+  try{history.replaceState({name:route.name,data:null},'',`#${route.name}`)}catch{}
+ }
  document.body.classList.toggle('hm30-active',route.name==='home');
  if(route.name!=='quiz'&&timerId){clearInterval(timerId);timerId=null}
  updateChrome();
@@ -12934,7 +12994,7 @@ function accountSchoolCodeValid(value){return /^[A-Z0-9][A-Z0-9-]{5,31}$/.test(S
 function accountRequestJson(){return accountEnrollment.pendingRequest?JSON.stringify(accountEnrollment.pendingRequest,null,2):''}
 function accountSetRole(role){
  if(!['student','instructor','school'].includes(role))return;
- accountEnrollment.role=role;
+ accountEnrollment.role=role; // UI preference only; never an authorization source.
  if(role!=='school')mdmSchoolAdminReset();
  accountEnrollmentSave();
  render();

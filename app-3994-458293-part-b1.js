@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.20';
+const BUILD_VERSION = '45.8.31.21';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12522,6 +12522,18 @@ function backendRealViewHtml(){
   </article>
   <button class="btn secondary" id="mdmReadinessDriftGuardCheck">📉 ${esc(lang3('Verifica Drift Guard','Verify Drift Guard','Ivverifika Drift Guard'))}</button>
   <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.calibrationCandidateVerified?(mdmProtectedContentStatus.calibrationCandidateResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🧮 ${esc(lang3('Readiness Calibration Candidate','Readiness Calibration Candidate','Readiness Calibration Candidate'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.calibrationCandidateVerified&&mdmProtectedContentStatus.calibrationCandidateResult
+    ?lang3(
+      `${mdmProtectedContentStatus.calibrationCandidateResult.eligible?'PRONTO SHADOW':'NON PRONTO'} · campioni ${mdmProtectedContentStatus.calibrationCandidateResult.sampleCount} · offset proposto ${mdmProtectedContentStatus.calibrationCandidateResult.proposedOffset} · Δ medio attuale ${mdmProtectedContentStatus.calibrationCandidateResult.currentMeanAbs} · Δ medio previsto ${mdmProtectedContentStatus.calibrationCandidateResult.projectedMeanAbs}`,
+      `${mdmProtectedContentStatus.calibrationCandidateResult.eligible?'SHADOW READY':'NOT READY'} · samples ${mdmProtectedContentStatus.calibrationCandidateResult.sampleCount} · proposed offset ${mdmProtectedContentStatus.calibrationCandidateResult.proposedOffset} · current mean Δ ${mdmProtectedContentStatus.calibrationCandidateResult.currentMeanAbs} · projected mean Δ ${mdmProtectedContentStatus.calibrationCandidateResult.projectedMeanAbs}`,
+      `${mdmProtectedContentStatus.calibrationCandidateResult.eligible?'LEST SHADOW':'MHUX LEST'} · kampjuni ${mdmProtectedContentStatus.calibrationCandidateResult.sampleCount} · offset propost ${mdmProtectedContentStatus.calibrationCandidateResult.proposedOffset} · Δ medju attwali ${mdmProtectedContentStatus.calibrationCandidateResult.currentMeanAbs} · Δ medju mbassar ${mdmProtectedContentStatus.calibrationCandidateResult.projectedMeanAbs}`
+     )
+    :lang3('Calcola una correzione candidata usando solo lo storico Canary privato. Non applica ancora alcun cambiamento al Readiness reale.','Computes a candidate correction using only private Canary history. It does not yet change live Readiness.','Jikkalkula korrezzjoni kandidata billi juża biss l-istorja Canary privata. Għadu ma jbiddel l-ebda Readiness reali.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessCalibrationCandidateCheck">🧮 ${esc(lang3('Calcola Candidato Calibrazione','Calculate Calibration Candidate','Ikkalkula Kandidat tal-Kalibrazzjoni'))}</button>
+  <div style="height:12px"></div>
   <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
    <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
    <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
@@ -12558,6 +12570,7 @@ function bindBackendReal(){
  const liveCanary=$('#mdmReadinessLiveCanary');if(liveCanary)liveCanary.onclick=()=>mdmVerifyReadinessLiveCanary({silent:false});
  const sampleQuality=$('#mdmReadinessSampleQualityCheck');if(sampleQuality)sampleQuality.onclick=()=>mdmVerifyReadinessSampleQuality({silent:false});
  const driftGuard=$('#mdmReadinessDriftGuardCheck');if(driftGuard)driftGuard.onclick=()=>mdmVerifyReadinessDriftGuard({silent:false});
+ const calibrationCandidate=$('#mdmReadinessCalibrationCandidateCheck');if(calibrationCandidate)calibrationCandidate.onclick=()=>mdmVerifyReadinessCalibrationCandidate({silent:false});
  const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
  const calibrationCheck=$('#mdmReadinessCalibrationCheck');if(calibrationCheck)calibrationCheck.onclick=()=>mdmVerifyReadinessCalibration({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
@@ -12695,7 +12708,7 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
@@ -12769,6 +12782,46 @@ function mdmReadinessSampleSignature(){
  ].join(':');
 }
 
+
+async function mdmVerifyReadinessCalibrationCandidate({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Candidato calibrazione riservato all’Owner.','Calibration candidate is reserved for the Owner.','Il-kandidat tal-kalibrazzjoni huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  let result=await mdmDataRpc('mdm_readiness_calibration_candidate',{});
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_readiness_calibration_candidate',{});
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,calibrationCandidateVerified:false,calibrationCandidateResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'calibration_candidate_failed')};
+   if(!silent)toast(lang3('Candidato calibrazione non verificato.','Calibration candidate was not verified.','Il-kandidat tal-kalibrazzjoni ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   calibrationCandidateVerified:true,
+   calibrationCandidateResult:{
+    sampleCount:Number(data.sample_count||0),
+    signedMean:Number(data.signed_mean_delta||0),
+    proposedOffset:Number(data.proposed_offset||0),
+    currentMeanAbs:Number(data.current_mean_abs_delta||0),
+    projectedMeanAbs:Number(data.projected_mean_abs_delta||0),
+    eligible:Boolean(data.eligible),
+    reason:String(data.reason||'')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.eligible
+   ?lang3('Candidato calibrazione pronto per test shadow.','Calibration candidate ready for shadow testing.','Il-kandidat tal-kalibrazzjoni lest għat-test shadow.')
+   :lang3('Candidato calibrazione non ancora pronto.','Calibration candidate is not ready yet.','Il-kandidat tal-kalibrazzjoni għadu mhux lest.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
 async function mdmVerifyReadinessDriftGuard({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;
  if(!mdmPlatformOwnerAllowed()){

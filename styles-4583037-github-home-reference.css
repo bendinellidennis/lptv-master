@@ -65,3 +65,7 @@ body.hm30-active .bottom-nav b{font-size:8px!important}
 .hm30-welcome p{max-width:64%!important;padding-right:0!important}
 .hm30-welcome>b{width:32px!important;height:24px!important;right:7px!important;bottom:7px!important;border-radius:8px!important;font-size:9px!important;z-index:3!important}
 @media(max-width:390px){.hm30-welcome p{max-width:62%!important}}
+
+/* 45.8.31.4 — private Real Backend quick access (owner only) */
+.hm30-backend-card .hm30-icon{display:grid;place-items:center}
+@media(max-width:520px){.hm30-g6:has(.hm30-backend-card){grid-template-columns:repeat(4,minmax(0,1fr))!important}}

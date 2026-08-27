@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.21';
+const BUILD_VERSION = '45.8.31.22';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12534,6 +12534,18 @@ function backendRealViewHtml(){
   </article>
   <button class="btn secondary" id="mdmReadinessCalibrationCandidateCheck">🧮 ${esc(lang3('Calcola Candidato Calibrazione','Calculate Calibration Candidate','Ikkalkula Kandidat tal-Kalibrazzjoni'))}</button>
   <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.calibrationValidationVerified?(mdmProtectedContentStatus.calibrationValidationResult?.validated?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>✅ ${esc(lang3('Readiness Calibration Validation','Readiness Calibration Validation','Readiness Calibration Validation'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.calibrationValidationVerified&&mdmProtectedContentStatus.calibrationValidationResult
+    ?lang3(
+      `${mdmProtectedContentStatus.calibrationValidationResult.validated?'VALIDATO SHADOW':'NON VALIDATO'} · campioni ${mdmProtectedContentStatus.calibrationValidationResult.sampleCount} · offset ${mdmProtectedContentStatus.calibrationValidationResult.proposedOffset} · Δ medio previsto ${mdmProtectedContentStatus.calibrationValidationResult.projectedMeanAbs} · Δ max previsto ${mdmProtectedContentStatus.calibrationValidationResult.projectedMaxAbs} · holdout ${mdmProtectedContentStatus.calibrationValidationResult.holdoutMeanAbs}`,
+      `${mdmProtectedContentStatus.calibrationValidationResult.validated?'SHADOW VALIDATED':'NOT VALIDATED'} · samples ${mdmProtectedContentStatus.calibrationValidationResult.sampleCount} · offset ${mdmProtectedContentStatus.calibrationValidationResult.proposedOffset} · projected mean Δ ${mdmProtectedContentStatus.calibrationValidationResult.projectedMeanAbs} · projected max Δ ${mdmProtectedContentStatus.calibrationValidationResult.projectedMaxAbs} · holdout ${mdmProtectedContentStatus.calibrationValidationResult.holdoutMeanAbs}`,
+      `${mdmProtectedContentStatus.calibrationValidationResult.validated?'VALIDAT SHADOW':'MHUX VALIDAT'} · kampjuni ${mdmProtectedContentStatus.calibrationValidationResult.sampleCount} · offset ${mdmProtectedContentStatus.calibrationValidationResult.proposedOffset} · Δ medju mbassar ${mdmProtectedContentStatus.calibrationValidationResult.projectedMeanAbs} · Δ max mbassar ${mdmProtectedContentStatus.calibrationValidationResult.projectedMaxAbs} · holdout ${mdmProtectedContentStatus.calibrationValidationResult.holdoutMeanAbs}`
+     )
+    :lang3('Valida il candidato usando lo storico Canary privato e un controllo holdout. Non applica ancora l’offset al Readiness reale.','Validates the candidate using private Canary history and a holdout check. It still does not apply the offset to live Readiness.','Jivvalida l-kandidat bl-istorja Canary privata u kontroll holdout. Għadu ma japplikax l-offset għar-Readiness reali.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessCalibrationValidationCheck">✅ ${esc(lang3('Valida Candidato Calibrazione','Validate Calibration Candidate','Ivvalida Kandidat tal-Kalibrazzjoni'))}</button>
+  <div style="height:12px"></div>
   <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
    <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
    <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
@@ -12571,6 +12583,7 @@ function bindBackendReal(){
  const sampleQuality=$('#mdmReadinessSampleQualityCheck');if(sampleQuality)sampleQuality.onclick=()=>mdmVerifyReadinessSampleQuality({silent:false});
  const driftGuard=$('#mdmReadinessDriftGuardCheck');if(driftGuard)driftGuard.onclick=()=>mdmVerifyReadinessDriftGuard({silent:false});
  const calibrationCandidate=$('#mdmReadinessCalibrationCandidateCheck');if(calibrationCandidate)calibrationCandidate.onclick=()=>mdmVerifyReadinessCalibrationCandidate({silent:false});
+ const calibrationValidation=$('#mdmReadinessCalibrationValidationCheck');if(calibrationValidation)calibrationValidation.onclick=()=>mdmVerifyReadinessCalibrationValidation({silent:false});
  const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
  const calibrationCheck=$('#mdmReadinessCalibrationCheck');if(calibrationCheck)calibrationCheck.onclick=()=>mdmVerifyReadinessCalibration({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
@@ -12708,7 +12721,7 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
@@ -12783,6 +12796,47 @@ function mdmReadinessSampleSignature(){
 }
 
 
+
+async function mdmVerifyReadinessCalibrationValidation({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Validazione calibrazione riservata all’Owner.','Calibration validation is reserved for the Owner.','Il-validazzjoni tal-kalibrazzjoni hija riservata għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  let result=await mdmDataRpc('mdm_readiness_calibration_validate',{});
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_readiness_calibration_validate',{});
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,calibrationValidationVerified:false,calibrationValidationResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'calibration_validation_failed')};
+   if(!silent)toast(lang3('Validazione calibrazione non riuscita.','Calibration validation failed.','Il-validazzjoni tal-kalibrazzjoni falliet.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   calibrationValidationVerified:true,
+   calibrationValidationResult:{
+    validated:Boolean(data.validated),
+    sampleCount:Number(data.sample_count||0),
+    proposedOffset:Number(data.proposed_offset||0),
+    currentMeanAbs:Number(data.current_mean_abs_delta||0),
+    projectedMeanAbs:Number(data.projected_mean_abs_delta||0),
+    projectedMaxAbs:Number(data.projected_max_abs_delta||0),
+    holdoutMeanAbs:Number(data.holdout_mean_abs_delta||0),
+    reason:String(data.reason||'')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.validated
+   ?lang3('Candidato calibrazione validato in shadow.','Calibration candidate validated in shadow.','Il-kandidat tal-kalibrazzjoni ġie validat f’shadow.')
+   :lang3('Candidato non ancora validato: resta shadow.','Candidate not yet validated: remain in shadow.','Il-kandidat għadu mhux validat: ibqa’ shadow.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
 async function mdmVerifyReadinessCalibrationCandidate({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;
  if(!mdmPlatformOwnerAllowed()){

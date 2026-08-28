@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.31';
+const BUILD_VERSION = '45.8.31.32';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12672,6 +12672,18 @@ function backendRealViewHtml(){
   </article>
   <button class="btn secondary" id="mdmReadinessLimitedLiveCheck">🟠 ${esc(lang3('Esegui Limited Live Trial','Run Limited Live Trial','Ħaddem Limited Live Trial'))}</button>
   <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.limitedLiveRollbackVerified?(mdmProtectedContentStatus.limitedLiveRollbackResult?.pass?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>↩️ ${esc(lang3('Readiness Limited Live Rollback Test','Readiness Limited Live Rollback Test','Readiness Limited Live Rollback Test'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.limitedLiveRollbackVerified&&mdmProtectedContentStatus.limitedLiveRollbackResult
+    ?lang3(
+      `${mdmProtectedContentStatus.limitedLiveRollbackResult.pass?'PASS':'NON PASS'} · locale ${mdmProtectedContentStatus.limitedLiveRollbackResult.localScore} · ripristinato ${mdmProtectedContentStatus.limitedLiveRollbackResult.restoredScore} · source ${mdmProtectedContentStatus.limitedLiveRollbackResult.decisionSource} · persistente cambiato ${mdmProtectedContentStatus.limitedLiveRollbackResult.persistentReadinessChanged?'SI':'NO'}`,
+      `${mdmProtectedContentStatus.limitedLiveRollbackResult.pass?'PASS':'NOT PASS'} · local ${mdmProtectedContentStatus.limitedLiveRollbackResult.localScore} · restored ${mdmProtectedContentStatus.limitedLiveRollbackResult.restoredScore} · source ${mdmProtectedContentStatus.limitedLiveRollbackResult.decisionSource} · persistent changed ${mdmProtectedContentStatus.limitedLiveRollbackResult.persistentReadinessChanged?'YES':'NO'}`,
+      `${mdmProtectedContentStatus.limitedLiveRollbackResult.pass?'PASS':'MHUX PASS'} · lokali ${mdmProtectedContentStatus.limitedLiveRollbackResult.localScore} · restawrat ${mdmProtectedContentStatus.limitedLiveRollbackResult.restoredScore} · source ${mdmProtectedContentStatus.limitedLiveRollbackResult.decisionSource} · persistenti nbidel ${mdmProtectedContentStatus.limitedLiveRollbackResult.persistentReadinessChanged?'IVA':'LE'}`
+     )
+    :lang3('Verifica che dopo il Limited Live Trial il sistema possa tornare immediatamente al valore locale, senza modificare il Readiness persistente.','Verifies that after the Limited Live Trial the system can immediately return to the local value without changing persistent Readiness.','Jivverifika li wara l-Limited Live Trial is-sistema jista’ jirritorna immedjatament għall-valur lokali mingħajr ma jibdel Readiness persistenti.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessLimitedLiveRollbackCheck">↩️ ${esc(lang3('Verifica Rollback Limited Live','Verify Limited Live Rollback','Ivverifika Limited Live Rollback'))}</button>
+  <div style="height:12px"></div>
   <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
    <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
    <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
@@ -12718,6 +12730,7 @@ function bindBackendReal(){
  const failSafeRecovery=$('#mdmReadinessFailSafeRecoveryCheck');if(failSafeRecovery)failSafeRecovery.onclick=()=>mdmVerifyReadinessFailSafeRecovery({silent:false});
  const liveEligibility=$('#mdmReadinessLiveEligibilityCheck');if(liveEligibility)liveEligibility.onclick=()=>mdmVerifyReadinessLiveEligibility({silent:false});
  const limitedLive=$('#mdmReadinessLimitedLiveCheck');if(limitedLive)limitedLive.onclick=()=>mdmVerifyReadinessLimitedLiveTrial({silent:false});
+ const limitedLiveRollback=$('#mdmReadinessLimitedLiveRollbackCheck');if(limitedLiveRollback)limitedLiveRollback.onclick=()=>mdmVerifyReadinessLimitedLiveRollback({silent:false});
  const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
  const calibrationCheck=$('#mdmReadinessCalibrationCheck');if(calibrationCheck)calibrationCheck.onclick=()=>mdmVerifyReadinessCalibration({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
@@ -12855,7 +12868,7 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,failSafeVerified:false,failSafeResult:null,failSafeRecoveryVerified:false,failSafeRecoveryResult:null,liveEligibilityVerified:false,liveEligibilityResult:null,limitedLiveVerified:false,limitedLiveResult:null,lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,failSafeVerified:false,failSafeResult:null,failSafeRecoveryVerified:false,failSafeRecoveryResult:null,liveEligibilityVerified:false,liveEligibilityResult:null,limitedLiveVerified:false,limitedLiveResult:null,limitedLiveRollbackVerified:false,limitedLiveRollbackResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
@@ -12939,6 +12952,53 @@ function mdmReadinessSampleSignature(){
 
 
 
+
+async function mdmVerifyReadinessLimitedLiveRollback({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Rollback Test riservato all’Owner.','Rollback Test is reserved for the Owner.','Rollback Test huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const local=mdmReadinessLiveCanarySignals();
+  let result=await mdmDataRpc('mdm_readiness_limited_live_rollback_test',{
+   p_local_score:Number(local.localScore||0)
+  });
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_readiness_limited_live_rollback_test',{
+    p_local_score:Number(local.localScore||0)
+   });
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,limitedLiveRollbackVerified:false,limitedLiveRollbackResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'limited_live_rollback_failed')};
+   if(!silent)toast(lang3('Rollback Test non verificato.','Rollback Test was not verified.','Rollback Test ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   limitedLiveRollbackVerified:true,
+   limitedLiveRollbackResult:{
+    pass:Boolean(data.pass),
+    localScore:Number(data.local_score||0),
+    restoredScore:Number(data.restored_score||0),
+    decisionSource:String(data.decision_source||'local_fallback'),
+    persistentReadinessChanged:Boolean(data.persistent_readiness_changed),
+    rollbackVerified:Boolean(data.rollback_verified),
+    reason:String(data.reason||'')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.pass
+   ?lang3('Rollback PASS: decisione locale ripristinata.','Rollback PASS: local decision restored.','Rollback PASS: id-deċiżjoni lokali ġiet restawrata.')
+   :lang3('Rollback NON PASS.','Rollback NOT PASS.','Rollback MHUX PASS.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
 async function mdmVerifyReadinessLimitedLiveTrial({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;
  if(!mdmPlatformOwnerAllowed()){

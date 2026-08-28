@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.28';
+const BUILD_VERSION = '45.8.31.29';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12636,6 +12636,18 @@ function backendRealViewHtml(){
   </article>
   <button class="btn secondary" id="mdmReadinessFailSafeCheck">🛟 ${esc(lang3('Esegui Fail-Safe Test','Run Fail-Safe Test','Ħaddem Fail-Safe Test'))}</button>
   <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.failSafeRecoveryVerified?(mdmProtectedContentStatus.failSafeRecoveryResult?.pass?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🔄 ${esc(lang3('Readiness Fail-Safe Recovery Test','Readiness Fail-Safe Recovery Test','Readiness Fail-Safe Recovery Test'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.failSafeRecoveryVerified&&mdmProtectedContentStatus.failSafeRecoveryResult
+    ?lang3(
+      `${mdmProtectedContentStatus.failSafeRecoveryResult.pass?'PASS':'NON PASS'} · locale ${mdmProtectedContentStatus.failSafeRecoveryResult.localScore} · server recuperato ${mdmProtectedContentStatus.failSafeRecoveryResult.recoveredServerScore} · Δ ${mdmProtectedContentStatus.failSafeRecoveryResult.delta} · fallback ${mdmProtectedContentStatus.failSafeRecoveryResult.fallbackScore} · source ${mdmProtectedContentStatus.failSafeRecoveryResult.decisionSource}`,
+      `${mdmProtectedContentStatus.failSafeRecoveryResult.pass?'PASS':'NOT PASS'} · local ${mdmProtectedContentStatus.failSafeRecoveryResult.localScore} · recovered server ${mdmProtectedContentStatus.failSafeRecoveryResult.recoveredServerScore} · Δ ${mdmProtectedContentStatus.failSafeRecoveryResult.delta} · fallback ${mdmProtectedContentStatus.failSafeRecoveryResult.fallbackScore} · source ${mdmProtectedContentStatus.failSafeRecoveryResult.decisionSource}`,
+      `${mdmProtectedContentStatus.failSafeRecoveryResult.pass?'PASS':'MHUX PASS'} · lokali ${mdmProtectedContentStatus.failSafeRecoveryResult.localScore} · server irkuprat ${mdmProtectedContentStatus.failSafeRecoveryResult.recoveredServerScore} · Δ ${mdmProtectedContentStatus.failSafeRecoveryResult.delta} · fallback ${mdmProtectedContentStatus.failSafeRecoveryResult.fallbackScore} · source ${mdmProtectedContentStatus.failSafeRecoveryResult.decisionSource}`
+     )
+    :lang3('Dopo il guasto simulato verifica che il percorso server torni disponibile e coerente, mantenendo ancora local_fallback come decisione effettiva.','After the simulated failure, verifies that the server path becomes available and coherent again while still keeping local_fallback as the effective decision.','Wara l-ħsara simulata, jivverifika li l-path tas-server jerġa’ jkun disponibbli u koerenti filwaqt li local_fallback jibqa’ d-deċiżjoni effettiva.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessFailSafeRecoveryCheck">🔄 ${esc(lang3('Esegui Recovery Test','Run Recovery Test','Ħaddem Recovery Test'))}</button>
+  <div style="height:12px"></div>
   <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
    <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
    <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
@@ -12679,6 +12691,7 @@ function bindBackendReal(){
  const controlledCanary=$('#mdmReadinessControlledCanaryCheck');if(controlledCanary)controlledCanary.onclick=()=>mdmVerifyReadinessControlledCanary({silent:false});
  const controlledCanaryStability=$('#mdmReadinessControlledCanaryStabilityCheck');if(controlledCanaryStability)controlledCanaryStability.onclick=()=>mdmVerifyReadinessControlledCanaryStability({silent:false});
  const failSafe=$('#mdmReadinessFailSafeCheck');if(failSafe)failSafe.onclick=()=>mdmVerifyReadinessFailSafe({silent:false});
+ const failSafeRecovery=$('#mdmReadinessFailSafeRecoveryCheck');if(failSafeRecovery)failSafeRecovery.onclick=()=>mdmVerifyReadinessFailSafeRecovery({silent:false});
  const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
  const calibrationCheck=$('#mdmReadinessCalibrationCheck');if(calibrationCheck)calibrationCheck.onclick=()=>mdmVerifyReadinessCalibration({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
@@ -12816,7 +12829,7 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,failSafeVerified:false,failSafeResult:null,lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,failSafeVerified:false,failSafeResult:null,failSafeRecoveryVerified:false,failSafeRecoveryResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
@@ -12897,6 +12910,57 @@ function mdmReadinessSampleSignature(){
 
 
 
+
+async function mdmVerifyReadinessFailSafeRecovery({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Recovery Test riservato all’Owner.','Recovery Test is reserved for the Owner.','Recovery Test huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const local=mdmReadinessLiveCanarySignals();
+  let result=await mdmDataRpc('mdm_readiness_fail_safe_recovery_test',{
+   p_local_score:Number(local.localScore||0),
+   p_signals:local.signals
+  });
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_readiness_fail_safe_recovery_test',{
+    p_local_score:Number(local.localScore||0),
+    p_signals:local.signals
+   });
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,failSafeRecoveryVerified:false,failSafeRecoveryResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'fail_safe_recovery_failed')};
+   if(!silent)toast(lang3('Recovery Test non verificato.','Recovery Test was not verified.','Recovery Test ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   failSafeRecoveryVerified:true,
+   failSafeRecoveryResult:{
+    pass:Boolean(data.pass),
+    localScore:Number(data.local_score||0),
+    recoveredServerScore:Number(data.recovered_server_score||0),
+    delta:Number(data.abs_delta||0),
+    fallbackScore:Number(data.fallback_score||0),
+    decisionSource:String(data.decision_source||'local_fallback'),
+    serverRecovered:Boolean(data.server_recovered),
+    protected:Boolean(data.protected),
+    reason:String(data.reason||'')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.pass
+   ?lang3('Recovery PASS: server recuperato, decisione ancora protetta.','Recovery PASS: server recovered, decision still protected.','Recovery PASS: is-server irkupra, id-deċiżjoni għadha protetta.')
+   :lang3('Recovery Test NON PASS.','Recovery Test NOT PASS.','Recovery Test MHUX PASS.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
 async function mdmVerifyReadinessFailSafe({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;
  if(!mdmPlatformOwnerAllowed()){

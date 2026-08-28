@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.24';
+const BUILD_VERSION = '45.8.31.25';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -2269,11 +2269,41 @@ function showExamNavigator(){
  modal.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>{modal.classList.add('hidden');goExamQuestion(Number(b.dataset.jump))});
  $('#navigatorFinish').onclick=()=>{modal.classList.add('hidden');requestFinishExam()};
 }
+function mdmQuizActionConfirm(message,confirmLabel,onConfirm){
+ if(!modal)return;
+ modal.innerHTML=`<div class="modal-panel"><h2>${esc(message)}</h2><div class="actions"><button class="btn secondary" id="mdmQuizActionCancel">${esc(t('close'))}</button><button class="btn" id="mdmQuizActionConfirm">${esc(confirmLabel)}</button></div></div>`;
+ modal.classList.remove('hidden');
+ const close=()=>modal.classList.add('hidden');
+ const cancel=$('#mdmQuizActionCancel');
+ const confirmBtn=$('#mdmQuizActionConfirm');
+ if(cancel)cancel.onclick=(event)=>{if(event){event.preventDefault();event.stopPropagation()}close()};
+ if(confirmBtn)confirmBtn.onclick=(event)=>{
+  if(event){event.preventDefault();event.stopPropagation()}
+  close();
+  if(typeof onConfirm==='function')onConfirm();
+ };
+}
 function requestFinishExam(){
  if(!quiz||quiz.mode!=='exam')return;
  const missing=examUnansweredCount();
  const message=missing?t('unansweredWarning',missing):t('confirmFinish');
- if(confirm(message))finishQuiz(false);
+ mdmQuizActionConfirm(message,t('finishExam'),()=>finishQuiz(false));
+}
+function requestExitQuiz(){
+ if(!quiz)return;
+ if(quiz.mode==='exam'){
+  mdmQuizActionConfirm(t('pauseExamConfirm'),t('exit'),()=>{
+   const rr=quiz?.returnRoute||'lptv',rd=quiz?.returnData??null;
+   clearInterval(timerId);timerId=null;
+   saveSession();
+   go(rr,rd);
+  });
+  return;
+ }
+ const rr=quiz.returnRoute||'lptv',rd=quiz.returnData??null;
+ clearInterval(timerId);timerId=null;
+ localStorage.removeItem(SESSION);quiz=null;
+ go(rr,rd);
 }
 let mdmModalReturnFocus=null;
 let mdmModalA11yObserver=null;
@@ -15595,12 +15625,7 @@ function renderQuiz(){
   screen.querySelectorAll('[data-opt]').forEach(b=>{b.onclick=()=>selectOption(Number(b.dataset.opt))});
   $('#quizExit').onclick=(event)=>{
     if(event){event.preventDefault();event.stopPropagation();}
-    if(isExam){
-      if(confirm(t('pauseExamConfirm'))){const rr=quiz.returnRoute||'lptv',rd=quiz.returnData??null;clearInterval(timerId);timerId=null;saveSession();go(rr,rd)}
-      return;
-    }
-    const rr=quiz.returnRoute||'lptv',rd=quiz.returnData??null;
-    clearInterval(timerId);timerId=null;localStorage.removeItem(SESSION);quiz=null;go(rr,rd);
+    requestExitQuiz();
   };
   $('#quizConfirm').onclick=confirmAnswer;
   $('#quizNext').onclick=()=>isExam?(quiz.index<quiz.list.length-1?goExamQuestion(quiz.index+1):showExamNavigator()):nextQuestion();
@@ -15610,6 +15635,18 @@ function renderQuiz(){
     $('#examNavigator').onclick=showExamNavigator;
     $('#examFinish').onclick=requestFinishExam;
     $('#statusNavigator').onclick=showExamNavigator;
+  }
+
+  if(!window.__mdmExamControlsDelegated){
+    window.__mdmExamControlsDelegated=true;
+    document.addEventListener('click',(event)=>{
+      const target=event.target?.closest?.('#examFinish,#navigatorFinish,#quizExit');
+      if(!target||route?.name!=='quiz'||!quiz)return;
+      event.preventDefault();
+      event.stopPropagation();
+      if(target.id==='quizExit')requestExitQuiz();
+      else requestFinishExam();
+    },true);
   }
 
   if(quiz.mode!=='exam'){

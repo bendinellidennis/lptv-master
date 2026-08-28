@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.32';
+const BUILD_VERSION = '45.8.31.33';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';

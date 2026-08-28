@@ -135,8 +135,8 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.34.1';
-const BUILD_RELEASE_DATE = '26/08/2026';
+const BUILD_VERSION = '45.8.31.35';
+const BUILD_RELEASE_DATE = '28/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
 const ACCOUNT_ENROLLMENT_KEY = 'mdm-v1-account-enrollment';
@@ -740,7 +740,39 @@ let timerId = null;
 
 function clone(v){return v===null?null:JSON.parse(JSON.stringify(v))}
 function load(key,fallback){try{const raw=localStorage.getItem(key);if(!raw)return clone(fallback);const parsed=JSON.parse(raw);if(fallback&&typeof fallback==='object'&&!Array.isArray(fallback))return Object.assign(clone(fallback),parsed);return parsed}catch{return clone(fallback)}}
-function save(key,value){localStorage.setItem(key,JSON.stringify(value))}
+
+/* Build 45.8.31.35 — PWA CROSS-DEVICE PORTABLE STATE SYNC
+   Only portable user/study state is mirrored. Auth tokens, backend setup,
+   device identity, production permissions and protected validation gates are
+   deliberately excluded. The server row is private to auth.uid(). */
+const MDM_PORTABLE_SYNC_META_KEY='mdm_portable_sync_v4583135';
+const MDM_PORTABLE_SYNC_SCHEMA='mdm-portable-state-v1';
+const MDM_PORTABLE_SYNC_KEYS=new Set([
+ 'mdm-v1-progress','mdm-v1-settings','mdm-v1-user-profile','mdm-v1-error-replay',
+ 'mdm-v1-mission-system','mdm-v1-real-road-twin','mdm-v1-ai-instructor',
+ 'mdm-v1-instructor-portal','mdm-v1-country-pack-engine','mdm-v1-license-pack-engine',
+ 'mdm-v1-school-portal-2','mdm-v1-zero-error','mdm-v1-exam-day','mdm-v1-coach-recovery',
+ 'mdm-v1-coach','mdm-v1-onboarding','mdm-v1-privacy-preferences','mdm-v1-pilot-analytics',
+ 'mdm-v1-school-dashboard','mdm-v1-personal-roadmap','mdm-v1-lptv-passport',
+ 'mdm-v1-school-preferences','mdm-v1-school-compare','mdm-v1-school-partner-draft',
+ 'mdm-language-twin-v1','mdm-v1-real-road-selected-pattern','mdm-v1-real-road-telemetry',
+ 'mdm-v1-real-road-telemetry-mission-launch','mdm_school_command_center_4110',
+ 'mdm_instructor_assignments_4320','mdm_instructor_studio_4120','mdm_school_operations_45824',
+ 'mdm_fleet_corporate_45825','mdm_school_home_brand_v1'
+]);
+let mdmPortableSyncApplying=false;
+let mdmPortableSyncTimer=null;
+function mdmPortableSyncMeta(){
+ try{return Object.assign({dirty:false,dirtyAt:'',lastServerUpdatedAt:'',lastSyncAt:'',lastAction:'',lastError:''},JSON.parse(localStorage.getItem(MDM_PORTABLE_SYNC_META_KEY)||'{}'))}
+ catch{return {dirty:false,dirtyAt:'',lastServerUpdatedAt:'',lastSyncAt:'',lastAction:'',lastError:''}}
+}
+function mdmPortableSyncMetaSave(meta){try{localStorage.setItem(MDM_PORTABLE_SYNC_META_KEY,JSON.stringify(meta||{}))}catch{}}
+function mdmPortableSyncMarkDirty(key){
+ if(mdmPortableSyncApplying||!MDM_PORTABLE_SYNC_KEYS.has(String(key||'')))return;
+ const meta=mdmPortableSyncMeta();meta.dirty=true;meta.dirtyAt=new Date().toISOString();meta.lastAction='local_change';meta.lastError='';mdmPortableSyncMetaSave(meta);
+ clearTimeout(mdmPortableSyncTimer);mdmPortableSyncTimer=setTimeout(()=>{try{if(typeof mdmPortableSyncReconcile==='function')mdmPortableSyncReconcile({silent:true,reason:'local_change'})}catch{}},2200);
+}
+function save(key,value){localStorage.setItem(key,JSON.stringify(value));mdmPortableSyncMarkDirty(key)}
 
 function createRegistrationId(){
  const timestamp=Date.now().toString(36).toUpperCase();
@@ -14021,6 +14053,146 @@ function mdmDataRpc(name,payload={}){
   }catch(error){done('exception',String(error?.message||error))}
  });
 }
+
+let mdmPortableSyncInFlight=false;
+let mdmPortableSyncState={status:'idle',lastMessage:'',serverUpdatedAt:'',lastAction:''};
+function mdmPortableSnapshotItems(){
+ const items={};
+ MDM_PORTABLE_SYNC_KEYS.forEach(key=>{try{const raw=localStorage.getItem(key);if(raw!==null)items[key]=raw}catch{}});
+ return items;
+}
+function mdmPortableParseRaw(items,key,fallback={}){try{const raw=items?.[key];return raw?JSON.parse(raw):fallback}catch{return fallback}}
+function mdmPortableStudyScore(items=mdmPortableSnapshotItems()){
+ const p=mdmPortableParseRaw(items,'mdm-v1-progress',{});
+ let score=0;
+ score+=Object.keys(p.seen||{}).length;
+ score+=Object.keys(p.correct||{}).length;
+ score+=Object.keys(p.wrong||{}).length;
+ score+=(Array.isArray(p.exams)?p.exams.length:0)*5;
+ score+=(Array.isArray(p.favourites)?p.favourites.length:0);
+ score+=Object.keys(p.activity||{}).length;
+ score+=(Array.isArray(p.knownWords)?p.knownWords.length:0);
+ score+=(Array.isArray(p.knownPhrases)?p.knownPhrases.length:0);
+ score+=Object.keys(p.review||{}).length;
+ const replay=mdmPortableParseRaw(items,'mdm-v1-error-replay',{});
+ score+=Object.keys(replay.completed||{}).length*2;
+ const missions=mdmPortableParseRaw(items,'mdm-v1-mission-system',{});
+ score+=(Array.isArray(missions.completedMissionIds)?missions.completedMissionIds.length:0)*2;
+ const road=mdmPortableParseRaw(items,'mdm-v1-real-road-twin',{});
+ score+=(Array.isArray(road.evaluations)?road.evaluations.length:0)*2;
+ return Number(score||0);
+}
+function mdmPortablePayload(){return {schema:MDM_PORTABLE_SYNC_SCHEMA,snapshotVersion:1,build:BUILD_VERSION,exportedAt:new Date().toISOString(),items:mdmPortableSnapshotItems()}}
+function mdmPortablePayloadValid(payload){
+ return Boolean(payload&&typeof payload==='object'&&payload.schema===MDM_PORTABLE_SYNC_SCHEMA&&payload.items&&typeof payload.items==='object'&&!Array.isArray(payload.items));
+}
+function mdmPortableApplyPayload(payload,serverUpdatedAt=''){
+ if(!mdmPortablePayloadValid(payload))return false;
+ mdmPortableSyncApplying=true;
+ try{
+  MDM_PORTABLE_SYNC_KEYS.forEach(key=>{
+   const raw=payload.items[key];
+   if(typeof raw==='string')localStorage.setItem(key,raw);
+  });
+  localStorage.removeItem(SESSION);
+  const meta=mdmPortableSyncMeta();meta.dirty=false;meta.dirtyAt='';meta.lastServerUpdatedAt=String(serverUpdatedAt||'');meta.lastSyncAt=new Date().toISOString();meta.lastAction='restore';meta.lastError='';mdmPortableSyncMetaSave(meta);
+ }finally{mdmPortableSyncApplying=false}
+ return true;
+}
+async function mdmPortableServerPull(){
+ let result=await mdmDataRpc('mdm_user_portable_state_pull',{});
+ if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_user_portable_state_pull',{});
+ const data=mdmAuthParse(result.body)||{};
+ if(result.status<200||result.status>=300||data.ok===false)return {ok:false,error:mdmDataErrorMessage(result)||String(data.error||'portable_state_pull_failed')};
+ return {ok:true,found:Boolean(data.found),payload:data.payload||null,updatedAt:String(data.updated_at||''),build:String(data.build||'')};
+}
+async function mdmPortableServerPush(expectedUpdatedAt=''){
+ const payload=mdmPortablePayload();
+ let result=await mdmDataRpc('mdm_user_portable_state_push',{p_payload:payload,p_build:BUILD_VERSION,p_expected_updated_at:expectedUpdatedAt||null});
+ if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_user_portable_state_push',{p_payload:payload,p_build:BUILD_VERSION,p_expected_updated_at:expectedUpdatedAt||null});
+ const data=mdmAuthParse(result.body)||{};
+ if(result.status<200||result.status>=300||data.ok===false)return {ok:false,conflict:Boolean(data.conflict),error:mdmDataErrorMessage(result)||String(data.error||'portable_state_push_failed'),updatedAt:String(data.updated_at||'')};
+ return {ok:true,updatedAt:String(data.updated_at||new Date().toISOString())};
+}
+async function mdmPortableSyncReconcile({silent=true,reason='manual'}={}){
+ if(mdmPortableSyncInFlight)return false;
+ const auth=mdmAuthSummary();if(!auth.authenticated)return false;
+ mdmPortableSyncInFlight=true;mdmPortableSyncState={status:'checking',lastMessage:'',serverUpdatedAt:'',lastAction:reason};
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const pulled=await mdmPortableServerPull();
+  if(!pulled.ok){mdmPortableSyncState={status:'error',lastMessage:pulled.error,serverUpdatedAt:'',lastAction:reason};if(!silent)toast(lang3('Sincronizzazione account non disponibile: ','Account sync unavailable: ','Is-sinkronizzazzjoni tal-kont mhix disponibbli: ')+pulled.error);return false}
+  const localItems=mdmPortableSnapshotItems(),localScore=mdmPortableStudyScore(localItems),meta=mdmPortableSyncMeta();
+  if(!pulled.found){
+   if(localScore<=0){mdmPortableSyncState={status:'empty',lastMessage:'',serverUpdatedAt:'',lastAction:reason};return true}
+   const pushed=await mdmPortableServerPush('');
+   if(!pushed.ok){mdmPortableSyncState={status:pushed.conflict?'conflict':'error',lastMessage:pushed.error,serverUpdatedAt:pushed.updatedAt||'',lastAction:reason};if(!silent)toast(lang3('Sincronizzazione non completata.','Sync was not completed.','Is-sinkronizzazzjoni ma tlestietx.'));return false}
+   meta.dirty=false;meta.dirtyAt='';meta.lastServerUpdatedAt=pushed.updatedAt;meta.lastSyncAt=new Date().toISOString();meta.lastAction='upload';meta.lastError='';mdmPortableSyncMetaSave(meta);
+   mdmPortableSyncState={status:'synced',lastMessage:'',serverUpdatedAt:pushed.updatedAt,lastAction:'upload'};
+   if(!silent)toast(lang3('Dati di studio salvati sul tuo account.','Study data saved to your account.','Id-data tal-istudju ġiet salvata fil-kont tiegħek.'));
+   return true;
+  }
+  const serverPayload=pulled.payload,serverScore=mdmPortablePayloadValid(serverPayload)?mdmPortableStudyScore(serverPayload.items):0;
+  if(localScore<=0&&serverScore>0){
+   if(!mdmPortableApplyPayload(serverPayload,pulled.updatedAt)){mdmPortableSyncState={status:'error',lastMessage:'invalid_server_payload',serverUpdatedAt:pulled.updatedAt,lastAction:reason};return false}
+   mdmPortableSyncState={status:'restored',lastMessage:'',serverUpdatedAt:pulled.updatedAt,lastAction:'restore'};
+   if(!silent)toast(lang3('Progressi recuperati dal tuo account. Ricarico l’app.','Progress restored from your account. Reloading the app.','Il-progress ġie rkuprat mill-kont tiegħek. Qed terġa’ titgħabba l-app.'));
+   setTimeout(()=>location.reload(),450);return true;
+  }
+  if(meta.dirty&&localScore>0){
+   if(!meta.lastServerUpdatedAt){
+    mdmPortableSyncState={status:'conflict',lastMessage:'server_state_already_exists',serverUpdatedAt:pulled.updatedAt,lastAction:reason};
+    if(!silent)toast(lang3('Esistono dati sia su questo dispositivo sia sul server. Scegli Ripristina oppure Usa questo dispositivo.','Data exists both on this device and on the server. Choose Restore or Use this device.','Hemm data kemm fuq dan l-apparat kif ukoll fuq is-server. Agħżel Irrestawra jew Uża dan l-apparat.'));
+    return false;
+   }
+   const pushed=await mdmPortableServerPush(meta.lastServerUpdatedAt);
+   if(!pushed.ok){mdmPortableSyncState={status:pushed.conflict?'conflict':'error',lastMessage:pushed.error,serverUpdatedAt:pulled.updatedAt,lastAction:reason};if(!silent)toast(lang3('Conflitto di sincronizzazione: nessun dato è stato sovrascritto.','Sync conflict: no data was overwritten.','Kunflitt tas-sinkronizzazzjoni: l-ebda data ma ġiet miktuba fuq oħra.'));return false}
+   meta.dirty=false;meta.dirtyAt='';meta.lastServerUpdatedAt=pushed.updatedAt;meta.lastSyncAt=new Date().toISOString();meta.lastAction='upload';meta.lastError='';mdmPortableSyncMetaSave(meta);
+   mdmPortableSyncState={status:'synced',lastMessage:'',serverUpdatedAt:pushed.updatedAt,lastAction:'upload'};return true;
+  }
+  meta.lastServerUpdatedAt=pulled.updatedAt;meta.lastSyncAt=new Date().toISOString();meta.lastAction='checked';meta.lastError='';mdmPortableSyncMetaSave(meta);
+  mdmPortableSyncState={status:'synced',lastMessage:'',serverUpdatedAt:pulled.updatedAt,lastAction:'checked'};return true;
+ }finally{mdmPortableSyncInFlight=false}
+}
+async function mdmPortableSyncForceRestore(){
+ if(mdmPortableSyncInFlight)return false;
+ const localScore=mdmPortableStudyScore();
+ if(localScore>0&&!confirm(lang3('Sostituire i dati locali con quelli salvati sul tuo account?','Replace local data with the data saved on your account?','Tissostitwixxi d-data lokali bid-data salvata fil-kont tiegħek?')))return false;
+ mdmPortableSyncInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const pulled=await mdmPortableServerPull();if(!pulled.ok||!pulled.found||!mdmPortablePayloadValid(pulled.payload)){toast(lang3('Nessun backup account disponibile.','No account backup is available.','L-ebda backup tal-kont mhu disponibbli.'));return false}
+  if(!mdmPortableApplyPayload(pulled.payload,pulled.updatedAt))return false;
+  toast(lang3('Dati recuperati. Ricarico l’app.','Data restored. Reloading the app.','Id-data ġiet irrestawrata. Qed terġa’ titgħabba l-app.'));setTimeout(()=>location.reload(),450);return true;
+ }finally{mdmPortableSyncInFlight=false}
+}
+async function mdmPortableSyncForceUpload(){
+ if(mdmPortableSyncInFlight)return false;
+ if(mdmPortableStudyScore()<=0)return toast(lang3('Non ci sono ancora progressi da salvare su questo dispositivo.','There is no study progress to save on this device yet.','Għad m’hemmx progress ta’ studju x’jiġi salvat fuq dan l-apparat.'));
+ if(!confirm(lang3('Usare i dati di questo dispositivo come copia principale del tuo account?','Use this device data as the main copy for your account?','Tuża d-data ta’ dan l-apparat bħala l-kopja ewlenija tal-kont tiegħek?')))return false;
+ mdmPortableSyncInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const pulled=await mdmPortableServerPull();if(!pulled.ok){toast(lang3('Impossibile verificare il backup server.','Could not verify the server backup.','Ma setax jiġi vverifikat il-backup tas-server.'));return false}
+  const pushed=await mdmPortableServerPush(pulled.found?pulled.updatedAt:'');
+  if(!pushed.ok){toast(lang3('Salvataggio account non riuscito: ','Account save failed: ','Il-ħażna tal-kont falliet: ')+pushed.error);return false}
+  const meta=mdmPortableSyncMeta();meta.dirty=false;meta.dirtyAt='';meta.lastServerUpdatedAt=pushed.updatedAt;meta.lastSyncAt=new Date().toISOString();meta.lastAction='force_upload';meta.lastError='';mdmPortableSyncMetaSave(meta);
+  mdmPortableSyncState={status:'synced',lastMessage:'',serverUpdatedAt:pushed.updatedAt,lastAction:'force_upload'};toast(lang3('Dati di questo dispositivo salvati sul tuo account.','This device data was saved to your account.','Id-data ta’ dan l-apparat ġiet salvata fil-kont tiegħek.'));render({preserveScroll:true});return true;
+ }finally{mdmPortableSyncInFlight=false}
+}
+function mdmPortableSyncCardHtml(){
+ const auth=mdmAuthSummary(),meta=mdmPortableSyncMeta(),score=mdmPortableStudyScore();
+ const status=!auth.authenticated?lang3('Accedi con Supabase per sincronizzare','Sign in with Supabase to sync','Idħol b’Supabase biex tissinkronizza'):(mdmPortableSyncState.status==='conflict'?lang3('Conflitto protetto: scegli quale copia usare','Protected conflict: choose which copy to use','Kunflitt protett: agħżel liema kopja tuża'):(meta.lastSyncAt?lang3('Ultima sincronizzazione: ','Last sync: ','L-aħħar sinkronizzazzjoni: ')+dashboardDate(meta.lastSyncAt):lang3('Pronta per la prima sincronizzazione','Ready for first sync','Lesta għall-ewwel sinkronizzazzjoni')));
+ return `<div class="card backup-card mdm-portable-sync-card" style="margin-top:14px"><h3>${esc(lang3('Sincronizzazione account','Account sync','Sinkronizzazzjoni tal-kont'))}</h3><p class="muted">${esc(lang3('Progressi, storico, errori, Recovery, Replay e stato di studio possono seguire il tuo account Supabase tra Safari, PWA e altri dispositivi. Token, password, configurazione backend e gate tecnici non vengono copiati.','Progress, history, errors, Recovery, Replay and study state can follow your Supabase account across Safari, the PWA and other devices. Tokens, passwords, backend setup and technical gates are never copied.','Il-progress, l-istorja, l-iżbalji, Recovery, Replay u l-istat tal-istudju jistgħu jsegwu l-kont Supabase tiegħek bejn Safari, il-PWA u apparati oħra. Tokens, passwords, setup tal-backend u gates tekniċi qatt ma jiġu kkupjati.'))}</p><p class="muted"><strong>${esc(status)}</strong> · ${esc(lang3('Evidenze locali','Local evidence','Evidenza lokali'))}: ${score}</p><div class="actions"><button class="btn" id="mdmPortableSyncNow" ${auth.authenticated?'':'disabled'}>☁️ ${esc(lang3('Sincronizza adesso','Sync now','Issinkronizza issa'))}</button><button class="btn secondary" id="mdmPortableSyncRestore" ${auth.authenticated?'':'disabled'}>⬇️ ${esc(lang3('Ripristina dall’account','Restore from account','Irrestawra mill-kont'))}</button><button class="btn secondary" id="mdmPortableSyncUpload" ${auth.authenticated?'':'disabled'}>⬆️ ${esc(lang3('Usa questo dispositivo','Use this device','Uża dan l-apparat'))}</button></div></div>`;
+}
+function mdmPortableSyncBoot(){
+ setTimeout(async()=>{
+  try{
+   if(mdmAuthFresh())await mdmPortableSyncReconcile({silent:true,reason:'boot'});
+   else if(mdmAuthSession.accessToken||mdmAuthSession.refreshToken){const ok=await mdmAuthVerifySession({silent:true});if(ok)await mdmPortableSyncReconcile({silent:true,reason:'boot_verified'})}
+  }catch{}
+ },850);
+}
 async function mdmEnsureFreshAuthForData(){
  if(mdmAuthFresh())return true;
  if(mdmAuthSession.refreshToken)return await mdmAuthRefreshSession();
@@ -14232,7 +14404,7 @@ async function mdmAuthVerifySession({silent=false}={}){
    const user=mdmAuthParse(result.body);
    mdmAuthSession={...mdmAuthSession,status:'authenticated',user:user&&user.id?user:mdmAuthSession.user,email:String(user?.email||mdmAuthSession.email||''),verifiedAt:new Date().toISOString(),lastHttpStatus:result.status,lastMessage:'Utente Supabase verificato dal server',lastAction:'verify'};
    if(!Number(mdmAuthSession.expiresAt||0))mdmAuthSession.expiresAt=Date.now()+5*60*1000;
-   mdmAuthSave();render();setTimeout(()=>accountRefreshSchoolAdminConsole({silent:true}),25);
+   mdmAuthSave();render();setTimeout(()=>{accountRefreshSchoolAdminConsole({silent:true});mdmPortableSyncReconcile({silent:true,reason:'verify_session'});},25);
    if(!silent)toast(lang3('Sessione Supabase verificata.','Supabase session verified.','Is-sessjoni Supabase ġiet ivverifikata.'));
    return true;
   }
@@ -14283,7 +14455,7 @@ async function mdmAuthSignIn(){
   const result=await mdmAuthRequest('/token?grant_type=password',{method:'POST',body:{email,password}});
   const payload=mdmAuthParse(result.body)||{};
   if(result.status>=200&&result.status<300&&payload.access_token&&payload.user?.id){
-   mdmAuthAttemptSuccess();mdmAuthStoreResponse(payload,email);mdmSchoolAdminReset();render();setTimeout(()=>{accountRefreshSchoolAdminConsole({silent:true});mdmRefreshPlatformOwnerGate({silent:true});},25);
+   mdmAuthAttemptSuccess();mdmAuthStoreResponse(payload,email);mdmSchoolAdminReset();render();setTimeout(()=>{accountRefreshSchoolAdminConsole({silent:true});mdmRefreshPlatformOwnerGate({silent:true});mdmPortableSyncReconcile({silent:true,reason:'signin'});},25);
    toast(lang3('Accesso reale riuscito. Utente Supabase autenticato.','Real sign-in successful. Supabase user authenticated.','Id-dħul reali rnexxa. L-utent Supabase ġie awtentikat.'));
    return;
   }
@@ -15850,7 +16022,7 @@ const views={
     </div>
   </div>
   <button class="btn" data-go="accountenrollment">🔐 ${esc(lang3('Apri Account / Login','Open Account / Sign in','Iftaħ Kont / Login'))}</button>
-</div><div class="card sch35-switch-card" style="margin-top:14px"><h3>${esc(lang3('Area MDM','MDM Area','Żona MDM'))}</h3><p class="muted">${esc(lang3('Passa alla Home dedicata alla scuola guida oppure torna alla Home studente.','Open the dedicated driving school Home or return to the Student Home.','Iftaħ il-Home dedikata tal-iskola tas-sewqan jew erġa’ lura għall-Home tal-istudent.'))}</p><div class="sch35-switch-actions"><button class="btn secondary" id="sch35StudentArea">🎓 ${esc(lang3('Area Studente','Student Area','Żona Student'))}</button><button class="btn" id="sch35SchoolArea">🏫 ${esc(lang3('Area Scuola','School Area','Żona Skola'))}</button></div></div><div class="card installed-version-card"><div><span>${esc(t('installedVersion'))}</span><h3>Malta Driving Master — Build ${esc(BUILD_VERSION)}</h3><p>✓ ${esc(t('allModulesUpdated'))}</p></div><strong>${esc(t('releaseDate'))}<br>${esc(BUILD_RELEASE_DATE)}</strong></div><div class="stat-grid"><div class="stat-card"><strong>${st.seen}</strong><span>${esc(t('seen'))}</span></div><div class="stat-card"><strong>${st.accuracy}%</strong><span>${esc(t('accuracy'))}</span></div><div class="stat-card"><strong>${day.streak}</strong><span>${esc(t('streak'))}</span></div><div class="stat-card"><strong>${review.due}</strong><span>${esc(t('dueNow'))}</span></div><div class="stat-card"><strong>${review.mastered}</strong><span>${esc(t('masteredQuestions'))}</span></div><div class="stat-card"><strong>${progress.knownPhrases.length}</strong><span>${esc(t('learnedPhrases'))}</span></div><div class="stat-card"><strong>${st.best ?? '—'}</strong><span>${esc(t('best'))}</span></div></div><div class="card" style="margin-top:14px"><h3>${esc(t('language'))}</h3><select id="profileLang"><option value="en">English</option><option value="it">Italiano</option><option value="mt">Malti</option></select><h3>${esc(t('theme'))}</h3><select id="profileTheme"><option value="system">${esc(t('system'))}</option><option value="light">${esc(t('light'))}</option><option value="dark">${esc(t('dark'))}</option></select></div><div class="card profile-help-card" style="margin-top:14px"><div><h3>${esc(t('helpSupport'))}</h3><p class="muted">${esc(t('installAppSub'))}</p></div><button class="btn" data-go="help">${esc(t('menuHelp'))} ›</button></div><div class="card investor-profile-card" style="margin-top:14px"><div><h3>${esc(t('investorPreview'))}</h3><p class="muted">${esc(t('investorPreviewSub'))}</p></div><button class="btn" data-go="investorpreview">${esc(t('investorOpen'))} ›</button></div><div class="card profile-privacy-card" style="margin-top:14px"><div><h3>${esc(t('privacyCenter'))}</h3><p class="muted">${esc(t('privacyCenterSub'))}</p></div><div class="profile-privacy-actions"><button class="btn" data-go="privacycenter">${esc(t('privacyOpenCenter'))} ›</button><button class="btn secondary" id="replayPremiumIntro">${esc(t('premiumReplay'))}</button></div></div><div class="card backup-card" style="margin-top:14px"><h3>${esc(t('backup'))}</h3><p class="muted">${esc(t('backupSub'))}</p><div class="actions"><button class="btn" id="exportBackup">${esc(t('exportBackup'))}</button><button class="btn secondary" id="importBackup">${esc(t('importBackup'))}</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div></div><div class="card" style="margin-top:14px"><button class="btn danger" id="clearProgress" style="width:100%">${esc(t('clear'))}</button></div>`},
+</div><div class="card sch35-switch-card" style="margin-top:14px"><h3>${esc(lang3('Area MDM','MDM Area','Żona MDM'))}</h3><p class="muted">${esc(lang3('Passa alla Home dedicata alla scuola guida oppure torna alla Home studente.','Open the dedicated driving school Home or return to the Student Home.','Iftaħ il-Home dedikata tal-iskola tas-sewqan jew erġa’ lura għall-Home tal-istudent.'))}</p><div class="sch35-switch-actions"><button class="btn secondary" id="sch35StudentArea">🎓 ${esc(lang3('Area Studente','Student Area','Żona Student'))}</button><button class="btn" id="sch35SchoolArea">🏫 ${esc(lang3('Area Scuola','School Area','Żona Skola'))}</button></div></div><div class="card installed-version-card"><div><span>${esc(t('installedVersion'))}</span><h3>Malta Driving Master — Build ${esc(BUILD_VERSION)}</h3><p>✓ ${esc(t('allModulesUpdated'))}</p></div><strong>${esc(t('releaseDate'))}<br>${esc(BUILD_RELEASE_DATE)}</strong></div><div class="stat-grid"><div class="stat-card"><strong>${st.seen}</strong><span>${esc(t('seen'))}</span></div><div class="stat-card"><strong>${st.accuracy}%</strong><span>${esc(t('accuracy'))}</span></div><div class="stat-card"><strong>${day.streak}</strong><span>${esc(t('streak'))}</span></div><div class="stat-card"><strong>${review.due}</strong><span>${esc(t('dueNow'))}</span></div><div class="stat-card"><strong>${review.mastered}</strong><span>${esc(t('masteredQuestions'))}</span></div><div class="stat-card"><strong>${progress.knownPhrases.length}</strong><span>${esc(t('learnedPhrases'))}</span></div><div class="stat-card"><strong>${st.best ?? '—'}</strong><span>${esc(t('best'))}</span></div></div><div class="card" style="margin-top:14px"><h3>${esc(t('language'))}</h3><select id="profileLang"><option value="en">English</option><option value="it">Italiano</option><option value="mt">Malti</option></select><h3>${esc(t('theme'))}</h3><select id="profileTheme"><option value="system">${esc(t('system'))}</option><option value="light">${esc(t('light'))}</option><option value="dark">${esc(t('dark'))}</option></select></div><div class="card profile-help-card" style="margin-top:14px"><div><h3>${esc(t('helpSupport'))}</h3><p class="muted">${esc(t('installAppSub'))}</p></div><button class="btn" data-go="help">${esc(t('menuHelp'))} ›</button></div><div class="card investor-profile-card" style="margin-top:14px"><div><h3>${esc(t('investorPreview'))}</h3><p class="muted">${esc(t('investorPreviewSub'))}</p></div><button class="btn" data-go="investorpreview">${esc(t('investorOpen'))} ›</button></div><div class="card profile-privacy-card" style="margin-top:14px"><div><h3>${esc(t('privacyCenter'))}</h3><p class="muted">${esc(t('privacyCenterSub'))}</p></div><div class="profile-privacy-actions"><button class="btn" data-go="privacycenter">${esc(t('privacyOpenCenter'))} ›</button><button class="btn secondary" id="replayPremiumIntro">${esc(t('premiumReplay'))}</button></div></div><div class="card backup-card" style="margin-top:14px"><h3>${esc(t('backup'))}</h3><p class="muted">${esc(t('backupSub'))}</p><div class="actions"><button class="btn" id="exportBackup">${esc(t('exportBackup'))}</button><button class="btn secondary" id="importBackup">${esc(t('importBackup'))}</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div></div>${mdmPortableSyncCardHtml()}<div class="card" style="margin-top:14px"><button class="btn danger" id="clearProgress" style="width:100%">${esc(t('clear'))}</button></div>`},
  progress:()=>{const st=stats(),ready=readinessStats(),by=categoryStats(),examEntries=(progress.exams||[]).map((exam,index)=>({exam,index})).slice(-8).reverse();return `<div class="section-title"><div><h2>${esc(t('progress'))}</h2><p>${st.seen}/${Q.length}</p></div></div><div class="stats-fix-note"><span>✓</span><div><strong>${esc(t('statisticsCorrection'))}</strong><small>${esc(t('statisticsCorrectionSub'))}</small></div></div>${isItalianAssisted()?bridgeProgressHtml():''}${errorDnaHtml()}<div class="readiness-card"><div class="readiness-circle" style="--score:${ready.score}"><div><strong>${ready.score}%</strong><span>${esc(t('readiness'))}</span></div></div><div class="readiness-copy"><h3>${esc(t(ready.label))}</h3><p>${esc(t(ready.recommend))}</p><button class="btn" data-go="${ready.score<68?'weaksetup':'lptv'}">${esc(t('recommended'))}</button></div></div><div class="report-actions"><button class="btn" id="shareProgressReport">↗ ${esc(t('shareProgressReport'))}</button><button class="btn secondary" id="copyProgressReport">⧉ ${esc(t('copyProgressReport'))}</button></div><div class="metric-bars"><div><div class="label"><span>${esc(t('coverage'))}</span><strong>${ready.coverage}%</strong></div><div class="mini-bar"><span style="width:${ready.coverage}%"></span></div></div><div><div class="label"><span>${esc(t('accuracy'))}</span><strong>${ready.accuracy}%</strong></div><div class="mini-bar"><span style="width:${ready.accuracy}%"></span></div></div><div><div class="label"><span>${esc(t('recentAverage'))}</span><strong>${ready.examAverage}%</strong></div><div class="mini-bar"><span style="width:${ready.examAverage}%"></span></div></div></div><div class="stat-grid"><div class="stat-card"><strong>${st.seen}</strong><span>${esc(t('seen'))}</span></div><div class="stat-card"><strong>${st.accuracy}%</strong><span>${esc(t('accuracy'))}</span></div><div class="stat-card"><strong>${st.exams}</strong><span>${esc(t('exams'))}</span></div><div class="stat-card"><strong>${examPassRate()}%</strong><span>${esc(t('passRate'))}</span></div><div class="stat-card"><strong>${st.last ?? '—'}</strong><span>${esc(t('last'))}</span></div></div><div class="card" style="margin-top:14px"><h3>${esc(t('fourChapters'))}</h3>${TOPIC_GROUPS.map(topic=>{const x=topicStats(topic.id);return `<button class="progress-topic" data-go="chaptersetup" data-id="${topic.id}"><span>${topic.icon} ${esc(t(topic.title))}</span><strong>${x.accuracy}%</strong><div class="mini-bar"><span style="width:${x.coverage}%"></span></div></button>`}).join('')}</div><div class="card detailed-history-card" style="margin-top:14px"><div class="history-heading"><div><h3>${esc(t('detailedHistory'))}</h3><p>${esc(t('examDetailsSub'))}</p></div><span>${examEntries.length}</span></div>${examEntries.length?`<div class="exam-history detailed">${examEntries.map(({exam,index})=>{const passed=countryPackExamPassed(exam.score,exam.total);return `<button class="exam-row exam-detail-row" data-exam-index="${index}"><span>${formatExamDate(exam.date)}</span><strong>${exam.score}/${exam.total}</strong><em class="${passed?'pass':'fail'}">${esc(t(passed?'passedSmall':'failedSmall'))}</em><b>${esc(t('viewDetails'))} ›</b></button>`}).join('')}</div>`:`<p class="muted">${esc(t('noExamHistory'))}</p>`}</div><div class="card" style="margin-top:14px"><h3>${esc(t('categories'))}</h3>${by.length?by.map(x=>`<div class="bar-row"><div class="label"><span>${esc(categoryLabel(x.category))}</span><strong>${x.pct}%</strong></div><div class="mini-bar"><span style="width:${x.pct}%"></span></div></div>`).join(''):`<p class="muted">${esc(t('noResults'))}</p>`}</div>`},
  quiz:()=>`<div class="card quiz-card"><div class="quiz-head"><span class="badge counter-badge" id="qCounter"></span><span class="timer" id="quizTimer"></span></div><div class="progress"><span id="quizProgress"></span></div><div id="examStatus" class="exam-status hidden"></div><div class="quiz-mode-row"><span class="mode-label" id="quizModeBadge"></span><span id="quizMeta" class="muted small"></span></div><div id="quizQuestion" class="question"></div><div id="quizHelp"></div><div id="quizInstruction" class="quiz-instruction"></div><div id="quizOptions"></div><div id="quizExplanation" class="explanation hidden"></div><div class="actions quiz-footer"><button class="btn secondary" id="quizExit">${esc(t('exit'))}</button><button class="btn secondary hidden" id="examPrev">‹ ${esc(t('previous'))}</button><button class="btn flag hidden" id="examFlag">☆ ${esc(t('flagQuestion'))}</button><button class="btn secondary hidden" id="examNavigator">☷ ${esc(t('navigator'))}</button><button class="btn" id="quizConfirm">${esc(t('confirm'))}</button><button class="btn hidden" id="quizNext">${esc(t('next'))}</button><button class="btn finish hidden" id="examFinish">${esc(t('finishExam'))}</button></div></div>`,
 
@@ -16002,6 +16174,9 @@ function bindViewSpecific(){
    $('#exportBackup').onclick=exportBackup;
    $('#importBackup').onclick=()=>file.click();
    file.onchange=()=>{if(file.files?.[0])importBackup(file.files[0])};
+   const portableSyncNow=$('#mdmPortableSyncNow');if(portableSyncNow)portableSyncNow.onclick=async()=>{await mdmPortableSyncReconcile({silent:false,reason:'profile_manual'});render({preserveScroll:true})};
+   const portableSyncRestore=$('#mdmPortableSyncRestore');if(portableSyncRestore)portableSyncRestore.onclick=mdmPortableSyncForceRestore;
+   const portableSyncUpload=$('#mdmPortableSyncUpload');if(portableSyncUpload)portableSyncUpload.onclick=mdmPortableSyncForceUpload;
    $('#clearProgress').onclick=()=>{if(confirm(t('resetConfirm'))){progress={seen:{},correct:{},wrong:{},exams:[],favourites:[],activity:{},knownWords:[],knownPhrases:[],review:{},errorReasons:{},bridgeResults:[],bankVersion:TAG_BANK_VERSION};save(STORAGE,progress);aiInstructor.recoveryPlan=normaliseAiRecoveryPlan({});aiInstructorSave();localStorage.removeItem(SESSION);render()}}
  }
  if(route.name==='result'){
@@ -16906,6 +17081,7 @@ window.addEventListener('unhandledrejection',()=>pilotAnalyticsTrack('unhandled_
 pilotAnalyticsBoot();
 initAccessibilityResilience();
 render();
+mdmPortableSyncBoot();
 requestAnimationFrame(()=>{
  const startupMs=Math.max(0,Math.round(performance?.now?.()||0));
  pilotAnalyticsTrack('startup_ready',{durationMs:startupMs,build:BUILD_VERSION});

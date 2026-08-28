@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.30';
+const BUILD_VERSION = '45.8.31.31';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12660,6 +12660,18 @@ function backendRealViewHtml(){
   </article>
   <button class="btn secondary" id="mdmReadinessLiveEligibilityCheck">🚦 ${esc(lang3('Verifica Live Eligibility','Verify Live Eligibility','Ivverifika Live Eligibility'))}</button>
   <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.limitedLiveVerified?(mdmProtectedContentStatus.limitedLiveResult?.pass?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🟠 ${esc(lang3('Readiness Limited Live Trial','Readiness Limited Live Trial','Readiness Limited Live Trial'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.limitedLiveVerified&&mdmProtectedContentStatus.limitedLiveResult
+    ?lang3(
+      `${mdmProtectedContentStatus.limitedLiveResult.pass?'PASS':'NON PASS'} · trial ${mdmProtectedContentStatus.limitedLiveResult.trialApplied?'APPLICATO OWNER':'NON APPLICATO'} · locale ${mdmProtectedContentStatus.limitedLiveResult.localScore} · trial ${mdmProtectedContentStatus.limitedLiveResult.trialScore} · Δ ${mdmProtectedContentStatus.limitedLiveResult.delta} · fallback ${mdmProtectedContentStatus.limitedLiveResult.fallbackScore} · source ${mdmProtectedContentStatus.limitedLiveResult.decisionSource} · rollback ${mdmProtectedContentStatus.limitedLiveResult.rollbackReady?'PRONTO':'NO'}`,
+      `${mdmProtectedContentStatus.limitedLiveResult.pass?'PASS':'NOT PASS'} · trial ${mdmProtectedContentStatus.limitedLiveResult.trialApplied?'OWNER APPLIED':'NOT APPLIED'} · local ${mdmProtectedContentStatus.limitedLiveResult.localScore} · trial ${mdmProtectedContentStatus.limitedLiveResult.trialScore} · Δ ${mdmProtectedContentStatus.limitedLiveResult.delta} · fallback ${mdmProtectedContentStatus.limitedLiveResult.fallbackScore} · source ${mdmProtectedContentStatus.limitedLiveResult.decisionSource} · rollback ${mdmProtectedContentStatus.limitedLiveResult.rollbackReady?'READY':'NO'}`,
+      `${mdmProtectedContentStatus.limitedLiveResult.pass?'PASS':'MHUX PASS'} · trial ${mdmProtectedContentStatus.limitedLiveResult.trialApplied?'APPLIKAT SID':'MHUX APPLIKAT'} · lokali ${mdmProtectedContentStatus.limitedLiveResult.localScore} · trial ${mdmProtectedContentStatus.limitedLiveResult.trialScore} · Δ ${mdmProtectedContentStatus.limitedLiveResult.delta} · fallback ${mdmProtectedContentStatus.limitedLiveResult.fallbackScore} · source ${mdmProtectedContentStatus.limitedLiveResult.decisionSource} · rollback ${mdmProtectedContentStatus.limitedLiveResult.rollbackReady?'LEST':'LE'}`
+     )
+    :lang3('Esegue il primo trial live limitato esclusivamente all’Owner. Il risultato server viene applicato solo al test corrente e conserva sempre fallback locale e rollback immediato. Nessuno studente viene coinvolto.','Runs the first limited live trial exclusively for the Owner. The server result is applied only to the current test and always preserves the local fallback and immediate rollback. No student is involved.','Iħaddem l-ewwel limited live trial esklussivament għas-sid. Ir-riżultat tas-server jiġi applikat biss għat-test kurrenti u dejjem iżomm il-fallback lokali u rollback immedjat. L-ebda student ma jkun involut.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessLimitedLiveCheck">🟠 ${esc(lang3('Esegui Limited Live Trial','Run Limited Live Trial','Ħaddem Limited Live Trial'))}</button>
+  <div style="height:12px"></div>
   <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
    <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
    <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
@@ -12705,6 +12717,7 @@ function bindBackendReal(){
  const failSafe=$('#mdmReadinessFailSafeCheck');if(failSafe)failSafe.onclick=()=>mdmVerifyReadinessFailSafe({silent:false});
  const failSafeRecovery=$('#mdmReadinessFailSafeRecoveryCheck');if(failSafeRecovery)failSafeRecovery.onclick=()=>mdmVerifyReadinessFailSafeRecovery({silent:false});
  const liveEligibility=$('#mdmReadinessLiveEligibilityCheck');if(liveEligibility)liveEligibility.onclick=()=>mdmVerifyReadinessLiveEligibility({silent:false});
+ const limitedLive=$('#mdmReadinessLimitedLiveCheck');if(limitedLive)limitedLive.onclick=()=>mdmVerifyReadinessLimitedLiveTrial({silent:false});
  const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
  const calibrationCheck=$('#mdmReadinessCalibrationCheck');if(calibrationCheck)calibrationCheck.onclick=()=>mdmVerifyReadinessCalibration({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
@@ -12842,7 +12855,7 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,failSafeVerified:false,failSafeResult:null,failSafeRecoveryVerified:false,failSafeRecoveryResult:null,liveEligibilityVerified:false,liveEligibilityResult:null,lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,failSafeVerified:false,failSafeResult:null,failSafeRecoveryVerified:false,failSafeRecoveryResult:null,liveEligibilityVerified:false,liveEligibilityResult:null,limitedLiveVerified:false,limitedLiveResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
@@ -12925,6 +12938,61 @@ function mdmReadinessSampleSignature(){
 
 
 
+
+async function mdmVerifyReadinessLimitedLiveTrial({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Limited Live Trial riservato all’Owner.','Limited Live Trial is reserved for the Owner.','Limited Live Trial huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const local=mdmReadinessLiveCanarySignals();
+  const signature=mdmReadinessSampleSignature();
+  let result=await mdmDataRpc('mdm_readiness_limited_live_trial',{
+   p_local_score:Number(local.localScore||0),
+   p_signals:local.signals,
+   p_signature:signature
+  });
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_readiness_limited_live_trial',{
+    p_local_score:Number(local.localScore||0),
+    p_signals:local.signals,
+    p_signature:signature
+   });
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,limitedLiveVerified:false,limitedLiveResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'limited_live_trial_failed')};
+   if(!silent)toast(lang3('Limited Live Trial non verificato.','Limited Live Trial was not verified.','Limited Live Trial ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   limitedLiveVerified:true,
+   limitedLiveResult:{
+    pass:Boolean(data.pass),
+    trialApplied:Boolean(data.trial_applied),
+    localScore:Number(data.local_score||0),
+    trialScore:Number(data.trial_score||0),
+    delta:Number(data.abs_delta||0),
+    fallbackScore:Number(data.fallback_score||0),
+    decisionSource:String(data.decision_source||'local_fallback'),
+    rollbackReady:Boolean(data.rollback_ready),
+    duplicate:Boolean(data.duplicate),
+    reason:String(data.reason||'')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.pass
+   ?lang3('Limited Live Trial PASS: test Owner reversibile completato.','Limited Live Trial PASS: reversible Owner test completed.','Limited Live Trial PASS: test riversibbli tas-sid tlesta.')
+   :lang3('Limited Live Trial NON PASS: fallback mantenuto.','Limited Live Trial NOT PASS: fallback preserved.','Limited Live Trial MHUX PASS: fallback inżamm.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
 async function mdmVerifyReadinessLiveEligibility({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;
  if(!mdmPlatformOwnerAllowed()){

@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.27';
+const BUILD_VERSION = '45.8.31.28';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12624,6 +12624,18 @@ function backendRealViewHtml(){
   </article>
   <button class="btn secondary" id="mdmReadinessControlledCanaryStabilityCheck">🧱 ${esc(lang3('Verifica Stabilità Controlled Canary','Verify Controlled Canary Stability','Ivverifika l-Istabbiltà Controlled Canary'))}</button>
   <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.failSafeVerified?(mdmProtectedContentStatus.failSafeResult?.pass?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🛟 ${esc(lang3('Readiness Fail-Safe Test','Readiness Fail-Safe Test','Readiness Fail-Safe Test'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.failSafeVerified&&mdmProtectedContentStatus.failSafeResult
+    ?lang3(
+      `${mdmProtectedContentStatus.failSafeResult.pass?'PASS':'NON PASS'} · locale ${mdmProtectedContentStatus.failSafeResult.localScore} · fallback ${mdmProtectedContentStatus.failSafeResult.fallbackScore} · source ${mdmProtectedContentStatus.failSafeResult.decisionSource} · server failure simulato ${mdmProtectedContentStatus.failSafeResult.serverFailureSimulated?'SI':'NO'}`,
+      `${mdmProtectedContentStatus.failSafeResult.pass?'PASS':'NOT PASS'} · local ${mdmProtectedContentStatus.failSafeResult.localScore} · fallback ${mdmProtectedContentStatus.failSafeResult.fallbackScore} · source ${mdmProtectedContentStatus.failSafeResult.decisionSource} · simulated server failure ${mdmProtectedContentStatus.failSafeResult.serverFailureSimulated?'YES':'NO'}`,
+      `${mdmProtectedContentStatus.failSafeResult.pass?'PASS':'MHUX PASS'} · lokali ${mdmProtectedContentStatus.failSafeResult.localScore} · fallback ${mdmProtectedContentStatus.failSafeResult.fallbackScore} · source ${mdmProtectedContentStatus.failSafeResult.decisionSource} · server failure simulata ${mdmProtectedContentStatus.failSafeResult.serverFailureSimulated?'IVA':'LE'}`
+     )
+    :lang3('Simula un guasto del percorso server e verifica che la decisione effettiva rimanga immediatamente sul fallback locale.','Simulates a server-path failure and verifies that the effective decision immediately remains on the local fallback.','Jissimula ħsara fil-path tas-server u jivverifika li d-deċiżjoni effettiva tibqa’ immedjatament fuq il-fallback lokali.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessFailSafeCheck">🛟 ${esc(lang3('Esegui Fail-Safe Test','Run Fail-Safe Test','Ħaddem Fail-Safe Test'))}</button>
+  <div style="height:12px"></div>
   <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
    <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
    <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
@@ -12666,6 +12678,7 @@ function bindBackendReal(){
  const shadowPromotion=$('#mdmReadinessShadowPromotionCheck');if(shadowPromotion)shadowPromotion.onclick=()=>mdmVerifyReadinessShadowPromotionGate({silent:false});
  const controlledCanary=$('#mdmReadinessControlledCanaryCheck');if(controlledCanary)controlledCanary.onclick=()=>mdmVerifyReadinessControlledCanary({silent:false});
  const controlledCanaryStability=$('#mdmReadinessControlledCanaryStabilityCheck');if(controlledCanaryStability)controlledCanaryStability.onclick=()=>mdmVerifyReadinessControlledCanaryStability({silent:false});
+ const failSafe=$('#mdmReadinessFailSafeCheck');if(failSafe)failSafe.onclick=()=>mdmVerifyReadinessFailSafe({silent:false});
  const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
  const calibrationCheck=$('#mdmReadinessCalibrationCheck');if(calibrationCheck)calibrationCheck.onclick=()=>mdmVerifyReadinessCalibration({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
@@ -12803,7 +12816,7 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,failSafeVerified:false,failSafeResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
@@ -12883,6 +12896,55 @@ function mdmReadinessSampleSignature(){
 
 
 
+
+async function mdmVerifyReadinessFailSafe({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Fail-Safe Test riservato all’Owner.','Fail-Safe Test is reserved for the Owner.','Fail-Safe Test huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const local=mdmReadinessLiveCanarySignals();
+  let result=await mdmDataRpc('mdm_readiness_fail_safe_test',{
+   p_local_score:Number(local.localScore||0),
+   p_signals:local.signals
+  });
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_readiness_fail_safe_test',{
+    p_local_score:Number(local.localScore||0),
+    p_signals:local.signals
+   });
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,failSafeVerified:false,failSafeResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'fail_safe_failed')};
+   if(!silent)toast(lang3('Fail-Safe Test non verificato.','Fail-Safe Test was not verified.','Fail-Safe Test ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   failSafeVerified:true,
+   failSafeResult:{
+    pass:Boolean(data.pass),
+    localScore:Number(data.local_score||0),
+    fallbackScore:Number(data.fallback_score||0),
+    decisionSource:String(data.decision_source||''),
+    serverFailureSimulated:Boolean(data.server_failure_simulated),
+    protected:Boolean(data.protected),
+    reason:String(data.reason||'')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.pass
+   ?lang3('Fail-Safe PASS: fallback locale protetto.','Fail-Safe PASS: local fallback protected.','Fail-Safe PASS: local fallback protett.')
+   :lang3('Fail-Safe NON PASS.','Fail-Safe NOT PASS.','Fail-Safe MHUX PASS.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
 async function mdmVerifyReadinessControlledCanaryStability({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;
  if(!mdmPlatformOwnerAllowed()){

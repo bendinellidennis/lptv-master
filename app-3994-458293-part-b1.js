@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.23';
+const BUILD_VERSION = '45.8.31.24';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12558,6 +12558,18 @@ function backendRealViewHtml(){
   </article>
   <button class="btn secondary" id="mdmReadinessCalibratedShadowCheck">🛰️ ${esc(lang3('Esegui Shadow Calibrato','Run Calibrated Shadow','Ħaddem Calibrated Shadow'))}</button>
   <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.shadowPromotionVerified?(mdmProtectedContentStatus.shadowPromotionResult?.ready?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🚦 ${esc(lang3('Readiness Shadow Promotion Gate','Readiness Shadow Promotion Gate','Readiness Shadow Promotion Gate'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.shadowPromotionVerified&&mdmProtectedContentStatus.shadowPromotionResult
+    ?lang3(
+      `${mdmProtectedContentStatus.shadowPromotionResult.ready?'PRONTO CONTROLLED CANARY':'NON ANCORA'} · campioni shadow ${mdmProtectedContentStatus.shadowPromotionResult.sampleCount} · Δ medio ${mdmProtectedContentStatus.shadowPromotionResult.meanAbs} · Δ max ${mdmProtectedContentStatus.shadowPromotionResult.maxAbs} · migliorati ${mdmProtectedContentStatus.shadowPromotionResult.improvedCount}`,
+      `${mdmProtectedContentStatus.shadowPromotionResult.ready?'CONTROLLED CANARY READY':'NOT YET'} · shadow samples ${mdmProtectedContentStatus.shadowPromotionResult.sampleCount} · mean Δ ${mdmProtectedContentStatus.shadowPromotionResult.meanAbs} · max Δ ${mdmProtectedContentStatus.shadowPromotionResult.maxAbs} · improved ${mdmProtectedContentStatus.shadowPromotionResult.improvedCount}`,
+      `${mdmProtectedContentStatus.shadowPromotionResult.ready?'LEST CONTROLLED CANARY':'GĦADU LE'} · kampjuni shadow ${mdmProtectedContentStatus.shadowPromotionResult.sampleCount} · Δ medju ${mdmProtectedContentStatus.shadowPromotionResult.meanAbs} · Δ max ${mdmProtectedContentStatus.shadowPromotionResult.maxAbs} · imtejba ${mdmProtectedContentStatus.shadowPromotionResult.improvedCount}`
+     )
+    :lang3('Registra risultati shadow calibrati distinti e apre solo il prossimo Controlled Canary quando la qualità resta entro soglia.','Records distinct calibrated-shadow results and opens the next Controlled Canary only when quality remains within threshold.','Jirreġistra riżultati calibrated-shadow distinti u jiftaħ il-Controlled Canary li jmiss biss meta l-kwalità tibqa’ fil-limitu.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessShadowPromotionCheck">🚦 ${esc(lang3('Verifica Promotion Gate','Verify Promotion Gate','Ivverifika Promotion Gate'))}</button>
+  <div style="height:12px"></div>
   <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
    <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
    <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
@@ -12597,6 +12609,7 @@ function bindBackendReal(){
  const calibrationCandidate=$('#mdmReadinessCalibrationCandidateCheck');if(calibrationCandidate)calibrationCandidate.onclick=()=>mdmVerifyReadinessCalibrationCandidate({silent:false});
  const calibrationValidation=$('#mdmReadinessCalibrationValidationCheck');if(calibrationValidation)calibrationValidation.onclick=()=>mdmVerifyReadinessCalibrationValidation({silent:false});
  const calibratedShadow=$('#mdmReadinessCalibratedShadowCheck');if(calibratedShadow)calibratedShadow.onclick=()=>mdmVerifyReadinessCalibratedShadow({silent:false});
+ const shadowPromotion=$('#mdmReadinessShadowPromotionCheck');if(shadowPromotion)shadowPromotion.onclick=()=>mdmVerifyReadinessShadowPromotionGate({silent:false});
  const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
  const calibrationCheck=$('#mdmReadinessCalibrationCheck');if(calibrationCheck)calibrationCheck.onclick=()=>mdmVerifyReadinessCalibration({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
@@ -12734,7 +12747,7 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
@@ -12811,6 +12824,59 @@ function mdmReadinessSampleSignature(){
 
 
 
+
+async function mdmVerifyReadinessShadowPromotionGate({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Promotion Gate riservato all’Owner.','Promotion Gate is reserved for the Owner.','Promotion Gate huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const local=mdmReadinessLiveCanarySignals();
+  const signature=mdmReadinessSampleSignature();
+  let result=await mdmDataRpc('mdm_readiness_shadow_promotion_gate',{
+   p_local_score:Number(local.localScore||0),
+   p_signals:local.signals,
+   p_signature:signature
+  });
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_readiness_shadow_promotion_gate',{
+    p_local_score:Number(local.localScore||0),
+    p_signals:local.signals,
+    p_signature:signature
+   });
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,shadowPromotionVerified:false,shadowPromotionResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'shadow_promotion_failed')};
+   if(!silent)toast(lang3('Promotion Gate non verificato.','Promotion Gate was not verified.','Promotion Gate ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   shadowPromotionVerified:true,
+   shadowPromotionResult:{
+    ready:Boolean(data.ready),
+    accepted:Boolean(data.accepted),
+    duplicate:Boolean(data.duplicate),
+    sampleCount:Number(data.sample_count||0),
+    meanAbs:Number(data.mean_abs_delta||0),
+    maxAbs:Number(data.max_abs_delta||0),
+    improvedCount:Number(data.improved_count||0),
+    reason:String(data.reason||'')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.ready
+   ?lang3('Promotion Gate pronto per Controlled Canary.','Promotion Gate ready for Controlled Canary.','Promotion Gate lest għal Controlled Canary.')
+   :lang3('Promotion Gate non ancora pronto: resta shadow.','Promotion Gate not ready yet: remain in shadow.','Promotion Gate għadu mhux lest: ibqa’ shadow.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
 async function mdmVerifyReadinessCalibratedShadow({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;
  if(!mdmPlatformOwnerAllowed()){

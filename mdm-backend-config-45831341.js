@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.34.1 — PWA Auth Bootstrap
+/* Malta Driving Master 45.8.31.35 — PWA Auth Bootstrap + Cross-Device Sync
    Public Supabase client configuration only.
    Never place sb_secret_ or service_role credentials in this file. */
 (function(){

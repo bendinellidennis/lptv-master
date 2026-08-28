@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.29';
+const BUILD_VERSION = '45.8.31.30';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12648,6 +12648,18 @@ function backendRealViewHtml(){
   </article>
   <button class="btn secondary" id="mdmReadinessFailSafeRecoveryCheck">🔄 ${esc(lang3('Esegui Recovery Test','Run Recovery Test','Ħaddem Recovery Test'))}</button>
   <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.liveEligibilityVerified?(mdmProtectedContentStatus.liveEligibilityResult?.ready?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🚦 ${esc(lang3('Readiness Live Eligibility Gate','Readiness Live Eligibility Gate','Readiness Live Eligibility Gate'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.liveEligibilityVerified&&mdmProtectedContentStatus.liveEligibilityResult
+    ?lang3(
+      `${mdmProtectedContentStatus.liveEligibilityResult.ready?'PRONTO LIMITED LIVE TRIAL':'NON ANCORA'} · campioni ${mdmProtectedContentStatus.liveEligibilityResult.controlledSamples} · PASS ${mdmProtectedContentStatus.liveEligibilityResult.controlledPass} · fallback ${mdmProtectedContentStatus.liveEligibilityResult.controlledFallback} · Δ medio ${mdmProtectedContentStatus.liveEligibilityResult.meanAbs} · Δ max ${mdmProtectedContentStatus.liveEligibilityResult.maxAbs} · fail-safe ${mdmProtectedContentStatus.liveEligibilityResult.failSafePass?'PASS':'NO'} · recovery ${mdmProtectedContentStatus.liveEligibilityResult.recoveryPass?'PASS':'NO'}`,
+      `${mdmProtectedContentStatus.liveEligibilityResult.ready?'LIMITED LIVE TRIAL READY':'NOT YET'} · samples ${mdmProtectedContentStatus.liveEligibilityResult.controlledSamples} · PASS ${mdmProtectedContentStatus.liveEligibilityResult.controlledPass} · fallback ${mdmProtectedContentStatus.liveEligibilityResult.controlledFallback} · mean Δ ${mdmProtectedContentStatus.liveEligibilityResult.meanAbs} · max Δ ${mdmProtectedContentStatus.liveEligibilityResult.maxAbs} · fail-safe ${mdmProtectedContentStatus.liveEligibilityResult.failSafePass?'PASS':'NO'} · recovery ${mdmProtectedContentStatus.liveEligibilityResult.recoveryPass?'PASS':'NO'}`,
+      `${mdmProtectedContentStatus.liveEligibilityResult.ready?'LEST LIMITED LIVE TRIAL':'GĦADU LE'} · kampjuni ${mdmProtectedContentStatus.liveEligibilityResult.controlledSamples} · PASS ${mdmProtectedContentStatus.liveEligibilityResult.controlledPass} · fallback ${mdmProtectedContentStatus.liveEligibilityResult.controlledFallback} · Δ medju ${mdmProtectedContentStatus.liveEligibilityResult.meanAbs} · Δ max ${mdmProtectedContentStatus.liveEligibilityResult.maxAbs} · fail-safe ${mdmProtectedContentStatus.liveEligibilityResult.failSafePass?'PASS':'LE'} · recovery ${mdmProtectedContentStatus.liveEligibilityResult.recoveryPass?'PASS':'LE'}`
+     )
+    :lang3('Combina stabilità Controlled Canary, Fail-Safe e Recovery. Se passa apre solo un Limited Live Trial reversibile; non attiva ancora il Readiness live.','Combines Controlled Canary stability, Fail-Safe and Recovery. If it passes, it opens only a reversible Limited Live Trial; it still does not activate live Readiness.','Jgħaqqad l-istabbiltà Controlled Canary, Fail-Safe u Recovery. Jekk jgħaddi, jiftaħ biss Limited Live Trial riversibbli; għadu ma jattivax Readiness live.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessLiveEligibilityCheck">🚦 ${esc(lang3('Verifica Live Eligibility','Verify Live Eligibility','Ivverifika Live Eligibility'))}</button>
+  <div style="height:12px"></div>
   <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
    <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
    <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
@@ -12692,6 +12704,7 @@ function bindBackendReal(){
  const controlledCanaryStability=$('#mdmReadinessControlledCanaryStabilityCheck');if(controlledCanaryStability)controlledCanaryStability.onclick=()=>mdmVerifyReadinessControlledCanaryStability({silent:false});
  const failSafe=$('#mdmReadinessFailSafeCheck');if(failSafe)failSafe.onclick=()=>mdmVerifyReadinessFailSafe({silent:false});
  const failSafeRecovery=$('#mdmReadinessFailSafeRecoveryCheck');if(failSafeRecovery)failSafeRecovery.onclick=()=>mdmVerifyReadinessFailSafeRecovery({silent:false});
+ const liveEligibility=$('#mdmReadinessLiveEligibilityCheck');if(liveEligibility)liveEligibility.onclick=()=>mdmVerifyReadinessLiveEligibility({silent:false});
  const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
  const calibrationCheck=$('#mdmReadinessCalibrationCheck');if(calibrationCheck)calibrationCheck.onclick=()=>mdmVerifyReadinessCalibration({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
@@ -12829,7 +12842,7 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,failSafeVerified:false,failSafeResult:null,failSafeRecoveryVerified:false,failSafeRecoveryResult:null,lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,failSafeVerified:false,failSafeResult:null,failSafeRecoveryVerified:false,failSafeRecoveryResult:null,liveEligibilityVerified:false,liveEligibilityResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
@@ -12911,6 +12924,58 @@ function mdmReadinessSampleSignature(){
 
 
 
+
+async function mdmVerifyReadinessLiveEligibility({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Live Eligibility Gate riservato all’Owner.','Live Eligibility Gate is reserved for the Owner.','Live Eligibility Gate huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const local=mdmReadinessLiveCanarySignals();
+  let result=await mdmDataRpc('mdm_readiness_live_eligibility_gate',{
+   p_local_score:Number(local.localScore||0),
+   p_signals:local.signals
+  });
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_readiness_live_eligibility_gate',{
+    p_local_score:Number(local.localScore||0),
+    p_signals:local.signals
+   });
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,liveEligibilityVerified:false,liveEligibilityResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'live_eligibility_failed')};
+   if(!silent)toast(lang3('Live Eligibility Gate non verificato.','Live Eligibility Gate was not verified.','Live Eligibility Gate ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   liveEligibilityVerified:true,
+   liveEligibilityResult:{
+    ready:Boolean(data.ready),
+    controlledSamples:Number(data.controlled_sample_count||0),
+    controlledPass:Number(data.controlled_pass_count||0),
+    controlledFallback:Number(data.controlled_fallback_count||0),
+    meanAbs:Number(data.controlled_mean_abs_delta||0),
+    maxAbs:Number(data.controlled_max_abs_delta||0),
+    recoveryPass:Boolean(data.recovery_pass),
+    failSafePass:Boolean(data.fail_safe_pass),
+    nextStage:String(data.next_stage||''),
+    reason:String(data.reason||'')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.ready
+   ?lang3('Live Eligibility PASS: pronto per Limited Live Trial.','Live Eligibility PASS: ready for Limited Live Trial.','Live Eligibility PASS: lest għal Limited Live Trial.')
+   :lang3('Live Eligibility non ancora pronta.','Live Eligibility is not ready yet.','Live Eligibility għadha mhix lesta.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
 async function mdmVerifyReadinessFailSafeRecovery({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;
  if(!mdmPlatformOwnerAllowed()){

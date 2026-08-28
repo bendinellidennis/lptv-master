@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.35';
+const BUILD_VERSION = '45.8.31.36';
 const BUILD_RELEASE_DATE = '28/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12461,6 +12461,32 @@ async function backendRealTestConnection(){
  backendRealSave();render();
  toast(lang3('Il test è terminato senza risposta HTTP. La schermata non resterà più bloccata: apri la diagnostica tecnica.','The test ended without an HTTP response. The screen will no longer stay stuck: open technical diagnostics.','It-test intemm mingħajr risposta HTTP. L-iskrin mhux se jibqa’ mwaħħal: iftaħ id-dijanjostika teknika.'));
 }
+
+/* Rebuild local-only technical gates from real server evidence on a fresh PWA.
+   This deliberately re-runs checks instead of syncing old green/red states. */
+let mdmPwaReverifyInFlight=false;
+async function mdmPwaReverifyServerBackedGates(){
+ if(mdmPwaReverifyInFlight)return false;
+ const auth=mdmAuthSummary();
+ if(!auth.authenticated)return false;
+ mdmPwaReverifyInFlight=true;
+ try{
+  try{if(!mdmProductionSyncState.schemaReady)await mdmProductionSyncProbe({silent:true})}catch{}
+  try{if(!mdmProductionPermissionState.verified)await mdmProductionPermissionProbe({silent:true})}catch{}
+  const cfg=mdmBackendPublicConfig();
+  if(cfg.endpoint&&cfg.publishableKey&&!(mdmBackendSetup.status==='connected'&&mdmBackendSetup.schemaReady)){
+   try{
+    mdmPlatformOwnerReset('pwa_backend_rehydrate');
+    const ownerAllowed=await mdmRefreshPlatformOwnerGate({silent:true});
+    if(ownerAllowed)await backendRealTestConnection();
+   }catch{}
+  }
+  return true;
+ }finally{mdmPwaReverifyInFlight=false}
+}
+setTimeout(()=>{mdmPwaReverifyServerBackedGates().catch(()=>{})},1400);
+setTimeout(()=>{mdmPwaReverifyServerBackedGates().catch(()=>{})},4200);
+
 async function backendRealDisconnect(){
  const ok=await backendOwnerConfirmCriticalAction(lang3('rimozione configurazione backend','remove backend configuration','tneħħija tal-konfigurazzjoni tal-backend'));
  if(!ok)return toast(lang3('Rimozione annullata.','Removal cancelled.','It-tneħħija ġiet ikkanċellata.'));
@@ -12853,6 +12879,29 @@ function mdmBackendPublicConfig(){
  const verified=Boolean((mdmBackendSetup.status==='connected'&&mdmBackendSetup.schemaReady&&mdmBackendSetup.verifiedAt)||(winCfg.enabled===true&&/^https:\/\//i.test(endpoint)));
  return {provider:'supabase',endpoint,publishableKey,enabled:verified,schemaReady:Boolean(mdmBackendSetup.schemaReady),verifiedAt:mdmBackendSetup.verifiedAt||'',status:verified?'connected':(mdmBackendSetup.status||'unconfigured')};
 }
+
+/* 45.8.31.36 — PWA BACKEND REHYDRATE
+   A Home Screen PWA has its own localStorage on iOS. The public Supabase
+   client configuration is therefore rehydrated from the shipped client
+   config when the local backend setup is empty. No secret/service-role key
+   is copied and no technical PASS is fabricated: server gates are re-run. */
+function mdmBackendRehydratePublicClientConfig(){
+ const winCfg=window.MDM_BACKEND_CONFIG&&typeof window.MDM_BACKEND_CONFIG==='object'?window.MDM_BACKEND_CONFIG:{};
+ const endpoint=mdmBackendNormalizeUrl(winCfg.endpoint||'');
+ const publishableKey=String(winCfg.publishableKey||winCfg.anonKey||'').trim();
+ const endpointOk=/^https:\/\//i.test(endpoint);
+ const keyOk=/^sb_publishable_/i.test(publishableKey)||/^eyJ[A-Za-z0-9_-]+\./.test(publishableKey);
+ if(!endpointOk||!keyOk)return false;
+ let changed=false;
+ if(!String(mdmBackendSetup.endpoint||'').trim()){mdmBackendSetup.endpoint=endpoint;changed=true}
+ if(!String(mdmBackendSetup.publishableKey||'').trim()){mdmBackendSetup.publishableKey=publishableKey;changed=true}
+ if(changed){
+  mdmBackendSetup={...mdmBackendSetup,provider:'supabase',status:'unconfigured',schemaReady:false,verifiedAt:'',lastHttpStatus:0,lastMessage:'Public client configuration restored for this installation',lastDiagnostic:null};
+  save(MDM_BACKEND_SETUP_KEY,mdmBackendSetup);
+ }
+ return changed;
+}
+mdmBackendRehydratePublicClientConfig();
 function accountBackendConfig(){
  const cfg=mdmBackendPublicConfig();
  return {enabled:cfg.enabled,endpoint:cfg.endpoint};

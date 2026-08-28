@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.33';
+const BUILD_VERSION = '45.8.31.34.1';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12684,6 +12684,18 @@ function backendRealViewHtml(){
   </article>
   <button class="btn secondary" id="mdmReadinessLimitedLiveRollbackCheck">↩️ ${esc(lang3('Verifica Rollback Limited Live','Verify Limited Live Rollback','Ivverifika Limited Live Rollback'))}</button>
   <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.productionCanaryVerified?(mdmProtectedContentStatus.productionCanaryResult?.pass?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🟢 ${esc(lang3('Readiness Production Canary','Readiness Production Canary','Readiness Production Canary'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.productionCanaryVerified&&mdmProtectedContentStatus.productionCanaryResult
+    ?lang3(
+      `${mdmProtectedContentStatus.productionCanaryResult.pass?'PASS':'NON PASS'} · cohort ${mdmProtectedContentStatus.productionCanaryResult.cohort} · locale ${mdmProtectedContentStatus.productionCanaryResult.localScore} · server ${mdmProtectedContentStatus.productionCanaryResult.serverScore} · effettivo ${mdmProtectedContentStatus.productionCanaryResult.effectiveScore} · Δ ${mdmProtectedContentStatus.productionCanaryResult.delta} · source ${mdmProtectedContentStatus.productionCanaryResult.source} · fallback ${mdmProtectedContentStatus.productionCanaryResult.fallbackReady?'PRONTO':'NO'}`,
+      `${mdmProtectedContentStatus.productionCanaryResult.pass?'PASS':'NOT PASS'} · cohort ${mdmProtectedContentStatus.productionCanaryResult.cohort} · local ${mdmProtectedContentStatus.productionCanaryResult.localScore} · server ${mdmProtectedContentStatus.productionCanaryResult.serverScore} · effective ${mdmProtectedContentStatus.productionCanaryResult.effectiveScore} · Δ ${mdmProtectedContentStatus.productionCanaryResult.delta} · source ${mdmProtectedContentStatus.productionCanaryResult.source} · fallback ${mdmProtectedContentStatus.productionCanaryResult.fallbackReady?'READY':'NO'}`,
+      `${mdmProtectedContentStatus.productionCanaryResult.pass?'PASS':'MHUX PASS'} · cohort ${mdmProtectedContentStatus.productionCanaryResult.cohort} · lokali ${mdmProtectedContentStatus.productionCanaryResult.localScore} · server ${mdmProtectedContentStatus.productionCanaryResult.serverScore} · effettiv ${mdmProtectedContentStatus.productionCanaryResult.effectiveScore} · Δ ${mdmProtectedContentStatus.productionCanaryResult.delta} · source ${mdmProtectedContentStatus.productionCanaryResult.source} · fallback ${mdmProtectedContentStatus.productionCanaryResult.fallbackReady?'LEST':'LE'}`
+     )
+    :lang3('Ultimo canary controllato prima del pilot reale. Solo account esplicitamente allowlistati; fallback locale sempre disponibile.','Final controlled canary before the real pilot. Only explicitly allowlisted accounts; local fallback always available.','L-aħħar canary ikkontrollat qabel il-pilot reali. Kontijiet allowlisted biss; fallback lokali dejjem disponibbli.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessProductionCanaryCheck">🟢 ${esc(lang3('Esegui Production Canary','Run Production Canary','Ħaddem Production Canary'))}</button>
+  <div style="height:12px"></div>
   <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
    <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
    <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
@@ -12731,6 +12743,7 @@ function bindBackendReal(){
  const liveEligibility=$('#mdmReadinessLiveEligibilityCheck');if(liveEligibility)liveEligibility.onclick=()=>mdmVerifyReadinessLiveEligibility({silent:false});
  const limitedLive=$('#mdmReadinessLimitedLiveCheck');if(limitedLive)limitedLive.onclick=()=>mdmVerifyReadinessLimitedLiveTrial({silent:false});
  const limitedLiveRollback=$('#mdmReadinessLimitedLiveRollbackCheck');if(limitedLiveRollback)limitedLiveRollback.onclick=()=>mdmVerifyReadinessLimitedLiveRollback({silent:false});
+ const productionCanary=$('#mdmReadinessProductionCanaryCheck');if(productionCanary)productionCanary.onclick=()=>mdmVerifyReadinessProductionCanary({silent:false});
  const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
  const calibrationCheck=$('#mdmReadinessCalibrationCheck');if(calibrationCheck)calibrationCheck.onclick=()=>mdmVerifyReadinessCalibration({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
@@ -12868,7 +12881,7 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,failSafeVerified:false,failSafeResult:null,failSafeRecoveryVerified:false,failSafeRecoveryResult:null,liveEligibilityVerified:false,liveEligibilityResult:null,limitedLiveVerified:false,limitedLiveResult:null,limitedLiveRollbackVerified:false,limitedLiveRollbackResult:null,lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,failSafeVerified:false,failSafeResult:null,failSafeRecoveryVerified:false,failSafeRecoveryResult:null,liveEligibilityVerified:false,liveEligibilityResult:null,limitedLiveVerified:false,limitedLiveResult:null,limitedLiveRollbackVerified:false,limitedLiveRollbackResult:null,productionCanaryVerified:false,productionCanaryResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
@@ -12953,6 +12966,60 @@ function mdmReadinessSampleSignature(){
 
 
 
+
+async function mdmVerifyReadinessProductionCanary({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Production Canary riservato all’Owner.','Production Canary is reserved for the Owner.','Production Canary huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const local=mdmReadinessLiveCanarySignals();
+  const signature=mdmReadinessSampleSignature();
+  let result=await mdmDataRpc('mdm_readiness_production_canary',{
+    p_local_score:Number(local.localScore||0),
+    p_signals:local.signals,
+    p_signature:signature
+  });
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_readiness_production_canary',{
+    p_local_score:Number(local.localScore||0),
+    p_signals:local.signals,
+    p_signature:signature
+   });
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,productionCanaryVerified:false,productionCanaryResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'production_canary_failed')};
+   if(!silent)toast(lang3('Production Canary non verificato.','Production Canary was not verified.','Production Canary ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   productionCanaryVerified:true,
+   productionCanaryResult:{
+    pass:Boolean(data.pass),
+    eligible:Boolean(data.eligible),
+    localScore:Number(data.local_score||0),
+    serverScore:Number(data.server_score||0),
+    effectiveScore:Number(data.effective_score||0),
+    delta:Number(data.delta||0),
+    source:String(data.decision_source||'local_fallback'),
+    fallbackReady:Boolean(data.fallback_ready),
+    cohort:String(data.cohort||'none')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.pass
+   ?lang3('Production Canary PASS.','Production Canary PASS.','Production Canary PASS.')
+   :lang3('Production Canary NON PASS.','Production Canary NOT PASS.','Production Canary MHUX PASS.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
 async function mdmVerifyReadinessLimitedLiveRollback({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;
  if(!mdmPlatformOwnerAllowed()){

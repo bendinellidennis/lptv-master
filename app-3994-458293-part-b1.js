@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.26';
+const BUILD_VERSION = '45.8.31.27';
 const BUILD_RELEASE_DATE = '26/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12612,6 +12612,18 @@ function backendRealViewHtml(){
   </article>
   <button class="btn secondary" id="mdmReadinessControlledCanaryCheck">🟡 ${esc(lang3('Esegui Controlled Canary','Run Controlled Canary','Ħaddem Controlled Canary'))}</button>
   <div style="height:12px"></div>
+  <article class="${mdmProtectedContentStatus.controlledCanaryStabilityVerified?(mdmProtectedContentStatus.controlledCanaryStabilityResult?.ready?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
+   <div><strong>🧱 ${esc(lang3('Controlled Canary Stability Gate','Controlled Canary Stability Gate','Controlled Canary Stability Gate'))}</strong>
+   <small>${esc(mdmProtectedContentStatus.controlledCanaryStabilityVerified&&mdmProtectedContentStatus.controlledCanaryStabilityResult
+    ?lang3(
+      `${mdmProtectedContentStatus.controlledCanaryStabilityResult.ready?'PRONTO FAIL-SAFE TEST':'NON ANCORA'} · campioni ${mdmProtectedContentStatus.controlledCanaryStabilityResult.sampleCount} · PASS ${mdmProtectedContentStatus.controlledCanaryStabilityResult.passCount} · fallback ${mdmProtectedContentStatus.controlledCanaryStabilityResult.fallbackCount} · Δ medio ${mdmProtectedContentStatus.controlledCanaryStabilityResult.meanAbs} · Δ max ${mdmProtectedContentStatus.controlledCanaryStabilityResult.maxAbs}`,
+      `${mdmProtectedContentStatus.controlledCanaryStabilityResult.ready?'FAIL-SAFE TEST READY':'NOT YET'} · samples ${mdmProtectedContentStatus.controlledCanaryStabilityResult.sampleCount} · PASS ${mdmProtectedContentStatus.controlledCanaryStabilityResult.passCount} · fallback ${mdmProtectedContentStatus.controlledCanaryStabilityResult.fallbackCount} · mean Δ ${mdmProtectedContentStatus.controlledCanaryStabilityResult.meanAbs} · max Δ ${mdmProtectedContentStatus.controlledCanaryStabilityResult.maxAbs}`,
+      `${mdmProtectedContentStatus.controlledCanaryStabilityResult.ready?'LEST FAIL-SAFE TEST':'GĦADU LE'} · kampjuni ${mdmProtectedContentStatus.controlledCanaryStabilityResult.sampleCount} · PASS ${mdmProtectedContentStatus.controlledCanaryStabilityResult.passCount} · fallback ${mdmProtectedContentStatus.controlledCanaryStabilityResult.fallbackCount} · Δ medju ${mdmProtectedContentStatus.controlledCanaryStabilityResult.meanAbs} · Δ max ${mdmProtectedContentStatus.controlledCanaryStabilityResult.maxAbs}`
+     )
+    :lang3('Registra Controlled Canary distinti e verifica che tutti restino entro soglia mantenendo sempre local_fallback come decisione effettiva.','Records distinct Controlled Canary samples and verifies that all remain within threshold while always keeping local_fallback as the effective decision.','Jirreġistra kampjuni Controlled Canary distinti u jivverifika li kollha jibqgħu fil-limitu filwaqt li local_fallback jibqa’ dejjem id-deċiżjoni effettiva.'))}</small></div>
+  </article>
+  <button class="btn secondary" id="mdmReadinessControlledCanaryStabilityCheck">🧱 ${esc(lang3('Verifica Stabilità Controlled Canary','Verify Controlled Canary Stability','Ivverifika l-Istabbiltà Controlled Canary'))}</button>
+  <div style="height:12px"></div>
   <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
    <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
    <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
@@ -12653,6 +12665,7 @@ function bindBackendReal(){
  const calibratedShadow=$('#mdmReadinessCalibratedShadowCheck');if(calibratedShadow)calibratedShadow.onclick=()=>mdmVerifyReadinessCalibratedShadow({silent:false});
  const shadowPromotion=$('#mdmReadinessShadowPromotionCheck');if(shadowPromotion)shadowPromotion.onclick=()=>mdmVerifyReadinessShadowPromotionGate({silent:false});
  const controlledCanary=$('#mdmReadinessControlledCanaryCheck');if(controlledCanary)controlledCanary.onclick=()=>mdmVerifyReadinessControlledCanary({silent:false});
+ const controlledCanaryStability=$('#mdmReadinessControlledCanaryStabilityCheck');if(controlledCanaryStability)controlledCanaryStability.onclick=()=>mdmVerifyReadinessControlledCanaryStability({silent:false});
  const convergenceGate=$('#mdmReadinessConvergenceGate');if(convergenceGate)convergenceGate.onclick=()=>mdmVerifyReadinessConvergenceGate({silent:false});
  const calibrationCheck=$('#mdmReadinessCalibrationCheck');if(calibrationCheck)calibrationCheck.onclick=()=>mdmVerifyReadinessCalibration({silent:false});
  const forget=$('#backendForgetConfig');if(forget)forget.onclick=backendRealDisconnect;
@@ -12790,7 +12803,7 @@ function mdmAuthSummary(){
 const MDM_PLATFORM_OWNER_GATE_EMPTY={status:'unknown',allowed:false,userId:'',checkedAt:'',lastMessage:''};
 let mdmPlatformOwnerGate={...MDM_PLATFORM_OWNER_GATE_EMPTY};
 let mdmPlatformOwnerGateInFlight=false;
-const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,lastMessage:''};
+const MDM_PROTECTED_CONTENT_EMPTY={status:'unknown',ready:false,schemaVersion:'',contentCount:0,pilotLoaded:false,pilotItems:[],pilotDigest:'',executionVerified:false,executionResults:[],executionDigest:'',runtimeShadowVerified:false,runtimeShadowResults:[],runtimeShadowDigest:'',liveCanaryVerified:false,liveCanaryResult:null,convergenceVerified:false,convergenceResult:null,calibrationVerified:false,calibrationResult:null,sampleQualityVerified:false,sampleQualityResult:null,driftVerified:false,driftResult:null,calibrationCandidateVerified:false,calibrationCandidateResult:null,calibrationValidationVerified:false,calibrationValidationResult:null,calibratedShadowVerified:false,calibratedShadowResult:null,shadowPromotionVerified:false,shadowPromotionResult:null,controlledCanaryVerified:false,controlledCanaryResult:null,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,lastMessage:''};
 let mdmProtectedContentStatus={...MDM_PROTECTED_CONTENT_EMPTY};
 let mdmProtectedContentInFlight=false;
 
@@ -12869,6 +12882,60 @@ function mdmReadinessSampleSignature(){
 
 
 
+
+async function mdmVerifyReadinessControlledCanaryStability({silent=false}={}){
+ if(mdmProtectedContentInFlight)return false;
+ if(!mdmPlatformOwnerAllowed()){
+  if(!silent)toast(lang3('Stability Gate riservato all’Owner.','Stability Gate is reserved for the Owner.','Stability Gate huwa riservat għas-sid.'));
+  return false;
+ }
+ mdmProtectedContentInFlight=true;
+ try{
+  if(!(await mdmEnsureFreshAuthForData()))return false;
+  const local=mdmReadinessLiveCanarySignals();
+  const signature=mdmReadinessSampleSignature();
+  let result=await mdmDataRpc('mdm_readiness_controlled_canary_stability_gate',{
+   p_local_score:Number(local.localScore||0),
+   p_signals:local.signals,
+   p_signature:signature
+  });
+  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
+   result=await mdmDataRpc('mdm_readiness_controlled_canary_stability_gate',{
+    p_local_score:Number(local.localScore||0),
+    p_signals:local.signals,
+    p_signature:signature
+   });
+  }
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true){
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,controlledCanaryStabilityVerified:false,controlledCanaryStabilityResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'controlled_canary_stability_failed')};
+   if(!silent)toast(lang3('Controlled Canary Stability Gate non verificato.','Controlled Canary Stability Gate was not verified.','Controlled Canary Stability Gate ma ġiex ivverifikat.'));
+   render({preserveScroll:true});
+   return false;
+  }
+  mdmProtectedContentStatus={
+   ...mdmProtectedContentStatus,
+   controlledCanaryStabilityVerified:true,
+   controlledCanaryStabilityResult:{
+    ready:Boolean(data.ready),
+    accepted:Boolean(data.accepted),
+    duplicate:Boolean(data.duplicate),
+    sampleCount:Number(data.sample_count||0),
+    passCount:Number(data.pass_count||0),
+    fallbackCount:Number(data.fallback_count||0),
+    meanAbs:Number(data.mean_abs_delta||0),
+    maxAbs:Number(data.max_abs_delta||0),
+    reason:String(data.reason||'')
+   },
+   lastMessage:''
+  };
+  if(!silent)toast(data.ready
+   ?lang3('Controlled Canary stabile: pronto per il test fail-safe.','Controlled Canary stable: ready for the fail-safe test.','Controlled Canary stabbli: lest għat-test fail-safe.')
+   :lang3('Controlled Canary non ancora stabile: raccogli altri campioni distinti.','Controlled Canary not stable yet: collect more distinct samples.','Controlled Canary għadu mhux stabbli: iġbor aktar kampjuni distinti.'));
+  render({preserveScroll:true});
+  return true;
+ }finally{mdmProtectedContentInFlight=false}
+}
 async function mdmVerifyReadinessControlledCanary({silent=false}={}){
  if(mdmProtectedContentInFlight)return false;
  if(!mdmPlatformOwnerAllowed()){

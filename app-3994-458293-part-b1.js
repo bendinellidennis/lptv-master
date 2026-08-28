@@ -135,7 +135,7 @@ const SESSION = 'mdm-v1-session';
 const USER_PROFILE = 'mdm-v1-user-profile';
 const ADMIN_EMAIL = 'maltadrivingmaster@gmail.com';
 /* Build 45.4.27 — C/CE COMPLETE · 386/386 */
-const BUILD_VERSION = '45.8.31.36';
+const BUILD_VERSION = '45.8.31.37';
 const BUILD_RELEASE_DATE = '28/08/2026';
 const ERROR_REPLAY_KEY = 'mdm-v1-error-replay';
 const CLOUD_READY_KEY = 'mdm-v1-cloud-ready';
@@ -12755,14 +12755,14 @@ function backendRealViewHtml(){
   <button class="btn secondary" id="mdmReadinessProductionCanaryCheck">🟢 ${esc(lang3('Esegui Production Canary','Run Production Canary','Ħaddem Production Canary'))}</button>
   <div style="height:12px"></div>
   <article class="${mdmProtectedContentStatus.convergenceVerified?(mdmProtectedContentStatus.convergenceResult?.eligible?'pass':'locked'):'locked'}" style="padding:14px;border-radius:18px">
-   <div><strong>🧪 ${esc(lang3('Readiness Convergence Gate','Readiness Convergence Gate','Readiness Convergence Gate'))}</strong>
+   <div><strong>🧪 ${esc(lang3('Readiness Calibrated Convergence Gate','Readiness Calibrated Convergence Gate','Readiness Calibrated Convergence Gate'))}</strong>
    <small>${esc(mdmProtectedContentStatus.convergenceVerified&&mdmProtectedContentStatus.convergenceResult
     ?lang3(
-      `${mdmProtectedContentStatus.convergenceResult.eligible?'SUPERATO':'NON ANCORA'} · campioni ${mdmProtectedContentStatus.convergenceResult.sampleCount} · Δ medio ${mdmProtectedContentStatus.convergenceResult.meanAbsDelta} · Δ max ${mdmProtectedContentStatus.convergenceResult.maxAbsDelta}`,
-      `${mdmProtectedContentStatus.convergenceResult.eligible?'PASSED':'NOT YET'} · samples ${mdmProtectedContentStatus.convergenceResult.sampleCount} · mean Δ ${mdmProtectedContentStatus.convergenceResult.meanAbsDelta} · max Δ ${mdmProtectedContentStatus.convergenceResult.maxAbsDelta}`,
-      `${mdmProtectedContentStatus.convergenceResult.eligible?'GĦADDA':'GĦADU LE'} · kampjuni ${mdmProtectedContentStatus.convergenceResult.sampleCount} · Δ medju ${mdmProtectedContentStatus.convergenceResult.meanAbsDelta} · Δ max ${mdmProtectedContentStatus.convergenceResult.maxAbsDelta}`
+      `${mdmProtectedContentStatus.convergenceResult.eligible?'SUPERATO':'NON ANCORA'} · regime ${mdmProtectedContentStatus.convergenceResult.regime||'calibrato'} · campioni ${mdmProtectedContentStatus.convergenceResult.sampleCount} · Δ medio calibrato ${mdmProtectedContentStatus.convergenceResult.meanAbsDelta} · Δ max calibrato ${mdmProtectedContentStatus.convergenceResult.maxAbsDelta} · storico grezzo ${mdmProtectedContentStatus.convergenceResult.rawMeanAbsDelta}/${mdmProtectedContentStatus.convergenceResult.rawMaxAbsDelta}`,
+      `${mdmProtectedContentStatus.convergenceResult.eligible?'PASSED':'NOT YET'} · regime ${mdmProtectedContentStatus.convergenceResult.regime||'calibrated'} · samples ${mdmProtectedContentStatus.convergenceResult.sampleCount} · calibrated mean Δ ${mdmProtectedContentStatus.convergenceResult.meanAbsDelta} · calibrated max Δ ${mdmProtectedContentStatus.convergenceResult.maxAbsDelta} · raw history ${mdmProtectedContentStatus.convergenceResult.rawMeanAbsDelta}/${mdmProtectedContentStatus.convergenceResult.rawMaxAbsDelta}`,
+      `${mdmProtectedContentStatus.convergenceResult.eligible?'GĦADDA':'GĦADU LE'} · regime ${mdmProtectedContentStatus.convergenceResult.regime||'kalibrat'} · kampjuni ${mdmProtectedContentStatus.convergenceResult.sampleCount} · Δ medju kalibrat ${mdmProtectedContentStatus.convergenceResult.meanAbsDelta} · Δ max kalibrat ${mdmProtectedContentStatus.convergenceResult.maxAbsDelta} · storja mhux kalibrata ${mdmProtectedContentStatus.convergenceResult.rawMeanAbsDelta}/${mdmProtectedContentStatus.convergenceResult.rawMaxAbsDelta}`
      )
-    :lang3('Registra e misura più confronti reali prima di permettere qualunque passaggio dal shadow al runtime reale.','Records and measures multiple real comparisons before any move from shadow to live runtime.','Jirreġistra u jkejjel diversi paraguni reali qabel kwalunkwe bidla minn shadow għal runtime reali.'))}</small></div>
+    :lang3('Misura la convergenza del regime calibrato validato. Lo storico grezzo resta visibile per audit, ma non può bloccare da solo un Production Canary calibrato già verificato.','Measures convergence of the validated calibrated regime. Raw history remains visible for audit, but cannot by itself block an already verified calibrated Production Canary.','Jkejjel il-konverġenza tar-reġim kalibrat ivvalidat. L-istorja mhux kalibrata tibqa’ viżibbli għall-awditjar, iżda waħedha ma tistax timblokka Production Canary kalibrat diġà vverifikat.'))}</small></div>
   </article>
   <button class="btn secondary" id="mdmReadinessConvergenceGate">🧪 ${esc(lang3('Verifica Gate Convergenza','Verify Convergence Gate','Ivverifika Gate Konverġenza'))}</button>
   <div style="height:12px"></div>
@@ -13729,24 +13729,31 @@ async function mdmVerifyReadinessConvergenceGate({silent=false}={}){
   if(!silent)toast(lang3('Gate convergenza riservato all’Owner.','Convergence gate is reserved for the Owner.','Il-gate tal-konverġenza huwa riservat għas-sid.'));
   return false;
  }
- if(!mdmProtectedContentStatus.liveCanaryVerified||!mdmProtectedContentStatus.liveCanaryResult){
-  if(!silent)toast(lang3('Esegui prima Readiness Live Canary.','Run Readiness Live Canary first.','L-ewwel ħaddem Readiness Live Canary.'));
-  return false;
- }
+ /* v3 does not trust transient green/red UI state. After a PWA refresh those
+    cards intentionally reset, while the authoritative evidence lives on the
+    server. The RPC below re-reads Validation, Calibrated Shadow, Drift, Live
+    Eligibility and Production Canary server-side before deciding. */
  mdmProtectedContentInFlight=true;
  try{
   if(!(await mdmEnsureFreshAuthForData()))return false;
-  const local=Number(mdmProtectedContentStatus.liveCanaryResult.localScore);
-  const server=Number(mdmProtectedContentStatus.liveCanaryResult.serverScore);
+  const local=mdmReadinessLiveCanarySignals();
   const signature=mdmReadinessSampleSignature();
-  let result=await mdmDataRpc('mdm_readiness_convergence_gate_v2',{p_local_score:local,p_server_score:server,p_signature:signature});
+  let result=await mdmDataRpc('mdm_readiness_convergence_gate_v3',{
+   p_local_score:Number(local.localScore||0),
+   p_signals:local.signals,
+   p_signature:signature
+  });
   if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
-   result=await mdmDataRpc('mdm_readiness_convergence_gate_v2',{p_local_score:local,p_server_score:server,p_signature:signature});
+   result=await mdmDataRpc('mdm_readiness_convergence_gate_v3',{
+    p_local_score:Number(local.localScore||0),
+    p_signals:local.signals,
+    p_signature:signature
+   });
   }
   const data=mdmAuthParse(result.body)||{};
   if(result.status<200||result.status>=300||data.ok!==true){
-   mdmProtectedContentStatus={...mdmProtectedContentStatus,convergenceVerified:false,convergenceResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'convergence_failed')};
-   if(!silent)toast(lang3('Gate convergenza non verificato.','Convergence gate was not verified.','Il-gate tal-konverġenza ma ġiex ivverifikat.'));
+   mdmProtectedContentStatus={...mdmProtectedContentStatus,convergenceVerified:false,convergenceResult:null,lastMessage:mdmDataErrorMessage(result)||String(data.error||'calibrated_convergence_failed')};
+   if(!silent)toast(lang3('Gate convergenza calibrata non verificato.','Calibrated convergence gate was not verified.','Il-gate tal-konverġenza kalibrata ma ġiex ivverifikat.'));
    render({preserveScroll:true});
    return false;
   }
@@ -13755,10 +13762,16 @@ async function mdmVerifyReadinessConvergenceGate({silent=false}={}){
    convergenceVerified:true,
    convergenceResult:{
     eligible:Boolean(data.eligible),
+    regime:String(data.regime||'calibrated_v3'),
     sampleCount:Number(data.sample_count||0),
-    meanAbsDelta:Number(data.mean_abs_delta||0),
-    maxAbsDelta:Number(data.max_abs_delta||0),
-    currentAbsDelta:Number(data.current_abs_delta||0),
+    meanAbsDelta:Number(data.calibrated_mean_abs_delta??data.mean_abs_delta??0),
+    maxAbsDelta:Number(data.calibrated_max_abs_delta??data.max_abs_delta??0),
+    currentAbsDelta:Number(data.current_calibrated_abs_delta??data.current_abs_delta??0),
+    rawMeanAbsDelta:Number(data.raw_mean_abs_delta||0),
+    rawMaxAbsDelta:Number(data.raw_max_abs_delta||0),
+    validationPass:Boolean(data.validation_pass),
+    shadowPass:Boolean(data.shadow_pass),
+    driftStable:Boolean(data.drift_stable),
     accepted:Boolean(data.accepted),
     duplicate:Boolean(data.duplicate),
     reason:String(data.reason||'')
@@ -13766,8 +13779,8 @@ async function mdmVerifyReadinessConvergenceGate({silent=false}={}){
    lastMessage:''
   };
   if(!silent)toast(data.eligible
-   ?lang3('Gate convergenza superato: candidato pronto per il prossimo stadio.','Convergence gate passed: candidate ready for the next stage.','Il-gate tal-konverġenza għadda: kandidat lest għall-istadju li jmiss.')
-   :lang3('Gate convergenza non ancora superato: il runtime resta in shadow.','Convergence gate not yet passed: runtime remains in shadow.','Il-gate tal-konverġenza għadu ma għaddiex: ir-runtime jibqa’ shadow.'));
+   ?lang3('Convergenza calibrata superata: il regime validato è coerente con i gate live già superati.','Calibrated convergence passed: the validated regime is coherent with the live gates already passed.','Il-konverġenza kalibrata għaddiet: ir-reġim ivvalidat huwa koerenti mal-gates live li diġà għaddew.')
+   :lang3('Convergenza calibrata non ancora superata: nessuna scorciatoia, il gate resta chiuso.','Calibrated convergence has not passed yet: no shortcut, the gate remains closed.','Il-konverġenza kalibrata għadha ma għaddietx: l-ebda shortcut, il-gate jibqa’ magħluq.'));
   render({preserveScroll:true});
   return true;
  }finally{mdmProtectedContentInFlight=false}

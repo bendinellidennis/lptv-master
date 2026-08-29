@@ -6,53 +6,46 @@
 <meta name="robots" content="noindex,nofollow">
 <title>MDM Pilot Access Test 45.8.31.46</title>
 <style>
-body{margin:0;background:#061a2b;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:calc(22px + env(safe-area-inset-top)) 18px 28px}main{max-width:620px;margin:auto}.card{background:#0d2b42;border:1px solid #31546c;border-radius:18px;padding:18px;box-shadow:0 12px 32px #0004}h1{font-size:22px;margin:0 0 8px}p{color:#c8d9e5;line-height:1.45}.status{margin:16px 0;padding:14px;border-radius:14px;background:#132f44;font-weight:800;white-space:pre-wrap;word-break:break-word}.ok{background:#123b32}.warn{background:#4a3514}.bad{background:#4a2025}button{width:100%;min-height:50px;border:0;border-radius:13px;font-size:16px;font-weight:800;background:#5ee2e6;color:#052334;padding:12px}small{display:block;margin-top:14px;color:#98afbf;line-height:1.4}
+body{margin:0;background:#061a2b;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:calc(22px + env(safe-area-inset-top)) 18px 28px}main{max-width:620px;margin:auto}.card{background:#0d2b42;border:1px solid #31546c;border-radius:18px;padding:18px}h1{font-size:22px;margin:0 0 8px}p{color:#c8d9e5;line-height:1.45}.status{margin:16px 0;padding:14px;border-radius:14px;background:#132f44;font-weight:800;white-space:pre-wrap;word-break:break-word}.ok{background:#123b32}.warn{background:#4a3514}.bad{background:#4a2025}button{width:100%;min-height:50px;border:0;border-radius:13px;font-size:16px;font-weight:800;background:#5ee2e6;color:#052334;padding:12px}small{display:block;margin-top:14px;color:#98afbf;line-height:1.4}
 </style>
 </head>
-<body><main><div class="card"><h1>Pilot Access 45.8.31.46</h1><p>Test isolato frontend → Supabase. Questa pagina non modifica e non blocca l'app.</p><div id="status" class="status">Avvio test…</div><button id="retry" type="button">Riprova test</button><small id="detail"></small></div></main>
-<script src="mdm-backend-config-45831341.js?v=45831341-pilot-test"></script>
+<body><main><div class="card"><h1>Pilot Access 45.8.31.46</h1><p>Test isolato. Non modifica l'app.</p><div id="status" class="status">Avvio test…</div><button id="retry" type="button">Riprova test</button><small id="detail"></small></div></main>
+<script src="mdm-backend-config-45831341.js?v=45831341-pilot-test2"></script>
 <script>
 (function(){
 'use strict';
-const status=document.getElementById('status'),detail=document.getElementById('detail'),retry=document.getElementById('retry');
-function set(text,cls){status.textContent=text;status.className='status '+(cls||'');}
-function getAccessToken(){
-  for(let i=0;i<localStorage.length;i++){
-    const k=localStorage.key(i); if(!k) continue;
-    let raw=''; try{raw=localStorage.getItem(k)||'';}catch(_){continue;}
-    if(raw.indexOf('access_token')<0) continue;
-    try{
-      const obj=JSON.parse(raw);
-      const stack=[obj];
-      while(stack.length){const x=stack.pop();if(!x||typeof x!=='object')continue;if(typeof x.access_token==='string'&&x.access_token.length>20)return x.access_token;for(const v of Object.values(x))if(v&&typeof v==='object')stack.push(v);}
-    }catch(_){}
+var status=document.getElementById('status'),detail=document.getElementById('detail'),retry=document.getElementById('retry');
+function set(t,c){status.textContent=t;status.className='status '+(c||'');}
+function deepToken(x){if(!x||typeof x!=='object')return'';if(typeof x.access_token==='string'&&x.access_token.length>20)return x.access_token;for(var k in x){if(Object.prototype.hasOwnProperty.call(x,k)){var r=deepToken(x[k]);if(r)return r;}}return'';}
+function findToken(){
+  var stores=[];try{stores.push(['localStorage',localStorage]);}catch(e){} try{stores.push(['sessionStorage',sessionStorage]);}catch(e){}
+  var seen=[];
+  for(var s=0;s<stores.length;s++){
+    var name=stores[s][0],st=stores[s][1];
+    for(var i=0;i<st.length;i++){
+      var k=st.key(i); if(!k)continue; seen.push(name+': '+k);
+      var raw=''; try{raw=st.getItem(k)||'';}catch(e){continue;}
+      if(raw.indexOf('access_token')<0)continue;
+      try{var tok=deepToken(JSON.parse(raw));if(tok)return{token:tok,keys:seen};}catch(e){}
+    }
   }
-  return '';
+  return{token:'',keys:seen};
 }
 async function run(){
-  retry.disabled=true;detail.textContent='';set('Controllo configurazione…','');
-  try{
-    const cfg=window.MDM_BACKEND_CONFIG;
-    if(!cfg||!cfg.endpoint||!cfg.publishableKey){set('ERRORE · configurazione backend non disponibile','bad');return;}
-    const token=getAccessToken();
-    if(!token){
-      set('SESSIONE NON TROVATA · apri prima Malta Driving Master ed effettua il login, poi torna qui e premi Riprova test.','warn');
-      detail.textContent='Endpoint rilevato: '+cfg.endpoint.replace(/^https?:\/\//,'');
-      return;
-    }
-    set('Connessione al backend…','');
-    const res=await fetch(cfg.endpoint.replace(/\/$/,'')+'/rest/v1/rpc/mdm_check_my_pilot_entitlement',{
-      method:'POST',headers:{'Content-Type':'application/json','apikey':cfg.publishableKey,'Authorization':'Bearer '+token},body:'{}',cache:'no-store'
-    });
-    const text=await res.text();let data=null;try{data=JSON.parse(text);}catch(_){}
-    if(!res.ok){set('ERRORE BACKEND · HTTP '+res.status,'bad');detail.textContent=(data&&JSON.stringify(data))||text||'Nessun dettaglio';return;}
-    const row=Array.isArray(data)?data[0]:data;
-    if(row&&row.authorized===true){set('PASS · BACKEND COLLEGATO · AUTHORIZED','ok');}
-    else if(row&&row.authorized===false){set('PASS · BACKEND COLLEGATO · NO ACTIVE LICENSE','ok');}
-    else{set('PASS · BACKEND COLLEGATO · risposta ricevuta','ok');}
-    detail.textContent='RPC mdm_check_my_pilot_entitlement raggiunta correttamente.';
-  }catch(e){set('ERRORE DI CONNESSIONE','bad');detail.textContent=String(e&&e.message||e||'errore sconosciuto');}
-  finally{retry.disabled=false;}
+ retry.disabled=true; detail.textContent=''; set('Controllo sessione…','');
+ try{
+   var cfg=window.MDM_BACKEND_CONFIG;if(!cfg||!cfg.endpoint||!cfg.publishableKey){set('ERRORE · configurazione backend assente','bad');return;}
+   var found=findToken();
+   if(!found.token){set('SESSIONE NON TROVATA','warn');detail.textContent='Chiavi viste: '+(found.keys.length?found.keys.join(' | '):'nessuna');return;}
+   set('SESSIONE TROVATA · controllo backend…','');
+   var res=await fetch(cfg.endpoint.replace(/\/$/,'')+'/rest/v1/rpc/mdm_check_my_pilot_entitlement',{method:'POST',headers:{'Content-Type':'application/json','apikey':cfg.publishableKey,'Authorization':'Bearer '+found.token},body:'{}',cache:'no-store'});
+   var txt=await res.text(),data={};try{data=JSON.parse(txt);}catch(e){}
+   if(!res.ok){set('ERRORE BACKEND · HTTP '+res.status,'bad');detail.textContent=txt||'Nessun dettaglio';return;}
+   var row=Array.isArray(data)?data[0]:data;
+   set(row&&row.authorized===true?'PASS · BACKEND COLLEGATO · AUTHORIZED':'PASS · BACKEND COLLEGATO · NO ACTIVE LICENSE','ok');
+   detail.textContent='RPC raggiunta correttamente.';
+ }catch(e){set('ERRORE DI CONNESSIONE','bad');detail.textContent=String(e&&e.message||e);}
+ finally{retry.disabled=false;}
 }
 retry.addEventListener('click',run);run();
 })();

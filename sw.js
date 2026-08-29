@@ -1,25 +1,74 @@
-const CACHE='mdm-build-39-9-2-strict-real-only';
-const ASSETS=[
- './',
- './index.html',
- './styles.css?v=39.9.2',
- './app.js?v=39.9.2',
- './database.js?v=39.9.2',
- './content.js?v=39.9.2',
- './replay-engine.js?v=39.9.2',
- './replay-scenes.js?v=39.9.2',
- './scene-audit.js?v=39.9.2',
- './manifest.webmanifest',
- './icon-192.png',
- './icon-512.png',
- './country-packs.js?v=39.9.2',
- './malta-pack.js?v=39.9.2',
- './replay-coach.js?v=39.9.2',
- './scene-catalog.js?v=39.9.2',
- './malta-scene-library.js?v=39.9.2',
- './scene-assets.js?v=39.9.2',
- './malta-scene-assets.js?v=39.9.2',
- './assets/mt/README.txt'];
-self.addEventListener('install',event=>{self.skipWaiting();event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)))});
-self.addEventListener('activate',event=>{event.waitUntil(Promise.all([self.clients.claim(),caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key))))]))});
-self.addEventListener('fetch',event=>{if(event.request.method!=='GET')return;event.respondWith(fetch(event.request,{cache:'no-store'}).then(response=>{const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy));return response}).catch(()=>caches.match(event.request).then(response=>response||caches.match('./index.html'))))});
+'use strict';
+
+/* Malta Driving Master 45.8.31.37.1
+   Internal Pentest — PWA Service Worker Integrity Fix
+   - removes obsolete 39.9.2 cache/version references
+   - keeps cache same-origin only
+   - never caches Supabase/API cross-origin traffic
+   - network-first to avoid stale security/runtime code
+   - minimal offline shell fallback
+*/
+
+const CACHE = 'mdm-build-45-8-31-37-1-pwa-integrity';
+const CORE = [
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './icon-192.png',
+  './icon-512.png'
+];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE)
+      .then((cache) => cache.addAll(CORE))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    Promise.all([
+      self.clients.claim(),
+      caches.keys().then((keys) =>
+        Promise.all(
+          keys
+            .filter((key) => key !== CACHE)
+            .map((key) => caches.delete(key))
+        )
+      )
+    ])
+  );
+});
+
+self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+
+  // Never intercept/cache Supabase or any other cross-origin traffic.
+  if (url.origin !== self.location.origin) return;
+
+  event.respondWith(
+    fetch(request, { cache: 'no-store' })
+      .then((response) => {
+        if (response && response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE).then((cache) => cache.put(request, copy));
+        }
+        return response;
+      })
+      .catch(async () => {
+        const cached = await caches.match(request);
+        if (cached) return cached;
+
+        if (request.mode === 'navigate') {
+          const shell = await caches.match('./index.html');
+          if (shell) return shell;
+        }
+
+        return Response.error();
+      })
+  );
+});

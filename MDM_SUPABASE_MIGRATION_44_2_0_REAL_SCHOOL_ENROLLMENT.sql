@@ -57,15 +57,15 @@ for select
 to authenticated
 using ((select auth.uid()) = user_id);
 
--- Development/pilot join code already used by the local MDM flow.
--- It is a REAL server record but explicitly marked TEST; it never creates an active membership.
+-- Legacy development/pilot join code retained only for historical compatibility.
+-- SECURITY: it must remain disabled and cannot be reactivated by re-running this migration.
 insert into public.mdm_school_join_codes(code, school_name, country_pack, status, is_test)
-values ('MDM-MT-ABC123', 'MDM Malta Pilot School (TEST)', 'MT-LPTV-TAG', 'active', true)
+values ('MDM-MT-ABC123', 'MDM Malta Pilot School (TEST)', 'MT-LPTV-TAG', 'disabled', true)
 on conflict (code) do update
 set school_name = excluded.school_name,
     country_pack = excluded.country_pack,
-    status = excluded.status,
-    is_test = excluded.is_test,
+    status = 'disabled',
+    is_test = true,
     updated_at = now();
 
 -- Authenticated student submits a real server request.

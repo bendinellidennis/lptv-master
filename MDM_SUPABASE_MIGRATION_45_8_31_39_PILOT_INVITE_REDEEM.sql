@@ -95,8 +95,8 @@ begin
     and invite_email_normalized = v_email
     and status = 'pending';
 
-  v_raw_token := encode(gen_random_bytes(32), 'hex');
-  v_token_hash := encode(digest(v_raw_token, 'sha256'), 'hex');
+  v_raw_token := encode(extensions.gen_random_bytes(32), 'hex');
+  v_token_hash := encode(extensions.digest(v_raw_token, 'sha256'), 'hex');
 
   insert into public.mdm_pilot_invitations(
     license_id,
@@ -171,7 +171,7 @@ begin
     return jsonb_build_object('ok', false, 'error', 'authenticated_email_required');
   end if;
 
-  v_hash := encode(digest(v_token, 'sha256'), 'hex');
+  v_hash := encode(extensions.digest(v_token, 'sha256'), 'hex');
 
   select * into v_inv
   from public.mdm_pilot_invitations

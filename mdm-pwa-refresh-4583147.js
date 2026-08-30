@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.47 — targeted PWA refresh + School Dashboard mount fix
+/* Malta Driving Master 45.8.31.47 — targeted PWA refresh + real Server School Console mount fix
    No MutationObserver. No polling. No enforcement changes. */
 (function(){
   'use strict';
@@ -42,11 +42,27 @@
     return true;
   }
 
+  function ensureRealServerHost(){
+    try{
+      if(document.querySelector('.dashboard-invites-card'))return true;
+      const consoleCard=document.querySelector('.account-enroll-card');
+      if(!consoleCard)return false;
+      const host=document.createElement('div');
+      host.className='dashboard-invites-card';
+      host.setAttribute('data-mdm-real-server-invite-host','45.8.31.47');
+      host.style.marginTop='14px';
+      consoleCard.appendChild(host);
+      return true;
+    }catch(_){return false;}
+  }
+
   function mountPilotInvite(){
     try{
+      if(!ensureRealServerHost())return false;
       const bridge=window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE;
-      if(bridge&&typeof bridge.mount==='function')bridge.mount();
+      if(bridge&&typeof bridge.mount==='function')return bridge.mount();
     }catch(_){}
+    return false;
   }
 
   function schedulePilotMount(){
@@ -56,12 +72,9 @@
     },0);
   }
 
-  document.addEventListener('click',function(ev){
+  document.addEventListener('click',function(){
     queueMicrotask(bindRefresh);
-    try{
-      const target=ev.target&&ev.target.closest?ev.target.closest('[data-go="schooldashboard"]'):null;
-      if(target)schedulePilotMount();
-    }catch(_){}
+    schedulePilotMount();
   },false);
 
   window.addEventListener('pageshow',schedulePilotMount);

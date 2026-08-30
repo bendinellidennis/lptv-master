@@ -1,12 +1,16 @@
 /* Malta Driving Master 45.8.31.46 — Pilot Access Shadow Bridge
    Uses the existing verified MDM auth session key.
-   One entitlement RPC at startup. No observers, no repeated timers, no enforcement. */
+   One entitlement RPC per authenticated session/user readiness transition.
+   No observers, no repeated timers, no enforcement. */
 (function(){
   'use strict';
 
   if (window.MDM_PILOT_ACCESS_BRIDGE) return;
 
   const AUTH_KEY='mdm_auth_session_v4410';
+  let lastAuthFingerprint='';
+  let checkInFlight=false;
+
   const state={
     version:'45.8.31.46',
     mode:'shadow',
@@ -45,7 +49,20 @@
     }catch(_){return null}
   }
 
+  function authFingerprint(session){
+    try{
+      const userId=String(session&&session.user&&session.user.id||'');
+      const token=String(session&&session.accessToken||'');
+      const verifiedAt=String(session&&session.verifiedAt||'');
+      const status=String(session&&session.status||'');
+      if(status!=='authenticated'||!userId||!token)return '';
+      return userId+'|'+verifiedAt+'|'+token.slice(-24);
+    }catch(_){return ''}
+  }
+
   async function check(){
+    if(checkInFlight)return snapshot();
+
     const cfg=window.MDM_BACKEND_CONFIG;
     if(!cfg||!cfg.enabled||!cfg.endpoint||!cfg.publishableKey){
       state.status='config_unavailable';
@@ -80,9 +97,13 @@
       return snapshot();
     }
 
+    const fingerprint=authFingerprint(session);
+    if(fingerprint&&fingerprint===lastAuthFingerprint&&state.checkedAt)return snapshot();
+
     state.status='checking';
     state.error='';
     renderBadge();
+    checkInFlight=true;
 
     try{
       const response=await fetch(
@@ -115,6 +136,7 @@
         return snapshot();
       }
 
+      lastAuthFingerprint=fingerprint;
       state.authorized=data&&data.authorized===true;
       state.status=state.authorized?'authorized':'unauthorized';
       state.reason=String(data&&data.reason||'');
@@ -129,8 +151,38 @@
       state.error=String(e&&e.message||e||'entitlement_check_exception');
       renderBadge();
       return snapshot();
+    }finally{
+      checkInFlight=false;
     }
   }
+
+  function checkWhenAuthReady(){
+    try{
+      const session=readSession();
+      if(authFingerprint(session))check();
+    }catch(_){}
+  }
+
+  /* Narrow auth-ready hook: MDM persists every verified Auth transition through
+     localStorage.setItem(AUTH_KEY,...). We observe only that exact key and only
+     authenticated states. This avoids DOM observers and polling while catching
+     the async restore/verify completion that can happen after window.load. */
+  try{
+    const originalSetItem=Storage.prototype.setItem;
+    if(!Storage.prototype.__mdmPilotAuthHook4583146){
+      Object.defineProperty(Storage.prototype,'__mdmPilotAuthHook4583146',{value:true,configurable:false,enumerable:false,writable:false});
+      Storage.prototype.setItem=function(key,value){
+        const result=originalSetItem.apply(this,arguments);
+        try{
+          if(this===localStorage&&String(key)===AUTH_KEY){
+            const parsed=JSON.parse(String(value||'{}'));
+            if(authFingerprint(parsed))Promise.resolve().then(checkWhenAuthReady);
+          }
+        }catch(_){}
+        return result;
+      };
+    }
+  }catch(_){}
 
   window.MDM_PILOT_ACCESS_BRIDGE=Object.freeze({
     version:'45.8.31.46',

@@ -1,15 +1,15 @@
 'use strict';
 
-/* Malta Driving Master 45.8.31.37.1
-   Internal Pentest — PWA Service Worker Integrity Fix
-   - removes obsolete 39.9.2 cache/version references
-   - keeps cache same-origin only
+/* Malta Driving Master 45.8.31.47
+   Pilot School Dashboard — PWA cache refresh
+   - rotates the cache namespace so installed PWAs discard the previous shell
+   - keeps same-origin only caching
    - never caches Supabase/API cross-origin traffic
    - network-first to avoid stale security/runtime code
    - minimal offline shell fallback
 */
 
-const CACHE = 'mdm-build-45-8-31-37-1-pwa-integrity';
+const CACHE = 'mdm-build-45-8-31-47-pilot-school-dashboard';
 const CORE = [
   './',
   './index.html',

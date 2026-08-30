@@ -137,10 +137,10 @@
         return snapshot();
       }
 
-      const allowed=data&&data.allowed===true;
-      state.deviceStatus=allowed?'authorized':'denied';
-      state.deviceReason=String(data&&data.reason||'');
-      state.deviceError='';
+      const registered=Boolean(data&&data.ok===true&&data.registered===true);
+      state.deviceStatus=registered?'authorized':'denied';
+      state.deviceReason=String((data&&((data.error)||(data.device_status)||(data.reason)))||'');
+      state.deviceError=registered?'':String((data&&data.error)||'device_registration_denied');
       renderBadge();
       return snapshot();
     }catch(e){

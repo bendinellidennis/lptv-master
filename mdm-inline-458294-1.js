@@ -1,8 +1,8 @@
 
 (function(){try{const raw=localStorage.getItem('mdm-v1-settings'),lang=raw?JSON.parse(raw).lang:'en',el=document.getElementById('mdmStartupSub');if(!el)return;el.textContent=lang==='it'?'Caricamento della tua intelligenza di guida…':lang==='mt'?'Qed titgħabba l-intelliġenza tas-sewqan tiegħek…':'Loading your driving intelligence…';}catch(_){}})();
 
-/* 45.8.31.49.7 — deterministic Pilot/account bridge loader.
-   Cache-busted current files only. No obsolete Home account mount adapter. */
+/* 45.8.31.49.8 — deterministic Pilot/account bridge loader.
+   Current cache-busted files only. School invite bridge is forced to immediate-mount 45.8.31.47.2. */
 window.addEventListener('load',function(){
   try{
     if(!window.MDM_PILOT_ACCESS_BRIDGE){
@@ -15,7 +15,7 @@ window.addEventListener('load',function(){
 
     if(!window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE){
       const school=document.createElement('script');
-      school.src='mdm-pilot-school-dashboard-4583147.js?v=45831497';
+      school.src='mdm-pilot-school-dashboard-4583147.js?v=45831472-immediate';
       school.async=true;
       school.setAttribute('data-mdm-pilot-school-bridge','shadow');
       document.head.appendChild(school);
@@ -23,7 +23,7 @@ window.addEventListener('load',function(){
 
     if(!window.MDM_PILOT_STUDENT_REDEEM_BRIDGE){
       const redeem=document.createElement('script');
-      redeem.src='mdm-pilot-student-redeem-4583148.js?v=45831497';
+      redeem.src='mdm-pilot-student-redeem-4583148.js?v=45831483-deterministic';
       redeem.async=true;
       redeem.setAttribute('data-mdm-pilot-student-redeem','shadow');
       document.head.appendChild(redeem);
@@ -31,7 +31,7 @@ window.addEventListener('load',function(){
 
     if(!window.MDM_ACCOUNT_ENTRY_BRIDGE){
       const account=document.createElement('script');
-      account.src='mdm-account-entry-4583149.js?v=45831497';
+      account.src='mdm-account-entry-4583149.js?v=45831496-direct';
       account.async=true;
       account.setAttribute('data-mdm-account-entry','quick');
       document.head.appendChild(account);

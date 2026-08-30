@@ -10,10 +10,47 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Create FULL ZIP
+      - name: Create clean runtime FULL ZIP
         shell: bash
         run: |
-          zip -r MDM_FULL_45_8_31_46_CURRENT_MAIN.zip .             -x ".git/*"             -x ".github/workflows/package-full.yml"             -x "BUILD_CHECK*"             -x "*/BUILD_CHECK*"
+          set -euo pipefail
+          mkdir -p package
+          files=(
+            index.html manifest.webmanifest icon-192.png icon-512.png sw.js
+            styles-3994-45821automatic-evidence-passport-final.css
+            styles-3994-45823parent-sponsor-portal-final.css
+            styles-3994-45824school-operations-final.css
+            styles-3994-45825fleet-corporate-final.css
+            styles-3994-458261investor-github-layout-sync.css
+            styles-3994-45829-security-stability-trust-center.css
+            styles-4583030-home-reference.css
+            styles-4583037-school-home.css
+            mdm-security-hardening-458314.js
+            mdm-inline-458294-1.js mdm-inline-458294-2.js mdm-inline-458294-3.js mdm-inline-458294-4.js mdm-inline-458294-5.js
+            mdm-backend-config-45831341.js mdm-pilot-access-4583146.js
+            mdm-458283-multi-device-conflict-resolution-overlay.js mdm-4582833-conflict-manager-safe.js
+            database.js language-pack-mt.js cce-questions-4581.js busd-questions-4560.js
+            content.js country-packs.js malta-pack.js license-packs.js
+            scene-catalog.js malta-scene-library.js scene-assets.js malta-scene-assets.js
+            replay-engine.js replay-scenes.js scene-audit.js replay-coach.js replay-freeze-inline.js
+            app-3994-4582852-part-a.js app-3994-458293-part-b1.js app-3994-458293-part-b2.js
+            fog.jpg gauge.jpg replay-overtaking-fallback.webp replay-overtaking-photo.webp
+          )
+          for f in "${files[@]}"; do
+            test -f "$f"
+            cp -- "$f" package/
+          done
+          if [ -d assets ]; then cp -R assets package/assets; fi
+          for f in MDM_SUPABASE_MIGRATION_*.sql; do
+            [ -e "$f" ] || continue
+            cp -- "$f" package/
+          done
+          if find package -type f -name 'BUILD_CHECK*' | grep -q .; then
+            echo "BUILD_CHECK found in package" >&2
+            exit 1
+          fi
+          (cd package && zip -r ../MDM_FULL_45_8_31_46_CURRENT_MAIN.zip .)
+          unzip -t MDM_FULL_45_8_31_46_CURRENT_MAIN.zip
       - name: Upload FULL ZIP
         uses: actions/upload-artifact@v4
         with:

@@ -1,7 +1,7 @@
 
 (function(){try{const raw=localStorage.getItem('mdm-v1-settings'),lang=raw?JSON.parse(raw).lang:'en',el=document.getElementById('mdmStartupSub');if(!el)return;el.textContent=lang==='it'?'Caricamento della tua intelligenza di guida…':lang==='mt'?'Qed titgħabba l-intelliġenza tas-sewqan tiegħek…':'Loading your driving intelligence…';}catch(_){}})();
 
-/* 45.8.31.46/47/48 — load Pilot shadow bridges and targeted PWA refresh fix
+/* 45.8.31.46/47/48/49 — load Pilot shadow bridges, quick account entry and targeted PWA refresh fix
    only after the stable app and every declared page resource completed loading.
    Student account creation uses the existing real Supabase Auth UI already built into Profile. */
 window.addEventListener('load',function(){
@@ -28,6 +28,14 @@ window.addEventListener('load',function(){
       redeem.async=true;
       redeem.setAttribute('data-mdm-pilot-student-redeem','shadow');
       document.head.appendChild(redeem);
+    }
+
+    if(!window.MDM_ACCOUNT_ENTRY_BRIDGE){
+      const account=document.createElement('script');
+      account.src='mdm-account-entry-4583149.js?v=4583149-account-v1';
+      account.async=true;
+      account.setAttribute('data-mdm-account-entry','quick');
+      document.head.appendChild(account);
     }
 
     if(!window.MDM_PWA_REFRESH_FIX){

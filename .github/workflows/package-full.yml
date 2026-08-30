@@ -1,0 +1,23 @@
+name: Build MDM FULL Package
+on:
+  push:
+    branches:
+      - full-45-8-31-46-package
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create FULL ZIP
+        shell: bash
+        run: |
+          zip -r MDM_FULL_45_8_31_46_CURRENT_MAIN.zip .             -x ".git/*"             -x ".github/workflows/package-full.yml"             -x "BUILD_CHECK*"             -x "*/BUILD_CHECK*"
+      - name: Upload FULL ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: MDM_FULL_45_8_31_46_CURRENT_MAIN
+          path: MDM_FULL_45_8_31_46_CURRENT_MAIN.zip
+          if-no-files-found: error
+          retention-days: 7

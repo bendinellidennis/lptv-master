@@ -1,15 +1,17 @@
 /* Malta Driving Master 45.8.31.46 — Pilot Access Shadow Bridge
    Uses the existing verified MDM auth session key.
-   One entitlement RPC per authenticated session/user readiness transition.
-   No observers, no repeated timers, no enforcement. */
+   Entitlement + device registration run only after authenticated readiness.
+   No DOM observers, no repeated polling, no enforcement. */
 (function(){
   'use strict';
 
   if (window.MDM_PILOT_ACCESS_BRIDGE) return;
 
   const AUTH_KEY='mdm_auth_session_v4410';
+  const DEVICE_TOKEN_KEY='mdm_pilot_device_token_v4583146';
   let lastAuthFingerprint='';
   let checkInFlight=false;
+  let deviceInFlight=false;
 
   const state={
     version:'45.8.31.46',
@@ -19,7 +21,11 @@
     checkedAt:'',
     authorized:null,
     reason:'',
-    error:''
+    error:'',
+    deviceStatus:'not_checked',
+    deviceReason:'',
+    deviceError:'',
+    deviceCheckedAt:''
   };
 
   function snapshot(){return Object.assign({},state)}
@@ -31,11 +37,12 @@
         el=document.createElement('div');
         el.id='mdmPilotShadowBadge';
         el.setAttribute('aria-live','polite');
-        el.style.cssText='position:fixed;z-index:9999;right:10px;top:calc(8px + env(safe-area-inset-top));max-width:78vw;padding:7px 10px;border-radius:10px;background:rgba(6,26,43,.90);color:#fff;font:700 10px/1.25 system-ui;letter-spacing:.01em;pointer-events:none;opacity:.94';
+        el.style.cssText='position:fixed;z-index:9999;right:10px;top:calc(8px + env(safe-area-inset-top));max-width:82vw;padding:7px 10px;border-radius:10px;background:rgba(6,26,43,.90);color:#fff;font:700 10px/1.25 system-ui;letter-spacing:.01em;pointer-events:none;opacity:.94';
         document.body.appendChild(el);
       }
       const auth=state.authorized===true?'AUTHORIZED':state.authorized===false?'NO ACTIVE LICENSE':'PENDING';
-      el.textContent='Pilot 45.8.31.46 · '+String(state.status||'ready').toUpperCase()+' · '+auth;
+      const device=state.authorized===true?' · DEVICE '+String(state.deviceStatus||'not_checked').toUpperCase():'';
+      el.textContent='Pilot 45.8.31.46 · '+String(state.status||'ready').toUpperCase()+' · '+auth+device;
     }catch(_){}
   }
 
@@ -58,6 +65,94 @@
       if(status!=='authenticated'||!userId||!token)return '';
       return userId+'|'+verifiedAt+'|'+token.slice(-24);
     }catch(_){return ''}
+  }
+
+  function randomDeviceToken(){
+    const bytes=new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+    let out='';
+    for(let i=0;i<bytes.length;i++)out+=bytes[i].toString(16).padStart(2,'0');
+    return out;
+  }
+
+  function getDeviceToken(){
+    try{
+      let token=String(localStorage.getItem(DEVICE_TOKEN_KEY)||'').trim();
+      if(token.length>=32&&token.length<=512)return token;
+      token=randomDeviceToken();
+      localStorage.setItem(DEVICE_TOKEN_KEY,token);
+      return token;
+    }catch(_){return ''}
+  }
+
+  async function registerDevice(session){
+    if(deviceInFlight)return snapshot();
+    const cfg=window.MDM_BACKEND_CONFIG;
+    const token=String(session&&session.accessToken||'');
+    if(!cfg||!cfg.enabled||!cfg.endpoint||!cfg.publishableKey||!token)return snapshot();
+
+    const deviceToken=getDeviceToken();
+    if(!deviceToken){
+      state.deviceStatus='error';
+      state.deviceReason='device_token_unavailable';
+      state.deviceError='device_token_unavailable';
+      state.deviceCheckedAt=new Date().toISOString();
+      renderBadge();
+      return snapshot();
+    }
+
+    state.deviceStatus='checking';
+    state.deviceReason='';
+    state.deviceError='';
+    renderBadge();
+    deviceInFlight=true;
+
+    try{
+      const response=await fetch(
+        String(cfg.endpoint).replace(/\/$/,'')+'/rest/v1/rpc/mdm_register_my_pilot_device',
+        {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'apikey':cfg.publishableKey,
+            'Authorization':'Bearer '+token
+          },
+          body:JSON.stringify({p_device_token:deviceToken,p_device_label:'iPhone / Safari PWA'}),
+          cache:'no-store'
+        }
+      );
+
+      const body=await response.text();
+      let data={};
+      try{data=body?JSON.parse(body):{}}catch(_){}
+      if(Array.isArray(data))data=data[0]||{};
+
+      state.deviceCheckedAt=new Date().toISOString();
+
+      if(!response.ok){
+        state.deviceStatus='error';
+        state.deviceReason=String((data&&data.reason)||'device_registration_failed');
+        state.deviceError=String((data&&((data.error)||(data.message)))||('http_'+response.status));
+        renderBadge();
+        return snapshot();
+      }
+
+      const allowed=data&&data.allowed===true;
+      state.deviceStatus=allowed?'authorized':'denied';
+      state.deviceReason=String(data&&data.reason||'');
+      state.deviceError='';
+      renderBadge();
+      return snapshot();
+    }catch(e){
+      state.deviceStatus='error';
+      state.deviceCheckedAt=new Date().toISOString();
+      state.deviceReason='device_registration_exception';
+      state.deviceError=String(e&&e.message||e||'device_registration_exception');
+      renderBadge();
+      return snapshot();
+    }finally{
+      deviceInFlight=false;
+    }
   }
 
   async function check(){
@@ -83,6 +178,7 @@
       state.authorized=null;
       state.reason='authentication_required';
       state.error='';
+      state.deviceStatus='not_checked';
       renderBadge();
       return snapshot();
     }
@@ -93,6 +189,7 @@
       state.authorized=null;
       state.reason='session_expired';
       state.error='';
+      state.deviceStatus='not_checked';
       renderBadge();
       return snapshot();
     }
@@ -132,6 +229,7 @@
         state.authorized=null;
         state.reason='entitlement_check_failed';
         state.error=String((data&&((data.error)||(data.message)))||('http_'+response.status));
+        state.deviceStatus='not_checked';
         renderBadge();
         return snapshot();
       }
@@ -141,7 +239,10 @@
       state.status=state.authorized?'authorized':'unauthorized';
       state.reason=String(data&&data.reason||'');
       state.error='';
+      state.deviceStatus=state.authorized?'queued':'not_checked';
       renderBadge();
+
+      if(state.authorized)await registerDevice(session);
       return snapshot();
     }catch(e){
       state.status='error';
@@ -149,6 +250,7 @@
       state.authorized=null;
       state.reason='entitlement_check_exception';
       state.error=String(e&&e.message||e||'entitlement_check_exception');
+      state.deviceStatus='not_checked';
       renderBadge();
       return snapshot();
     }finally{
@@ -163,10 +265,6 @@
     }catch(_){}
   }
 
-  /* Narrow auth-ready hook: MDM persists every verified Auth transition through
-     localStorage.setItem(AUTH_KEY,...). We observe only that exact key and only
-     authenticated states. This avoids DOM observers and polling while catching
-     the async restore/verify completion that can happen after window.load. */
   try{
     const originalSetItem=Storage.prototype.setItem;
     if(!Storage.prototype.__mdmPilotAuthHook4583146){

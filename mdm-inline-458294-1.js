@@ -1,8 +1,8 @@
 
 (function(){try{const raw=localStorage.getItem('mdm-v1-settings'),lang=raw?JSON.parse(raw).lang:'en',el=document.getElementById('mdmStartupSub');if(!el)return;el.textContent=lang==='it'?'Caricamento della tua intelligenza di guida…':lang==='mt'?'Qed titgħabba l-intelliġenza tas-sewqan tiegħek…':'Loading your driving intelligence…';}catch(_){}})();
 
-/* 45.8.31.46 — load the Pilot Access shadow bridge only after the stable app
-   and every declared page resource have completed loading. */
+/* 45.8.31.46/47 — load Pilot shadow bridges and targeted PWA refresh fix
+   only after the stable app and every declared page resource completed loading. */
 window.addEventListener('load',function(){
   try{
     if(!window.MDM_PILOT_ACCESS_BRIDGE){
@@ -19,6 +19,14 @@ window.addEventListener('load',function(){
       school.async=true;
       school.setAttribute('data-mdm-pilot-school-bridge','shadow');
       document.head.appendChild(school);
+    }
+
+    if(!window.MDM_PWA_REFRESH_FIX){
+      const refresh=document.createElement('script');
+      refresh.src='mdm-pwa-refresh-4583147.js?v=4583147-refresh-v1';
+      refresh.async=true;
+      refresh.setAttribute('data-mdm-pwa-refresh-fix','targeted');
+      document.head.appendChild(refresh);
     }
   }catch(_){}
 },{once:true});

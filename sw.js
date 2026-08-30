@@ -1,7 +1,7 @@
 'use strict';
 
-/* Malta Driving Master 45.8.31.49
-   Quick Account Entry + Password Recovery — PWA cache refresh
+/* Malta Driving Master 45.8.31.49.5
+   Registration Icon — PWA cache refresh
    - rotates the cache namespace so installed PWAs discard the previous shell
    - keeps same-origin only caching
    - never caches Supabase/API cross-origin traffic
@@ -9,7 +9,7 @@
    - minimal offline shell fallback
 */
 
-const CACHE = 'mdm-build-45-8-31-49-quick-account-entry';
+const CACHE = 'mdm-build-45-8-31-49-5-registration-icon';
 const CORE = [
   './',
   './index.html',

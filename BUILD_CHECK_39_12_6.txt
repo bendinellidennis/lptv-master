@@ -1,5 +1,0 @@
-MALTA DRIVING MASTER BUILD 39.12.6
-Corrective patch on top of 39.12.5.
-CARS1.15: phases 01-03 replaced with three question-specific real photographs; phase 04 video replaced.
-CARS4.15: phase 04 video replaced with driver-perspective real footage through rain/standing water.
-All other Replay catalogue entries, questions/answers and Coach text unchanged.

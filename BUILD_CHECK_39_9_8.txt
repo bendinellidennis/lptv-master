@@ -1,9 +1,0 @@
-MALTA DRIVING MASTER — BUILD 39.9.8
-CARS1.18 STRICT VISUAL FIX
-
-PASS: old empty-road clip removed from primary/fallback sources
-PASS: replacement source explicitly contains cyclists + car perspective + passing context
-PASS: hotspot enlarged for cyclist visibility
-PASS: quality rule rejects empty-road/generic-road footage
-PASS: CARS1.10 unchanged
-SOURCE: Pexels 34633207 — Cyclists Passing by in Car Side Mirror View

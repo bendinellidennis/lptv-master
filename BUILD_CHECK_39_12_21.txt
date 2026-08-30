@@ -1,7 +1,0 @@
-MALTA DRIVING MASTER BUILD 39.12.21
-Replay Library: 95 READY
-Base: 39.12.20 Replay90
-Added: CARS13.2, CARS13.3, CARS13.5, CARS13.6, CARS13.9
-01-03: real Pexels emergency/first-aid imagery, URLs verified from live Pexels pages
-04: dedicated distinct real emergency/first-aid videos
-Previous 90 Replay entries preserved.

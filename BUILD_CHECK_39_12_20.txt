@@ -1,9 +1,0 @@
-MALTA DRIVING MASTER BUILD 39.12.20 — REPLAY90 CARS13.7 FREEZE FIX
-Base: 39.12.19 Replay90
-Fix: CARS13.7 phases 01–03 no longer depend on invalid remote video-thumbnail URLs.
-01: verified real CPR training photo embedded in app.
-02: verified real CPR/first-aid training photo embedded in app.
-03: verified real pulse/circulation check photo embedded in app.
-04: existing approved real Pexels CPR training video unchanged.
-Replay count: 90 READY.
-No question, answer or approved video mappings changed.

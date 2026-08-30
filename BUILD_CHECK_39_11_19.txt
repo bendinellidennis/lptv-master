@@ -1,6 +1,0 @@
-MALTA DRIVING MASTER — BUILD 39.11.19
-BASE: 39.11.17 (first-frame fix retained; 39.11.18 rejected)
-GLOBAL FIX: phase transition without black flash.
-METHOD: keep the already-rendered old stage physically visible while the next phase mounts; release it only after the next decoded video frame (or a verified loaded poster) is ready.
-SAFARI FREEZE FIX: paused seek receives a one-frame muted inline decode warm-up; requestVideoFrameCallback also has a guarded timeout so iOS cannot wait forever.
-NO replay scenes, questions, answers, mappings, or video choices changed.

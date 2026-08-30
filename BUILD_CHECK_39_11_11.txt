@@ -1,7 +1,0 @@
-Malta Driving Master Build 39.11.11
-Target: CARS2.31
-Scene: MT_AMBULANCE_FOLLOWING_MAKE_WAY_V1
-Expected correct: [0]
-Base: 39.11.10D approved
-Rule: existing approved Replay scenes unchanged; only CARS2.31 mapping/asset/scene + cache-buster added.
-Test before delivery: QC selection ready+approved, JS syntax, static HTTP, DOM inline Replay flow.

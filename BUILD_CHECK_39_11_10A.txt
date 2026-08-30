@@ -1,4 +1,0 @@
-Build 39.11.10A
-Base: approved 39.11.9
-CARS2.30 rebuilt with direct MP4 primary sources for GitHub/Safari.
-Global inline replay fix unchanged.

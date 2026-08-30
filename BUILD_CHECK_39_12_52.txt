@@ -1,5 +1,0 @@
-Build 39.12.52 Replay185 INITIAL INLINE FREEZE MAP FIX
-Base: Build 39.12.49 Replay180 PORTRAIT SAFE.
-New Replay: CARS5.13, CARS5.14, CARS5.15, CARS5.16, CARS5.17.
-Fix: 15 dedicated JPEG freeze data URIs are inside the initial REPLAY_FREEZE_INLINE object (same load path as working Replay176-180), not appended after application startup.
-Defensive question bindings are inserted before replaySceneSelection. No CSS/global renderer changes.

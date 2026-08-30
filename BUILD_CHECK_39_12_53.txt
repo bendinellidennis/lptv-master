@@ -1,7 +1,0 @@
-MALTA DRIVING MASTER — BUILD 39.12.53 — Replay190
-Base: Build 39.12.52 Replay185 (approved on Koder/iPhone)
-New Replay IDs: CARS6.55, CARS6.56, CARS6.57, CARS6.58, CARS6.60
-01-03: 15 dedicated inline JPEG freezes, 600x960 portrait-safe.
-04: five dedicated Pexels real-video sources; no reuse detected against current asset files.
-Previous Replay mappings preserved.
-NOTE: technical/static checks performed; real Koder/iPhone acceptance remains user-side.

@@ -1,8 +1,0 @@
-MALTA DRIVING MASTER BUILD 39.12.16
-Replay Library: 75 READY
-Base: 39.12.15 Replay70
-Added: CARS10.25, CARS9.4, CARS10.27, CARS9.10, CARS6.5
-01-03: dedicated real relevant still/freeze imagery
-04: dedicated real moving footage directly matched to the question/answer
-Previously approved 70 Replay entries preserved.
-PATCH functional files: index.html, app-3994.js, malta-scene-library.js, malta-scene-assets.js, replay-scenes.js

@@ -1,9 +1,0 @@
-Malta Driving Master Build 39.11.12A
-Target: CARS2.32
-Question: A bus at a stop is signalling right. What should you do?
-Scene: MT_BUS_RIGHT_SIGNAL_GIVE_WAY_V2
-Expected correct: [1]
-Base: 39.11.11 approved
-Rule: existing approved Replay scenes unchanged; only CARS2.32 mapping/asset/scene + cache-buster added.
-Visual rule: real bus at designated stop in left-driving London traffic; real amber right-indicator close-up used only to isolate the exact signal cue; then return to bus scene for slow-down/give-way action.
-Test before delivery: QC selection ready+approved, expected answer [1], four phases, JS syntax, static HTTP, existing engine unchanged.

@@ -1,6 +1,0 @@
-MALTA DRIVING MASTER — BUILD 39.11.19A
-BASE: 39.11.17 + tested stage handoff from 39.11.19
-FIX: preserve stage during phase transitions without modifying the final video playback engine.
-CRITICAL: replay-engine.js restored byte-for-byte from 39.11.17 to prevent Safari freeze warm-up logic from pausing phase 04 video.
-EXPECTED: phases 01-03 freeze frames remain visible through transition; phase 04 video starts normally.
-No database, question, scene, media, mapping or approved Replay content modified.

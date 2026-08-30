@@ -1,7 +1,0 @@
-MALTA DRIVING MASTER — BUILD 39.11.13
-
-BASE: Build 39.11.12A approved.
-NEW REPLAY: CARS2.34 — horn purpose / alert others of your presence.
-SCENE: MT_HORN_ALERT_PRESENCE_V1.
-UX: staticUntilFinal — phases 01/02/03 are freeze-frame images with no central Play or video controls; phase 04 is the only playable video phase.
-STRICT RULE: horn = warning of presence; never anger, greeting or right-of-way.

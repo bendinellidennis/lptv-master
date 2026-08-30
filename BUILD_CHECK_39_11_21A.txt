@@ -1,7 +1,0 @@
-MALTA DRIVING MASTER — BUILD 39.11.21A
-BASE: 39.11.21
-FIX ONLY: CARS3.18 media URLs.
-CAUSE: guessed Pexels poster URL was invalid, producing a black/missing image even in Koder.
-POSTER: replaced with the real Pexels image URL from the source page.
-VIDEO: replaced with the direct Pexels MP4 URL reached by the official download action.
-No question, answer, Coach, mapping, Replay Engine or previously approved Replay content changed.

@@ -1,7 +1,0 @@
-MALTA DRIVING MASTER — BUILD 39.11.27
-BASE: 39.11.26 approved on GitHub
-PURPOSE: global freeze-system uniformity across ALL approved Replay scenes.
-AUDIT TARGET: 25 ready Replay scenes / 25 embedded freeze registry keys / 0 missing.
-LEGACY KEYS ADDED: msmRoutine (CARS1.7), blindSpotDefinition (CARS1.3), uTurnShoulderCheck (CARS1.2).
-TECHNICAL RULE: phases 01-03 use image data embedded in app-3994.js; no separate freeze JS, no external freeze URL, no fragile local path. Phase 04 remains video.
-NO CHANGES: database, answers, Replay Engine, scene definitions, Coach, mapping, approved videos.

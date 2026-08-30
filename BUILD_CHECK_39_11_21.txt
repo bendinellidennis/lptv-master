@@ -1,7 +1,0 @@
-MALTA DRIVING MASTER — BUILD 39.11.21
-BASE: 39.11.20 TRUE STATIC FREEZE FIX (accepted operational base)
-NEW REPLAY: CARS3.18 — dipped headlights during daytime poor visibility.
-EXPECTED CORRECT: [2] = In poor visibility.
-STRICT VISUAL: real driver POV through dense daytime fog / severely reduced visibility.
-No changes to previously approved Replay scenes, database, Replay Engine or global freeze behavior.
-Known initial-black-image refinement remains deferred until final polishing as agreed.

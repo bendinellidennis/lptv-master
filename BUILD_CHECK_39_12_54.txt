@@ -1,9 +1,0 @@
-MALTA DRIVING MASTER — BUILD 39.12.54
-Replay190 CARS6.56 VIDEO 1080P FIX
-
-Base: Build 39.12.53 Replay190.
-Only CARS6.56 phase-04 video source corrected.
-Old Pexels download redirected to an 8K 7680x4320 file.
-New dedicated source: Pexels 8624906 direct 1920x1080 MP4.
-Replay 01-03 freezes unchanged. Other Replay unchanged.
-Patch contains exactly: index.html, app-3994.js, malta-scene-library.js, malta-scene-assets.js, replay-scenes.js.

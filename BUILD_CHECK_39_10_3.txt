@@ -1,2 +1,0 @@
-CARS1.19 validation: {"reason":"ready","timeline":4,"video":true,"correct":[1]}
-Existing approved scenes were not modified.

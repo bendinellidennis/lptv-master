@@ -1,8 +1,0 @@
-MALTA DRIVING MASTER — BUILD 39.11.15
-BASE: 39.11.14B (approved operational base)
-NEW REPLAY: CARS3.4 — under-inflated tyres / steering + braking.
-SCENE: MT_UNDERINFLATED_STEERING_BRAKING_V1.
-EXPECTED CORRECT: [0,1] = Steering + Braking.
-STRICT VISUAL SEQUENCE: real tyre-pressure check -> steering control -> braking/stopping.
-UX: phases 01-03 static/freeze; phase 04 moving video; global Continue/iOS inline fixes preserved from 39.11.14B.
-No previously approved question/replay content intentionally modified.

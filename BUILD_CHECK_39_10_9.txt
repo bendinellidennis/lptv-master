@@ -1,7 +1,0 @@
-MALTA DRIVING MASTER — BUILD 39.10.9
-CARS1.2 GitHub Pages cache fix
-
-Cause: Build 39.10.8 contained CARS1.2, but index.html still referenced JS/CSS with ?v=39107, allowing Safari/GitHub Pages to reuse an older catalog and show CATALOG-MISSING.
-
-Runtime validation: {"question":"CARS1.2","key":"uTurnShoulderCheck","scene":"MT_UTURN_SHOULDER_CHECK_V1","asset":"uTurnShoulderCheck","timeline":4,"status":"ready"}
-All index JS/CSS references: v=39109

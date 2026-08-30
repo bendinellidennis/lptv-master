@@ -1,9 +1,0 @@
-MALTA DRIVING MASTER 39.9.9 — CARS1.9 STRICT MATCH
-
-Question: When following a large vehicle you should stay well back because:
-Correct answer: It allows the driver to see you in the mirror.
-
-Primary scene: Pexels 4608275 — POV shot of trucks on an expressway.
-Required visual elements: driver POV + large truck ahead + visible following gap.
-Fallback: previous working large-truck clip retained as final source.
-CARS1.10 and CARS1.18 unchanged.

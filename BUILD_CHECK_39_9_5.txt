@@ -1,4 +1,0 @@
-MALTA DRIVING MASTER 39.9.5
-PASS — CARS1.10 uses direct MP4 URL, not Pexels download endpoint
-PASS — scene registry and asset registry URLs match
-PASS — cache query bumped to 3995

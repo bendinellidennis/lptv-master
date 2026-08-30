@@ -1,8 +1,0 @@
-MALTA DRIVING MASTER BUILD 39.12.17
-Replay Library: 80 READY
-Base: 39.12.16 Replay75
-Added: CARS9.8, CARS9.11, CARS4.16, CARS13.11, CARS13.8
-01-03: real photographic frames/posters directly tied to each scene.
-04: dedicated real moving footage.
-Previously approved 75 Replay entries preserved.
-PATCH delivery contains exactly the 5 standard functional files.

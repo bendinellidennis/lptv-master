@@ -1,9 +1,0 @@
-MALTA DRIVING MASTER — BUILD 39.12.49 REPLAY180
-
-Base lineage: Build 39.12.44 -> approved Replay175 mobile freeze correction 39.12.48 -> Replay180.
-New Replay IDs: CARS5.7, CARS5.8, CARS5.9, CARS5.11, CARS5.12.
-01-03: 15 dedicated embedded real JPEG freezes, 600x960 portrait-safe, full-subject mobile-safe framing, no remote freeze URLs.
-04: five dedicated real video sources, not present in previous approved assets.
-Previous Replay content not edited.
-Patch scope: exactly index.html, app-3994.js, malta-scene-library.js, malta-scene-assets.js, replay-scenes.js.
-Device-level Koder/iPhone verification remains required before declaring final AUDIT PASS.

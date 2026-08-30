@@ -1,7 +1,7 @@
 'use strict';
 
-/* Malta Driving Master 45.8.31.47
-   Pilot School Dashboard — PWA cache refresh
+/* Malta Driving Master 45.8.31.48.1
+   Pilot Student Signup — PWA cache refresh
    - rotates the cache namespace so installed PWAs discard the previous shell
    - keeps same-origin only caching
    - never caches Supabase/API cross-origin traffic
@@ -9,7 +9,7 @@
    - minimal offline shell fallback
 */
 
-const CACHE = 'mdm-build-45-8-31-47-pilot-school-dashboard';
+const CACHE = 'mdm-build-45-8-31-48-1-pilot-student-signup';
 const CORE = [
   './',
   './index.html',

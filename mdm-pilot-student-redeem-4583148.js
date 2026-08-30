@@ -53,23 +53,12 @@
     const session=readSession();
     if(!session)return false;
     if(document.getElementById('mdmPilotStudentRedeemPanel'))return true;
-
     const host=findHost();
     if(!host)return false;
-
     const panel=document.createElement('div');
     panel.id='mdmPilotStudentRedeemPanel';
     panel.style.cssText='margin-top:14px;padding:14px;border:1px solid rgba(45,125,255,.22);border-radius:14px;background:rgba(45,125,255,.05)';
-    panel.innerHTML=`
-      <div style="display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap">
-        <div><strong>🎓 ${lang3('Riscatta invito Pilot','Redeem Pilot invitation','Uża stedina Pilot')}</strong>
-        <p style="margin:6px 0 0;opacity:.78;font-size:12px">${lang3('Usa il token ricevuto dalla scuola. L’email dell’account autenticato deve coincidere con quella invitata.','Use the token received from the school. The authenticated account email must match the invited email.','Uża t-token mill-iskola. L-email tal-kont awtentikat trid taqbel mal-email mistiedna.')}</p></div>
-        <span style="font-size:10px;font-weight:800;padding:5px 8px;border-radius:999px;background:#132d46;color:#fff">SHADOW · ENFORCEMENT OFF</span>
-      </div>
-      <textarea id="mdmPilotRedeemToken" rows="3" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${lang3('Incolla qui il token monouso','Paste the one-time token here','Waħħal it-token ta’ darba hawn')}" style="box-sizing:border-box;width:100%;margin-top:12px;padding:11px;border:1px solid rgba(0,0,0,.18);border-radius:10px;background:var(--card,#fff);color:inherit;resize:vertical"></textarea>
-      <button id="mdmPilotRedeemButton" class="btn" type="button" style="margin-top:9px;width:100%">${lang3('Riscatta invito Pilot','Redeem Pilot invitation','Uża stedina Pilot')}</button>
-      <div id="mdmPilotRedeemResult" style="display:none;margin-top:10px;padding:10px;border-radius:10px;background:rgba(0,0,0,.05);font-size:12px;word-break:break-word"></div>`;
-
+    panel.innerHTML=`<div style="display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap"><div><strong>🎓 ${lang3('Riscatta invito Pilot','Redeem Pilot invitation','Uża stedina Pilot')}</strong><p style="margin:6px 0 0;opacity:.78;font-size:12px">${lang3('Usa il token ricevuto dalla scuola. L’email dell’account autenticato deve coincidere con quella invitata.','Use the token received from the school. The authenticated account email must match the invited email.','Uża t-token mill-iskola. L-email tal-kont awtentikat trid taqbel mal-email mistiedna.')}</p></div><span style="font-size:10px;font-weight:800;padding:5px 8px;border-radius:999px;background:#132d46;color:#fff">SHADOW · ENFORCEMENT OFF</span></div><textarea id="mdmPilotRedeemToken" rows="3" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${lang3('Incolla qui il token monouso','Paste the one-time token here','Waħħal it-token ta’ darba hawn')}" style="box-sizing:border-box;width:100%;margin-top:12px;padding:11px;border:1px solid rgba(0,0,0,.18);border-radius:10px;background:var(--card,#fff);color:inherit;resize:vertical"></textarea><button id="mdmPilotRedeemButton" class="btn" type="button" style="margin-top:9px;width:100%">${lang3('Riscatta invito Pilot','Redeem Pilot invitation','Uża stedina Pilot')}</button><div id="mdmPilotRedeemResult" style="display:none;margin-top:10px;padding:10px;border-radius:10px;background:rgba(0,0,0,.05);font-size:12px;word-break:break-word"></div>`;
     host.appendChild(panel);
     panel.querySelector('#mdmPilotRedeemButton').onclick=redeem;
     return true;
@@ -78,6 +67,7 @@
   function scheduleMount(){
     try{queueMicrotask(renderPanel);}catch(_){try{renderPanel()}catch(__){}}
     try{requestAnimationFrame(()=>{try{renderPanel()}catch(_){}});}catch(_){}
+    setTimeout(()=>{try{renderPanel()}catch(_){}},60);
   }
 
   async function redeem(){
@@ -85,29 +75,17 @@
     const result=document.getElementById('mdmPilotRedeemResult');
     const button=document.getElementById('mdmPilotRedeemButton');
     if(!tokenEl||!result||!button)return;
-
     const token=String(tokenEl.value||'').trim();
     result.style.display='block';
-    if(token.length<32||token.length>256){
-      result.textContent='❌ '+lang3('Token non valido.','Invalid token.','Token mhux validu.');
-      return;
-    }
-
-    button.disabled=true;
-    state.status='redeeming';state.error='';state.lastResult=null;
-    result.textContent=lang3('Riscatto invito in corso…','Redeeming invitation…','Qed tintuża l-istedina…');
-
+    if(token.length<32||token.length>256){result.textContent='❌ '+lang3('Token non valido.','Invalid token.','Token mhux validu.');return;}
+    button.disabled=true;state.status='redeeming';state.error='';state.lastResult=null;result.textContent=lang3('Riscatto invito in corso…','Redeeming invitation…','Qed tintuża l-istedina…');
     try{
       const data=await rpc('mdm_redeem_pilot_invitation',{p_invite_token:token});
       if(data?.ok!==true||data?.redeemed!==true)throw new Error(String(data?.error||'redeem_failed'));
-      state.status='redeemed';
-      state.lastResult={invitationId:String(data.invitation_id||''),licenseId:String(data.license_id||''),schoolId:String(data.school_id||''),seatAssigned:Boolean(data.seat_assigned),nextStep:String(data.next_step||'')};
+      state.status='redeemed';state.lastResult={invitationId:String(data.invitation_id||''),licenseId:String(data.license_id||''),schoolId:String(data.school_id||''),seatAssigned:Boolean(data.seat_assigned),nextStep:String(data.next_step||'')};
       tokenEl.value='';
       result.innerHTML=`<strong>✅ ${lang3('Invito riscattato','Invitation redeemed','Stedina użata')}</strong><br><br><b>ID:</b> ${state.lastResult.invitationId}<br><b>${lang3('Seat assegnato','Seat assigned','Seat assenjat')}:</b> ${state.lastResult.seatAssigned?'YES':'NO'}<br><b>${lang3('Prossimo step','Next step','Pass li jmiss')}:</b> ${state.lastResult.nextStep||'—'}`;
-    }catch(e){
-      state.status='error';state.error=String(e?.message||e||'redeem_failed');
-      result.textContent='❌ '+state.error;
-    }finally{button.disabled=false;}
+    }catch(e){state.status='error';state.error=String(e?.message||e||'redeem_failed');result.textContent='❌ '+state.error;}finally{button.disabled=false;}
   }
 
   const originalSetItem=Storage.prototype.setItem;
@@ -116,17 +94,15 @@
     Storage.prototype.setItem=function(key,value){
       const result=originalSetItem.apply(this,arguments);
       if(this===localStorage&&key===AUTH_KEY){
-        try{
-          const s=JSON.parse(String(value||''));
-          if(s&&s.status==='authenticated'&&s.accessToken&&s.user?.id)scheduleMount();
-        }catch(_){}
+        try{const s=JSON.parse(String(value||''));if(s&&s.status==='authenticated'&&s.accessToken&&s.user?.id)scheduleMount();}catch(_){}
       }
       return result;
     };
   }
 
-  window.MDM_PILOT_STUDENT_REDEEM_BRIDGE=Object.freeze({version:'45.8.31.48',mode:'shadow',mount:renderPanel,getState:()=>JSON.parse(JSON.stringify(state))});
+  document.addEventListener('click',function(){scheduleMount();},false);
   window.addEventListener('pageshow',scheduleMount);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleMount();});
+  window.MDM_PILOT_STUDENT_REDEEM_BRIDGE=Object.freeze({version:'45.8.31.48',mode:'shadow',mount:renderPanel,getState:()=>JSON.parse(JSON.stringify(state))});
   try{renderPanel()}catch(_){}
 })();

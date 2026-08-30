@@ -1,7 +1,7 @@
 
 (function(){try{const raw=localStorage.getItem('mdm-v1-settings'),lang=raw?JSON.parse(raw).lang:'en',el=document.getElementById('mdmStartupSub');if(!el)return;el.textContent=lang==='it'?'Caricamento della tua intelligenza di guida…':lang==='mt'?'Qed titgħabba l-intelliġenza tas-sewqan tiegħek…':'Loading your driving intelligence…';}catch(_){}})();
 
-/* 45.8.31.46/47/48/49 — load Pilot shadow bridges, quick account entry and targeted PWA refresh fix
+/* 45.8.31.46/47/48/49 — load Pilot shadow bridges, quick account entry and Home account mount
    only after the stable app and every declared page resource completed loading.
    Student account creation uses the existing real Supabase Auth UI already built into Profile. */
 window.addEventListener('load',function(){
@@ -32,10 +32,25 @@ window.addEventListener('load',function(){
 
     if(!window.MDM_ACCOUNT_ENTRY_BRIDGE){
       const account=document.createElement('script');
-      account.src='mdm-account-entry-4583149.js?v=4583149-account-v1';
+      account.src='mdm-account-entry-4583149.js?v=4583149-account-v2';
       account.async=true;
       account.setAttribute('data-mdm-account-entry','quick');
+      account.onload=function(){
+        if(!window.MDM_ACCOUNT_HOME_MOUNT_FIX){
+          const mount=document.createElement('script');
+          mount.src='mdm-account-home-mount-fix-45831491.js?v=45831495-register-icon';
+          mount.async=true;
+          mount.setAttribute('data-mdm-account-home-mount','registration-icon');
+          document.head.appendChild(mount);
+        }
+      };
       document.head.appendChild(account);
+    }else if(!window.MDM_ACCOUNT_HOME_MOUNT_FIX){
+      const mount=document.createElement('script');
+      mount.src='mdm-account-home-mount-fix-45831491.js?v=45831495-register-icon';
+      mount.async=true;
+      mount.setAttribute('data-mdm-account-home-mount','registration-icon');
+      document.head.appendChild(mount);
     }
 
     if(!window.MDM_PWA_REFRESH_FIX){

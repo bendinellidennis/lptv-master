@@ -1,7 +1,7 @@
 'use strict';
 
-/* Malta Driving Master 45.8.31.48.1
-   Pilot Student Signup — PWA cache refresh
+/* Malta Driving Master 45.8.31.49
+   Quick Account Entry + Password Recovery — PWA cache refresh
    - rotates the cache namespace so installed PWAs discard the previous shell
    - keeps same-origin only caching
    - never caches Supabase/API cross-origin traffic
@@ -9,7 +9,7 @@
    - minimal offline shell fallback
 */
 
-const CACHE = 'mdm-build-45-8-31-48-1-pilot-student-signup';
+const CACHE = 'mdm-build-45-8-31-49-quick-account-entry';
 const CORE = [
   './',
   './index.html',
@@ -46,8 +46,6 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
 
   const url = new URL(request.url);
-
-  // Never intercept/cache Supabase or any other cross-origin traffic.
   if (url.origin !== self.location.origin) return;
 
   event.respondWith(

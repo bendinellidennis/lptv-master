@@ -1,14 +1,13 @@
-/* Malta Driving Master 45.8.31.47.1 — Deterministic School Admin Pilot Invite Bridge
-   Mounts the real Pilot invitation control directly inside the real School Server console.
-   Visible only when the current authenticated account is Pilot-authorized AND the rendered server role is school_admin.
+/* Malta Driving Master 45.8.31.47.2 — Immediate School Admin Pilot Invite Bridge
+   The invite control appears immediately when the real School Server console renders school_admin ACTIVE.
+   Backend Pilot entitlement is verified only when creating the invitation, so rendering never waits on network.
    Raw invite tokens remain memory-only. No polling. No MutationObserver. No enforcement. */
 (function(){
   'use strict';
   if(window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE)return;
 
   const AUTH_KEY='mdm_auth_session_v4410';
-  const state={version:'45.8.31.47.1',mode:'shadow',enforcement:false,status:'ready',licenseId:'',lastInvitation:null,error:''};
-  let mountInFlight=false;
+  const state={version:'45.8.31.47.2',mode:'shadow',enforcement:false,status:'ready',licenseId:'',lastInvitation:null,error:''};
 
   function lang3(it,en,mt){
     try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en;}
@@ -27,20 +26,17 @@
   }
 
   function removePanel(){const old=document.getElementById('mdmPilotRealInvitePanel');if(old)old.remove();}
-
   function findSchoolConsole(){
     const direct=document.querySelector('.account-enroll-card');
     if(direct)return direct;
     const cards=Array.from(document.querySelectorAll('section,article,.card,div'));
     return cards.find(el=>/CONSOLE\s+SCUOLA\s+SERVER/i.test(String(el.innerText||'')))||null;
   }
-
   function renderedSchoolAdmin(host){
     if(!host)return false;
     const text=String(host.innerText||'').toLowerCase();
     return text.includes('school_admin')&&text.includes('active');
   }
-
   async function resolveSchoolLicense(host){
     if(!readSession())throw new Error('authentication_required');
     if(!renderedSchoolAdmin(host))throw new Error('not_school_admin');
@@ -60,26 +56,20 @@
     return true;
   }
 
-  async function mount(){
-    if(mountInFlight)return false;
-    mountInFlight=true;
-    try{
-      const host=findSchoolConsole();
-      if(!host||!renderedSchoolAdmin(host)||!readSession()){removePanel();return false;}
-      try{await resolveSchoolLicense(host);}catch(_){removePanel();return false;}
-      return buildPanel(host);
-    }finally{mountInFlight=false;}
+  function mount(){
+    const host=findSchoolConsole();
+    if(!host||!renderedSchoolAdmin(host)||!readSession()){removePanel();return false;}
+    return buildPanel(host);
   }
 
   async function createInvitation(){
     const emailEl=document.getElementById('mdmPilotInviteEmail'),hoursEl=document.getElementById('mdmPilotInviteHours'),result=document.getElementById('mdmPilotInviteResult'),button=document.getElementById('mdmPilotCreateRealInvite');
     if(!emailEl||!result||!button)return;
-    const email=String(emailEl.value||'').trim().toLowerCase();
-    result.style.display='block';
+    const email=String(emailEl.value||'').trim().toLowerCase();result.style.display='block';
     if(!/^\S+@\S+\.\S+$/.test(email)){result.textContent=lang3('Inserisci un’email valida.','Enter a valid email.','Daħħal email valida.');return;}
-    button.disabled=true;result.textContent=lang3('Creazione invito in corso…','Creating invitation…','Qed tinħoloq stedina…');state.status='creating';state.error='';state.lastInvitation=null;
+    button.disabled=true;result.textContent=lang3('Verifica licenza e creazione invito…','Checking licence and creating invitation…','Qed tiġi vverifikata l-liċenzja u tinħoloq l-istedina…');state.status='creating';state.error='';state.lastInvitation=null;
     try{
-      const host=findSchoolConsole();const licenseId=state.licenseId||await resolveSchoolLicense(host);const hours=Math.max(1,Math.min(168,Number(hoursEl?.value||72)||72));
+      const host=findSchoolConsole();const licenseId=await resolveSchoolLicense(host);const hours=Math.max(1,Math.min(168,Number(hoursEl?.value||72)||72));
       const data=await rpc('mdm_school_create_pilot_invitation',{p_license_id:licenseId,p_invite_email:email,p_valid_hours:hours});
       if(data?.ok!==true||!data?.invite_token)throw new Error(String(data?.error||'invite_creation_failed'));
       state.status='created';state.lastInvitation={invitationId:String(data.invitation_id||''),email:String(data.invite_email||email),expiresAt:String(data.expires_at||''),token:String(data.invite_token)};
@@ -90,8 +80,8 @@
 
   function schedule(){
     try{queueMicrotask(mount);}catch(_){mount();}
-    try{requestAnimationFrame(()=>{mount();});}catch(_){}
-    setTimeout(mount,120);
+    try{requestAnimationFrame(mount);}catch(_){}
+    setTimeout(mount,60);
   }
 
   const originalSetItem=Storage.prototype.setItem;
@@ -104,7 +94,6 @@
   window.addEventListener('pageshow',schedule);
   window.addEventListener('load',schedule,{once:true});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule();});
-
-  window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE=Object.freeze({version:'45.8.31.47.1',mode:'shadow',getState:()=>JSON.parse(JSON.stringify(state)),mount});
+  window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE=Object.freeze({version:'45.8.31.47.2',mode:'shadow',getState:()=>JSON.parse(JSON.stringify(state)),mount});
   schedule();
 })();

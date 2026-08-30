@@ -1,13 +1,15 @@
-/* Malta Driving Master 45.8.31.48.2 — Student-only compact Pilot Redeem Shadow Bridge
+/* Malta Driving Master 45.8.31.48.3 — Student-only deterministic Pilot Redeem Shadow Bridge
    Shows redeem only to authenticated users who are NOT already Pilot-authorized.
-   Therefore licensed school/admin accounts never see the student redeem control.
+   Waits for the real Pilot entitlement result before deciding visibility, so first load is deterministic.
+   Licensed school/admin accounts never see the student redeem control.
    Compact UI only. No seat assignment. No enforcement. No polling. No MutationObserver. */
 (function(){
   'use strict';
   if(window.MDM_PILOT_STUDENT_REDEEM_BRIDGE)return;
 
   const AUTH_KEY='mdm_auth_session_v4410';
-  const state={version:'45.8.31.48.2',mode:'shadow',enforcement:false,status:'ready',lastResult:null,error:''};
+  const state={version:'45.8.31.48.3',mode:'shadow',enforcement:false,status:'ready',lastResult:null,error:''};
+  let visibilityInFlight=false;
 
   function lang3(it,en,mt){
     try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en}
@@ -32,18 +34,14 @@
 
   function removePanel(){const old=document.getElementById('mdmPilotStudentRedeemPanel');if(old)old.remove();}
 
-  function findHost(){
-    return document.querySelector('.hm30') || document.querySelector('main') || document.body;
-  }
+  function findHost(){return document.querySelector('.hm30')||document.querySelector('main')||document.body;}
 
   function renderPanel(){
     const session=readSession();
     if(!session){removePanel();return false;}
 
     const ps=pilotState();
-    /* A licensed school/admin is already authorized and must never see student redeem.
-       A student needing an invitation is authenticated but not yet authorized. */
-    if(!ps || ps.authorized!==false){removePanel();return false;}
+    if(!ps||ps.authorized!==false){removePanel();return false;}
 
     if(document.getElementById('mdmPilotStudentRedeemPanel'))return true;
     const host=findHost();if(!host)return false;
@@ -58,11 +56,24 @@
     return true;
   }
 
+  async function syncVisibility(){
+    if(visibilityInFlight)return;
+    const session=readSession();
+    if(!session){removePanel();return;}
+    visibilityInFlight=true;
+    try{
+      const bridge=window.MDM_PILOT_ACCESS_BRIDGE;
+      if(bridge&&typeof bridge.check==='function'){
+        try{await bridge.check();}catch(_){}
+      }
+      renderPanel();
+    }finally{visibilityInFlight=false;}
+  }
+
   function scheduleMount(){
-    try{queueMicrotask(renderPanel);}catch(_){try{renderPanel()}catch(__){}}
-    try{requestAnimationFrame(()=>{try{renderPanel()}catch(_){}});}catch(_){}
-    setTimeout(()=>{try{renderPanel()}catch(_){}},120);
-    setTimeout(()=>{try{renderPanel()}catch(_){}},700);
+    try{queueMicrotask(syncVisibility);}catch(_){syncVisibility();}
+    try{requestAnimationFrame(()=>{syncVisibility();});}catch(_){}
+    setTimeout(syncVisibility,120);
   }
 
   async function redeem(){
@@ -75,6 +86,7 @@
       if(data?.ok!==true||data?.redeemed!==true)throw new Error(String(data?.error||'redeem_failed'));
       state.status='redeemed';state.lastResult={invitationId:String(data.invitation_id||''),licenseId:String(data.license_id||''),schoolId:String(data.school_id||''),seatAssigned:Boolean(data.seat_assigned),nextStep:String(data.next_step||'')};tokenEl.value='';
       result.innerHTML=`<strong>✅ ${lang3('Invito riscattato','Invitation redeemed','Stedina użata')}</strong>`;
+      await syncVisibility();
     }catch(e){state.status='error';state.error=String(e?.message||e||'redeem_failed');result.textContent='❌ '+state.error;}finally{button.disabled=false;}
   }
 
@@ -86,7 +98,8 @@
 
   document.addEventListener('click',scheduleMount,false);
   window.addEventListener('pageshow',scheduleMount);
+  window.addEventListener('load',scheduleMount,{once:true});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleMount();});
-  window.MDM_PILOT_STUDENT_REDEEM_BRIDGE=Object.freeze({version:'45.8.31.48.2',mode:'shadow',mount:renderPanel,getState:()=>JSON.parse(JSON.stringify(state))});
+  window.MDM_PILOT_STUDENT_REDEEM_BRIDGE=Object.freeze({version:'45.8.31.48.3',mode:'shadow',mount:syncVisibility,getState:()=>JSON.parse(JSON.stringify(state))});
   scheduleMount();
 })();

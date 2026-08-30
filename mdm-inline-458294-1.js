@@ -1,7 +1,7 @@
 
 (function(){try{const raw=localStorage.getItem('mdm-v1-settings'),lang=raw?JSON.parse(raw).lang:'en',el=document.getElementById('mdmStartupSub');if(!el)return;el.textContent=lang==='it'?'Caricamento della tua intelligenza di guida…':lang==='mt'?'Qed titgħabba l-intelliġenza tas-sewqan tiegħek…':'Loading your driving intelligence…';}catch(_){}})();
 
-/* 45.8.31.46/47/48 — load Pilot shadow bridges and targeted PWA refresh fix
+/* 45.8.31.46/47/48/48.1 — load Pilot shadow bridges and targeted PWA refresh fix
    only after the stable app and every declared page resource completed loading. */
 window.addEventListener('load',function(){
   try{
@@ -27,6 +27,14 @@ window.addEventListener('load',function(){
       redeem.async=true;
       redeem.setAttribute('data-mdm-pilot-student-redeem','shadow');
       document.head.appendChild(redeem);
+    }
+
+    if(!window.MDM_PILOT_STUDENT_SIGNUP_BRIDGE){
+      const signup=document.createElement('script');
+      signup.src='mdm-pilot-student-signup-45831481.js?v=45831481-signup-v1';
+      signup.async=true;
+      signup.setAttribute('data-mdm-pilot-student-signup','shadow');
+      document.head.appendChild(signup);
     }
 
     if(!window.MDM_PWA_REFRESH_FIX){

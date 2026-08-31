@@ -12,7 +12,7 @@ window.addEventListener('load',function(){
     if(!window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE){const school=document.createElement('script');school.src='mdm-pilot-school-dashboard-4583147.js?v=45831478-email-deeplink';school.async=true;school.setAttribute('data-mdm-pilot-school-bridge','shadow');document.head.appendChild(school);}
     if(!window.MDM_PILOT_STUDENT_REDEEM_BRIDGE){const redeem=document.createElement('script');redeem.src='mdm-pilot-student-redeem-4583148.js?v=45831483-deterministic';redeem.async=true;redeem.setAttribute('data-mdm-pilot-student-redeem','shadow');document.head.appendChild(redeem);}
     if(!window.MDM_ACCOUNT_ENTRY_BRIDGE){const account=document.createElement('script');account.src='mdm-account-entry-4583149.js?v=45831496-direct';account.async=true;account.setAttribute('data-mdm-account-entry','quick');document.head.appendChild(account);}
-    if(!window.MDM_PWA_REFRESH_FIX){const refresh=document.createElement('script');refresh.src='mdm-pwa-refresh-4583147.js?v=4583149201-direct-modal';refresh.async=true;refresh.setAttribute('data-mdm-pwa-refresh-fix','direct-school-queue');document.head.appendChild(refresh);}
+    if(!window.MDM_PWA_REFRESH_FIX){const refresh=document.createElement('script');refresh.src='mdm-pwa-refresh-4583147.js?v=458314925-no-flash';refresh.async=true;refresh.setAttribute('data-mdm-pwa-refresh-fix','direct-school-queue');document.head.appendChild(refresh);}
 
     /* Remove any legacy duplicate seat queue left by an older cached runtime.
        The only activation entry point is now the Home alert -> exact modal. */

@@ -9,7 +9,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_DATA_ISOLATION)return;
 
-  const VERSION='45.8.31.50.11';
+  const VERSION='45.8.31.50.13';
   const AUTH_KEY='mdm_auth_session_v4410';
   const LAST_AUTH_KEY='mdm_account_isolation_last_auth_user_v4583152';
   const LEGACY_BACKUP_PREFIX='mdm_account_isolation_legacy_backup_v4583154::';
@@ -289,30 +289,24 @@
       lastObservedAuth=next;
     }
   }
-  function reconcileAfterInteraction(){
-    [0,120,400,1000,2000,4000].forEach(ms=>setTimeout(reconcileAuthTransition,ms));
-  }
-
   function looksLikeLogoutTarget(target){
     try{
-      const el=target&&target.closest?target.closest('button,a,[role="button"],.card,.tile,div'):null;
+      const el=target&&target.closest?target.closest('button,a,[role="button"]'):null;
       if(!el)return false;
       const text=String(el.innerText||el.textContent||'').trim().toLowerCase();
       const aria=String(el.getAttribute&&el.getAttribute('aria-label')||'').trim().toLowerCase();
-      const id=String(el.id||'').toLowerCase();
-      const cls=String(el.className||'').toLowerCase();
-      return /(^|\s)(esci|logout|sign out|disconnect|disconnetti)(\s|$)/i.test(text+' '+aria+' '+id+' '+cls);
+      const id=String(el.id||'').trim().toLowerCase();
+      const label=(text+' '+aria+' '+id).replace(/\s+/g,' ').trim();
+      return /^(?:.*\s)?(?:esci|logout|sign out|disconnect|disconnetti)(?:\s.*)?$/i.test(label) && label.length<=80;
     }catch(_){return false;}
   }
 
   function onAuthInteraction(ev){
-    reconcileAfterInteraction();
-    if(looksLikeLogoutTarget(ev.target)){
-      [1500,3000,6000].forEach(ms=>setTimeout(function(){
-        const now=auth();
-        if(!now.authenticated)scheduleAccountReload(120,false,'');
-      },ms));
-    }
+    if(!looksLikeLogoutTarget(ev.target))return;
+    [120,500,1500,3000].forEach(ms=>setTimeout(function(){
+      const now=auth();
+      if(!now.authenticated)scheduleAccountReload(120,false,'');
+    },ms));
   }
 
   document.addEventListener('click',onAuthInteraction,true);

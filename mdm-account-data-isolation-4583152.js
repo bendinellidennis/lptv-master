@@ -9,7 +9,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_DATA_ISOLATION)return;
 
-  const VERSION='45.8.31.50.5';
+  const VERSION='45.8.31.50.6';
   const AUTH_KEY='mdm_auth_session_v4410';
   const LAST_AUTH_KEY='mdm_account_isolation_last_auth_user_v4583152';
   const LEGACY_BACKUP_PREFIX='mdm_account_isolation_legacy_backup_v4583154::';
@@ -40,6 +40,7 @@
   const lowerGet=Storage.prototype.getItem;
   const lowerSet=Storage.prototype.setItem;
   const lowerRemove=Storage.prototype.removeItem;
+  const lowerClear=Storage.prototype.clear;
 
   function isLocal(store){
     try{return store===window.localStorage;}catch(_){return false;}
@@ -238,6 +239,34 @@
     if(isLocal(this)&&k===AUTH_KEY&&before&&before.authenticated)scheduleAccountReload();
     return out;
   };
+
+  Storage.prototype.clear=function(){
+    let before={userId:'',email:'',authenticated:false};
+    if(isLocal(this)){
+      try{before=parseAuth(lowerGet.call(this,AUTH_KEY));}catch(_){}
+    }
+    const out=lowerClear.apply(this,arguments);
+    if(isLocal(this)&&before.authenticated)scheduleAccountReload();
+    return out;
+  };
+
+  /* Event-driven fallback for legacy logout/login code paths that may bypass
+     the patched Storage methods. No polling and no MutationObserver. */
+  let lastObservedAuth=auth();
+  function reconcileAuthTransition(){
+    const next=auth();
+    const identityChanged=String(lastObservedAuth&&lastObservedAuth.userId||'')!==String(next.userId||'');
+    const authChanged=Boolean(lastObservedAuth&&lastObservedAuth.authenticated)!==Boolean(next.authenticated);
+    if(identityChanged||authChanged){
+      lastObservedAuth=next;
+      scheduleAccountReload();
+    }else{
+      lastObservedAuth=next;
+    }
+  }
+  document.addEventListener('click',()=>setTimeout(reconcileAuthTransition,0),true);
+  window.addEventListener('pageshow',reconcileAuthTransition);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)reconcileAuthTransition();});
 
   /* Quarantine proven user-owned legacy globals before the historical runtime loads.
      Data is copied first, then only the global alias is removed. */

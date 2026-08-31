@@ -11,7 +11,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_ISOLATION_SAFE)return;
 
-  const VERSION='45.8.31.50.33';
+  const VERSION='45.8.31.50.34';
   const TECH_OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const AUTH_KEY='mdm_auth_session_v4410';
   const MIGRATION_PREFIX='mdm_account_safe_migrated_v1::';
@@ -28,6 +28,7 @@
     'mdm-v1-ai-instructor',
     'mdm-v1-coach',
     'mdm-v1-onboarding',
+    'mdm-v1-account-enrollment',
     'mdm-v1-pilot-analytics',
     'mdm-v1-personal-roadmap',
     'mdm-v1-lptv-passport',

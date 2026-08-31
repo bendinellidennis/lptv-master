@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.16 — Account Contamination Scrub
+/* Malta Driving Master 45.8.31.50.17 — Account Contamination Scrub
    Safety rule: if the scoped profile stored under the CURRENT authenticated user_id
    contains a different email than auth.user.email, quarantine and clear ONLY that
    current user's scoped user-owned keys. Other accounts are untouched. */
@@ -8,7 +8,9 @@
 
   const VERSION='45.8.31.50.16';
   const AUTH_KEY='mdm_auth_session_v4410';
-  const BACKUP_PREFIX='mdm_account_contamination_backup_v45831516::';
+  const BACKUP_PREFIX='mdm_account_contamination_backup_v45831517::';
+  const LEGACY_PREFIX='mdm_account_isolation_legacy_backup_v4583154::';
+  const RESTORED_PREFIX='mdm_account_isolation_legacy_restored_v45831515::';
   const USER_KEYS=[
     'mdm-v1-progress','mdm-v1-error-replay','mdm-v1-zero-error','mdm-v1-exam-day',
     'mdm-v1-coach-recovery','mdm-v1-user-profile','mdm-v1-mission-system',
@@ -49,6 +51,23 @@
     return '';
   }
 
+  function inferLegacyOwnerUserId(){
+    try{
+      const legacy=localStorage.getItem(LEGACY_PREFIX+'mdm-v1-user-profile');
+      if(!legacy)return '';
+      for(let i=0;i<localStorage.length;i++){
+        const k=localStorage.key(i);
+        if(!k||!k.startsWith(RESTORED_PREFIX))continue;
+        if(localStorage.getItem(k)!=='1')continue;
+        const uid=k.slice(RESTORED_PREFIX.length);
+        if(!uid)continue;
+        const scoped=localStorage.getItem('mdm-v1-user-profile::user:'+uid);
+        if(scoped===legacy)return uid;
+      }
+    }catch(_){}
+    return '';
+  }
+
   function scrubIfMismatch(){
     const a=session();
     if(!a||!a.userId||!a.email)return {ok:false,reason:'not_authenticated'};
@@ -57,8 +76,11 @@
     if(!raw)return {ok:true,reason:'no_scoped_profile'};
     let profileEmail='';
     try{profileEmail=findEmail(JSON.parse(raw),0);}catch(_){}
-    if(!profileEmail)return {ok:true,reason:'profile_email_missing'};
-    if(profileEmail===a.email)return {ok:true,reason:'profile_matches_auth'};
+    const legacy=localStorage.getItem(LEGACY_PREFIX+'mdm-v1-user-profile');
+    const ownerUid=inferLegacyOwnerUserId();
+    const copiedLegacy=Boolean(legacy&&ownerUid&&ownerUid!==a.userId&&raw===legacy);
+    if(profileEmail===a.email&&!copiedLegacy)return {ok:true,reason:'profile_matches_auth'};
+    if(!profileEmail&&!copiedLegacy)return {ok:true,reason:'profile_email_missing'};
 
     let cleared=0;
     for(const key of USER_KEYS){
@@ -72,16 +94,27 @@
         cleared++;
       }catch(_){}
     }
-    try{sessionStorage.setItem('mdm_account_contamination_scrub_v45831516',JSON.stringify({userId:a.userId,email:a.email,profileEmail,cleared,at:Date.now()}));}catch(_){}
+    try{sessionStorage.setItem('mdm_account_contamination_scrub_v45831517',JSON.stringify({userId:a.userId,email:a.email,profileEmail,cleared,at:Date.now()}));}catch(_){}
     if(cleared>0){
       try{
         const url=new URL(location.href);
-        url.searchParams.set('mdm_scrub','45831516');
+        url.searchParams.set('mdm_scrub','45831517');
         location.replace(url.toString());
       }catch(_){try{location.reload();}catch(__){}}
     }
     return {ok:true,reason:'mismatch_scrubbed',cleared};
   }
+
+  const previousSet=Storage.prototype.setItem;
+  Storage.prototype.setItem=function(key,value){
+    const out=previousSet.apply(this,arguments);
+    try{
+      if(this===localStorage&&String(key)===AUTH_KEY){
+        [0,80,250].forEach(ms=>setTimeout(scrubIfMismatch,ms));
+      }
+    }catch(_){}
+    return out;
+  };
 
   window.MDM_ACCOUNT_CONTAMINATION_SCRUB=Object.freeze({version:VERSION,run:scrubIfMismatch});
   setTimeout(scrubIfMismatch,0);

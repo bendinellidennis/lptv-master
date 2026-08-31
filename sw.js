@@ -9,7 +9,7 @@
    - minimal offline shell fallback
 */
 
-const CACHE = 'mdm-build-45-8-31-50-24-auth-stable';
+const CACHE = 'mdm-build-45-8-31-50-26-signedout-router';
 const CORE = [
   './',
   './index.html',

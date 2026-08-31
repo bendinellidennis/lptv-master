@@ -6,7 +6,8 @@
   if(window.MDM_PILOT_STUDENT_SIGNUP_BRIDGE)return;
 
   const AUTH_KEY='mdm_auth_session_v4410';
-  const VERSION='45.8.31.48.1';
+  const VERSION='45.8.31.48.2';
+  const PENDING_KEY='mdm_pilot_pending_invite_v1';
   const state={version:VERSION,mode:'shadow',enforcement:false,status:'ready',error:''};
 
   function t(it,en,mt){
@@ -26,6 +27,19 @@
     }catch(_){return false;}
   }
 
+  function hasPendingInvite(){
+    try{
+      const raw=localStorage.getItem(PENDING_KEY);
+      if(!raw)return false;
+      const p=JSON.parse(raw);
+      return Boolean(p&&String(p.token||'').length>=32&&Date.now()-Number(p.at||0)<=7*24*60*60*1000);
+    }catch(_){return false;}
+  }
+
+  function removePanel(){
+    try{document.getElementById('mdmPilotStudentSignupPanel')?.remove();}catch(_){}
+  }
+
   function backend(){
     const cfg=window.MDM_BACKEND_CONFIG;
     if(!cfg||!cfg.enabled||!cfg.endpoint||!cfg.publishableKey)throw new Error('backend_config_unavailable');
@@ -37,7 +51,7 @@
   }
 
   function render(){
-    if(isAuthenticated())return false;
+    if(isAuthenticated()||!hasPendingInvite()){removePanel();return false;}
     if(document.getElementById('mdmPilotStudentSignupPanel'))return true;
     const root=host();
     if(!root)return false;

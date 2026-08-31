@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.47.6 — School Admin Pilot Invite ONLY
+/* Malta Driving Master 45.8.31.47.7 — School Admin Pilot Invite Email Sanitizer
    Single responsibility: real Pilot invite creation in the verified School Admin console.
    Student activation queue is NOT rendered here anymore.
    Home alert + direct activation modal are owned by mdm-pwa-refresh-4583147.js.
@@ -8,7 +8,7 @@
   if(window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE)return;
 
   const AUTH_KEY='mdm_auth_session_v4410';
-  const state={version:'45.8.31.47.6',mode:'shadow',enforcement:false,status:'ready',licenseId:'',lastInvitation:null,error:''};
+  const state={version:'45.8.31.47.7',mode:'shadow',enforcement:false,status:'ready',licenseId:'',lastInvitation:null,error:''};
 
   function lang3(it,en,mt){try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en;}}
   function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -43,7 +43,7 @@
 
   async function createInvitation(){
     const emailEl=document.getElementById('mdmPilotInviteEmail'),hoursEl=document.getElementById('mdmPilotInviteHours'),result=document.getElementById('mdmPilotInviteResult'),button=document.getElementById('mdmPilotCreateRealInvite');if(!emailEl||!result||!button)return;
-    const email=String(emailEl.value||'').trim().toLowerCase();result.style.display='block';if(!/^\S+@\S+\.\S+$/.test(email)){result.textContent=lang3('Inserisci un’email valida.','Enter a valid email.','Daħħal email valida.');return;}
+    const email=String(emailEl.value||'').trim().replace(/^mailto:\s*/i,'').trim().toLowerCase();emailEl.value=email;result.style.display='block';if(!/^\S+@\S+\.\S+$/.test(email)){result.textContent=lang3('Inserisci un’email valida.','Enter a valid email.','Daħħal email valida.');return;}
     button.disabled=true;result.textContent=lang3('Verifica licenza e creazione invito…','Checking licence and creating invitation…','Qed tiġi vverifikata l-liċenzja u tinħoloq l-istedina…');state.status='creating';state.error='';state.lastInvitation=null;
     try{
       const host=findSchoolConsole();const licenseId=await resolveSchoolLicense(host);const hours=Math.max(1,Math.min(168,Number(hoursEl?.value||72)||72));
@@ -67,6 +67,6 @@
   window.addEventListener('load',schedule,{once:true});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule();});
 
-  window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE=Object.freeze({version:'45.8.31.47.6',mode:'shadow',getState:()=>JSON.parse(JSON.stringify(state)),mount});
+  window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE=Object.freeze({version:'45.8.31.47.7',mode:'shadow',getState:()=>JSON.parse(JSON.stringify(state)),mount});
   schedule();
 })();

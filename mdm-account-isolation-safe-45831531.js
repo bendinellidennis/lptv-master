@@ -11,7 +11,8 @@
   'use strict';
   if(window.MDM_ACCOUNT_ISOLATION_SAFE)return;
 
-  const VERSION='45.8.31.50.safe.1';
+  const VERSION='45.8.31.50.safe.2';
+  const TECH_OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const AUTH_KEY='mdm_auth_session_v4410';
   const MIGRATION_PREFIX='mdm_account_safe_migrated_v1::';
   const USER_KEYS=new Set([
@@ -55,8 +56,13 @@
     }catch(_){return {ok:false,userId:'',email:''};}
   }
 
-  function scoped(key,userId){
-    return String(key)+'::user:'+String(userId);
+  function accountType(a){
+    return a&&a.ok&&a.email===TECH_OWNER_EMAIL?'owner':'user';
+  }
+
+  function scoped(key,a){
+    const type=accountType(a);
+    return String(key)+'::'+type+':'+String(a&&a.userId||'');
   }
 
   function findEmail(value,depth){
@@ -94,14 +100,14 @@
   }
 
   function migrateOwnedLegacy(a){
-    if(!a.ok||!a.email)return false;
+    if(!a.ok||!a.email||accountType(a)==='owner')return false;
     const owner=legacyOwnerEmail();
     if(!owner||owner!==a.email)return false;
     const marker=MIGRATION_PREFIX+a.userId;
     if(rawGet.call(localStorage,marker)==='1')return true;
 
     for(const key of USER_KEYS){
-      const target=scoped(key,a.userId);
+      const target=scoped(key,a);
       if(rawGet.call(localStorage,target)!==null)continue;
       const legacy=rawGet.call(localStorage,key);
       if(legacy!==null)rawSet.call(localStorage,target,legacy);
@@ -114,19 +120,19 @@
     const a=auth();
     if(!a.ok)return null;
     migrateOwnedLegacy(a);
-    return rawGet.call(localStorage,scoped(key,a.userId));
+    return rawGet.call(localStorage,scoped(key,a));
   }
 
   function writeUserKey(key,value){
     const a=auth();
-    if(!a.ok)return rawSet.call(localStorage,scoped(key,'guest'),String(value));
-    return rawSet.call(localStorage,scoped(key,a.userId),String(value));
+    if(!a.ok)return rawSet.call(localStorage,String(key)+'::guest',String(value));
+    return rawSet.call(localStorage,scoped(key,a),String(value));
   }
 
   function removeUserKey(key){
     const a=auth();
-    if(!a.ok)return rawRemove.call(localStorage,scoped(key,'guest'));
-    return rawRemove.call(localStorage,scoped(key,a.userId));
+    if(!a.ok)return rawRemove.call(localStorage,String(key)+'::guest');
+    return rawRemove.call(localStorage,scoped(key,a));
   }
 
   Storage.prototype.getItem=function(key){
@@ -151,6 +157,7 @@
     version:VERSION,
     keys:Array.from(USER_KEYS),
     current:auth,
+    accountType:()=>accountType(auth()),
     legacyOwnerEmail
   });
 })();

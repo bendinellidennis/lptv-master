@@ -1,12 +1,14 @@
-/* Malta Driving Master 45.8.31.49.17 — direct Home -> Student activation queue.
+/* Malta Driving Master 45.8.31.49.20 — synchronized Home -> Student activation queue.
    Home alert no longer navigates through Profile.
    One tap opens the exact real seat-assignment queue as a focused modal over the current screen.
    SHADOW / enforcement unchanged. */
 (function(){
   'use strict';
-  const RELEASE='45.8.31.49.17';
+  const RELEASE='45.8.31.49.20';
   const AUTH_KEY='mdm_auth_session_v4410';
   let alertRequestSeq=0;
+  let latestPendingRows=[];
+  let latestPendingAt=0;
 
   function lang3(it,en,mt){try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en;}}
   function esc(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -49,7 +51,7 @@
     return el;
   }
   function showCheckingAlert(){const el=ensureAlert();if(!el)return;el.innerHTML=`<span><strong>🔔 ${esc(lang3('Richieste studenti','Student requests','Talbiet tal-istudenti'))}</strong><small style="display:block;margin-top:3px;opacity:.72">${esc(lang3('Controllo studenti da attivare… Tocca per aprire','Checking students to activate… Tap to open','Qed jiġu ċċekkjati studenti biex jiġu attivati… Agħfas biex tiftaħ'))}</small></span><span style="font-size:22px;font-weight:900">›</span>`;}
-  function showAlert(rows){if(!rows.length){removeAlert();return;}const el=ensureAlert();if(!el)return;const n=rows.length;el.innerHTML=`<span><strong>🔔 ${n} ${esc(n===1?lang3('studente da attivare','student to activate','student biex jiġi attivat'):lang3('studenti da attivare','students to activate','studenti biex jiġu attivati'))}</strong><small style="display:block;margin-top:3px;opacity:.72">${esc(lang3('Tocca: apri direttamente le richieste','Tap: open requests directly','Agħfas: iftaħ it-talbiet direttament'))}</small></span><span style="font-size:22px;font-weight:900">›</span>`;}
+  function showAlert(rows){latestPendingRows=Array.isArray(rows)?rows.slice():[];latestPendingAt=Date.now();if(!latestPendingRows.length){removeAlert();return;}const el=ensureAlert();if(!el)return;const n=latestPendingRows.length;el.innerHTML=`<span><strong>🔔 ${n} ${esc(n===1?lang3('studente da attivare','student to activate','student biex jiġi attivat'):lang3('studenti da attivare','students to activate','studenti biex jiġu attivati'))}</strong><small style="display:block;margin-top:3px;opacity:.72">${esc(lang3('Tocca: apri direttamente le richieste','Tap: open requests directly','Agħfas: iftaħ it-talbiet direttament'))}</small></span><span style="font-size:22px;font-weight:900">›</span>`;}
 
 
   function closeDirectQueue(){
@@ -80,13 +82,18 @@
     return overlay;
   }
 
-  async function loadDirectQueue(){
+  async function loadDirectQueue(forceRefresh=false){
     const overlay=ensureDirectQueue(),body=overlay.querySelector('#mdmDirectSeatQueueBody');
     body.textContent=lang3('Caricamento richieste…','Loading requests…','Qed jitgħabbew it-talbiet…');
     try{
-      let rows=await rpc('mdm_school_list_redeemed_pilot_invitations',{});
-      if(!Array.isArray(rows))rows=rows?[rows]:[];
-      showAlert(rows);
+      let rows;
+      if(!forceRefresh && latestPendingRows.length && (Date.now()-latestPendingAt)<30000){
+        rows=latestPendingRows.slice();
+      }else{
+        rows=await rpc('mdm_school_list_redeemed_pilot_invitations',{});
+        if(!Array.isArray(rows))rows=rows?[rows]:[];
+        showAlert(rows);
+      }
       if(!rows.length){
         body.innerHTML=`<div style="padding:14px;border-radius:14px;background:rgba(16,185,129,.08)">✅ ${esc(lang3('Nessuno studente in attesa di attivazione.','No student is waiting for activation.','L-ebda student mhu qed jistenna l-attivazzjoni.'))}</div>`;
         return;
@@ -104,7 +111,7 @@
             let data=await rpc('mdm_school_assign_pilot_seat',{p_invitation_id:id});if(Array.isArray(data))data=data[0]||{};
             if(data?.ok!==true)throw new Error(String(data?.error||'seat_assignment_failed'));
             result.textContent='✅ '+lang3('Studente attivato','Student activated','Student attivat');
-            setTimeout(async()=>{await refreshAlert();await loadDirectQueue();},300);
+            setTimeout(async()=>{latestPendingRows=[];latestPendingAt=0;await refreshAlert();await loadDirectQueue(true);},300);
           }catch(e){result.textContent='❌ '+String(e?.message||e||'seat_assignment_failed');btn.disabled=false;}
         };
         body.appendChild(item);
@@ -117,7 +124,7 @@
 
   function openDirectQueue(){
     ensureDirectQueue();
-    loadDirectQueue();
+    loadDirectQueue(false);
   }
 
   async function refreshAlert(){

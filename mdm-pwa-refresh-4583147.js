@@ -1,88 +1,37 @@
-/* Malta Driving Master 45.8.31.47 — targeted PWA refresh + real Server School Console mount fix
-   No MutationObserver. No polling. No enforcement changes. */
+/* Malta Driving Master 45.8.31.49.15 — deterministic School Admin activation alert.
+   Runs independently of Profile rendering and of the main loader lifecycle.
+   Real backend queue -> Home alert -> direct Profile jump -> exact seat queue.
+   SHADOW / enforcement unchanged. */
 (function(){
   'use strict';
+  const RELEASE='45.8.31.49.15';
+  const AUTH_KEY='mdm_auth_session_v4410';
 
-  const RELEASE='45.8.31.47';
+  function lang3(it,en,mt){try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en;}}
+  function esc(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+  function session(){try{const raw=localStorage.getItem(AUTH_KEY);if(!raw)return null;const s=JSON.parse(raw);if(!s||s.status!=='authenticated'||!s.accessToken||!s.user?.id)return null;if(Number(s.expiresAt||0)>0&&Number(s.expiresAt)<=Date.now())return null;return s;}catch(_){return null;}}
+  async function rpc(name,payload){const cfg=window.MDM_BACKEND_CONFIG,s=session();if(!cfg||!cfg.enabled||!cfg.endpoint||!cfg.publishableKey)throw new Error('backend_config_unavailable');if(!s)throw new Error('authentication_required');const r=await fetch(String(cfg.endpoint).replace(/\/$/,'')+'/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json','apikey':cfg.publishableKey,'Authorization':'Bearer '+s.accessToken},body:JSON.stringify(payload||{}),cache:'no-store'});const text=await r.text();let data={};try{data=text?JSON.parse(text):{}}catch(_){}if(!r.ok)throw new Error(String(data?.message||data?.error||('http_'+r.status)));return data;}
 
-  async function hardRefresh(){
-    try{
-      const regs=await navigator.serviceWorker?.getRegistrations?.();
-      if(Array.isArray(regs)){
-        await Promise.all(regs.map(async reg=>{try{await reg.update();}catch(_){}}));
-      }else{
-        const reg=await navigator.serviceWorker?.getRegistration?.();
-        if(reg){try{await reg.update();}catch(_){}}
-      }
+  async function hardRefresh(){try{const regs=await navigator.serviceWorker?.getRegistrations?.();if(Array.isArray(regs))await Promise.all(regs.map(async reg=>{try{await reg.update();}catch(_){}}));if(window.caches){const keys=await caches.keys();await Promise.all(keys.map(k=>caches.delete(k)));}}catch(_){}try{const url=new URL(location.href);url.searchParams.set('mdm_release',RELEASE.replace(/\./g,'_'));location.replace(url.toString());}catch(_){location.reload();}}
+  function bindRefresh(){const btn=document.getElementById('refreshAppBtn');if(!btn||btn.dataset.mdmPwaRefresh==='1')return;btn.dataset.mdmPwaRefresh='1';btn.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();hardRefresh();},true);}
 
-      if(window.caches){
-        const keys=await caches.keys();
-        await Promise.all(keys.map(key=>caches.delete(key)));
-      }
-    }catch(_){}
+  function removeAlert(){document.getElementById('mdmSchoolActivationAlert')?.remove();}
+  function profileButton(){return Array.from(document.querySelectorAll('#bottomNav button,#bottomNav [data-action],button[data-action]')).find(el=>String(el.dataset?.action||'').toLowerCase()==='profile')||Array.from(document.querySelectorAll('#bottomNav button,#bottomNav [data-action]')).find(el=>/profilo|profile/i.test(String(el.innerText||el.getAttribute('aria-label')||'')))||null;}
 
-    try{
-      const url=new URL(window.location.href);
-      url.searchParams.set('mdm_release',RELEASE.replace(/\./g,'_'));
-      window.location.replace(url.toString());
-    }catch(_){
-      window.location.reload();
-    }
+  async function renderQueue(){
+    const host=document.querySelector('.account-enroll-card');if(!host)return false;
+    const t=String(host.innerText||'').toLowerCase();if(!t.includes('school_admin')||!t.includes('active'))return false;
+    document.getElementById('mdmPilotSeatAssignPanel')?.remove();
+    const panel=document.createElement('div');panel.id='mdmPilotSeatAssignPanel';panel.style.cssText='margin-top:12px;padding:14px;border:1px solid rgba(16,185,129,.28);border-radius:14px;background:rgba(16,185,129,.06)';panel.innerHTML=`<strong>🎟️ ${esc(lang3('Studenti da attivare','Students to activate','Studenti biex jiġu attivati'))}</strong><p style="margin:6px 0 10px;opacity:.78;font-size:12px">${esc(lang3('Gli inviti riscattati compaiono qui automaticamente. Nessun ID da copiare.','Redeemed invitations appear here automatically. No ID to copy.','L-istediniet mifdija jidhru hawn awtomatikament. Ebda ID biex tikkopja.'))}</p><div id="mdmPilotSeatQueue">${esc(lang3('Caricamento…','Loading…','Qed jitgħabba…'))}</div>`;host.appendChild(panel);
+    try{let rows=await rpc('mdm_school_list_redeemed_pilot_invitations',{});if(!Array.isArray(rows))rows=rows?[rows]:[];const q=panel.querySelector('#mdmPilotSeatQueue');if(!rows.length){q.innerHTML=`<div style="padding:10px;border-radius:10px;background:rgba(0,0,0,.04)">✅ ${esc(lang3('Nessuno studente in attesa di seat','No student waiting for a seat','L-ebda student mistenni għal seat'))}</div>`;return true;}q.innerHTML='';for(const row of rows){const id=String(row.invitation_id||''),email=String(row.invite_email||lang3('Studente','Student','Student'));const item=document.createElement('div');item.style.cssText='padding:11px;margin-top:8px;border:1px solid rgba(0,0,0,.10);border-radius:11px;background:var(--card,#fff)';item.innerHTML=`<div style="font-weight:800;word-break:break-word">${esc(email)}</div><div style="font-size:12px;opacity:.72;margin-top:3px">${esc(lang3('Invito riscattato · seat non ancora attivo','Invitation redeemed · seat not active yet','Stedina mifdija · seat għadu mhux attiv'))}</div><button class="btn" type="button" style="margin-top:9px;width:100%">${esc(lang3('Assegna seat','Assign seat','Assenja seat'))}</button><div style="display:none;margin-top:8px;font-size:12px"></div>`;const b=item.querySelector('button'),r=item.querySelector('div:last-child');b.onclick=async()=>{b.disabled=true;r.style.display='block';r.textContent=lang3('Assegnazione seat in corso…','Assigning seat…','Qed jiġi assenjat is-seat…');try{let data=await rpc('mdm_school_assign_pilot_seat',{p_invitation_id:id});if(Array.isArray(data))data=data[0]||{};if(data?.ok!==true)throw new Error(String(data?.error||'seat_assignment_failed'));r.textContent='✅ '+lang3('Seat Pilot assegnato','Pilot seat assigned','Seat Pilot assenjat');setTimeout(()=>{refreshAlert();renderQueue();},250);}catch(e){r.textContent='❌ '+String(e?.message||e||'seat_assignment_failed');b.disabled=false;}};q.appendChild(item);}return true;}catch(e){panel.querySelector('#mdmPilotSeatQueue').textContent='❌ '+String(e?.message||e||'seat_queue_failed');return false;}
   }
 
-  function bindRefresh(){
-    const btn=document.getElementById('refreshAppBtn');
-    if(!btn||btn.dataset.mdmPwaRefresh4583147==='1')return false;
-    btn.dataset.mdmPwaRefresh4583147='1';
-    btn.addEventListener('click',function(ev){
-      ev.preventDefault();
-      ev.stopImmediatePropagation();
-      hardRefresh();
-    },true);
-    return true;
-  }
+  function jump(){const b=profileButton();if(b)b.click();const reveal=()=>{renderQueue().then(ok=>{if(ok){const p=document.getElementById('mdmPilotSeatAssignPanel');if(p){p.scrollIntoView({behavior:'smooth',block:'center'});p.style.boxShadow='0 0 0 3px rgba(16,185,129,.30)';setTimeout(()=>p.style.boxShadow='',1800);}}});};setTimeout(reveal,120);setTimeout(reveal,360);}
+  function showAlert(rows){if(!rows.length){removeAlert();return;}const app=document.getElementById('app'),screen=document.getElementById('screen');if(!app||!screen)return;let el=document.getElementById('mdmSchoolActivationAlert');if(!el){el=document.createElement('button');el.id='mdmSchoolActivationAlert';el.type='button';el.style.cssText='display:flex;width:calc(100% - 24px);margin:8px 12px 4px;box-sizing:border-box;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid rgba(245,158,11,.34);border-radius:14px;background:#fff7df;color:#3f2b00;font:inherit;text-align:left;box-shadow:0 8px 24px rgba(3,25,38,.10);cursor:pointer;z-index:35';el.onclick=jump;app.insertBefore(el,screen);}const n=rows.length;el.innerHTML=`<span><strong>🔔 ${n} ${esc(n===1?lang3('studente da attivare','student to activate','student biex jiġi attivat'):lang3('studenti da attivare','students to activate','studenti biex jiġu attivati'))}</strong><small style="display:block;margin-top:3px;opacity:.72">${esc(lang3('Tocca per aprire direttamente la richiesta','Tap to open the request directly','Agħfas biex tiftaħ it-talba direttament'))}</small></span><span style="font-size:22px;font-weight:900">›</span>`;}
+  async function refreshAlert(){if(!session()){removeAlert();return;}try{let rows=await rpc('mdm_school_list_redeemed_pilot_invitations',{});if(!Array.isArray(rows))rows=rows?[rows]:[];showAlert(rows);}catch(_){removeAlert();}}
 
-  function ensureRealServerHost(){
-    try{
-      if(document.querySelector('.dashboard-invites-card'))return true;
-      const consoleCard=document.querySelector('.account-enroll-card');
-      if(!consoleCard)return false;
-      const host=document.createElement('div');
-      host.className='dashboard-invites-card';
-      host.setAttribute('data-mdm-real-server-invite-host','45.8.31.47');
-      host.style.marginTop='14px';
-      consoleCard.appendChild(host);
-      return true;
-    }catch(_){return false;}
-  }
-
-  function mountPilotInvite(){
-    try{
-      if(!ensureRealServerHost())return false;
-      const bridge=window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE;
-      if(bridge&&typeof bridge.mount==='function')return bridge.mount();
-    }catch(_){}
-    return false;
-  }
-
-  function schedulePilotMount(){
-    setTimeout(function(){
-      mountPilotInvite();
-      requestAnimationFrame(mountPilotInvite);
-    },0);
-  }
-
-  document.addEventListener('click',function(){
-    queueMicrotask(bindRefresh);
-    schedulePilotMount();
-  },false);
-
-  window.addEventListener('pageshow',schedulePilotMount);
-  document.addEventListener('visibilitychange',function(){if(!document.hidden)schedulePilotMount();});
-  window.addEventListener('load',function(){
-    bindRefresh();
-    schedulePilotMount();
-  },{once:true});
-
-  window.MDM_PWA_REFRESH_FIX=Object.freeze({version:RELEASE,mode:'targeted',bind:bindRefresh,mountPilotInvite:schedulePilotMount});
+  function boot(){bindRefresh();refreshAlert();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+  window.addEventListener('pageshow',refreshAlert);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshAlert();});
+  window.MDM_PWA_REFRESH_FIX=Object.freeze({version:RELEASE,mode:'targeted',bind:bindRefresh,refreshSchoolAlert:refreshAlert});
 })();

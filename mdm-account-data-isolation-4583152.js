@@ -9,7 +9,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_DATA_ISOLATION)return;
 
-  const VERSION='45.8.31.50.10';
+  const VERSION='45.8.31.50.11';
   const AUTH_KEY='mdm_auth_session_v4410';
   const LAST_AUTH_KEY='mdm_account_isolation_last_auth_user_v4583152';
   const LEGACY_BACKUP_PREFIX='mdm_account_isolation_legacy_backup_v4583154::';
@@ -224,8 +224,9 @@
     const identityChanged=String(before&&before.userId||'')!==String(next.userId||'');
     const authChanged=Boolean(before&&before.authenticated)!==Boolean(next.authenticated);
     if(identityChanged||authChanged){
-      if(next.authenticated) scheduleAccountReload(2200,true,next.userId);
-      else scheduleAccountReload(120,false,'');
+      /* Never navigate during login: reloading here can interrupt the real auth
+         completion flow and drop the new session on Safari. Logout still refreshes. */
+      if(!next.authenticated)scheduleAccountReload(120,false,'');
     }
   }
 
@@ -283,8 +284,7 @@
     const authChanged=Boolean(lastObservedAuth&&lastObservedAuth.authenticated)!==Boolean(next.authenticated);
     if(identityChanged||authChanged){
       lastObservedAuth=next;
-      if(next.authenticated) scheduleAccountReload(2200,true,next.userId);
-      else scheduleAccountReload(120,false,'');
+      if(!next.authenticated)scheduleAccountReload(120,false,'');
     }else{
       lastObservedAuth=next;
     }

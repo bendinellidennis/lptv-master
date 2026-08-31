@@ -5,7 +5,7 @@
 (function(){
   'use strict';
   if(window.MDM_LOGOUT_PRIVACY_GUARD)return;
-  const VERSION='45.8.31.50.19';
+  const VERSION='45.8.31.50.22';
   const AUTH_KEY='mdm_auth_session_v4410';
   const lowerGet=Storage.prototype.getItem;
   const lowerSet=Storage.prototype.setItem;
@@ -37,9 +37,19 @@
       }
     }catch(_){}
   }
+  function isPublicWelcomeMounted(){
+    try{
+      const screen=document.getElementById('screen')||document.querySelector('main');
+      const text=String(screen&&screen.innerText||'').replace(/\s+/g,' ').trim().toLowerCase();
+      return text.includes('benvenuto in malta driving master') ||
+             text.includes('welcome to malta driving master') ||
+             text.includes('come utilizzerai la piattaforma') ||
+             text.includes('how will you use the platform');
+    }catch(_){return false;}
+  }
   function unmaskOnlyWhenWelcome(){
     try{
-      if(document.querySelector('.hm30'))document.documentElement.removeAttribute('data-mdm-logout-transition');
+      if(isPublicWelcomeMounted())document.documentElement.removeAttribute('data-mdm-logout-transition');
     }catch(_){}
   }
   function goSignedOut(){
@@ -50,7 +60,7 @@
       try{
         const url=new URL(location.href);
         url.hash='';
-        url.searchParams.set('mdm_logout_refresh','45831519');
+        url.searchParams.set('mdm_logout_refresh','45831522');
         location.replace(url.toString());
       }catch(_){try{location.reload();}catch(__){}}
     },60);
@@ -59,10 +69,10 @@
     if(read().authenticated){document.documentElement.removeAttribute('data-mdm-logout-transition');return false;}
     mask();
     try{
-      if(document.querySelector('.hm30')){unmaskOnlyWhenWelcome();return true;}
+      if(isPublicWelcomeMounted()){unmaskOnlyWhenWelcome();return true;}
       const home=document.querySelector('[data-nav="home"]')||document.querySelector('[data-action="home"]');
       if(home&&typeof home.click==='function')home.click();
-      setTimeout(unmaskOnlyWhenWelcome,80);
+      [80,200,500,1000].forEach(ms=>setTimeout(unmaskOnlyWhenWelcome,ms));
       return true;
     }catch(_){}
     return false;
@@ -106,7 +116,7 @@
   function settle(){
     try{
       const url=new URL(location.href);
-      if(url.searchParams.get('mdm_logout_refresh')==='45831519'){
+      if(url.searchParams.get('mdm_logout_refresh')==='45831522'){
         url.searchParams.delete('mdm_logout_refresh');
         history.replaceState(history.state,'',url.toString());
       }

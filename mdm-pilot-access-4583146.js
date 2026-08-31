@@ -14,7 +14,7 @@
   let deviceInFlight=false;
 
   const state={
-    version:'45.8.31.46',
+    version:'45.8.31.46.1',
     mode:'shadow',
     enforcement:false,
     status:'ready',
@@ -265,8 +265,24 @@
     }catch(_){}
   }
 
+  function resetSignedOutState(){
+    lastAuthFingerprint='';
+    state.status='signed_out';
+    state.checkedAt=new Date().toISOString();
+    state.authorized=null;
+    state.reason='authentication_required';
+    state.error='';
+    state.deviceStatus='not_checked';
+    state.deviceReason='';
+    state.deviceError='';
+    state.deviceCheckedAt='';
+    renderBadge();
+  }
+
   try{
     const originalSetItem=Storage.prototype.setItem;
+    const originalRemoveItem=Storage.prototype.removeItem;
+    const originalClear=Storage.prototype.clear;
     if(!Storage.prototype.__mdmPilotAuthHook4583146){
       Object.defineProperty(Storage.prototype,'__mdmPilotAuthHook4583146',{value:true,configurable:false,enumerable:false,writable:false});
       Storage.prototype.setItem=function(key,value){
@@ -275,8 +291,19 @@
           if(this===localStorage&&String(key)===AUTH_KEY){
             const parsed=JSON.parse(String(value||'{}'));
             if(authFingerprint(parsed))Promise.resolve().then(checkWhenAuthReady);
+            else resetSignedOutState();
           }
         }catch(_){}
+        return result;
+      };
+      Storage.prototype.removeItem=function(key){
+        const result=originalRemoveItem.apply(this,arguments);
+        try{if(this===localStorage&&String(key)===AUTH_KEY)resetSignedOutState();}catch(_){}
+        return result;
+      };
+      Storage.prototype.clear=function(){
+        const result=originalClear.apply(this,arguments);
+        try{if(this===localStorage)resetSignedOutState();}catch(_){}
         return result;
       };
     }

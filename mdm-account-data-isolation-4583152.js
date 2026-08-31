@@ -9,7 +9,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_DATA_ISOLATION)return;
 
-  const VERSION='45.8.31.50.16';
+  const VERSION='45.8.31.50.23';
   const AUTH_KEY='mdm_auth_session_v4410';
   const LAST_AUTH_KEY='mdm_account_isolation_last_auth_user_v4583152';
   const LEGACY_BACKUP_PREFIX='mdm_account_isolation_legacy_backup_v4583154::';
@@ -181,33 +181,11 @@
     return lowerRemove.call(localStorage,key);
   }
 
-  let reloadTimer=0;
-  let reloadDueAt=0;
-  function scheduleAccountReload(delay,expectedAuthenticated,expectedUserId){
-    const wait=Math.max(80,Number(delay||120));
-    const due=Date.now()+wait;
-    if(reloadTimer){
-      if(reloadDueAt&&reloadDueAt<=due)return;
-      try{clearTimeout(reloadTimer);}catch(_){}
-      reloadTimer=0;
-    }
-    reloadDueAt=due;
-    reloadTimer=setTimeout(function(){
-      reloadTimer=0;reloadDueAt=0;
-      const now=auth();
-      if(expectedAuthenticated===true){
-        if(!now.authenticated)return;
-        if(expectedUserId&&String(now.userId)!==String(expectedUserId))return;
-      }
-      if(expectedAuthenticated===false&&now.authenticated)return;
-      try{
-        const url=new URL(location.href);
-        url.searchParams.set('mdm_auth_refresh','45831510');
-        location.replace(url.toString());
-      }catch(_){
-        try{location.href=location.href;}catch(__){}
-      }
-    },wait);
+  function scheduleAccountReload(){
+    /* 45.8.31.50.23: disabled.
+       Safari auth transitions are handled in-place by the logout privacy guard.
+       Forced navigation here caused startup/welcome reload loops. */
+    return false;
   }
 
   function noteAuthTransition(before,raw){

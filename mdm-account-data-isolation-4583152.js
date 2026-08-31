@@ -9,7 +9,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_DATA_ISOLATION)return;
 
-  const VERSION='45.8.31.50.13';
+  const VERSION='45.8.31.50.14';
   const AUTH_KEY='mdm_auth_session_v4410';
   const LAST_AUTH_KEY='mdm_account_isolation_last_auth_user_v4583152';
   const LEGACY_BACKUP_PREFIX='mdm_account_isolation_legacy_backup_v4583154::';
@@ -247,7 +247,11 @@
       try{before=parseAuth(lowerGet.call(this,AUTH_KEY));}catch(_){before={userId:'',email:'',authenticated:false};}
     }
     const out=lowerSet.apply(this,arguments);
-    if(isLocal(this)&&k===AUTH_KEY)noteAuthTransition(before,value);
+    if(isLocal(this)&&k===AUTH_KEY){
+      noteAuthTransition(before,value);
+      const next=parseAuth(value);
+      if(next.authenticated&&!(before&&before.authenticated))schedulePostLoginHome();
+    }
     return out;
   };
 
@@ -306,6 +310,20 @@
     [120,500,1500,3000].forEach(ms=>setTimeout(function(){
       const now=auth();
       if(!now.authenticated)scheduleAccountReload(120,false,'');
+    },ms));
+  }
+
+  function goHomeAfterAuthenticated(){
+    const now=auth();
+    if(!now.authenticated)return false;
+    const home=document.querySelector('[data-nav="home"]') || document.querySelector('[data-action="home"]');
+    if(!home||typeof home.click!=='function')return false;
+    try{home.click();return true;}catch(_){return false;}
+  }
+
+  function schedulePostLoginHome(){
+    [180,500,1000].forEach(ms=>setTimeout(function(){
+      if(goHomeAfterAuthenticated())return;
     },ms));
   }
 

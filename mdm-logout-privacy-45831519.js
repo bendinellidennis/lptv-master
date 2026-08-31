@@ -16,14 +16,28 @@
   function read(){
     try{
       const s=JSON.parse(lowerGet.call(localStorage,AUTH_KEY)||'null');
-      return {authenticated:Boolean(s&&s.status==='authenticated'&&s.user&&s.user.id),userId:String(s&&s.user&&s.user.id||'')};
-    }catch(_){return {authenticated:false,userId:''};}
+      const status=String(s&&s.status||'');
+      return {
+        status,
+        authenticated:Boolean(status==='authenticated'&&s&&s.user&&s.user.id),
+        checking:status==='checking',
+        signedOut:status==='signed_out'||status==='',
+        userId:String(s&&s.user&&s.user.id||'')
+      };
+    }catch(_){return {status:'',authenticated:false,checking:false,signedOut:true,userId:''};}
   }
   function parse(raw){
     try{
       const s=raw?JSON.parse(String(raw)):null;
-      return {authenticated:Boolean(s&&s.status==='authenticated'&&s.user&&s.user.id),userId:String(s&&s.user&&s.user.id||'')};
-    }catch(_){return {authenticated:false,userId:''};}
+      const status=String(s&&s.status||'');
+      return {
+        status,
+        authenticated:Boolean(status==='authenticated'&&s&&s.user&&s.user.id),
+        checking:status==='checking',
+        signedOut:status==='signed_out'||status==='',
+        userId:String(s&&s.user&&s.user.id||'')
+      };
+    }catch(_){return {status:'',authenticated:false,checking:false,signedOut:true,userId:''};}
   }
   function mask(){
     try{
@@ -54,19 +68,23 @@
   }
   function goSignedOut(){
     if(navigating)return;
+    const st=read();
+    if(!st.signedOut||st.checking||st.authenticated)return;
     navigating=true;
     mask();
     setTimeout(function(){
-      try{
-        const url=new URL(location.href);
-        url.hash='';
-        url.searchParams.set('mdm_logout_refresh','45831522');
-        location.replace(url.toString());
-      }catch(_){try{location.reload();}catch(__){}}
-    },60);
+      navigating=false;
+      routeWelcomeIfSignedOut();
+    },120);
   }
   function routeWelcomeIfSignedOut(){
-    if(read().authenticated){document.documentElement.removeAttribute('data-mdm-logout-transition');return false;}
+    if(read().authenticated){document.documentElement.  function routeWelcomeIfSignedOut(){
+    const st=read();
+    if(st.authenticated||st.checking){
+      document.documentElement.removeAttribute('data-mdm-logout-transition');
+      return false;
+    }
+    if(!st.signedOut)return false;
     mask();
     try{
       if(isPublicWelcomeMounted()){unmaskOnlyWhenWelcome();return true;}
@@ -121,9 +139,10 @@
         history.replaceState(history.state,'',url.toString());
       }
     }catch(_){}
-    if(!read().authenticated){
+    const st=read();
+    if(st.signedOut&&!st.checking&&!st.authenticated){
       mask();
-      [80,250,700,1500,3000].forEach(ms=>setTimeout(routeWelcomeIfSignedOut,ms));
+      [120,350,800].forEach(ms=>setTimeout(routeWelcomeIfSignedOut,ms));
     }
   }
   window.addEventListener('pageshow',settle);

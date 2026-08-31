@@ -9,9 +9,10 @@
   'use strict';
   if(window.MDM_ACCOUNT_DATA_ISOLATION)return;
 
-  const VERSION='45.8.31.50.3';
+  const VERSION='45.8.31.50.4';
   const AUTH_KEY='mdm_auth_session_v4410';
   const LAST_AUTH_KEY='mdm_account_isolation_last_auth_user_v4583152';
+  const LEGACY_BACKUP_PREFIX='mdm_account_isolation_legacy_backup_v4583154::';
 
   /* Explicit allow-list: only data proven/user-owned in the isolation diagnostic. */
   const USER_KEYS=new Set([
@@ -104,12 +105,32 @@
     return '';
   }
 
+  function backupKey(key){return LEGACY_BACKUP_PREFIX+String(key);}
+  function legacyRaw(key){
+    try{
+      const backup=lowerGet.call(localStorage,backupKey(key));
+      if(backup!==null)return backup;
+      return lowerGet.call(localStorage,String(key));
+    }catch(_){return null;}
+  }
   function legacyOwnerEmail(){
     try{
-      const raw=lowerGet.call(localStorage,'mdm-v1-user-profile');
+      const raw=legacyRaw('mdm-v1-user-profile');
       if(!raw)return '';
       return findEmail(JSON.parse(raw),0);
     }catch(_){return '';}
+  }
+
+  function quarantineLegacyGlobals(){
+    for(const key of USER_KEYS){
+      try{
+        const legacy=lowerGet.call(localStorage,key);
+        if(legacy===null)continue;
+        const bk=backupKey(key);
+        if(lowerGet.call(localStorage,bk)===null)lowerSet.call(localStorage,bk,legacy);
+        if(lowerGet.call(localStorage,bk)!==null)lowerRemove.call(localStorage,key);
+      }catch(_){}
+    }
   }
 
   function mayAdoptLegacy(current){
@@ -128,7 +149,7 @@
 
       /* Never attach another account's legacy data to this user. */
       if(mayAdoptLegacy(current)){
-        const legacy=lowerGet.call(localStorage,key);
+        const legacy=legacyRaw(key);
         if(legacy!==null){
           lowerSet.call(localStorage,sk,legacy);
           return legacy;
@@ -208,8 +229,11 @@
     return out;
   };
 
-  /* Seed last-auth marker for the currently authenticated session.
-     This does not migrate any user data by itself. */
+  /* Quarantine proven user-owned legacy globals before the historical runtime loads.
+     Data is copied first, then only the global alias is removed. */
+  quarantineLegacyGlobals();
+
+  /* Seed last-auth marker for the currently authenticated session. */
   try{
     const current=auth();
     if(current.authenticated&&!lastAuthId())lowerSet.call(localStorage,LAST_AUTH_KEY,current.userId);

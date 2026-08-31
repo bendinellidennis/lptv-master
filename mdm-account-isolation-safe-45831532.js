@@ -15,6 +15,8 @@
   const TECH_OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const AUTH_KEY='mdm_auth_session_v4410';
   const MIGRATION_PREFIX='mdm_account_safe_migrated_v1::';
+  const QUARANTINE_PREFIX='mdm_owner_legacy_quarantine_v1::';
+  const OWNER_QUARANTINE_MARKER='mdm_owner_isolation_quarantined_v1::';
   const USER_KEYS=new Set([
     'mdm-v1-progress',
     'mdm-v1-error-replay',
@@ -93,10 +95,16 @@
 
   function legacyOwnerEmail(){
     try{
-      const raw=rawGet.call(localStorage,'mdm-v1-user-profile');
+      const raw=rawGet.call(localStorage,'mdm-v1-user-profile') || rawGet.call(localStorage,QUARANTINE_PREFIX+'mdm-v1-user-profile');
       if(!raw)return '';
       return findEmail(JSON.parse(raw),0);
     }catch(_){return '';}
+  }
+
+  function legacyValue(key){
+    const direct=rawGet.call(localStorage,key);
+    if(direct!==null)return direct;
+    return rawGet.call(localStorage,QUARANTINE_PREFIX+key);
   }
 
   function quarantineOwnerContamination(a){
@@ -146,7 +154,7 @@
     for(const key of USER_KEYS){
       const target=scoped(key,a);
       if(rawGet.call(localStorage,target)!==null)continue;
-      const legacy=rawGet.call(localStorage,key);
+      const legacy=legacyValue(key);
       if(legacy!==null)rawSet.call(localStorage,target,legacy);
     }
     rawSet.call(localStorage,marker,'1');

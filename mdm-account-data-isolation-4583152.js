@@ -9,7 +9,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_DATA_ISOLATION)return;
 
-  const VERSION='45.8.31.50.14';
+  const VERSION='45.8.31.50.16';
   const AUTH_KEY='mdm_auth_session_v4410';
   const LAST_AUTH_KEY='mdm_account_isolation_last_auth_user_v4583152';
   const LEGACY_BACKUP_PREFIX='mdm_account_isolation_legacy_backup_v4583154::';
@@ -148,14 +148,8 @@
       const scoped=lowerGet.call(localStorage,sk);
       if(scoped!==null)return scoped;
 
-      /* Never attach another account's legacy data to this user. */
-      if(mayAdoptLegacy(current)){
-        const legacy=legacyRaw(key);
-        if(legacy!==null){
-          lowerSet.call(localStorage,sk,legacy);
-          return legacy;
-        }
-      }
+      /* Never auto-adopt quarantined legacy data here.
+         Historical recovery is handled only by the dedicated owner-matched recovery bridge. */
       return null;
     }
 

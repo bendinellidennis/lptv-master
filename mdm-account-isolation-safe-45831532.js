@@ -99,6 +99,43 @@
     }catch(_){return '';}
   }
 
+  function quarantineOwnerContamination(a){
+    if(!a||!a.ok||accountType(a)!=='owner')return false;
+    const marker=OWNER_QUARANTINE_MARKER+a.userId;
+    if(rawGet.call(localStorage,marker)==='1')return true;
+
+    /* Preserve and remove the old student namespace accidentally attached
+       to the technical Owner account. */
+    for(const key of USER_KEYS){
+      const wrong=String(key)+'::user:'+a.userId;
+      const value=rawGet.call(localStorage,wrong);
+      if(value!==null){
+        const backup=QUARANTINE_PREFIX+wrong;
+        if(rawGet.call(localStorage,backup)===null)rawSet.call(localStorage,backup,value);
+        rawRemove.call(localStorage,wrong);
+      }
+    }
+
+    /* If legacy global user data belongs to another email, preserve it and
+       remove it from the live global namespace so even direct legacy reads
+       cannot paint another user's profile into the Owner Home. */
+    const directProfile=rawGet.call(localStorage,'mdm-v1-user-profile');
+    let directEmail='';
+    try{directEmail=directProfile?findEmail(JSON.parse(directProfile),0):'';}catch(_){}
+    if(directEmail&&directEmail!==a.email){
+      for(const key of USER_KEYS){
+        const value=rawGet.call(localStorage,key);
+        if(value===null)continue;
+        const backup=QUARANTINE_PREFIX+key;
+        if(rawGet.call(localStorage,backup)===null)rawSet.call(localStorage,backup,value);
+        rawRemove.call(localStorage,key);
+      }
+    }
+
+    rawSet.call(localStorage,marker,'1');
+    return true;
+  }
+
   function migrateOwnedLegacy(a){
     if(!a.ok||!a.email||accountType(a)==='owner')return false;
     const owner=legacyOwnerEmail();
@@ -119,6 +156,7 @@
   function readUserKey(key){
     const a=auth();
     if(!a.ok)return null;
+    quarantineOwnerContamination(a);
     migrateOwnedLegacy(a);
     return rawGet.call(localStorage,scoped(key,a));
   }
@@ -126,6 +164,7 @@
   function writeUserKey(key,value){
     const a=auth();
     if(!a.ok)return rawSet.call(localStorage,String(key)+'::guest',String(value));
+    quarantineOwnerContamination(a);
     return rawSet.call(localStorage,scoped(key,a),String(value));
   }
 
@@ -144,6 +183,12 @@
   Storage.prototype.setItem=function(key,value){
     const k=String(key);
     if(isLocal(this)&&USER_KEYS.has(k))return writeUserKey(k,value);
+    if(isLocal(this)&&k===AUTH_KEY){
+      const out=rawSet.apply(this,arguments);
+      const a=auth();
+      if(a.ok)quarantineOwnerContamination(a);
+      return out;
+    }
     return rawSet.apply(this,arguments);
   };
 
@@ -158,6 +203,9 @@
     keys:Array.from(USER_KEYS),
     current:auth,
     accountType:()=>accountType(auth()),
+    quarantineOwner:()=>quarantineOwnerContamination(auth()),
     legacyOwnerEmail
   });
 })();
+/* Run once before the historical app runtime starts. */
+try{const __a=auth();if(__a.ok)quarantineOwnerContamination(__a);}catch(_){}

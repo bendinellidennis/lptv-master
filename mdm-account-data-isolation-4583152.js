@@ -9,7 +9,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_DATA_ISOLATION)return;
 
-  const VERSION='45.8.31.50.8';
+  const VERSION='45.8.31.50.9';
   const AUTH_KEY='mdm_auth_session_v4410';
   const LAST_AUTH_KEY='mdm_account_isolation_last_auth_user_v4583152';
   const LEGACY_BACKUP_PREFIX='mdm_account_isolation_legacy_backup_v4583154::';
@@ -191,7 +191,13 @@
   function scheduleAccountReload(){
     if(reloadTimer)return;
     reloadTimer=setTimeout(function(){
-      try{location.reload();}catch(_){}
+      try{
+        const url=new URL(location.href);
+        url.searchParams.set('mdm_auth_refresh','45831509');
+        location.replace(url.toString());
+      }catch(_){
+        try{location.href=location.href;}catch(__){}
+      }
     },80);
   }
 

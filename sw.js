@@ -9,7 +9,7 @@
    - minimal offline shell fallback
 */
 
-const CACHE = 'mdm-build-45-8-31-50-27-one-shot-logout';
+const CACHE = 'mdm-build-45-8-31-50-28-original-welcome';
 const CORE = [
   './',
   './index.html',

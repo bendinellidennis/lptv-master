@@ -9,7 +9,7 @@
   if(window.MDM_ACCOUNT_ISOLATION_DIAGNOSTIC)return;
 
   const AUTH_KEY='mdm_auth_session_v4410';
-  const VERSION='45.8.31.50.0-diag';
+  const VERSION='45.8.31.50.12-auth-trace';
   const nativeGet=Storage.prototype.getItem;
   const nativeSet=Storage.prototype.setItem;
   const nativeRemove=Storage.prototype.removeItem;
@@ -20,6 +20,10 @@
   let currentEmail='';
   let authSwitches=0;
   let renderQueued=false;
+  const AUTH_TRACE_KEY='mdm_iso_auth_trace_v45831512';
+  let authTrace=[];
+  try{authTrace=JSON.parse(sessionStorage.getItem(AUTH_TRACE_KEY)||'[]');if(!Array.isArray(authTrace))authTrace=[];}catch(_){authTrace=[];}
+
 
   function isLocal(store){
     try{return store===window.localStorage;}catch(_){return false;}
@@ -49,6 +53,24 @@
       currentEmail='';
       return {status:'unavailable',userId:'',email:''};
     }
+  }
+
+  function traceSource(){
+    try{
+      const stack=String(new Error().stack||'').split('\n').map(s=>s.trim());
+      const line=stack.find(s=>/app-3994|mdm-/i.test(s)&&!/account-isolation-diagnostic/i.test(s));
+      return String(line||'').replace(/^at\s+/,'').slice(0,180);
+    }catch(_){return '';}
+  }
+
+  function traceAuth(op,raw){
+    try{
+      const a=parseAuth(raw);
+      const evt={at:Date.now(),op:String(op),status:String(a.status||''),userId:String(a.userId||'').slice(0,8),email:String(a.email||''),source:traceSource()};
+      authTrace.push(evt);
+      if(authTrace.length>12)authTrace=authTrace.slice(-12);
+      sessionStorage.setItem(AUTH_TRACE_KEY,JSON.stringify(authTrace));
+    }catch(_){}
   }
 
   function classify(key){
@@ -97,7 +119,7 @@
     const out=nativeSet.apply(this,arguments);
     if(isLocal(this)){
       remember('set',key,String(value));
-      if(String(key)===AUTH_KEY)onAuthWrite(value);
+      if(String(key)===AUTH_KEY){traceAuth('set',value);onAuthWrite(value);}
     }
     return out;
   };
@@ -107,6 +129,7 @@
     if(isLocal(this)){
       remember('remove',key,null);
       if(String(key)===AUTH_KEY){
+        traceAuth('remove',null);
         currentUserId='';
         currentEmail='';
         queueRender();
@@ -118,6 +141,7 @@
   Storage.prototype.clear=function(){
     const out=nativeClear.apply(this,arguments);
     if(isLocal(this)){
+      traceAuth('clear',null);
       records.set('[localStorage.clear]',{key:'[localStorage.clear]',classification:'DANGER',get:0,set:0,remove:0,clear:1,lastOp:'clear',lastAt:Date.now(),lastSize:null});
       currentUserId='';
       currentEmail='';
@@ -162,7 +186,7 @@
     const el=ensureBadge();
     if(!el)return;
     const suspects=Array.from(records.values()).filter(r=>r.classification==='USER?').length;
-    const dataIso=window.MDM_ACCOUNT_DATA_ISOLATION?'DATA ON':'DATA OFF'; el.textContent='ISO DIAG · '+dataIso+' · '+suspects+' suspect · '+authLabel();
+    const iso=window.MDM_ACCOUNT_DATA_ISOLATION;const dataIso=iso?('DATA '+String(iso.version||'ON')):'DATA OFF';const last=authTrace.length?authTrace[authTrace.length-1]:null;const evt=last?(' · EVT '+last.op+':'+last.status):'';el.textContent='ISO DIAG · '+dataIso+' · '+suspects+' suspect · '+authLabel()+evt;
   }
 
   function showPanel(){
@@ -178,6 +202,7 @@
     modal.innerHTML='<div style="width:min(560px,100%);max-height:88vh;overflow:auto;background:#fff;color:#123548;border-radius:18px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.32)">'+
       '<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><strong>Account Isolation Diagnostic</strong><div style="font-size:11px;opacity:.72;margin-top:3px">'+esc(VERSION)+'</div></div><button id="mdmIsoDiagClose" type="button" style="border:0;background:transparent;font-size:22px">×</button></div>'+
       '<div style="margin-top:10px;padding:10px;border-radius:10px;background:#f1f5f7;font-size:12px"><b>'+esc(authLabel())+'</b><br>Auth switch rilevati: '+authSwitches+'<br>Valori e token: NON mostrati / NON salvati.</div>'+
+      '<div style="margin-top:10px;padding:10px;border-radius:10px;background:#fff3cd;font-size:11px"><b>AUTH TRACE</b><br>'+esc(authTrace.slice(-8).map(e=>new Date(e.at).toLocaleTimeString()+' · '+e.op+' · '+e.status+(e.userId?' · '+e.userId+'…':'')+(e.source?' · '+e.source:'')).join('\n')||'Nessun evento auth registrato')+'</div>'+
       '<h4 style="margin:14px 0 4px">Chiavi sospette / auth</h4>'+renderRows(suspect)+
       '<h4 style="margin:14px 0 4px">Ultime chiavi toccate (max 40)</h4>'+renderRows(all)+
       '</div>';

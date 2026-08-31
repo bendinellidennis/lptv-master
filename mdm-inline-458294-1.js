@@ -1,8 +1,8 @@
 
 (function(){try{const raw=localStorage.getItem('mdm-v1-settings'),lang=raw?JSON.parse(raw).lang:'en',el=document.getElementById('mdmStartupSub');if(!el)return;el.textContent=lang==='it'?'Caricamento della tua intelligenza di guida…':lang==='mt'?'Qed titgħabba l-intelliġenza tas-sewqan tiegħek…':'Loading your driving intelligence…';}catch(_){}})();
 
-/* 45.8.31.49.8 — deterministic Pilot/account bridge loader.
-   Current cache-busted files only. School invite bridge is forced to immediate-mount 45.8.31.47.2. */
+/* 45.8.31.49.9 — deterministic Pilot/account bridge loader.
+   Current cache-busted files only. School invite bridge forced to 45.8.31.47.4 lifecycle fix. */
 window.addEventListener('load',function(){
   try{
     if(!window.MDM_PILOT_ACCESS_BRIDGE){
@@ -15,7 +15,7 @@ window.addEventListener('load',function(){
 
     if(!window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE){
       const school=document.createElement('script');
-      school.src='mdm-pilot-school-dashboard-4583147.js?v=45831472-immediate';
+      school.src='mdm-pilot-school-dashboard-4583147.js?v=45831474-route-lifecycle';
       school.async=true;
       school.setAttribute('data-mdm-pilot-school-bridge','shadow');
       document.head.appendChild(school);

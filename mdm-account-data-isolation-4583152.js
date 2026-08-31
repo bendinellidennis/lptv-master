@@ -9,7 +9,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_DATA_ISOLATION)return;
 
-  const VERSION='45.8.31.50.2';
+  const VERSION='45.8.31.50.3';
   const AUTH_KEY='mdm_auth_session_v4410';
   const LAST_AUTH_KEY='mdm_account_isolation_last_auth_user_v4583152';
 
@@ -137,10 +137,10 @@
       return null;
     }
 
-    /* Preserve pre-auth legacy-only installations, but after an account has
-       existed on this device do not expose account-owned data while signed out. */
-    if(lastAuthId())return null;
-    return lowerGet.call(localStorage,key);
+    /* Signed-out/guest state must never expose account-owned data.
+       Legacy globals remain stored only as a migration source and are adopted
+       after authenticated email ownership is verified. */
+    return null;
   }
 
   function writeUserKey(key,value){

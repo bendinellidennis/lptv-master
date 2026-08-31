@@ -9,7 +9,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_DATA_ISOLATION)return;
 
-  const VERSION='45.8.31.50.4';
+  const VERSION='45.8.31.50.5';
   const AUTH_KEY='mdm_auth_session_v4410';
   const LAST_AUTH_KEY='mdm_account_isolation_last_auth_user_v4583152';
   const LEGACY_BACKUP_PREFIX='mdm_account_isolation_legacy_backup_v4583154::';
@@ -194,12 +194,14 @@
     },80);
   }
 
-  function noteAuthenticatedUser(raw){
+  function noteAuthTransition(before,raw){
     const next=parseAuth(raw);
-    if(!next.authenticated)return;
-    const previous=lastAuthId();
-    try{lowerSet.call(localStorage,LAST_AUTH_KEY,next.userId);}catch(_){}
-    if(previous&&previous!==next.userId)scheduleAccountReload();
+    if(next.authenticated){
+      try{lowerSet.call(localStorage,LAST_AUTH_KEY,next.userId);}catch(_){}
+    }
+    const identityChanged=String(before&&before.userId||'')!==String(next.userId||'');
+    const authChanged=Boolean(before&&before.authenticated)!==Boolean(next.authenticated);
+    if(identityChanged||authChanged)scheduleAccountReload();
   }
 
   Storage.prototype.getItem=function(key){
@@ -214,8 +216,12 @@
     if(isLocal(this)&&USER_KEYS.has(k)){
       return writeUserKey(k,String(value));
     }
+    let before=null;
+    if(isLocal(this)&&k===AUTH_KEY){
+      try{before=parseAuth(lowerGet.call(this,AUTH_KEY));}catch(_){before={userId:'',email:'',authenticated:false};}
+    }
     const out=lowerSet.apply(this,arguments);
-    if(isLocal(this)&&k===AUTH_KEY)noteAuthenticatedUser(value);
+    if(isLocal(this)&&k===AUTH_KEY)noteAuthTransition(before,value);
     return out;
   };
 
@@ -224,8 +230,12 @@
     if(isLocal(this)&&USER_KEYS.has(k)){
       return removeUserKey(k);
     }
+    let before=null;
+    if(isLocal(this)&&k===AUTH_KEY){
+      try{before=parseAuth(lowerGet.call(this,AUTH_KEY));}catch(_){before={userId:'',email:'',authenticated:false};}
+    }
     const out=lowerRemove.apply(this,arguments);
-    if(isLocal(this)&&k===AUTH_KEY&&lastAuthId())scheduleAccountReload();
+    if(isLocal(this)&&k===AUTH_KEY&&before&&before.authenticated)scheduleAccountReload();
     return out;
   };
 

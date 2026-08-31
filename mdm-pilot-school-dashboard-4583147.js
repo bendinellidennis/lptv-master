@@ -1,12 +1,13 @@
-/* Malta Driving Master 45.8.31.47.3 — School Admin Pilot Invite lifecycle fix
-   Mounts immediately after the real Account & Enrollment renderer binds the School Server console.
-   This removes the need to leave/re-enter Profile. No polling. No MutationObserver. No enforcement. */
+/* Malta Driving Master 45.8.31.47.4 — School Admin Pilot Invite route-lifecycle fix
+   Mounts after MDM navigation finishes rendering Account & Enrollment.
+   This removes the first-entry miss that required leaving and re-entering Profile.
+   No polling. No MutationObserver. No enforcement. */
 (function(){
   'use strict';
   if(window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE)return;
 
   const AUTH_KEY='mdm_auth_session_v4410';
-  const state={version:'45.8.31.47.3',mode:'shadow',enforcement:false,status:'ready',licenseId:'',lastInvitation:null,error:''};
+  const state={version:'45.8.31.47.4',mode:'shadow',enforcement:false,status:'ready',licenseId:'',lastInvitation:null,error:''};
 
   function lang3(it,en,mt){try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en;}}
   function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -35,28 +36,26 @@
     }catch(e){state.status='error';state.error=String(e?.message||e||'invite_creation_failed');result.textContent='❌ '+state.error;}finally{button.disabled=false;}
   }
 
-  function schedule(){try{queueMicrotask(mount);}catch(_){mount();}try{requestAnimationFrame(()=>requestAnimationFrame(mount));}catch(_){}setTimeout(mount,100);setTimeout(mount,300);}
+  function schedule(){try{queueMicrotask(mount);}catch(_){mount();}try{requestAnimationFrame(()=>requestAnimationFrame(mount));}catch(_){}setTimeout(mount,80);}
 
-  function installAccountLifecycleHook(){
-    try{
-      const original=window.bindAccountEnrollment;
-      if(typeof original==='function'&&!original.__mdmPilotInviteWrapped){
-        const wrapped=function(){const out=original.apply(this,arguments);schedule();return out;};
-        Object.defineProperty(wrapped,'__mdmPilotInviteWrapped',{value:true});
-        window.bindAccountEnrollment=wrapped;
-      }
-    }catch(_){}
+  function installHistoryLifecycleHook(){
+    if(window.__MDM_PILOT_SCHOOL_HISTORY_HOOK__)return;
+    window.__MDM_PILOT_SCHOOL_HISTORY_HOOK__=true;
+    const push=history.pushState.bind(history),replace=history.replaceState.bind(history);
+    history.pushState=function(){const out=push(...arguments);setTimeout(schedule,0);return out;};
+    history.replaceState=function(){const out=replace(...arguments);setTimeout(schedule,0);return out;};
+    window.addEventListener('popstate',()=>setTimeout(schedule,0));
   }
 
   const originalSetItem=Storage.prototype.setItem;
-  if(!window.__MDM_PILOT_SCHOOL_INVITE_AUTH_HOOK__){window.__MDM_PILOT_SCHOOL_INVITE_AUTH_HOOK__=true;Storage.prototype.setItem=function(key,value){const out=originalSetItem.apply(this,arguments);if(this===localStorage&&String(key)===AUTH_KEY)schedule();return out;};}
+  if(!window.__MDM_PILOT_SCHOOL_INVITE_AUTH_HOOK__){window.__MDM_PILOT_SCHOOL_INVITE_AUTH_HOOK__=true;Storage.prototype.setItem=function(key,value){const out=originalSetItem.apply(this,arguments);if(this===localStorage&&String(key)===AUTH_KEY)setTimeout(schedule,0);return out;};}
 
-  installAccountLifecycleHook();
-  document.addEventListener('click',schedule,false);
+  installHistoryLifecycleHook();
+  document.addEventListener('click',()=>setTimeout(schedule,0),false);
   window.addEventListener('pageshow',schedule);
-  window.addEventListener('load',()=>{installAccountLifecycleHook();schedule();},{once:true});
+  window.addEventListener('load',schedule,{once:true});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule();});
 
-  window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE=Object.freeze({version:'45.8.31.47.3',mode:'shadow',getState:()=>JSON.parse(JSON.stringify(state)),mount});
+  window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE=Object.freeze({version:'45.8.31.47.4',mode:'shadow',getState:()=>JSON.parse(JSON.stringify(state)),mount});
   schedule();
 })();

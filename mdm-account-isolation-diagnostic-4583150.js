@@ -162,7 +162,7 @@
     const el=ensureBadge();
     if(!el)return;
     const suspects=Array.from(records.values()).filter(r=>r.classification==='USER?').length;
-    el.textContent='ISO DIAG · '+suspects+' suspect · '+authLabel();
+    const dataIso=window.MDM_ACCOUNT_DATA_ISOLATION?'DATA ON':'DATA OFF'; el.textContent='ISO DIAG · '+dataIso+' · '+suspects+' suspect · '+authLabel();
   }
 
   function showPanel(){

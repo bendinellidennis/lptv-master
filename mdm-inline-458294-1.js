@@ -1,8 +1,9 @@
 
 (function(){try{const raw=localStorage.getItem('mdm-v1-settings'),lang=raw?JSON.parse(raw).lang:'en',el=document.getElementById('mdmStartupSub');if(!el)return;el.textContent=lang==='it'?'Caricamento della tua intelligenza di guida…':lang==='mt'?'Qed titgħabba l-intelliġenza tas-sewqan tiegħek…':'Loading your driving intelligence…';}catch(_){}})();
 
-/* 45.8.31.49.9 — deterministic Pilot/account bridge loader.
-   Current cache-busted files only. School invite bridge forced to 45.8.31.47.4 lifecycle fix. */
+/* 45.8.31.49.10 — deterministic Pilot/account bridge loader.
+   School invite is synchronized with the real #screen render lifecycle.
+   One scoped observer only; no global DOM observer and no polling. */
 window.addEventListener('load',function(){
   try{
     if(!window.MDM_PILOT_ACCESS_BRIDGE){
@@ -43,6 +44,22 @@ window.addEventListener('load',function(){
       refresh.async=true;
       refresh.setAttribute('data-mdm-pwa-refresh-fix','targeted');
       document.head.appendChild(refresh);
+    }
+
+    const screen=document.getElementById('screen');
+    if(screen&&!window.__MDM_SCHOOL_INVITE_SCREEN_OBSERVER__){
+      let raf=0;
+      const syncSchoolInvite=function(){
+        if(raf)return;
+        raf=requestAnimationFrame(function(){
+          raf=0;
+          try{window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE?.mount?.();}catch(_){}
+        });
+      };
+      const observer=new MutationObserver(syncSchoolInvite);
+      observer.observe(screen,{childList:true,subtree:true});
+      window.__MDM_SCHOOL_INVITE_SCREEN_OBSERVER__=observer;
+      syncSchoolInvite();
     }
   }catch(_){}
 },{once:true});

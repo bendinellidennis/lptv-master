@@ -9,7 +9,7 @@
    - minimal offline shell fallback
 */
 
-const CACHE = 'mdm-build-45-8-31-49-13-auto-seat-queue';
+const CACHE = 'mdm-build-45-8-31-49-24-emergency-recovery-1';
 const CORE = [
   './',
   './index.html',

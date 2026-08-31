@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.19 — Logout Privacy & Immediate Signed-Out Routing
+/* Malta Driving Master 45.8.31.50.20 — Logout Privacy & Immediate Signed-Out Routing
    Prevents stale personal/profile UI from remaining visible after auth logout.
    Does not delete user data. It only reacts to authenticated -> signed_out and routes
    the signed-out shell back to Home/Welcome without requiring app restart. */
@@ -32,9 +32,14 @@
       if(!style){
         style=document.createElement('style');
         style.id='mdmLogoutPrivacyStyle';
-        style.textContent='html[data-mdm-logout-transition="1"] main,html[data-mdm-logout-transition="1"] .account-enroll-card{visibility:hidden!important}';
+        style.textContent='html[data-mdm-logout-transition="1"] main{visibility:hidden!important}';
         (document.head||document.documentElement).appendChild(style);
       }
+    }catch(_){}
+  }
+  function unmaskOnlyWhenWelcome(){
+    try{
+      if(document.querySelector('.hm30'))document.documentElement.removeAttribute('data-mdm-logout-transition');
     }catch(_){}
   }
   function goSignedOut(){
@@ -51,11 +56,14 @@
     },60);
   }
   function routeWelcomeIfSignedOut(){
-    if(read().authenticated)return false;
+    if(read().authenticated){document.documentElement.removeAttribute('data-mdm-logout-transition');return false;}
+    mask();
     try{
-      document.documentElement.removeAttribute('data-mdm-logout-transition');
+      if(document.querySelector('.hm30')){unmaskOnlyWhenWelcome();return true;}
       const home=document.querySelector('[data-nav="home"]')||document.querySelector('[data-action="home"]');
-      if(home&&typeof home.click==='function'){home.click();return true;}
+      if(home&&typeof home.click==='function')home.click();
+      setTimeout(unmaskOnlyWhenWelcome,80);
+      return true;
     }catch(_){}
     return false;
   }
@@ -104,7 +112,8 @@
       }
     }catch(_){}
     if(!read().authenticated){
-      [80,250,700].forEach(ms=>setTimeout(routeWelcomeIfSignedOut,ms));
+      mask();
+      [80,250,700,1500,3000].forEach(ms=>setTimeout(routeWelcomeIfSignedOut,ms));
     }
   }
   window.addEventListener('pageshow',settle);

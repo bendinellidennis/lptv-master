@@ -68,6 +68,32 @@
     return String(key)+'::'+type+':'+String(a&&a.userId||'');
   }
 
+  function parseLegacyScopedKey(key){
+    const m=String(key).match(/^(.*)::user:([^:]+)$/);
+    if(!m||!USER_KEYS.has(m[1]))return null;
+    return {base:m[1],userId:m[2]};
+  }
+
+  function parseEnrollmentUserKey(key){
+    const m=String(key).match(/^mdm-v1-account-enrollment-user:([^:]+)$/);
+    return m?{userId:m[1]}:null;
+  }
+
+  function crossAccountKey(key,a){
+    const legacy=parseLegacyScopedKey(key);
+    if(legacy){
+      if(!a||!a.ok)return true;
+      if(accountType(a)==='owner')return true;
+      return legacy.userId!==a.userId;
+    }
+    const enrollment=parseEnrollmentUserKey(key);
+    if(enrollment){
+      if(!a||!a.ok)return true;
+      return enrollment.userId!==a.userId;
+    }
+    return false;
+  }
+
   function findEmail(value,depth){
     if(depth>4||value==null)return '';
     if(typeof value==='string'){
@@ -185,27 +211,45 @@
 
   Storage.prototype.getItem=function(key){
     const k=String(key);
-    if(isLocal(this)&&USER_KEYS.has(k))return readUserKey(k);
+    if(isLocal(this)){
+      const a=auth();
+      if(crossAccountKey(k,a))return null;
+      if(USER_KEYS.has(k))return readUserKey(k);
+    }
     return rawGet.apply(this,arguments);
   };
 
   Storage.prototype.setItem=function(key,value){
     const k=String(key);
-    if(isLocal(this)&&USER_KEYS.has(k))return writeUserKey(k,value);
-    if(isLocal(this)&&k===AUTH_KEY){
-      const out=rawSet.apply(this,arguments);
+    if(isLocal(this)){
       const a=auth();
-      if(a.ok)quarantineOwnerContamination(a);
-      return out;
+      if(crossAccountKey(k,a))return undefined;
+      if(USER_KEYS.has(k))return writeUserKey(k,value);
+      if(k===AUTH_KEY){
+        const out=rawSet.apply(this,arguments);
+        const next=auth();
+        if(next.ok)quarantineOwnerContamination(next);
+        return out;
+      }
     }
     return rawSet.apply(this,arguments);
   };
 
   Storage.prototype.removeItem=function(key){
     const k=String(key);
-    if(isLocal(this)&&USER_KEYS.has(k))return removeUserKey(k);
+    if(isLocal(this)){
+      const a=auth();
+      if(crossAccountKey(k,a))return undefined;
+      if(USER_KEYS.has(k))return removeUserKey(k);
+    }
     return rawRemove.apply(this,arguments);
   };
+
+  /* Preflight before the historical app runtime starts. */
+  try{
+    const preflight=auth();
+    if(preflight.ok)quarantineOwnerContamination(preflight);
+  }catch(_){}
 
   window.MDM_ACCOUNT_ISOLATION_SAFE=Object.freeze({
     version:VERSION,
@@ -216,5 +260,3 @@
     legacyOwnerEmail
   });
 })();
-/* Run once before the historical app runtime starts. */
-try{const __a=auth();if(__a.ok)quarantineOwnerContamination(__a);}catch(_){}

@@ -9,8 +9,6 @@
   let alertRequestSeq=0;
   let latestPendingRows=[];
   let latestPendingAt=0;
-  let latestPendingRows=[];
-  let latestPendingAt=0;
 
   function lang3(it,en,mt){try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en;}}
   function esc(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}

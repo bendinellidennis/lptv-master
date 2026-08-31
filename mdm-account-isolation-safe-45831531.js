@@ -119,13 +119,13 @@
 
   function writeUserKey(key,value){
     const a=auth();
-    if(!a.ok)return undefined;
+    if(!a.ok)return rawSet.call(localStorage,scoped(key,'guest'),String(value));
     return rawSet.call(localStorage,scoped(key,a.userId),String(value));
   }
 
   function removeUserKey(key){
     const a=auth();
-    if(!a.ok)return undefined;
+    if(!a.ok)return rawRemove.call(localStorage,scoped(key,'guest'));
     return rawRemove.call(localStorage,scoped(key,a.userId));
   }
 

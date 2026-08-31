@@ -9,7 +9,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_DATA_ISOLATION)return;
 
-  const VERSION='45.8.31.50.6';
+  const VERSION='45.8.31.50.7';
   const AUTH_KEY='mdm_auth_session_v4410';
   const LAST_AUTH_KEY='mdm_account_isolation_last_auth_user_v4583152';
   const LEGACY_BACKUP_PREFIX='mdm_account_isolation_legacy_backup_v4583154::';
@@ -264,7 +264,10 @@
       lastObservedAuth=next;
     }
   }
-  document.addEventListener('click',()=>setTimeout(reconcileAuthTransition,0),true);
+  function reconcileAfterInteraction(){
+    [0,120,400,1000].forEach(ms=>setTimeout(reconcileAuthTransition,ms));
+  }
+  document.addEventListener('click',reconcileAfterInteraction,true);
   window.addEventListener('pageshow',reconcileAuthTransition);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)reconcileAuthTransition();});
 

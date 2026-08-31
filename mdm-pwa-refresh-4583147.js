@@ -9,6 +9,8 @@
   let alertRequestSeq=0;
   let latestPendingRows=[];
   let latestPendingAt=0;
+  let latestPendingRows=[];
+  let latestPendingAt=0;
 
   function lang3(it,en,mt){try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en;}}
   function esc(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -45,9 +47,11 @@
     if(!el){
       el=document.createElement('button');el.id='mdmSchoolActivationAlert';el.type='button';
       el.style.cssText='display:flex;width:calc(100% - 24px);margin:8px 12px 4px;box-sizing:border-box;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid rgba(245,158,11,.40);border-radius:14px;background:#fff7df;color:#3f2b00;font:inherit;text-align:left;box-shadow:0 8px 24px rgba(3,25,38,.12);cursor:pointer;z-index:35';
-      el.onclick=openDirectQueue;
       app.insertBefore(el,screen);
     }
+    el.onclick=null;
+    el.onclick=function(ev){try{ev?.preventDefault?.();ev?.stopPropagation?.();}catch(_){}openDirectQueue();};
+    el.dataset.mdmSchoolAlertOwner=RELEASE;
     return el;
   }
   function showCheckingAlert(){const el=ensureAlert();if(!el)return;el.innerHTML=`<span><strong>🔔 ${esc(lang3('Richieste studenti','Student requests','Talbiet tal-istudenti'))}</strong><small style="display:block;margin-top:3px;opacity:.72">${esc(lang3('Controllo studenti da attivare… Tocca per aprire','Checking students to activate… Tap to open','Qed jiġu ċċekkjati studenti biex jiġu attivati… Agħfas biex tiftaħ'))}</small></span><span style="font-size:22px;font-weight:900">›</span>`;}

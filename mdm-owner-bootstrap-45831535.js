@@ -29,17 +29,7 @@
   function clean(v,max=80){
     return String(v||'').trim().replace(/\s+/g,' ').slice(0,max);
   }
-  function ownerNameParts(s){
-    const meta=s?.user?.user_metadata||s?.user?.metadata||{};
-    const first=clean(meta.first_name||meta.firstName||'');
-    const last=clean(meta.last_name||meta.lastName||'');
-    if(first&&last)return {first,last};
-    const full=clean(meta.full_name||meta.name||'');
-    if(full){
-      const bits=full.split(' ').filter(Boolean);
-      if(bits.length>1)return {first:bits[0],last:bits.slice(1).join(' ')};
-      return {first:full,last:'Owner'};
-    }
+  function ownerNameParts(){
     return {first:'MDM',last:'Owner'};
   }
 

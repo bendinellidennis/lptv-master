@@ -7,7 +7,7 @@
   'use strict';
   if(window.MDM_SIGNED_OUT_NEUTRAL_GATE)return;
 
-  const VERSION='45.8.31.50.52';
+  const VERSION='45.8.31.50.53';
   const AUTH_KEY='mdm_auth_session_v4410';
   let raf=0;
 
@@ -31,6 +31,168 @@
       const lang=raw?String(JSON.parse(raw).lang||'en'):'en';
       return lang==='it'?it:lang==='mt'?mt:en;
     }catch(_){return en;}
+  }
+
+  function authNote(message,isError){
+    const el=document.getElementById('mdmSignedOutAuthNote');
+    if(!el)return;
+    el.textContent=String(message||'');
+    el.style.color=isError?'#9a3c2f':'#607b8b';
+  }
+
+  function setAuthBusy(busy){
+    const signIn=document.getElementById('mdmAuthSignIn');
+    const signUp=document.getElementById('mdmAuthSignUp');
+    const email=document.getElementById('mdmAuthEmail');
+    const password=document.getElementById('mdmAuthPassword');
+    if(signIn)signIn.disabled=Boolean(busy);
+    if(signUp)signUp.disabled=Boolean(busy);
+    if(email)email.disabled=Boolean(busy);
+    if(password)password.disabled=Boolean(busy);
+  }
+
+  function authErrorMessage(payload,status){
+    return String(
+      payload?.msg||
+      payload?.message||
+      payload?.error_description||
+      payload?.error||
+      ('HTTP '+String(status||0))
+    ).slice(0,240);
+  }
+
+  function storeAuthenticatedSession(payload,email){
+    const user=payload&&payload.user&&typeof payload.user==='object'?payload.user:null;
+    const accessToken=String(payload?.access_token||'');
+    const refreshToken=String(payload?.refresh_token||'');
+    if(!user?.id||!accessToken)return false;
+
+    const expiresAt=Number(payload?.expires_at||0)>0
+      ? Number(payload.expires_at)*1000
+      : (Number(payload?.expires_in||0)>0?Date.now()+Number(payload.expires_in)*1000:0);
+
+    const next={
+      status:'authenticated',
+      email:String(user.email||email||''),
+      user,
+      accessToken,
+      refreshToken,
+      expiresAt,
+      verifiedAt:new Date().toISOString(),
+      lastHttpStatus:200,
+      lastMessage:'Supabase Auth session verified',
+      lastAction:'session'
+    };
+
+    localStorage.setItem(AUTH_KEY,JSON.stringify(next));
+    return true;
+  }
+
+  async function directAuth(action){
+    const cfg=window.MDM_BACKEND_CONFIG;
+    const emailEl=document.getElementById('mdmAuthEmail');
+    const passwordEl=document.getElementById('mdmAuthPassword');
+    const email=String(emailEl?.value||'').trim().toLowerCase();
+    const password=String(passwordEl?.value||'');
+
+    if(!cfg?.enabled||!cfg.endpoint||!cfg.publishableKey){
+      authNote(t(
+        'Servizio di accesso non disponibile. Riprova tra poco.',
+        'Sign-in service unavailable. Please try again shortly.',
+        'Is-servizz tad-dħul mhux disponibbli. Erġa’ pprova dalwaqt.'
+      ),true);
+      return;
+    }
+    if(!/^\S+@\S+\.\S+$/.test(email)||!password){
+      authNote(t(
+        'Inserisci e-mail e password.',
+        'Enter email and password.',
+        'Daħħal email u password.'
+      ),true);
+      return;
+    }
+    if(action==='signup'&&password.length<6){
+      authNote(t(
+        'La password deve avere almeno 6 caratteri.',
+        'Password must contain at least 6 characters.',
+        'Il-password għandu jkollha mill-inqas 6 karattri.'
+      ),true);
+      return;
+    }
+
+    setAuthBusy(true);
+    authNote(action==='signup'
+      ? t('Creazione account in corso…','Creating account…','Qed jinħoloq il-kont…')
+      : t('Accesso in corso…','Signing in…','Qed isir id-dħul…'),false);
+
+    try{
+      const base=String(cfg.endpoint).replace(/\/$/,'')+'/auth/v1';
+      const url=action==='signup'
+        ? base+'/signup'
+        : base+'/token?grant_type=password';
+      const body=action==='signup'
+        ? {email,password,data:{mdm_role:'student',mdm_build:VERSION}}
+        : {email,password};
+
+      const response=await fetch(url,{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'apikey':cfg.publishableKey,
+          'Accept':'application/json'
+        },
+        body:JSON.stringify(body),
+        cache:'no-store'
+      });
+
+      const textBody=await response.text();
+      let payload={};
+      try{payload=textBody?JSON.parse(textBody):{};}catch(_){}
+
+      if(response.ok&&payload?.access_token&&payload?.user?.id){
+        if(!storeAuthenticatedSession(payload,email))throw new Error('session_store_failed');
+        authNote(t('Accesso riuscito.','Signed in successfully.','Id-dħul irnexxa.'),false);
+        clearClasses();
+        try{
+          if(typeof render==='function')render();
+        }catch(_){}
+        try{
+          window.MDM_PILOT_ACCESS_BRIDGE?.check?.();
+          window.MDM_PILOT_STUDENT_REDEEM_BRIDGE?.mount?.();
+          window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE?.mount?.();
+        }catch(_){}
+        schedule();
+        return;
+      }
+
+      if(action==='signup'&&response.ok&&payload?.user?.id){
+        authNote(t(
+          'Account creato. Controlla l’e-mail di conferma, poi torna qui e accedi.',
+          'Account created. Check your confirmation email, then return here and sign in.',
+          'Il-kont inħoloq. Iċċekkja l-email ta’ konferma, imbagħad erġa’ idħol hawn.'
+        ),false);
+        return;
+      }
+
+      authNote(
+        (action==='signup'
+          ? t('Creazione account non riuscita: ','Account creation failed: ','Il-ħolqien tal-kont falla: ')
+          : t('Accesso non riuscito: ','Sign-in failed: ','Id-dħul falla: ')
+        )+authErrorMessage(payload,response.status),
+        true
+      );
+    }catch(e){
+      authNote(
+        t(
+          'Problema di connessione. I dati inseriti sono rimasti qui: riprova.',
+          'Connection problem. Your entered details are still here: try again.',
+          'Problema ta’ konnessjoni. Id-data li daħħalt għadha hawn: erġa’ pprova.'
+        ),
+        true
+      );
+    }finally{
+      if(!authenticated())setAuthBusy(false);
+    }
   }
 
   function installStyle(){
@@ -185,21 +347,13 @@
     const signIn=gate.querySelector('#mdmAuthSignIn');
     const signUp=gate.querySelector('#mdmAuthSignUp');
 
-    if(signIn)signIn.onclick=function(){
-      try{
-        if(typeof mdmAuthSignIn==='function'){mdmAuthSignIn();return;}
-      }catch(_){}
-      const profile=document.querySelector('[data-nav="profile"]');
-      if(profile)profile.click();
-    };
+    if(signIn)signIn.onclick=function(){directAuth('signin');};
+    if(signUp)signUp.onclick=function(){directAuth('signup');};
 
-    if(signUp)signUp.onclick=function(){
-      try{
-        if(typeof mdmAuthSignUp==='function'){mdmAuthSignUp();return;}
-      }catch(_){}
-      const profile=document.querySelector('[data-nav="profile"]');
-      if(profile)profile.click();
-    };
+    const password=gate.querySelector('#mdmAuthPassword');
+    if(password)password.addEventListener('keydown',function(event){
+      if(event.key==='Enter'){event.preventDefault();directAuth('signin');}
+    });
   }
 
   function clearClasses(){

@@ -11,7 +11,7 @@
 
   const AUTH_KEY='mdm_auth_session_v4410';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
-  const VERSION='45.8.31.50.40';
+  const VERSION='45.8.31.50.41';
   const APP_URL='https://bendinellidennis.github.io/lptv-master/';
   const state={version:VERSION,mode:'shadow',enforcement:false,status:'ready',licenseId:'',lastInvitation:null,error:'',emailDelivery:'',activationQueue:[]};
 
@@ -127,13 +127,24 @@
     return true;
   }
 
-  function findSchoolConsole(){const direct=document.querySelector('.account-enroll-card');if(direct)return direct;return Array.from(document.querySelectorAll('section,article,.card,div')).find(el=>/CONSOLE\s+SCUOLA\s+SERVER/i.test(String(el.innerText||'')))||null;}
-  function renderedSchoolAdmin(host){if(!host)return false;const text=String(host.innerText||'').toLowerCase();return text.includes('school_admin')&&text.includes('active');}
+  function isTechnicalOwner(){const s=readSession();return normalizeEmail(s?.user?.email||s?.email||'')==='maltadrivingmaster@gmail.com';}
+  function findSchoolConsole(){
+    const home=document.querySelector('.sch35');
+    if(home&&isTechnicalOwner())return home;
+    const direct=document.querySelector('.account-enroll-card');
+    if(direct)return direct;
+    return Array.from(document.querySelectorAll('section,article,.card,div')).find(el=>/CONSOLE\s+SCUOLA\s+SERVER/i.test(String(el.innerText||'')))||null;
+  }
+  function renderedSchoolAdmin(host){
+    if(!host)return false;
+    if(host.classList?.contains('sch35')&&isTechnicalOwner())return true;
+    const text=String(host.innerText||'').toLowerCase();
+    return text.includes('school_admin')&&text.includes('active');
+  }
   function removeLegacySeatQueue(){try{document.getElementById('mdmPilotSeatAssignPanel')?.remove();}catch(_){}}
   function removePanel(){document.getElementById('mdmPilotRealInvitePanel')?.remove();removeActivationPanel();removeLegacySeatQueue();}
   async function resolveSchoolLicense(host){
     if(!readSession())throw new Error('authentication_required');
-    if(!renderedSchoolAdmin(host))throw new Error('not_school_admin');
     const data=await rpc('mdm_school_get_pilot_license',{});
     if(data?.authorized===true&&data?.license_found===true&&data?.license_id){
       state.licenseId=String(data.license_id);
@@ -197,7 +208,9 @@
     panel.id='mdmPilotActivationQueuePanel';
     panel.style.cssText='margin-top:14px;padding:14px;border:1px solid rgba(22,129,95,.22);border-radius:14px;background:rgba(22,129,95,.05)';
     panel.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><strong>✅ Attivazione posti Pilot</strong><p style="margin:5px 0 0;opacity:.74;font-size:11px">Dopo che lo studente ha riscattato l’invito, attiva qui il posto server reale.</p></div><button id="mdmPilotRefreshActivationQueue" class="btn secondary" type="button" style="padding:8px 10px">Aggiorna</button></div><div id="mdmPilotActivationQueueBody" style="margin-top:10px"></div>';
-    host.appendChild(panel);
+    const invite=document.getElementById('mdmPilotRealInvitePanel');
+    if(host.classList?.contains('sch35')&&invite&&invite.parentNode===host)invite.insertAdjacentElement('afterend',panel);
+    else host.appendChild(panel);
     panel.querySelector('#mdmPilotRefreshActivationQueue').onclick=refreshActivationQueue;
     refreshActivationQueue();
     return panel;
@@ -210,7 +223,11 @@
     if(panel)panel.remove();
     panel=document.createElement('div');panel.id='mdmPilotRealInvitePanel';panel.style.cssText='margin-top:14px;padding:14px;border:1px solid rgba(45,125,255,.22);border-radius:14px;background:rgba(45,125,255,.05)';
     panel.innerHTML=`<div style="display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap"><div><strong>✉️ ${esc(lang3('Invita studente Pilot','Invite Pilot student','Stieden student Pilot'))}</strong><p style="margin:6px 0 0;opacity:.78;font-size:12px">${esc(lang3('Inserisci l’email: MDM invia automaticamente il link allo studente.','Enter the email: MDM automatically sends the link to the student.','Daħħal l-email: MDM jibgħat il-link awtomatikament lill-istudent.'))}</p></div><span style="font-size:10px;font-weight:800;padding:5px 8px;border-radius:999px;background:#132d46;color:#fff">SHADOW · ENFORCEMENT OFF</span></div><div style="display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:8px;margin-top:12px"><input id="mdmPilotInviteEmail" type="email" maxlength="254" autocomplete="email" inputmode="email" placeholder="student@example.com" style="min-width:0;padding:11px;border:1px solid rgba(0,0,0,.18);border-radius:10px;background:var(--card,#fff);color:inherit"><select id="mdmPilotInviteHours" style="padding:11px;border:1px solid rgba(0,0,0,.18);border-radius:10px;background:var(--card,#fff);color:inherit"><option value="24">24 h</option><option value="72" selected>72 h</option><option value="168">7 days</option></select></div><button id="mdmPilotCreateRealInvite" class="btn" type="button" style="margin-top:9px;width:100%">${esc(lang3('Invia invito allo studente','Send invitation to student','Ibgħat stedina lill-istudent'))}</button><div id="mdmPilotInviteResult" style="display:none;margin-top:10px;padding:10px;border-radius:10px;background:rgba(0,0,0,.05);font-size:12px;word-break:break-word"></div>`;
-    host.appendChild(panel);panel.querySelector('#mdmPilotCreateRealInvite').onclick=createInvitation;return panel;
+    if(host.classList?.contains('sch35')){
+      const anchor=host.querySelector('.sch35-profile-entry')||host.querySelector('.sch35-head');
+      if(anchor)anchor.insertAdjacentElement('afterend',panel); else host.insertBefore(panel,host.firstChild||null);
+    }else host.appendChild(panel);
+    panel.querySelector('#mdmPilotCreateRealInvite').onclick=createInvitation;return panel;
   }
 
   function mount(){removeLegacySeatQueue();const host=findSchoolConsole();if(!host||!renderedSchoolAdmin(host)||!readSession()){removePanel();return false;}buildInvitePanel(host);buildActivationPanel(host);return true;}

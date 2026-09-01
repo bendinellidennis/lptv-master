@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.36 — Technical Owner Home Separation
+/* Malta Driving Master 45.8.31.50.37 — Technical Owner Home Separation
    Maps the technical Owner's Home to the existing School/Operations Home.
    No reloads, no polling, no timers, no auth mutation, no data copying. */
 (function(){
@@ -54,6 +54,10 @@
     if(!isOwner())return;
     const h=String(location.hash||'');
     if(h===''||h==='#'||h==='#home')ownerHome(false);
+  });
+
+  window.addEventListener('mdm:owner-ready',function(){
+    ownerHome(false);
   });
 
   const initialHash=String(location.hash||'');

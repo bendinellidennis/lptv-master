@@ -7,12 +7,14 @@
   'use strict';
   if(window.MDM_DENNIS_HISTORY_RESTORE)return;
 
-  const VERSION='45.8.31.50.39';
+  const VERSION='45.8.31.50.50';
   const AUTH_KEY='mdm_auth_session_v4410';
   const TARGET_EMAIL='bendinellidennis@gmail.com';
   const PROFILE_KEY='mdm-v1-user-profile';
   const MARKER_PREFIX='mdm_dennis_history_restored_v1::';
   const PRE_RESTORE_PREFIX='mdm_dennis_pre_restore_v1::';
+  const PRE_REHYDRATE_PREFIX='mdm_dennis_pre_rehydrate_v1::';
+  const REHYDRATE_PREFIX='mdm_dennis_history_rehydrated_v1::';
 
   const USER_KEYS=[
     'mdm-v1-progress',
@@ -113,46 +115,118 @@
     return scored[0]||null;
   }
 
+  function currentState(userId){
+    let count=0,total=0;
+    const values={};
+    for(const key of USER_KEYS){
+      const targetKey=key+'::user:'+userId;
+      const raw=localStorage.getItem(targetKey);
+      values[key]=raw;
+      if(raw!==null){count++;total+=raw.length;}
+    }
+    const profile=values[PROFILE_KEY];
+    return {
+      count,
+      total,
+      values,
+      profileEmail:profile?findEmail(readJson(profile),0):''
+    };
+  }
+
+  function needsRepair(current,source){
+    if(!source)return false;
+    if(current.profileEmail!==TARGET_EMAIL)return true;
+
+    const sourceProgress=localStorage.getItem(source.prefix+'mdm-v1-progress');
+    const currentProgress=current.values['mdm-v1-progress'];
+    if(sourceProgress!==null){
+      if(currentProgress===null)return true;
+      if(sourceProgress.length>120 && currentProgress.length < sourceProgress.length*0.55)return true;
+    }
+
+    if(source.total>500 && current.total < source.total*0.55)return true;
+    return false;
+  }
+
   function restore(){
     const s=auth();
     if(!s)return {restored:false,reason:'not_target_account'};
     const userId=String(s.user.id);
     const marker=MARKER_PREFIX+userId;
-    if(localStorage.getItem(marker)==='1'){
-      return {restored:false,reason:'already_restored',userId};
-    }
-
     const source=bestSource();
     if(!source)return {restored:false,reason:'no_matching_backup',userId};
 
-    let restoredCount=0,restoredBytes=0;
+    const current=currentState(userId);
+    const firstRestore=localStorage.getItem(marker)!=='1';
+    const repair=needsRepair(current,source);
+
+    if(!firstRestore&&!repair){
+      return {
+        restored:false,
+        reason:'already_restored_and_healthy',
+        userId,
+        currentCount:current.count,
+        currentBytes:current.total,
+        sourceCount:source.count,
+        sourceBytes:source.total
+      };
+    }
+
+    const stamp=Date.now();
+    let restoredCount=0,restoredBytes=0,repairedCount=0;
+
     for(const key of USER_KEYS){
       const sourceValue=localStorage.getItem(source.prefix+key);
       if(sourceValue===null)continue;
 
       const targetKey=key+'::user:'+userId;
-      const current=localStorage.getItem(targetKey);
-      if(current!==null&&localStorage.getItem(PRE_RESTORE_PREFIX+targetKey)===null){
-        localStorage.setItem(PRE_RESTORE_PREFIX+targetKey,current);
+      const currentValue=localStorage.getItem(targetKey);
+
+      let shouldCopy=firstRestore || currentValue===null;
+
+      if(!shouldCopy && key===PROFILE_KEY){
+        const currentEmail=findEmail(readJson(currentValue),0);
+        if(currentEmail!==TARGET_EMAIL)shouldCopy=true;
+      }
+
+      if(!shouldCopy && currentValue!==null){
+        if(sourceValue.length>120 && currentValue.length < sourceValue.length*0.55)shouldCopy=true;
+      }
+
+      if(!shouldCopy)continue;
+
+      if(currentValue!==null){
+        const backupKey=(firstRestore?PRE_RESTORE_PREFIX:PRE_REHYDRATE_PREFIX+stamp+'::')+targetKey;
+        if(localStorage.getItem(backupKey)===null)localStorage.setItem(backupKey,currentValue);
       }
 
       localStorage.setItem(targetKey,sourceValue);
       restoredCount++;
       restoredBytes+=sourceValue.length;
+      if(!firstRestore)repairedCount++;
     }
 
     localStorage.setItem(marker,'1');
-    localStorage.setItem(marker+'::meta',JSON.stringify({
+    const meta={
       version:VERSION,
       sourcePrefix:source.prefix,
       sourceCount:source.count,
       sourceBytes:source.total,
       restoredCount,
       restoredBytes,
+      repairedCount,
+      firstRestore,
+      repair,
+      previousCount:current.count,
+      previousBytes:current.total,
       at:new Date().toISOString()
-    }));
+    };
+    localStorage.setItem(marker+'::meta',JSON.stringify(meta));
+    if(!firstRestore&&repair){
+      localStorage.setItem(REHYDRATE_PREFIX+userId,JSON.stringify(meta));
+    }
 
-    return {restored:true,userId,restoredCount,restoredBytes,sourceCount:source.count,sourceBytes:source.total};
+    return {restored:true,userId,...meta};
   }
 
   const previousSetItem=Storage.prototype.setItem;

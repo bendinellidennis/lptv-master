@@ -1,11 +1,11 @@
-/* Malta Driving Master 45.8.31.50.37 — Technical Owner Home Separation
-   Maps the technical Owner's Home to the existing School/Operations Home.
+/* Malta Driving Master 45.8.31.50.38 — Technical Owner Home Navigation Fix
+   Uses the app's own existing bottom-nav handler instead of calling a private/global route function.
    No reloads, no polling, no timers, no auth mutation, no data copying. */
 (function(){
   'use strict';
   if(window.MDM_TECH_OWNER_HOME_GUARD)return;
 
-  const VERSION='45.8.31.50.36';
+  const VERSION='45.8.31.50.38';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_EMAIL='maltadrivingmaster@gmail.com';
 
@@ -22,52 +22,79 @@
 
   function isOwner(){return Boolean(readSession());}
 
-  function ownerHome(push){
-    if(!isOwner())return false;
-    try{document.body?.classList?.add('mdm-tech-owner');}catch(_){}
+  function navButton(){
     try{
-      if(typeof window.go==='function'){
-        if(!push)history.replaceState({name:'schoolhome',data:null},'', '#schoolhome');
-        window.go('schoolhome',null,Boolean(push));
-        return true;
-      }
-    }catch(_){}
-    return false;
-  }
-
-  function homeTarget(target){
-    try{
-      const el=target&&target.closest?target.closest('[data-nav="home"],[data-go="home"],.brand'):null;
-      return el||null;
+      return document.querySelector('[data-nav="home"]')
+        || document.querySelector('[data-nav="schoolhome"][data-mdm-owner-home="1"]');
     }catch(_){return null;}
   }
 
+  function armOwnerHome(){
+    if(!isOwner())return false;
+    const btn=navButton();
+    if(!btn)return false;
+    btn.setAttribute('data-mdm-owner-home','1');
+    btn.setAttribute('data-nav','schoolhome');
+    try{document.body?.classList?.add('mdm-tech-owner');}catch(_){}
+    return true;
+  }
+
+  function restoreStudentHome(){
+    const btn=document.querySelector('[data-nav="schoolhome"][data-mdm-owner-home="1"]');
+    if(!btn)return false;
+    btn.setAttribute('data-nav','home');
+    btn.removeAttribute('data-mdm-owner-home');
+    try{document.body?.classList?.remove('mdm-tech-owner');}catch(_){}
+    return true;
+  }
+
+  function openOwnerHome(){
+    if(!armOwnerHome())return false;
+    const btn=navButton();
+    if(!btn)return false;
+    try{btn.click();return true;}catch(_){return false;}
+  }
+
   document.addEventListener('click',function(ev){
-    if(!isOwner())return;
-    if(!homeTarget(ev.target))return;
-    ev.preventDefault();
-    ev.stopImmediatePropagation();
-    ownerHome(true);
+    if(!isOwner()){
+      restoreStudentHome();
+      return;
+    }
+    const brand=ev.target&&ev.target.closest?ev.target.closest('.brand'):null;
+    if(brand){
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      openOwnerHome();
+      return;
+    }
+    armOwnerHome();
   },true);
 
   window.addEventListener('popstate',function(){
-    if(!isOwner())return;
+    if(!isOwner()){restoreStudentHome();return;}
     const h=String(location.hash||'');
-    if(h===''||h==='#'||h==='#home')ownerHome(false);
+    if(h===''||h==='#'||h==='#home')openOwnerHome();
   });
 
   window.addEventListener('mdm:owner-ready',function(){
-    ownerHome(false);
+    if(!isOwner())return;
+    armOwnerHome();
+    const h=String(location.hash||'');
+    if(h===''||h==='#'||h==='#home')openOwnerHome();
   });
 
-  const initialHash=String(location.hash||'');
-  if(isOwner()&&(initialHash===''||initialHash==='#'||initialHash==='#home')){
-    ownerHome(false);
+  if(isOwner()){
+    armOwnerHome();
+    const h=String(location.hash||'');
+    if(h===''||h==='#'||h==='#home')openOwnerHome();
+  }else{
+    restoreStudentHome();
   }
 
   window.MDM_TECH_OWNER_HOME_GUARD=Object.freeze({
     version:VERSION,
     active:isOwner,
-    open:()=>ownerHome(true)
+    arm:armOwnerHome,
+    open:openOwnerHome
   });
 })();

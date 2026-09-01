@@ -6,7 +6,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_SWITCH_REHYDRATE)return;
 
-  const VERSION='45.8.31.50.54';
+  const VERSION='45.8.31.50.54.1';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const PROFILE_KEY='mdm-v1-user-profile';
@@ -43,6 +43,9 @@
 
   function rehydrateRuntimeObject(name,fresh){
     if(!fresh||typeof fresh!=='object')return false;
+    try{
+      if(name==='mdmAuthSession' && typeof mdmAuthSession!=='undefined')return replaceObject(mdmAuthSession,fresh);
+    }catch(_){}
     try{
       if(name==='userProfile' && typeof userProfile!=='undefined')return replaceObject(userProfile,fresh);
     }catch(_){}
@@ -123,6 +126,7 @@
     const isOwner=state.email===OWNER_EMAIL;
 
     const updated={
+      auth:rehydrateRuntimeObject('mdmAuthSession',s),
       profile:rehydrateRuntimeObject('userProfile',state.profile),
       enrollment:rehydrateRuntimeObject('accountEnrollment',state.enrollment),
       onboarding:rehydrateRuntimeObject('onboardingState',state.onboarding) ||

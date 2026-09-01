@@ -7,7 +7,7 @@
   'use strict';
   if(window.MDM_SIGNED_OUT_NEUTRAL_GATE)return;
 
-  const VERSION='45.8.31.50.51';
+  const VERSION='45.8.31.50.52';
   const AUTH_KEY='mdm_auth_session_v4410';
   let raf=0;
 
@@ -77,8 +77,9 @@
         font-size:13px;
         line-height:1.48
       }
-      #mdmSignedOutGate button{
-        width:min(100%,360px)
+      #mdmSignedOutGate button{width:100%}
+      @media(max-width:520px){
+        #mdmSignedOutGate > div[style*="grid-template-columns"]{grid-template-columns:1fr!important}
       }
 
       body.mdm-signed-out-profile .account-hero,
@@ -109,7 +110,8 @@
   }
 
   function findAuthCard(){
-    const direct=document.querySelector('#mdmAuthEmail,#mdmAuthSignIn,#mdmAuthSignUp');
+    const direct=Array.from(document.querySelectorAll('#mdmAuthEmail,#mdmAuthSignIn,#mdmAuthSignUp'))
+      .find(function(el){return !el.closest('#mdmSignedOutGate');});
     if(!direct)return null;
     return direct.closest('.account-identity-card,.card,section,article,div');
   }
@@ -158,14 +160,43 @@
         'Sign in or create an account to see your profile, progress and study journey.',
         'Idħol jew oħloq kont biex tara l-profil, il-progress u l-mixja tal-istudju tiegħek.'
       )+'</p>'+
-      '<button id="mdmSignedOutOpenAccount" class="btn" type="button">'+
-        '🔐 '+t('Accedi / Crea account','Sign in / Create account','Idħol / Oħloq kont')+
-      '</button>';
+      '<label style="display:block;text-align:left;margin:14px auto 7px;width:min(100%,420px);font-weight:800">'+
+        'E-mail'+
+        '<input id="mdmAuthEmail" type="email" value="" autocomplete="email" autocapitalize="none" spellcheck="false" '+
+        'style="box-sizing:border-box;width:100%;margin-top:6px;padding:12px;border:1px solid rgba(18,53,72,.18);border-radius:12px;background:#fff;color:#123548;font:600 16px system-ui">'+
+      '</label>'+
+      '<label style="display:block;text-align:left;margin:7px auto 12px;width:min(100%,420px);font-weight:800">'+
+        t('Password','Password','Password')+
+        '<input id="mdmAuthPassword" type="password" value="" autocomplete="current-password" '+
+        'style="box-sizing:border-box;width:100%;margin-top:6px;padding:12px;border:1px solid rgba(18,53,72,.18);border-radius:12px;background:#fff;color:#123548;font:600 16px system-ui">'+
+      '</label>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;width:min(100%,420px);margin:0 auto">'+
+        '<button id="mdmAuthSignIn" class="btn" type="button">🔓 '+t('Accedi','Sign in','Idħol')+'</button>'+
+        '<button id="mdmAuthSignUp" class="btn secondary" type="button">＋ '+t('Crea account','Create account','Oħloq kont')+'</button>'+
+      '</div>'+
+      '<p id="mdmSignedOutAuthNote" style="margin-top:12px;font-size:11px">'+t(
+        'I dati del precedente utente restano privati e ricompaiono solo dopo il suo accesso.',
+        'The previous user’s data stays private and only returns after that user signs in.',
+        'Id-data tal-utent preċedenti tibqa’ privata u terġa’ tidher biss wara d-dħul tiegħu.'
+      )+'</p>';
 
     screen.insertBefore(gate,screen.firstChild||null);
 
-    const btn=gate.querySelector('#mdmSignedOutOpenAccount');
-    if(btn)btn.onclick=function(){
+    const signIn=gate.querySelector('#mdmAuthSignIn');
+    const signUp=gate.querySelector('#mdmAuthSignUp');
+
+    if(signIn)signIn.onclick=function(){
+      try{
+        if(typeof mdmAuthSignIn==='function'){mdmAuthSignIn();return;}
+      }catch(_){}
+      const profile=document.querySelector('[data-nav="profile"]');
+      if(profile)profile.click();
+    };
+
+    if(signUp)signUp.onclick=function(){
+      try{
+        if(typeof mdmAuthSignUp==='function'){mdmAuthSignUp();return;}
+      }catch(_){}
       const profile=document.querySelector('[data-nav="profile"]');
       if(profile)profile.click();
     };

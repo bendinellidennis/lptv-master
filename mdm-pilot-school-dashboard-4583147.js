@@ -11,7 +11,7 @@
 
   const AUTH_KEY='mdm_auth_session_v4410';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
-  const VERSION='45.8.31.50.41';
+  const VERSION='45.8.31.50.42';
   const APP_URL='https://bendinellidennis.github.io/lptv-master/';
   const state={version:VERSION,mode:'shadow',enforcement:false,status:'ready',licenseId:'',lastInvitation:null,error:'',emailDelivery:'',activationQueue:[]};
 
@@ -25,6 +25,19 @@
   function savePending(token,email){try{localStorage.setItem(PENDING_KEY,JSON.stringify({token:String(token||''),email:normalizeEmail(email),at:Date.now()}));}catch(_){}}
   function readPending(){try{const raw=localStorage.getItem(PENDING_KEY);if(!raw)return null;const p=JSON.parse(raw);if(!p||String(p.token||'').length<32||Date.now()-Number(p.at||0)>7*24*60*60*1000){localStorage.removeItem(PENDING_KEY);return null;}return p;}catch(_){return null;}}
   function clearPending(){try{localStorage.removeItem(PENDING_KEY);}catch(_){}}
+  function jwtExpired(token){
+    try{
+      const body=String(token||'').split('.')[1]||'';
+      const json=JSON.parse(atob(body.replace(/-/g,'+').replace(/_/g,'/')));
+      return Number(json?.exp||0)>0 && Number(json.exp)*1000<=Date.now();
+    }catch(_){return false;}
+  }
+  function syncInviteLoginEmail(){
+    const p=readPending(); if(!p)return;
+    const email=normalizeEmail(p.email||'');
+    const input=document.getElementById('mdmAuthEmail');
+    if(input&&email&&normalizeEmail(input.value)!==email)input.value=email;
+  }
 
   function captureInviteFromUrl(){
     try{
@@ -46,9 +59,20 @@
       const accessToken=String(p.get('access_token')||'');
       const refreshToken=String(p.get('refresh_token')||'');
       if(!accessToken||!refreshToken)return false;
+      if(jwtExpired(accessToken)){
+        const url=new URL(location.href);url.hash='';history.replaceState(history.state,'',url.pathname+url.search);
+        showStudentNotice(lang3('Link di accesso scaduto. L’invito resta valido: accedi con l’email invitata e la tua password.','Sign-in link expired. The invitation is still valid: sign in with the invited email and your password.','Il-link tad-dħul skada. L-istedina għadha valida: idħol bl-email mistiedna u l-password tiegħek.'),false);
+        syncInviteLoginEmail();
+        return false;
+      }
       const c=cfg();
       const userRes=await fetch(c.endpoint+'/auth/v1/user',{headers:{'apikey':c.key,'Authorization':'Bearer '+accessToken},cache:'no-store'});
-      if(!userRes.ok)throw new Error('magic_link_user_lookup_failed');
+      if(!userRes.ok){
+        const url=new URL(location.href);url.hash='';history.replaceState(history.state,'',url.pathname+url.search);
+        showStudentNotice(lang3('Il link di accesso non è più valido. Accedi normalmente: l’invito è stato conservato.','The sign-in link is no longer valid. Sign in normally: the invitation has been preserved.','Il-link tad-dħul m’għadux validu. Idħol normalment: l-istedina nżammet.'),false);
+        syncInviteLoginEmail();
+        return false;
+      }
       const user=await userRes.json();
       const expiresIn=Math.max(60,Number(p.get('expires_in')||3600)||3600);
       const session={
@@ -100,7 +124,9 @@
   async function processInboundInvite(){
     captureInviteFromUrl();
     await adoptMagicLinkSession();
+    syncInviteLoginEmail();
     await autoRedeemPending();
+    syncInviteLoginEmail();
   }
 
   async function sendInvitationEmail(email,token,invitationId){
@@ -255,7 +281,7 @@
     finally{button.disabled=false;}
   }
 
-  function schedule(){try{queueMicrotask(mount);}catch(_){mount();}try{requestAnimationFrame(()=>requestAnimationFrame(mount));}catch(_){}setTimeout(mount,80);}
+  function schedule(){syncInviteLoginEmail();try{queueMicrotask(mount);}catch(_){mount();}try{requestAnimationFrame(()=>requestAnimationFrame(mount));}catch(_){}setTimeout(mount,80);}
   function installHistoryLifecycleHook(){if(window.__MDM_PILOT_SCHOOL_HISTORY_HOOK__)return;window.__MDM_PILOT_SCHOOL_HISTORY_HOOK__=true;const push=history.pushState.bind(history),replace=history.replaceState.bind(history);history.pushState=function(){const out=push(...arguments);setTimeout(schedule,0);return out;};history.replaceState=function(){const out=replace(...arguments);setTimeout(schedule,0);return out;};window.addEventListener('popstate',()=>setTimeout(schedule,0));}
   const originalSetItem=Storage.prototype.setItem;
   if(!window.__MDM_PILOT_SCHOOL_INVITE_AUTH_HOOK__){window.__MDM_PILOT_SCHOOL_INVITE_AUTH_HOOK__=true;Storage.prototype.setItem=function(key,value){const out=originalSetItem.apply(this,arguments);if(this===localStorage&&String(key)===AUTH_KEY){setTimeout(()=>{schedule();autoRedeemPending();},0);}return out;};}

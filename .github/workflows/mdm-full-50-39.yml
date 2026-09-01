@@ -1,0 +1,49 @@
+name: Build MDM FULL 45.8.31.50.39
+
+on:
+  push:
+    branches:
+      - dennis-history-restore-50-39
+  workflow_dispatch:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build clean FULL package
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="MDM_FULL_45_8_31_50_39_ACCOUNT_ISOLATION_OWNER_DENNIS_RESTORE_APPROVED"
+          mkdir -p "$OUT"
+          rsync -a ./ "$OUT"/ \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude "$OUT/" \
+            --exclude 'BUILD_CHECK*' \
+            --exclude '*BUILD_CHECK*'
+          find "$OUT" -type f -name 'app-3994*.js' | while read -r f; do
+            base="$(basename "$f")"
+            case "$base" in
+              app-3994-4582852-part-a.js|app-3994-458293-part-b1.js|app-3994-458293-part-b2.js) ;;
+              *) rm -f "$f" ;;
+            esac
+          done
+          rm -f "$OUT/account-storage-inspector.html" "$OUT/account-isolation-inspector.html"
+          find "$OUT" -type f -iname '*BUILD_CHECK*' -delete
+          zip -qr "${OUT}.zip" "$OUT"
+          sha256sum "${OUT}.zip" > "${OUT}.sha256"
+          ls -lh "${OUT}.zip" "${OUT}.sha256"
+      - name: Upload FULL
+        uses: actions/upload-artifact@v4
+        with:
+          name: MDM_FULL_45_8_31_50_39_APPROVED
+          path: |
+            MDM_FULL_45_8_31_50_39_ACCOUNT_ISOLATION_OWNER_DENNIS_RESTORE_APPROVED.zip
+            MDM_FULL_45_8_31_50_39_ACCOUNT_ISOLATION_OWNER_DENNIS_RESTORE_APPROVED.sha256
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0

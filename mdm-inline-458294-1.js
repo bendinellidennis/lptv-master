@@ -29,6 +29,30 @@
 })();
 
 
+/* 45.8.31.50.43 — Invite login privacy scrub */
+function mdmInviteLoginPrivacyScrub(){
+  try{
+    const raw=localStorage.getItem('mdm_pilot_pending_invite_v1');
+    const p=raw?JSON.parse(raw):null;
+    if(!p||String(p.token||'').length<32||Date.now()-Number(p.at||0)>7*24*60*60*1000)return false;
+    const inputs=Array.from(document.querySelectorAll('input[type="email"]'));
+    let changed=false;
+    for(const input of inputs){
+      if(input.dataset.mdmInvitePrivacyScrubbed==='1')continue;
+      const host=input.closest('section,article,.card,form,div');
+      if(!host||!host.querySelector('input[type="password"]'))continue;
+      const text=String(host.innerText||'').toLowerCase();
+      if(!text.includes('supabase auth')&&!text.includes('autenticazione reale')&&!text.includes('authentication'))continue;
+      input.value='';
+      input.setAttribute('data-mdm-invite-privacy-scrubbed','1');
+      try{input.dispatchEvent(new Event('input',{bubbles:true}));}catch(_){}
+      try{input.dispatchEvent(new Event('change',{bubbles:true}));}catch(_){}
+      changed=true;
+    }
+    return changed;
+  }catch(_){return false;}
+}
+
 (function(){try{const raw=localStorage.getItem('mdm-v1-settings'),lang=raw?JSON.parse(raw).lang:'en',el=document.getElementById('mdmStartupSub');if(!el)return;el.textContent=lang==='it'?'Caricamento della tua intelligenza di guida…':lang==='mt'?'Qed titgħabba l-intelliġenza tas-sewqan tiegħek…':'Loading your driving intelligence…';}catch(_){}})();
 
 /* 45.8.31.49.24 — automatic Pilot email/deep-link loader.
@@ -57,12 +81,14 @@ window.addEventListener('load',function(){
           raf=0;
           try{document.getElementById('mdmPilotSeatAssignPanel')?.remove();}catch(_){}
           try{window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE?.mount?.();}catch(_){}
+          try{mdmInviteLoginPrivacyScrub();}catch(_){}
         });
       };
       const observer=new MutationObserver(syncSchoolPilot);
       observer.observe(screen,{childList:true,subtree:true});
       window.__MDM_SCHOOL_INVITE_SCREEN_OBSERVER__=observer;
       syncSchoolPilot();
+      try{mdmInviteLoginPrivacyScrub();}catch(_){}
     }
   }catch(_){}
 },{once:true});

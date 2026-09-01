@@ -11,9 +11,9 @@
 
   const AUTH_KEY='mdm_auth_session_v4410';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
-  const VERSION='45.8.31.47.8';
+  const VERSION='45.8.31.50.40';
   const APP_URL='https://bendinellidennis.github.io/lptv-master/';
-  const state={version:VERSION,mode:'shadow',enforcement:false,status:'ready',licenseId:'',lastInvitation:null,error:'',emailDelivery:''};
+  const state={version:VERSION,mode:'shadow',enforcement:false,status:'ready',licenseId:'',lastInvitation:null,error:'',emailDelivery:'',activationQueue:[]};
 
   function lang3(it,en,mt){try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en;}}
   function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -130,8 +130,78 @@
   function findSchoolConsole(){const direct=document.querySelector('.account-enroll-card');if(direct)return direct;return Array.from(document.querySelectorAll('section,article,.card,div')).find(el=>/CONSOLE\s+SCUOLA\s+SERVER/i.test(String(el.innerText||'')))||null;}
   function renderedSchoolAdmin(host){if(!host)return false;const text=String(host.innerText||'').toLowerCase();return text.includes('school_admin')&&text.includes('active');}
   function removeLegacySeatQueue(){try{document.getElementById('mdmPilotSeatAssignPanel')?.remove();}catch(_){}}
-  function removePanel(){document.getElementById('mdmPilotRealInvitePanel')?.remove();removeLegacySeatQueue();}
-  async function resolveSchoolLicense(host){if(!readSession())throw new Error('authentication_required');if(!renderedSchoolAdmin(host))throw new Error('not_school_admin');const data=await rpc('mdm_check_my_pilot_entitlement',{});if(data?.authorized===true&&data?.license_id){state.licenseId=String(data.license_id);return state.licenseId;}throw new Error(String(data?.reason||'no_active_pilot_license'));}
+  function removePanel(){document.getElementById('mdmPilotRealInvitePanel')?.remove();removeActivationPanel();removeLegacySeatQueue();}
+  async function resolveSchoolLicense(host){
+    if(!readSession())throw new Error('authentication_required');
+    if(!renderedSchoolAdmin(host))throw new Error('not_school_admin');
+    const data=await rpc('mdm_school_get_pilot_license',{});
+    if(data?.authorized===true&&data?.license_found===true&&data?.license_id){
+      state.licenseId=String(data.license_id);
+      return state.licenseId;
+    }
+    throw new Error(String(data?.reason||(data?.license_found===false?'no_active_school_pilot_license':'pilot_license_lookup_failed')));
+  }
+
+  function activationPanel(){return document.getElementById('mdmPilotActivationQueuePanel');}
+  function removeActivationPanel(){try{activationPanel()?.remove();}catch(_){}}
+
+  async function refreshActivationQueue(){
+    const panel=activationPanel();
+    if(!panel)return false;
+    const body=panel.querySelector('#mdmPilotActivationQueueBody');
+    if(!body)return false;
+    body.innerHTML='<div style="opacity:.7;font-size:12px">Aggiornamento…</div>';
+    try{
+      const data=await rpc('mdm_school_list_pilot_activation_queue',{});
+      if(data?.authorized!==true)throw new Error('school_admin_required');
+      const items=Array.isArray(data?.items)?data.items:[];
+      state.activationQueue=items;
+      if(!items.length){
+        body.innerHTML='<div style="opacity:.72;font-size:12px">Nessun invito riscattato in attesa.</div>';
+        return true;
+      }
+      body.innerHTML=items.map(item=>{
+        const assigned=item?.seat_assigned===true;
+        const email=esc(item?.invite_email||'—');
+        const id=esc(item?.invitation_id||'');
+        return '<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid rgba(0,0,0,.08)"><div><strong style="font-size:12px">'+email+'</strong><div style="font-size:10px;opacity:.68;margin-top:3px">'+(assigned?'POSTO ACTIVE':'INVITO RISCATTATO · DA ATTIVARE')+'</div></div>'+(assigned?'<span style="font-size:11px;font-weight:900;color:#16815f">✓ ACTIVE</span>':'<button class="btn mdmPilotAssignSeat" type="button" data-invitation-id="'+id+'" style="padding:8px 10px;min-height:34px">Attiva posto</button>')+'</div>';
+      }).join('');
+      body.querySelectorAll('.mdmPilotAssignSeat').forEach(btn=>{
+        btn.onclick=()=>assignSeat(String(btn.dataset.invitationId||''),btn);
+      });
+      return true;
+    }catch(e){
+      body.innerHTML='<div style="font-size:12px;color:#a33">❌ '+esc(String(e?.message||e||'activation_queue_failed'))+'</div>';
+      return false;
+    }
+  }
+
+  async function assignSeat(invitationId,button){
+    if(!invitationId)return;
+    if(button)button.disabled=true;
+    try{
+      const data=await rpc('mdm_school_assign_pilot_seat',{p_invitation_id:invitationId});
+      if(data?.ok!==true||data?.assigned!==true)throw new Error(String(data?.error||'seat_assignment_failed'));
+      await refreshActivationQueue();
+    }catch(e){
+      if(button){button.disabled=false;button.textContent='Errore';}
+      state.error=String(e?.message||e||'seat_assignment_failed');
+    }
+  }
+
+  function buildActivationPanel(host){
+    let panel=activationPanel();
+    if(panel&&panel.parentElement===host){refreshActivationQueue();return panel;}
+    if(panel)panel.remove();
+    panel=document.createElement('div');
+    panel.id='mdmPilotActivationQueuePanel';
+    panel.style.cssText='margin-top:14px;padding:14px;border:1px solid rgba(22,129,95,.22);border-radius:14px;background:rgba(22,129,95,.05)';
+    panel.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><strong>✅ Attivazione posti Pilot</strong><p style="margin:5px 0 0;opacity:.74;font-size:11px">Dopo che lo studente ha riscattato l’invito, attiva qui il posto server reale.</p></div><button id="mdmPilotRefreshActivationQueue" class="btn secondary" type="button" style="padding:8px 10px">Aggiorna</button></div><div id="mdmPilotActivationQueueBody" style="margin-top:10px"></div>';
+    host.appendChild(panel);
+    panel.querySelector('#mdmPilotRefreshActivationQueue').onclick=refreshActivationQueue;
+    refreshActivationQueue();
+    return panel;
+  }
 
   function buildInvitePanel(host){
     removeLegacySeatQueue();
@@ -143,7 +213,7 @@
     host.appendChild(panel);panel.querySelector('#mdmPilotCreateRealInvite').onclick=createInvitation;return panel;
   }
 
-  function mount(){removeLegacySeatQueue();const host=findSchoolConsole();if(!host||!renderedSchoolAdmin(host)||!readSession()){removePanel();return false;}buildInvitePanel(host);return true;}
+  function mount(){removeLegacySeatQueue();const host=findSchoolConsole();if(!host||!renderedSchoolAdmin(host)||!readSession()){removePanel();return false;}buildInvitePanel(host);buildActivationPanel(host);return true;}
 
   async function createInvitation(){
     const emailEl=document.getElementById('mdmPilotInviteEmail'),hoursEl=document.getElementById('mdmPilotInviteHours'),result=document.getElementById('mdmPilotInviteResult'),button=document.getElementById('mdmPilotCreateRealInvite');if(!emailEl||!result||!button)return;
@@ -179,6 +249,6 @@
   window.addEventListener('load',()=>{schedule();processInboundInvite();},{once:true});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden){schedule();processInboundInvite();}});
 
-  window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE=Object.freeze({version:VERSION,mode:'shadow',getState:()=>JSON.parse(JSON.stringify(state)),mount,processInboundInvite});
+  window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE=Object.freeze({version:VERSION,mode:'shadow',getState:()=>JSON.parse(JSON.stringify(state)),mount,processInboundInvite,refreshActivationQueue});
   processInboundInvite();schedule();
 })();

@@ -13,7 +13,7 @@
   'use strict';
   if(window.MDM_PILOT_UX_CLEANUP)return;
 
-  const VERSION='45.8.31.50.48';
+  const VERSION='45.8.31.50.48.1';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
@@ -172,6 +172,7 @@
         margin-top:9px
       }
 
+      body.mdm-student-clean .onboarding-data-card ul{display:none!important}
       body.mdm-student-clean .onboarding-data-card,
       body.mdm-student-clean .onboarding-consents{
         border-radius:16px!important
@@ -346,6 +347,37 @@
     };
   }
 
+  function simplifyInvitedOnboarding(){
+    if(isOwner()||!pendingInvite())return;
+    const roleInputs=Array.from(document.querySelectorAll('[data-onboarding-role] input, input[name="onboardingRole"]'));
+    if(!roleInputs.length)return;
+
+    let studentInput=null;
+    roleInputs.forEach(function(input){
+      const value=String(input.value||'').toLowerCase();
+      const label=input.closest('label,[data-onboarding-role]');
+      if(value==='student')studentInput=input;
+      else if(label)label.style.display='none';
+    });
+
+    if(studentInput && !studentInput.checked){
+      const label=studentInput.closest('label,[data-onboarding-role]');
+      try{label?.click();}catch(_){
+        try{
+          studentInput.checked=true;
+          studentInput.dispatchEvent(new Event('change',{bubbles:true}));
+        }catch(__){}
+      }
+    }
+
+    const title=document.querySelector('.onboarding-panel h2,.onboarding-brand h1');
+    if(title)title.textContent=t(
+      'Prepariamo il tuo accesso studente',
+      'Set up your student access',
+      'Ipprepara l-aċċess tal-istudent tiegħek'
+    );
+  }
+
   function compactOnboarding(){
     if(isOwner())return;
     const screen=document.getElementById('screen');
@@ -441,6 +473,7 @@
     if(!student)return;
     humanizeAccount();
     renderCleanPilotStatus();
+    simplifyInvitedOnboarding();
     promoteToday();
     mountWelcome();
     compactOnboarding();

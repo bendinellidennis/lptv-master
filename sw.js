@@ -1,15 +1,8 @@
 'use strict';
 
-/* Malta Driving Master 45.8.31.50.53
-   Automatic Seat Queue — PWA cache refresh
-   - rotates the cache namespace so installed PWAs discard the previous shell
-   - keeps same-origin only caching
-   - never caches Supabase/API cross-origin traffic
-   - network-first to avoid stale security/runtime code
-   - minimal offline shell fallback
-*/
+/* Malta Driving Master 45.8.31.50.54.1 */
 
-const CACHE = 'mdm-build-45-8-31-50-53-stable-login-fields';
+const CACHE = 'mdm-build-45-8-31-50-54-1-account-switch-rehydrate';
 const CORE = [
   './',
   './index.html',

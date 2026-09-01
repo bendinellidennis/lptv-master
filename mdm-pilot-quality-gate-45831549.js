@@ -6,10 +6,10 @@
   'use strict';
   if(window.MDM_PILOT_QUALITY_GATE)return;
 
-  const VERSION='45.8.31.50.49';
+  const VERSION='45.8.31.50.49.1';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_EMAIL='maltadrivingmaster@gmail.com';
-  const METRICS_KEY='mdm_pilot_quality_metrics_v1';
+  const METRICS_KEY_PREFIX='mdm_pilot_quality_metrics_v1::';
   let lastRoute='';
   let raf=0;
 
@@ -31,8 +31,12 @@
     const h=String(location.hash||'#home').replace(/^#/,'').trim();
     return h||'home';
   }
+  function metricsKey(){
+    const uid=String(session()?.user?.id||'').trim();
+    return METRICS_KEY_PREFIX+(uid||'signed-out');
+  }
   function metrics(){
-    const base=readJson(METRICS_KEY,{});
+    const base=readJson(metricsKey(),{});
     return {
       version:1,
       createdAt:String(base.createdAt||nowIso()),
@@ -50,7 +54,7 @@
       lastNavigationMs:Number(base.lastNavigationMs||0)
     };
   }
-  function save(m){m.lastSeenAt=nowIso();writeJson(METRICS_KEY,m);}
+  function save(m){m.lastSeenAt=nowIso();writeJson(metricsKey(),m);}
   function markRoute(){
     if(isOwner())return;
     const r=routeName();

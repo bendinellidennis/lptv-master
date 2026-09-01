@@ -13,7 +13,7 @@
   'use strict';
   if(window.MDM_PILOT_UX_CLEANUP)return;
 
-  const VERSION='45.8.31.50.48.1';
+  const VERSION='45.8.31.50.48.2';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
@@ -359,16 +359,6 @@
       if(value==='student')studentInput=input;
       else if(label)label.style.display='none';
     });
-
-    if(studentInput && !studentInput.checked){
-      const label=studentInput.closest('label,[data-onboarding-role]');
-      try{label?.click();}catch(_){
-        try{
-          studentInput.checked=true;
-          studentInput.dispatchEvent(new Event('change',{bubbles:true}));
-        }catch(__){}
-      }
-    }
 
     const title=document.querySelector('.onboarding-panel h2,.onboarding-brand h1');
     if(title)title.textContent=t(

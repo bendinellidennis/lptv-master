@@ -35,20 +35,36 @@ function mdmInviteLoginPrivacyScrub(){
     const raw=localStorage.getItem('mdm_pilot_pending_invite_v1');
     const p=raw?JSON.parse(raw):null;
     if(!p||String(p.token||'').length<32||Date.now()-Number(p.at||0)>7*24*60*60*1000)return false;
-    const inputs=Array.from(document.querySelectorAll('input[type="email"]'));
+
+    const invitedEmail=String(p.email||'').trim().toLowerCase();
+    const input=document.getElementById('mdmAuthEmail');
     let changed=false;
-    for(const input of inputs){
-      const host=input.closest('section,article,.card,form,div');
-      if(!host||!host.querySelector('input[type="password"]'))continue;
-      const text=String(host.innerText||'').toLowerCase();
-      if(!text.includes('supabase auth')&&!text.includes('autenticazione reale')&&!text.includes('authentication'))continue;
+
+    if(input){
       const current=String(input.value||'').trim().toLowerCase();
-      if(current!=='maltadrivingmaster@gmail.com')continue;
-      input.value='';
-      try{input.dispatchEvent(new Event('input',{bubbles:true}));}catch(_){}
-      try{input.dispatchEvent(new Event('change',{bubbles:true}));}catch(_){}
-      changed=true;
+      if(invitedEmail && current!==invitedEmail){
+        input.value=invitedEmail;
+        try{input.dispatchEvent(new Event('input',{bubbles:true}));}catch(_){}
+        try{input.dispatchEvent(new Event('change',{bubbles:true}));}catch(_){}
+        changed=true;
+      }else if(!invitedEmail && current==='maltadrivingmaster@gmail.com'){
+        input.value='';
+        try{input.dispatchEvent(new Event('input',{bubbles:true}));}catch(_){}
+        try{input.dispatchEvent(new Event('change',{bubbles:true}));}catch(_){}
+        changed=true;
+      }
     }
+
+    document.querySelectorAll('.driving-twin-disclaimer').forEach(el=>{
+      const msg=String(el.textContent||'').toLowerCase();
+      if(msg.includes('invalid jwt')||msg.includes('token is expired')){
+        el.textContent=invitedEmail
+          ? 'Invito Pilot ricevuto. Accedi con l’account dello studente invitato.'
+          : 'Invito Pilot ricevuto. Inserisci l’e-mail dello studente e accedi.';
+        changed=true;
+      }
+    });
+
     return changed;
   }catch(_){return false;}
 }

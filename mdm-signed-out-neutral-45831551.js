@@ -7,9 +7,11 @@
   'use strict';
   if(window.MDM_SIGNED_OUT_NEUTRAL_GATE)return;
 
-  const VERSION='45.8.31.50.53';
+  const VERSION='45.8.31.50.55';
   const AUTH_KEY='mdm_auth_session_v4410';
   let raf=0;
+  let emailPrimed=false;
+  let emailDraft='';
 
   function readSession(){
     try{
@@ -283,10 +285,18 @@
     card.classList.add('mdm-public-auth-card');
 
     const email=card.querySelector('#mdmAuthEmail');
-    if(email && String(email.value||'')!==''){
-      email.value='';
-      try{email.dispatchEvent(new Event('input',{bubbles:true}));}catch(_){}
-      try{email.dispatchEvent(new Event('change',{bubbles:true}));}catch(_){}
+    if(email){
+      if(!emailPrimed){
+        email.value='';
+        emailDraft='';
+        emailPrimed=true;
+      }else if(String(email.value||'')!==emailDraft){
+        email.value=emailDraft;
+      }
+      if(email.dataset.mdmDraftBound!=='1'){
+        email.dataset.mdmDraftBound='1';
+        email.addEventListener('input',function(){ emailDraft=String(email.value||''); },false);
+      }
     }
 
     const linked=card.querySelector('.account-linked');
@@ -357,6 +367,8 @@
   }
 
   function clearClasses(){
+    emailPrimed=false;
+    emailDraft='';
     document.body?.classList?.remove('mdm-signed-out-home','mdm-signed-out-profile');
     document.getElementById('mdmSignedOutGate')?.remove();
     document.querySelectorAll('.mdm-public-auth-card').forEach(function(el){

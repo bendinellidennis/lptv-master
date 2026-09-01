@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.35 — Technical Owner Bootstrap
+/* Malta Driving Master 45.8.31.50.37 — Technical Owner Bootstrap
    Purpose: give the authenticated technical Owner its own complete local identity
    and professional Home role before the historical app runtime starts.
    No navigation, no reload, no timers, no server-role grants. */
@@ -93,6 +93,23 @@
 
     return {active:true,userId:String(s.user.id),email:OWNER_EMAIL,role:'school'};
   }
+
+  function signal(state){
+    if(!state||state.active!==true)return;
+    try{window.dispatchEvent(new CustomEvent('mdm:owner-ready',{detail:state}));}catch(_){}
+  }
+
+  const previousSetItem=Storage.prototype.setItem;
+  Storage.prototype.setItem=function(key,value){
+    const out=previousSetItem.apply(this,arguments);
+    try{
+      if(this===window.localStorage&&String(key)===AUTH_KEY){
+        const next=ensure();
+        signal(next);
+      }
+    }catch(_){}
+    return out;
+  };
 
   const state=ensure();
   window.MDM_TECH_OWNER_BOOTSTRAP=Object.freeze({version:VERSION,state,ensure});

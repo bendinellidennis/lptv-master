@@ -11,7 +11,7 @@
 
   const AUTH_KEY='mdm_auth_session_v4410';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
-  const VERSION='45.8.31.50.42';
+  const VERSION='45.8.31.50.45';
   const APP_URL='https://bendinellidennis.github.io/lptv-master/';
   const state={version:VERSION,mode:'shadow',enforcement:false,status:'ready',licenseId:'',lastInvitation:null,error:'',emailDelivery:'',activationQueue:[]};
 
@@ -34,9 +34,12 @@
   }
   function syncInviteLoginEmail(){
     const p=readPending(); if(!p)return;
-    const email=normalizeEmail(p.email||'');
     const input=document.getElementById('mdmAuthEmail');
-    if(input&&email&&normalizeEmail(input.value)!==email)input.value=email;
+    if(!input||input.dataset.mdmInviteBlanked==='1')return;
+    input.value='';
+    input.dataset.mdmInviteBlanked='1';
+    try{input.dispatchEvent(new Event('input',{bubbles:true}));}catch(_){}
+    try{input.dispatchEvent(new Event('change',{bubbles:true}));}catch(_){}
   }
 
   function captureInviteFromUrl(){
@@ -61,7 +64,7 @@
       if(!accessToken||!refreshToken)return false;
       if(jwtExpired(accessToken)){
         const url=new URL(location.href);url.hash='';history.replaceState(history.state,'',url.pathname+url.search);
-        showStudentNotice(lang3('Link di accesso scaduto. L’invito resta valido: accedi con l’email invitata e la tua password.','Sign-in link expired. The invitation is still valid: sign in with the invited email and your password.','Il-link tad-dħul skada. L-istedina għadha valida: idħol bl-email mistiedna u l-password tiegħek.'),false);
+        showStudentNotice(lang3('Link di accesso scaduto. L’invito resta valido: inserisci la tua e-mail e la password.','Sign-in link expired. The invitation is still valid: enter your email and password.','Il-link tad-dħul skada. L-istedina għadha valida: idħol bl-email mistiedna u l-password tiegħek.'),false);
         syncInviteLoginEmail();
         return false;
       }

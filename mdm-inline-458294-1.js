@@ -29,38 +29,28 @@
 })();
 
 
-/* 45.8.31.50.43 — Invite login privacy scrub */
+/* 45.8.31.50.45 — Invite login privacy scrub */
 function mdmInviteLoginPrivacyScrub(){
   try{
     const raw=localStorage.getItem('mdm_pilot_pending_invite_v1');
     const p=raw?JSON.parse(raw):null;
     if(!p||String(p.token||'').length<32||Date.now()-Number(p.at||0)>7*24*60*60*1000)return false;
 
-    const invitedEmail=String(p.email||'').trim().toLowerCase();
     const input=document.getElementById('mdmAuthEmail');
     let changed=false;
 
-    if(input){
-      const current=String(input.value||'').trim().toLowerCase();
-      if(invitedEmail && current!==invitedEmail){
-        input.value=invitedEmail;
-        try{input.dispatchEvent(new Event('input',{bubbles:true}));}catch(_){}
-        try{input.dispatchEvent(new Event('change',{bubbles:true}));}catch(_){}
-        changed=true;
-      }else if(!invitedEmail && current==='maltadrivingmaster@gmail.com'){
-        input.value='';
-        try{input.dispatchEvent(new Event('input',{bubbles:true}));}catch(_){}
-        try{input.dispatchEvent(new Event('change',{bubbles:true}));}catch(_){}
-        changed=true;
-      }
+    if(input && input.dataset.mdmInviteBlanked!=='1'){
+      input.value='';
+      input.dataset.mdmInviteBlanked='1';
+      try{input.dispatchEvent(new Event('input',{bubbles:true}));}catch(_){}
+      try{input.dispatchEvent(new Event('change',{bubbles:true}));}catch(_){}
+      changed=true;
     }
 
     document.querySelectorAll('.driving-twin-disclaimer').forEach(el=>{
       const msg=String(el.textContent||'').toLowerCase();
       if(msg.includes('invalid jwt')||msg.includes('token is expired')){
-        el.textContent=invitedEmail
-          ? 'Invito Pilot ricevuto. Accedi con l’account dello studente invitato.'
-          : 'Invito Pilot ricevuto. Inserisci l’e-mail dello studente e accedi.';
+        el.textContent='Invito Pilot ricevuto. Inserisci la tua e-mail e password per accedere.';
         changed=true;
       }
     });
@@ -79,7 +69,7 @@ function mdmInviteLoginPrivacyScrub(){
 window.addEventListener('load',function(){
   try{
     if(!window.MDM_PILOT_ACCESS_BRIDGE){const s=document.createElement('script');s.src='mdm-pilot-access-4583146.js?v=45831497';s.async=true;s.setAttribute('data-mdm-pilot-bridge','shadow');document.head.appendChild(s);}
-    if(!window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE){const school=document.createElement('script');school.src='mdm-pilot-school-dashboard-4583147.js?v=458315042-invite-hygiene';school.async=true;school.setAttribute('data-mdm-pilot-school-bridge','shadow');document.head.appendChild(school);}
+    if(!window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE){const school=document.createElement('script');school.src='mdm-pilot-school-dashboard-4583147.js?v=458315045-blank-login';school.async=true;school.setAttribute('data-mdm-pilot-school-bridge','shadow');document.head.appendChild(school);}
     if(!window.MDM_PILOT_STUDENT_REDEEM_BRIDGE){const redeem=document.createElement('script');redeem.src='mdm-pilot-student-redeem-4583148.js?v=458315042-pending-only';redeem.async=true;redeem.setAttribute('data-mdm-pilot-student-redeem','shadow');document.head.appendChild(redeem);}
     if(!window.MDM_ACCOUNT_ENTRY_BRIDGE){const account=document.createElement('script');account.src='mdm-account-entry-4583149.js?v=45831496-direct';account.async=true;account.setAttribute('data-mdm-account-entry','quick');document.head.appendChild(account);}
     if(!window.MDM_PWA_REFRESH_FIX){const refresh=document.createElement('script');refresh.src='mdm-pwa-refresh-4583147.js?v=4583149201-direct-modal';refresh.async=true;refresh.setAttribute('data-mdm-pwa-refresh-fix','direct-school-queue');document.head.appendChild(refresh);}

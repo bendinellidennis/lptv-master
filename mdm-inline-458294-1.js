@@ -38,13 +38,13 @@ function mdmInviteLoginPrivacyScrub(){
     const inputs=Array.from(document.querySelectorAll('input[type="email"]'));
     let changed=false;
     for(const input of inputs){
-      if(input.dataset.mdmInvitePrivacyScrubbed==='1')continue;
       const host=input.closest('section,article,.card,form,div');
       if(!host||!host.querySelector('input[type="password"]'))continue;
       const text=String(host.innerText||'').toLowerCase();
       if(!text.includes('supabase auth')&&!text.includes('autenticazione reale')&&!text.includes('authentication'))continue;
+      const current=String(input.value||'').trim().toLowerCase();
+      if(current!=='maltadrivingmaster@gmail.com')continue;
       input.value='';
-      input.setAttribute('data-mdm-invite-privacy-scrubbed','1');
       try{input.dispatchEvent(new Event('input',{bubbles:true}));}catch(_){}
       try{input.dispatchEvent(new Event('change',{bubbles:true}));}catch(_){}
       changed=true;

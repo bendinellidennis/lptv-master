@@ -8,7 +8,7 @@
   if(window.MDM_PILOT_STUDENT_REDEEM_BRIDGE)return;
 
   const AUTH_KEY='mdm_auth_session_v4410';
-  const state={version:'45.8.31.48.3',mode:'shadow',enforcement:false,status:'ready',lastResult:null,error:''};
+  const state={version:'45.8.31.50.42',mode:'shadow',enforcement:false,status:'ready',lastResult:null,error:''};
   let visibilityInFlight=false;
 
   function lang3(it,en,mt){
@@ -32,13 +32,21 @@
     try{return window.MDM_PILOT_ACCESS_BRIDGE&&typeof window.MDM_PILOT_ACCESS_BRIDGE.getState==='function'?window.MDM_PILOT_ACCESS_BRIDGE.getState():null;}catch(_){return null;}
   }
 
+  function hasPendingInvite(){
+    try{
+      const raw=localStorage.getItem('mdm_pilot_pending_invite_v1');
+      if(!raw)return false;
+      const p=JSON.parse(raw);
+      return Boolean(p&&String(p.token||'').length>=32&&Date.now()-Number(p.at||0)<=7*24*60*60*1000);
+    }catch(_){return false;}
+  }
   function removePanel(){const old=document.getElementById('mdmPilotStudentRedeemPanel');if(old)old.remove();}
 
   function findHost(){return document.querySelector('.hm30')||document.querySelector('main')||document.body;}
 
   function renderPanel(){
     const session=readSession();
-    if(!session){removePanel();return false;}
+    if(!session||!hasPendingInvite()){removePanel();return false;}
 
     const ps=pilotState();
     if(!ps||ps.authorized!==false){removePanel();return false;}
@@ -100,6 +108,6 @@
   window.addEventListener('pageshow',scheduleMount);
   window.addEventListener('load',scheduleMount,{once:true});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleMount();});
-  window.MDM_PILOT_STUDENT_REDEEM_BRIDGE=Object.freeze({version:'45.8.31.48.3',mode:'shadow',mount:syncVisibility,getState:()=>JSON.parse(JSON.stringify(state))});
+  window.MDM_PILOT_STUDENT_REDEEM_BRIDGE=Object.freeze({version:'45.8.31.50.42',mode:'shadow',mount:syncVisibility,getState:()=>JSON.parse(JSON.stringify(state))});
   scheduleMount();
 })();

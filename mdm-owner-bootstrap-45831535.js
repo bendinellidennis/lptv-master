@@ -39,45 +39,37 @@
     const parts=ownerNameParts(s);
 
     const currentProfile=readJson(PROFILE_KEY)||{};
-    if(String(currentProfile.email||'').trim().toLowerCase()!==OWNER_EMAIL ||
-       !clean(currentProfile.firstName)||!clean(currentProfile.lastName)){
-      writeJson(PROFILE_KEY,{
-        ...currentProfile,
-        firstName:parts.first,
-        lastName:parts.last,
-        email:OWNER_EMAIL,
-        accountType:'technical_owner',
-        ownerUserId:String(s.user.id),
-        updatedAt:now
-      });
-    }
+    writeJson(PROFILE_KEY,{
+      ...currentProfile,
+      firstName:'MDM',
+      lastName:'Owner',
+      email:OWNER_EMAIL,
+      accountType:'technical_owner',
+      ownerUserId:String(s.user.id),
+      updatedAt:now
+    });
 
     const currentEnrollment=readJson(ENROLLMENT_KEY)||{};
-    if(String(currentEnrollment.email||'').trim().toLowerCase()!==OWNER_EMAIL ||
-       String(currentEnrollment.role||'')!=='school'){
-      writeJson(ENROLLMENT_KEY,{
-        ...currentEnrollment,
-        role:'school',
-        name:clean(currentEnrollment.name)||'Malta Driving Master',
-        email:OWNER_EMAIL,
-        schoolName:clean(currentEnrollment.schoolName)||'Malta Driving Master',
-        ownerUserId:String(s.user.id),
-        technicalOwner:true,
-        updatedAt:now
-      });
-    }
+    writeJson(ENROLLMENT_KEY,{
+      ...currentEnrollment,
+      role:'school',
+      name:'MDM Owner',
+      email:OWNER_EMAIL,
+      schoolName:'Malta Driving Master',
+      ownerUserId:String(s.user.id),
+      technicalOwner:true,
+      updatedAt:now
+    });
 
     const currentOnboarding=readJson(ONBOARDING_KEY)||{};
-    if(String(currentOnboarding.role||'')!=='school' || currentOnboarding.technicalOwner!==true){
-      writeJson(ONBOARDING_KEY,{
-        ...currentOnboarding,
-        role:'school',
-        completed:true,
-        technicalOwner:true,
-        ownerUserId:String(s.user.id),
-        updatedAt:now
-      });
-    }
+    writeJson(ONBOARDING_KEY,{
+      ...currentOnboarding,
+      role:'school',
+      completed:true,
+      technicalOwner:true,
+      ownerUserId:String(s.user.id),
+      updatedAt:now
+    });
 
     return {active:true,userId:String(s.user.id),email:OWNER_EMAIL,role:'school'};
   }

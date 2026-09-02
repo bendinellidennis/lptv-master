@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.48 — Pilot UX & Clean-Up Gate
+/* Malta Driving Master 45.8.31.50.59 — Pilot UX & Clean-Up Gate
    Student-facing polish only.
    Goals:
    - hide technical diagnostics from students
@@ -13,7 +13,7 @@
   'use strict';
   if(window.MDM_PILOT_UX_CLEANUP)return;
 
-  const VERSION='45.8.31.50.48.2';
+  const VERSION='45.8.31.50.59';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
@@ -64,9 +64,26 @@
       body.mdm-student-clean .account-no-fake,
       body.mdm-student-clean .account-identity-card .account-id-lines,
       body.mdm-student-clean #mdmAuthVerify,
+      body.mdm-student-clean .account-role-card,
+      body.mdm-student-clean .account-security-card,
+      body.mdm-student-clean .account-links,
+      body.mdm-student-clean .investor-profile-card,
+      body.mdm-student-clean [data-go="pilotanalytics"],
+      body.mdm-student-clean [data-go="pilotreadiness"],
+      body.mdm-student-clean [data-go="externalvalidation"],
+      body.mdm-student-clean [data-go="securitytrust"],
+      body.mdm-student-clean [data-go="pentestprep"],
+      body.mdm-student-clean [data-go="realpilotprep"],
+      body.mdm-student-clean [data-go="schoolpilotprep"],
+      body.mdm-student-clean [data-go="metricsloiprep"],
+      body.mdm-student-clean [data-go="backendreal"],
+      body.mdm-student-clean [data-go="investorproduction"],
+      body.mdm-student-clean [data-go="investorpreview"],
       body.mdm-student-clean .security-trust-home,
       body.mdm-student-clean .investor-production-home,
       body.mdm-student-clean .fleet-corporate-home{display:none!important}
+
+      body.mdm-student-clean #screen > .section-title .badge.official{display:none!important}
 
       body.mdm-student-clean .premium-focus-card{
         border:2px solid rgba(16,168,184,.28)!important;
@@ -457,6 +474,21 @@
     });
   }
 
+  function hideTechnicalEntries(){
+    if(isOwner())return;
+    const ownerOnlyRoutes=new Set([
+      'pilotanalytics','pilotreadiness','externalvalidation','securitytrust',
+      'pentestprep','realpilotprep','schoolpilotprep','metricsloiprep',
+      'backendreal','investorproduction','investorpreview'
+    ]);
+    document.querySelectorAll('[data-go]').forEach(function(el){
+      if(ownerOnlyRoutes.has(String(el.getAttribute('data-go')||''))){
+        el.setAttribute('aria-hidden','true');
+        el.setAttribute('tabindex','-1');
+      }
+    });
+  }
+
   function sync(){
     installStyle();
     const student=applyMode();
@@ -469,6 +501,7 @@
     compactOnboarding();
     mountFeedback();
     cleanStudentHome();
+    hideTechnicalEntries();
   }
 
   function schedule(){

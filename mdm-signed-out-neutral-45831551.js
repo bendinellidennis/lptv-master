@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.64 — Signed-Out Neutral Gate
+/* Malta Driving Master 45.8.31.50.69 — Signed-Out Neutral Gate + Password Setup
    Privacy-only visual isolation after logout / before login.
    Signed-out users never see the previous student's profile, progress or school data.
    Existing authenticated data remains untouched in storage.
@@ -7,8 +7,10 @@
   'use strict';
   if(window.MDM_SIGNED_OUT_NEUTRAL_GATE)return;
 
-  const VERSION='45.8.31.50.64';
+  const VERSION='45.8.31.50.69';
   const AUTH_KEY='mdm_auth_session_v4410';
+  const APP_URL='https://bendinellidennis.github.io/lptv-master/';
+  let recoverySession=null;
   let raf=0;
   let emailPrimed=false;
   let emailDraft='';
@@ -70,10 +72,12 @@
   function setAuthBusy(busy){
     const signIn=document.getElementById('mdmStableAuthSignIn');
     const signUp=document.getElementById('mdmStableAuthSignUp');
+    const recover=document.getElementById('mdmStableAuthRecover');
     const email=document.getElementById('mdmStableAuthEmail');
     const password=document.getElementById('mdmStableAuthPassword');
     if(signIn)signIn.disabled=Boolean(busy);
     if(signUp)signUp.disabled=Boolean(busy);
+    if(recover)recover.disabled=Boolean(busy);
     if(email)email.disabled=Boolean(busy);
     if(password)password.disabled=Boolean(busy);
   }
@@ -113,6 +117,77 @@
 
     localStorage.setItem(AUTH_KEY,JSON.stringify(next));
     return true;
+  }
+
+  function readRecoveryHash(){
+    try{
+      const params=new URLSearchParams(String(location.hash||'').replace(/^#/,''));
+      const accessToken=String(params.get('access_token')||'');
+      const refreshToken=String(params.get('refresh_token')||'');
+      const type=String(params.get('type')||'');
+      if(type!=='recovery'||!accessToken)return null;
+      window.__MDM_PASSWORD_RECOVERY_IN_PROGRESS__=true;
+      return {accessToken,refreshToken,expiresIn:Number(params.get('expires_in')||3600)||3600};
+    }catch(_){return null;}
+  }
+
+  async function requestPasswordSetup(email){
+    const cfg=window.MDM_BACKEND_CONFIG;
+    const normalized=String(email||emailDraft||'').trim().toLowerCase();
+    if(!cfg?.enabled||!cfg.endpoint||!cfg.publishableKey||!/^\S+@\S+\.\S+$/.test(normalized)){
+      authNote(t('Inserisci prima un indirizzo e-mail valido.','Enter a valid email address first.','L-ewwel daħħal indirizz tal-email validu.'),true);return false;
+    }
+    setAuthBusy(true);
+    authNote(t('Invio del link per impostare la password…','Sending the password setup link…','Qed jintbagħat il-link biex tissettja l-password…'),false);
+    try{
+      const redirect=new URL(APP_URL);
+      redirect.searchParams.set('mdm_password_setup','1');
+      redirect.searchParams.set('pilot_email',normalized);
+      const endpoint=String(cfg.endpoint).replace(/\/$/,'')+'/auth/v1/recover?redirect_to='+encodeURIComponent(redirect.toString());
+      const response=await fetch(endpoint,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':cfg.publishableKey,'Accept':'application/json'},
+        body:JSON.stringify({email:normalized}),cache:'no-store'
+      });
+      if(!response.ok){let payload={};try{payload=await response.json();}catch(_){}throw new Error(authErrorMessage(payload,response.status));}
+      authNote(t('E-mail inviata. Apri il nuovo messaggio “Imposta password” e premi il link.','Email sent. Open the new “Set password” message and tap the link.','L-email intbagħtet. Iftaħ il-messaġġ il-ġdid “Issettja l-password” u agħfas il-link.'),false);
+      return true;
+    }catch(e){
+      authNote(t('Invio non riuscito: ','Could not send: ','Ma setax jintbagħat: ')+String(e?.message||e||''),true);return false;
+    }finally{setAuthBusy(false);}
+  }
+
+  function renderPasswordSetup(){
+    if(!recoverySession||document.getElementById('mdmPasswordSetupGate'))return;
+    const gate=document.createElement('div');
+    gate.id='mdmPasswordSetupGate';
+    gate.style.cssText='position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:20px;background:#edf5f7;color:#123548;font-family:system-ui,-apple-system,sans-serif';
+    gate.innerHTML='<section style="width:min(100%,480px);box-sizing:border-box;padding:24px;border-radius:22px;background:#fff;box-shadow:0 18px 50px rgba(5,36,55,.16)"><div style="font-size:42px;text-align:center">🔑</div><h1 style="margin:8px 0;text-align:center;font-size:26px">'+t('Imposta la tua password','Set your password','Issettja l-password tiegħek')+'</h1><p style="margin:0 0 14px;text-align:center;color:#607b8b">'+t('Scegli una password personale di almeno 8 caratteri.','Choose a personal password of at least 8 characters.','Agħżel password personali ta’ mill-inqas 8 karattri.')+'</p><input id="mdmRecoveryPassword" type="password" autocomplete="new-password" placeholder="'+t('Nuova password','New password','Password ġdida')+'" style="box-sizing:border-box;width:100%;padding:12px;border:1px solid #cad8df;border-radius:12px;font-size:16px"><input id="mdmRecoveryPassword2" type="password" autocomplete="new-password" placeholder="'+t('Ripeti password','Repeat password','Irrepeti l-password')+'" style="box-sizing:border-box;width:100%;margin-top:9px;padding:12px;border:1px solid #cad8df;border-radius:12px;font-size:16px"><button id="mdmRecoveryPasswordSave" type="button" style="width:100%;margin-top:12px;padding:13px;border:0;border-radius:12px;background:#08a9b5;color:#fff;font-size:17px;font-weight:800">'+t('Salva e accedi','Save and sign in','Issejvja u idħol')+'</button><p id="mdmRecoveryPasswordNote" style="margin:11px 0 0;text-align:center;color:#9a3c2f;font-size:12px"></p></section>';
+    document.body.appendChild(gate);
+    gate.querySelector('#mdmRecoveryPasswordSave').onclick=saveRecoveryPassword;
+  }
+
+  async function saveRecoveryPassword(){
+    const cfg=window.MDM_BACKEND_CONFIG;
+    const pass=document.getElementById('mdmRecoveryPassword');
+    const pass2=document.getElementById('mdmRecoveryPassword2');
+    const button=document.getElementById('mdmRecoveryPasswordSave');
+    const note=document.getElementById('mdmRecoveryPasswordNote');
+    const password=String(pass?.value||''),repeat=String(pass2?.value||'');
+    if(password.length<8){if(note)note.textContent=t('Servono almeno 8 caratteri.','At least 8 characters are required.','Huma meħtieġa mill-inqas 8 karattri.');return;}
+    if(password!==repeat){if(note)note.textContent=t('Le password non coincidono.','Passwords do not match.','Il-passwords ma jaqblux.');return;}
+    if(button)button.disabled=true;if(note)note.textContent='';
+    try{
+      const response=await fetch(String(cfg.endpoint).replace(/\/$/,'')+'/auth/v1/user',{
+        method:'PUT',headers:{'Content-Type':'application/json','apikey':cfg.publishableKey,'Authorization':'Bearer '+recoverySession.accessToken},body:JSON.stringify({password}),cache:'no-store'
+      });
+      const textBody=await response.text();let user={};try{user=textBody?JSON.parse(textBody):{};}catch(_){}
+      if(!response.ok||!user?.id)throw new Error(authErrorMessage(user,response.status));
+      const payload={access_token:recoverySession.accessToken,refresh_token:recoverySession.refreshToken,expires_in:recoverySession.expiresIn,user};
+      if(!storeAuthenticatedSession(payload,user.email||''))throw new Error('session_store_failed');
+      const url=new URL(location.href);url.hash='';url.searchParams.delete('mdm_password_setup');history.replaceState(history.state,'',url.pathname+url.search);
+      recoverySession=null;window.__MDM_PASSWORD_RECOVERY_IN_PROGRESS__=false;location.reload();
+    }catch(e){if(note)note.textContent=t('Password non salvata: ','Password not saved: ','Il-password ma ġietx issejvjata: ')+String(e?.message||e||'');if(button)button.disabled=false;}
   }
 
   async function directAuth(action){
@@ -184,12 +259,8 @@
         return;
       }
 
-      if(action==='signup'&&response.ok&&payload?.user?.id){
-        authNote(t(
-          'Account creato. Controlla l’e-mail di conferma, poi torna qui e accedi.',
-          'Account created. Check your confirmation email, then return here and sign in.',
-          'Il-kont inħoloq. Iċċekkja l-email ta’ konferma, imbagħad erġa’ idħol hawn.'
-        ),false);
+      if(action==='signup'&&response.ok){
+        await requestPasswordSetup(email);
         return;
       }
 
@@ -368,6 +439,7 @@
         '<button id="mdmStableAuthSignIn" class="btn" type="button">🔓 '+t('Accedi','Sign in','Idħol')+'</button>'+
         '<button id="mdmStableAuthSignUp" class="btn secondary" type="button">＋ '+t('Crea account','Create account','Oħloq kont')+'</button>'+
       '</div>'+
+      '<button id="mdmStableAuthRecover" class="btn secondary" type="button" style="width:min(100%,420px);margin:9px auto 0">🔑 '+t('Imposta o reimposta password','Set or reset password','Issettja jew ibdel il-password')+'</button>'+
       '<p id="mdmSignedOutAuthNote" style="margin-top:12px;font-size:11px">'+t(
         'I dati del precedente utente restano privati e ricompaiono solo dopo il suo accesso.',
         'The previous user’s data stays private and only returns after that user signs in.',
@@ -382,6 +454,8 @@
 
     if(signIn)signIn.onclick=function(){directAuth('signin');};
     if(signUp)signUp.onclick=function(){directAuth('signup');};
+    const recover=gate.querySelector('#mdmStableAuthRecover');
+    if(recover)recover.onclick=function(){requestPasswordSetup(String(gate.querySelector('#mdmStableAuthEmail')?.value||emailDraft||''));};
 
     const password=gate.querySelector('#mdmStableAuthPassword');
     if(password)password.addEventListener('keydown',function(event){
@@ -421,7 +495,9 @@
   }
 
   installStyle();
+  recoverySession=readRecoveryHash();
   sync();
+  if(recoverySession)renderPasswordSetup();
 
   const screen=document.getElementById('screen');
   if(screen){

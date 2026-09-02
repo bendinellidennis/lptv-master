@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.65 — Pilot UX & Clean-Up Gate
+/* Malta Driving Master 45.8.31.50.66 — Pilot UX & Clean-Up Gate
    Student-facing polish only.
    Goals:
    - hide technical diagnostics from students
@@ -13,7 +13,7 @@
   'use strict';
   if(window.MDM_PILOT_UX_CLEANUP)return;
 
-  const VERSION='45.8.31.50.65';
+  const VERSION='45.8.31.50.66';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
@@ -491,6 +491,43 @@
     });
   }
 
+  function humanizeAccountSync(){
+    if(isOwner())return;
+    const cards=Array.from(document.querySelectorAll('.card'));
+    const card=cards.find(function(el){
+      const text=normalize(el.innerText);
+      return text.includes('sincronizzazione account') ||
+             text.includes('account sync') ||
+             text.includes('supabase') ||
+             text.includes('sinkronizzazzjoni tal-kont');
+    });
+    if(!card)return;
+
+    const title=card.querySelector('h2,h3,strong');
+    if(title)title.textContent=t(
+      'I tuoi dati su tutti i dispositivi',
+      'Your data on every device',
+      'Id-data tiegħek fuq kull apparat'
+    );
+
+    Array.from(card.querySelectorAll('p')).forEach(function(p){
+      const text=normalize(p.innerText);
+      if(text.includes('supabase')||text.includes('token')||text.includes('backend')||text.includes('gate tecnici')){
+        p.textContent=t(
+          'Salva i tuoi progressi nel tuo account e ritrovali quando accedi da un altro dispositivo.',
+          'Save your progress to your account and find it again when you sign in on another device.',
+          'Issejvja l-progress fil-kont tiegħek u sib l-istess data meta tidħol minn apparat ieħor.'
+        );
+      }else if(text.includes('evidence locali')){
+        p.textContent=String(p.textContent||'').replace(/Evidence locali/gi,t(
+          'Dati sul dispositivo',
+          'Data on this device',
+          'Data fuq dan l-apparat'
+        ));
+      }
+    });
+  }
+
   function blockTechnicalRoute(){
     if(isOwner())return false;
     const ownerOnlyRoutes=new Set([
@@ -518,6 +555,7 @@
     if(!student)return;
     if(blockTechnicalRoute())return;
     humanizeAccount();
+    humanizeAccountSync();
     renderCleanPilotStatus();
     simplifyInvitedOnboarding();
     promoteToday();

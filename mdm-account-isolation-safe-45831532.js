@@ -11,7 +11,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_ISOLATION_SAFE)return;
 
-  const VERSION='45.8.31.50.34';
+  const VERSION='45.8.31.50.61';
   const TECH_OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const AUTH_KEY='mdm_auth_session_v4410';
   const MIGRATION_PREFIX='mdm_account_safe_migrated_v1::';
@@ -41,6 +41,8 @@
   const rawGet=Storage.prototype.getItem;
   const rawSet=Storage.prototype.setItem;
   const rawRemove=Storage.prototype.removeItem;
+  let lastAuthenticatedUserId='';
+  let accountSwitchWriteLock=false;
 
   function isLocal(store){
     try{return store===window.localStorage;}catch(_){return false;}
@@ -62,6 +64,8 @@
   function accountType(a){
     return a&&a.ok&&a.email===TECH_OWNER_EMAIL?'owner':'user';
   }
+
+  try{lastAuthenticatedUserId=auth().userId||'';}catch(_){}
 
   function scoped(key,a){
     const type=accountType(a);
@@ -197,6 +201,7 @@
   }
 
   function writeUserKey(key,value){
+    if(accountSwitchWriteLock)return undefined;
     const a=auth();
     if(!a.ok)return rawSet.call(localStorage,String(key)+'::guest',String(value));
     quarantineOwnerContamination(a);
@@ -226,8 +231,16 @@
       if(crossAccountKey(k,a))return undefined;
       if(USER_KEYS.has(k))return writeUserKey(k,value);
       if(k===AUTH_KEY){
+        const before=auth();
         const out=rawSet.apply(this,arguments);
         const next=auth();
+        if(before.ok)lastAuthenticatedUserId=before.userId;
+        if(next.ok){
+          if(lastAuthenticatedUserId&&lastAuthenticatedUserId!==next.userId){
+            accountSwitchWriteLock=true;
+          }
+          lastAuthenticatedUserId=next.userId;
+        }
         if(next.ok)quarantineOwnerContamination(next);
         return out;
       }
@@ -256,6 +269,7 @@
     keys:Array.from(USER_KEYS),
     current:auth,
     accountType:()=>accountType(auth()),
+    accountSwitchWriteLocked:()=>accountSwitchWriteLock,
     quarantineOwner:()=>quarantineOwnerContamination(auth()),
     legacyOwnerEmail
   });

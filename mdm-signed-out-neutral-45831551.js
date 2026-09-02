@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.60 — Signed-Out Neutral Gate
+/* Malta Driving Master 45.8.31.50.62 — Signed-Out Neutral Gate
    Privacy-only visual isolation after logout / before login.
    Signed-out users never see the previous student's profile, progress or school data.
    Existing authenticated data remains untouched in storage.
@@ -7,18 +7,32 @@
   'use strict';
   if(window.MDM_SIGNED_OUT_NEUTRAL_GATE)return;
 
-  const VERSION='45.8.31.50.60';
+  const VERSION='45.8.31.50.62';
   const AUTH_KEY='mdm_auth_session_v4410';
   let raf=0;
   let emailPrimed=false;
   let emailDraft='';
   let emailEditedAt=0;
 
+  function restoreEmailDraft(){
+    if(authenticated()||!emailDraft)return;
+    const email=document.getElementById('mdmAuthEmail');
+    if(email&&String(email.value||'')!==emailDraft)email.value=emailDraft;
+  }
+
+  function queueEmailRestore(){
+    Promise.resolve().then(restoreEmailDraft);
+    requestAnimationFrame(restoreEmailDraft);
+    setTimeout(restoreEmailDraft,0);
+    setTimeout(restoreEmailDraft,80);
+  }
+
   function captureEmailDraft(event){
     const target=event&&event.target;
     if(!target||target.id!=='mdmAuthEmail')return;
     emailDraft=String(target.value||'');
     emailEditedAt=Date.now();
+    queueEmailRestore();
   }
 
   document.addEventListener('input',captureEmailDraft,true);
@@ -105,7 +119,7 @@
     const cfg=window.MDM_BACKEND_CONFIG;
     const emailEl=document.getElementById('mdmAuthEmail');
     const passwordEl=document.getElementById('mdmAuthPassword');
-    const email=String(emailEl?.value||'').trim().toLowerCase();
+    const email=String(emailEl?.value||emailDraft||'').trim().toLowerCase();
     const password=String(passwordEl?.value||'');
 
     if(!cfg?.enabled||!cfg.endpoint||!cfg.publishableKey){

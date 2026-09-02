@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.51 — Signed-Out Neutral Gate
+/* Malta Driving Master 45.8.31.50.60 — Signed-Out Neutral Gate
    Privacy-only visual isolation after logout / before login.
    Signed-out users never see the previous student's profile, progress or school data.
    Existing authenticated data remains untouched in storage.
@@ -7,11 +7,22 @@
   'use strict';
   if(window.MDM_SIGNED_OUT_NEUTRAL_GATE)return;
 
-  const VERSION='45.8.31.50.56';
+  const VERSION='45.8.31.50.60';
   const AUTH_KEY='mdm_auth_session_v4410';
   let raf=0;
   let emailPrimed=false;
   let emailDraft='';
+  let emailEditedAt=0;
+
+  function captureEmailDraft(event){
+    const target=event&&event.target;
+    if(!target||target.id!=='mdmAuthEmail')return;
+    emailDraft=String(target.value||'');
+    emailEditedAt=Date.now();
+  }
+
+  document.addEventListener('input',captureEmailDraft,true);
+  document.addEventListener('change',captureEmailDraft,true);
 
   function readSession(){
     try{
@@ -279,15 +290,20 @@
     const email=card.querySelector('#mdmAuthEmail');
     if(email){
       if(!emailPrimed){
-        email.value='';
-        emailDraft='';
+        const userIsTyping=Date.now()-emailEditedAt<2000||document.activeElement===email;
+        if(userIsTyping){
+          emailDraft=String(email.value||emailDraft||'');
+        }else{
+          email.value='';
+          emailDraft='';
+        }
         emailPrimed=true;
       }else if(String(email.value||'')!==emailDraft){
         email.value=emailDraft;
       }
       if(email.dataset.mdmDraftBound!=='1'){
         email.dataset.mdmDraftBound='1';
-        email.addEventListener('input',function(){ emailDraft=String(email.value||''); },false);
+        email.addEventListener('input',captureEmailDraft,false);
       }
     }
 

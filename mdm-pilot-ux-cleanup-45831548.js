@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.59 — Pilot UX & Clean-Up Gate
+/* Malta Driving Master 45.8.31.50.65 — Pilot UX & Clean-Up Gate
    Student-facing polish only.
    Goals:
    - hide technical diagnostics from students
@@ -13,7 +13,7 @@
   'use strict';
   if(window.MDM_PILOT_UX_CLEANUP)return;
 
-  const VERSION='45.8.31.50.59';
+  const VERSION='45.8.31.50.65';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
@@ -79,6 +79,8 @@
       body.mdm-student-clean [data-go="backendreal"],
       body.mdm-student-clean [data-go="investorproduction"],
       body.mdm-student-clean [data-go="investorpreview"],
+      body.mdm-student-clean [data-go="cloudready"],
+      body.mdm-student-clean .installed-version-card,
       body.mdm-student-clean .security-trust-home,
       body.mdm-student-clean .investor-production-home,
       body.mdm-student-clean .fleet-corporate-home{display:none!important}
@@ -479,7 +481,7 @@
     const ownerOnlyRoutes=new Set([
       'pilotanalytics','pilotreadiness','externalvalidation','securitytrust',
       'pentestprep','realpilotprep','schoolpilotprep','metricsloiprep',
-      'backendreal','investorproduction','investorpreview'
+      'backendreal','investorproduction','investorpreview','cloudready'
     ]);
     document.querySelectorAll('[data-go]').forEach(function(el){
       if(ownerOnlyRoutes.has(String(el.getAttribute('data-go')||''))){
@@ -489,10 +491,32 @@
     });
   }
 
+  function blockTechnicalRoute(){
+    if(isOwner())return false;
+    const ownerOnlyRoutes=new Set([
+      'pilotanalytics','pilotreadiness','externalvalidation','securitytrust',
+      'pentestprep','realpilotprep','schoolpilotprep','metricsloiprep',
+      'backendreal','investorproduction','investorpreview','cloudready'
+    ]);
+    let active='';
+    try{active=String(route?.name||'');}catch(_){}
+    if(!active)active=String(location.hash||'').replace(/^#/,'');
+    if(!ownerOnlyRoutes.has(active))return false;
+
+    const role=String(readJson('mdm-v1-onboarding')?.role||'').toLowerCase();
+    const fallback=role==='school'?'schoolhome':'home';
+    try{
+      if(typeof go==='function'){go(fallback);return true;}
+    }catch(_){}
+    history.replaceState({name:fallback,data:null},'',location.pathname+'#'+fallback);
+    return true;
+  }
+
   function sync(){
     installStyle();
     const student=applyMode();
     if(!student)return;
+    if(blockTechnicalRoute())return;
     humanizeAccount();
     renderCleanPilotStatus();
     simplifyInvitedOnboarding();

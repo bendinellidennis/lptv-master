@@ -11,9 +11,11 @@
 
   const AUTH_KEY='mdm_auth_session_v4410';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
-  const VERSION='45.8.31.50.68';
+  const VERSION='45.8.31.50.68.1';
   const APP_URL='https://bendinellidennis.github.io/lptv-master/';
   const state={version:VERSION,mode:'enforced',enforcement:true,status:'ready',licenseId:'',lastInvitation:null,error:'',emailDelivery:'',activationQueue:[]};
+  let activationRefreshInFlight=null;
+  let activationQueueLoaded=false;
 
   function lang3(it,en,mt){try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en;}}
   function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -193,6 +195,12 @@
   function removeActivationPanel(){try{activationPanel()?.remove();}catch(_){}}
 
   async function refreshActivationQueue(){
+    if(activationRefreshInFlight)return activationRefreshInFlight;
+    activationRefreshInFlight=refreshActivationQueueOnce();
+    try{return await activationRefreshInFlight;}finally{activationRefreshInFlight=null;}
+  }
+
+  async function refreshActivationQueueOnce(){
     const panel=activationPanel();
     if(!panel)return false;
     const body=panel.querySelector('#mdmPilotActivationQueueBody');
@@ -203,6 +211,7 @@
       if(data?.authorized!==true)throw new Error('school_admin_required');
       const items=Array.isArray(data?.items)?data.items:[];
       state.activationQueue=items;
+      activationQueueLoaded=true;
       if(!items.length){
         body.innerHTML='<div style="opacity:.72;font-size:12px">Nessun invito riscattato in attesa.</div>';
         return true;
@@ -259,7 +268,7 @@
 
   function buildActivationPanel(host){
     let panel=activationPanel();
-    if(panel&&panel.parentElement===host){refreshActivationQueue();return panel;}
+    if(panel&&panel.parentElement===host){if(!activationQueueLoaded)refreshActivationQueue();return panel;}
     if(panel)panel.remove();
     panel=document.createElement('div');
     panel.id='mdmPilotActivationQueuePanel';

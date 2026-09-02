@@ -1,8 +1,8 @@
 'use strict';
 
-/* Malta Driving Master 45.8.31.50.60 */
+/* Malta Driving Master 45.8.31.50.61 */
 
-const CACHE = 'mdm-build-45-8-31-50-60-account-switch-input';
+const CACHE = 'mdm-build-45-8-31-50-61-account-isolation-lock';
 const CORE = [
   './',
   './index.html',

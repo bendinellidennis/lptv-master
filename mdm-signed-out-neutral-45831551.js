@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.69 — Signed-Out Neutral Gate + Password Setup
+/* Malta Driving Master 45.8.31.50.69.1 — Signed-Out Neutral Gate + Password Setup
    Privacy-only visual isolation after logout / before login.
    Signed-out users never see the previous student's profile, progress or school data.
    Existing authenticated data remains untouched in storage.
@@ -7,7 +7,7 @@
   'use strict';
   if(window.MDM_SIGNED_OUT_NEUTRAL_GATE)return;
 
-  const VERSION='45.8.31.50.69';
+  const VERSION='45.8.31.50.69.1';
   const AUTH_KEY='mdm_auth_session_v4410';
   const APP_URL='https://bendinellidennis.github.io/lptv-master/';
   let recoverySession=null;
@@ -121,7 +121,8 @@
 
   function readRecoveryHash(){
     try{
-      const params=new URLSearchParams(String(location.hash||'').replace(/^#/,''));
+      const source=String(window.__MDM_RECOVERY_HASH__||location.hash||'');
+      const params=new URLSearchParams(source.replace(/^#/,''));
       const accessToken=String(params.get('access_token')||'');
       const refreshToken=String(params.get('refresh_token')||'');
       const type=String(params.get('type')||'');
@@ -186,7 +187,7 @@
       const payload={access_token:recoverySession.accessToken,refresh_token:recoverySession.refreshToken,expires_in:recoverySession.expiresIn,user};
       if(!storeAuthenticatedSession(payload,user.email||''))throw new Error('session_store_failed');
       const url=new URL(location.href);url.hash='';url.searchParams.delete('mdm_password_setup');history.replaceState(history.state,'',url.pathname+url.search);
-      recoverySession=null;window.__MDM_PASSWORD_RECOVERY_IN_PROGRESS__=false;location.reload();
+      recoverySession=null;window.__MDM_RECOVERY_HASH__='';window.__MDM_PASSWORD_RECOVERY_IN_PROGRESS__=false;location.reload();
     }catch(e){if(note)note.textContent=t('Password non salvata: ','Password not saved: ','Il-password ma ġietx issejvjata: ')+String(e?.message||e||'');if(button)button.disabled=false;}
   }
 

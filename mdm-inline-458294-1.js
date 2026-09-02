@@ -29,7 +29,7 @@
 })();
 
 
-/* 45.8.31.50.45 — Invite login privacy scrub */
+/* 45.8.31.50.58 — Invite login privacy scrub, once per invite */
 function mdmInviteLoginPrivacyScrub(){
   try{
     const raw=localStorage.getItem('mdm_pilot_pending_invite_v1');
@@ -39,11 +39,15 @@ function mdmInviteLoginPrivacyScrub(){
     const input=document.getElementById('mdmAuthEmail');
     let changed=false;
 
-    if(input && input.dataset.mdmInviteBlanked!=='1'){
+    const marker='mdm_invite_email_blank_once_v1::'+String(p.token||'').slice(0,24);
+    let alreadyBlanked=false;
+    try{alreadyBlanked=sessionStorage.getItem(marker)==='1';}catch(_){}
+
+    if(input && !alreadyBlanked){
       input.value='';
-      input.dataset.mdmInviteBlanked='1';
       try{input.dispatchEvent(new Event('input',{bubbles:true}));}catch(_){}
       try{input.dispatchEvent(new Event('change',{bubbles:true}));}catch(_){}
+      try{sessionStorage.setItem(marker,'1');}catch(_){}
       changed=true;
     }
 

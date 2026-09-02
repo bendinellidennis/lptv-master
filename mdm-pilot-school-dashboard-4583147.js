@@ -11,7 +11,7 @@
 
   const AUTH_KEY='mdm_auth_session_v4410';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
-  const VERSION='45.8.31.50.45';
+  const VERSION='45.8.31.50.57';
   const APP_URL='https://bendinellidennis.github.io/lptv-master/';
   const state={version:VERSION,mode:'shadow',enforcement:false,status:'ready',licenseId:'',lastInvitation:null,error:'',emailDelivery:'',activationQueue:[]};
 
@@ -35,11 +35,18 @@
   function syncInviteLoginEmail(){
     const p=readPending(); if(!p)return;
     const input=document.getElementById('mdmAuthEmail');
-    if(!input||input.dataset.mdmInviteBlanked==='1')return;
+    if(!input)return;
+
+    const token=String(p.token||'');
+    const marker='mdm_invite_email_blank_once_v1::'+token.slice(0,24);
+    let already=false;
+    try{already=sessionStorage.getItem(marker)==='1';}catch(_){}
+    if(already)return;
+
     input.value='';
-    input.dataset.mdmInviteBlanked='1';
     try{input.dispatchEvent(new Event('input',{bubbles:true}));}catch(_){}
     try{input.dispatchEvent(new Event('change',{bubbles:true}));}catch(_){}
+    try{sessionStorage.setItem(marker,'1');}catch(_){}
   }
 
   function captureInviteFromUrl(){

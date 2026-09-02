@@ -1,7 +1,7 @@
-/* Malta Driving Master 45.8.31.46 — Pilot Access Shadow Bridge
+/* Malta Driving Master 45.8.31.50.68 — Pilot Access Enforcement
    Uses the existing verified MDM auth session key.
    Entitlement + device registration run only after authenticated readiness.
-   No DOM observers, no repeated polling, no enforcement. */
+   Denied student access is blocked without deleting local or server data. */
 (function(){
   'use strict';
 
@@ -9,14 +9,15 @@
 
   const AUTH_KEY='mdm_auth_session_v4410';
   const DEVICE_TOKEN_KEY='mdm_pilot_device_token_v4583146';
+  const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   let lastAuthFingerprint='';
   let checkInFlight=false;
   let deviceInFlight=false;
 
   const state={
-    version:'45.8.31.46',
-    mode:'shadow',
-    enforcement:false,
+    version:'45.8.31.50.68',
+    mode:'enforced',
+    enforcement:true,
     status:'ready',
     checkedAt:'',
     authorized:null,
@@ -29,6 +30,27 @@
   };
 
   function snapshot(){return Object.assign({},state)}
+
+  function normalizeEmail(value){return String(value||'').trim().toLowerCase()}
+
+  function lang3(it,en,mt){try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en}}
+
+  function isTechnicalOwner(session){return normalizeEmail(session&&session.user&&session.user.email||session&&session.email||'')===OWNER_EMAIL}
+
+  function removeAccessBlock(){try{document.getElementById('mdmPilotAccessBlock')?.remove();}catch(_){}}
+
+  function renderAccessBlock(session){
+    if(!session||isTechnicalOwner(session)||state.authorized!==false){removeAccessBlock();return;}
+    let el=document.getElementById('mdmPilotAccessBlock');
+    if(!el){
+      el=document.createElement('div');
+      el.id='mdmPilotAccessBlock';
+      el.style.cssText='position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;padding:22px;background:#edf5f7;color:#092b40;font-family:system-ui,-apple-system,sans-serif';
+      el.innerHTML='<section style="width:min(100%,520px);box-sizing:border-box;padding:26px;border-radius:24px;background:#fff;box-shadow:0 18px 50px rgba(5,36,55,.16);text-align:center"><div style="font-size:46px">🔒</div><h1 style="margin:10px 0 8px;font-size:28px">'+lang3('Accesso Pilot sospeso','Pilot access suspended','Aċċess Pilot sospiż')+'</h1><p style="margin:0;color:#61788a;font-size:16px;line-height:1.45">'+lang3('Il tuo account e i tuoi progressi sono al sicuro. Chiedi alla scuola di riattivare l’accesso, poi premi il pulsante qui sotto.','Your account and progress are safe. Ask the school to reactivate access, then press the button below.','Il-kont u l-progress tiegħek huma siguri. Itlob lill-iskola terġa’ tattiva l-aċċess, imbagħad agħfas il-buttuna hawn taħt.')+'</p><button id="mdmPilotRetryAccess" type="button" style="width:100%;margin-top:20px;padding:14px;border:0;border-radius:14px;background:#08a9b5;color:#fff;font-size:17px;font-weight:800">'+lang3('Controlla di nuovo','Check again','Iċċekkja mill-ġdid')+'</button></section>';
+      document.body.appendChild(el);
+      el.querySelector('#mdmPilotRetryAccess').onclick=()=>{lastAuthFingerprint='';check(true);};
+    }
+  }
 
   function renderBadge(){
     try{
@@ -155,7 +177,7 @@
     }
   }
 
-  async function check(){
+  async function check(force){
     if(checkInFlight)return snapshot();
 
     const cfg=window.MDM_BACKEND_CONFIG;
@@ -180,6 +202,7 @@
       state.error='';
       state.deviceStatus='not_checked';
       renderBadge();
+      removeAccessBlock();
       return snapshot();
     }
 
@@ -191,11 +214,12 @@
       state.error='';
       state.deviceStatus='not_checked';
       renderBadge();
+      removeAccessBlock();
       return snapshot();
     }
 
     const fingerprint=authFingerprint(session);
-    if(fingerprint&&fingerprint===lastAuthFingerprint&&state.checkedAt)return snapshot();
+    if(!force&&fingerprint&&fingerprint===lastAuthFingerprint&&state.checkedAt)return snapshot();
 
     state.status='checking';
     state.error='';
@@ -241,6 +265,7 @@
       state.error='';
       state.deviceStatus=state.authorized?'queued':'not_checked';
       renderBadge();
+      renderAccessBlock(session);
 
       if(state.authorized)await registerDevice(session);
       return snapshot();
@@ -283,8 +308,8 @@
   }catch(_){}
 
   window.MDM_PILOT_ACCESS_BRIDGE=Object.freeze({
-    version:'45.8.31.46',
-    mode:'shadow',
+    version:'45.8.31.50.68',
+    mode:'enforced',
     getState:snapshot,
     check:check
   });

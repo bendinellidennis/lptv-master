@@ -66,6 +66,7 @@
 
   async function adoptMagicLinkSession(){
     try{
+      if(window.__MDM_PASSWORD_RECOVERY_IN_PROGRESS__)return false;
       const hash=String(location.hash||'').replace(/^#/,'');if(!hash)return false;
       const p=new URLSearchParams(hash);
       const accessToken=String(p.get('access_token')||'');

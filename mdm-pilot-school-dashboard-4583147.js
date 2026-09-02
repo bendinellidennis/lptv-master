@@ -11,9 +11,9 @@
 
   const AUTH_KEY='mdm_auth_session_v4410';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
-  const VERSION='45.8.31.50.57';
+  const VERSION='45.8.31.50.68';
   const APP_URL='https://bendinellidennis.github.io/lptv-master/';
-  const state={version:VERSION,mode:'shadow',enforcement:false,status:'ready',licenseId:'',lastInvitation:null,error:'',emailDelivery:'',activationQueue:[]};
+  const state={version:VERSION,mode:'enforced',enforcement:true,status:'ready',licenseId:'',lastInvitation:null,error:'',emailDelivery:'',activationQueue:[]};
 
   function lang3(it,en,mt){try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en;}}
   function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -209,12 +209,18 @@
       }
       body.innerHTML=items.map(item=>{
         const assigned=item?.seat_assigned===true;
+        const revoked=String(item?.seat_status||'')==='revoked';
         const email=esc(item?.invite_email||'—');
         const id=esc(item?.invitation_id||'');
-        return '<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid rgba(0,0,0,.08)"><div><strong style="font-size:12px">'+email+'</strong><div style="font-size:10px;opacity:.68;margin-top:3px">'+(assigned?'POSTO ACTIVE':'INVITO RISCATTATO · DA ATTIVARE')+'</div></div>'+(assigned?'<span style="font-size:11px;font-weight:900;color:#16815f">✓ ACTIVE</span>':'<button class="btn mdmPilotAssignSeat" type="button" data-invitation-id="'+id+'" style="padding:8px 10px;min-height:34px">Attiva posto</button>')+'</div>';
+        const status=assigned?lang3('ACCESSO ATTIVO','ACCESS ACTIVE','AĊĊESS ATTIV'):revoked?lang3('ACCESSO REVOCATO','ACCESS REVOKED','AĊĊESS REVOKAT'):lang3('INVITO RISCATTATO · DA ATTIVARE','INVITATION REDEEMED · TO ACTIVATE','STEDINA UŻATA · BIEX TIĠI ATTIVATA');
+        const action=assigned?lang3('Revoca accesso','Revoke access','Irrevoka l-aċċess'):revoked?lang3('Riattiva accesso','Reactivate access','Erġa’ attiva l-aċċess'):lang3('Attiva posto','Activate seat','Attiva l-post');
+        return '<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid rgba(0,0,0,.08)"><div><strong style="font-size:12px">'+email+'</strong><div style="font-size:10px;opacity:.68;margin-top:3px">'+esc(status)+'</div></div>'+(assigned?'<button class="btn secondary mdmPilotRevokeSeat" type="button" data-invitation-id="'+id+'" style="padding:8px 10px;min-height:34px;color:#a33">'+esc(action)+'</button>':'<button class="btn mdmPilotAssignSeat" type="button" data-invitation-id="'+id+'" style="padding:8px 10px;min-height:34px">'+esc(action)+'</button>')+'</div>';
       }).join('');
       body.querySelectorAll('.mdmPilotAssignSeat').forEach(btn=>{
         btn.onclick=()=>assignSeat(String(btn.dataset.invitationId||''),btn);
+      });
+      body.querySelectorAll('.mdmPilotRevokeSeat').forEach(btn=>{
+        btn.onclick=()=>revokeSeat(String(btn.dataset.invitationId||''),btn);
       });
       return true;
     }catch(e){
@@ -236,6 +242,21 @@
     }
   }
 
+  async function revokeSeat(invitationId,button){
+    if(!invitationId)return;
+    const confirmed=window.confirm(lang3('Revocare temporaneamente l\u2019accesso Pilot? Account, profilo e progressi resteranno intatti.','Temporarily revoke Pilot access? Account, profile and progress will remain intact.','Tirrevoke temporanjament l-aċċess Pilot? Il-kont, il-profil u l-progress jibqgħu intatti.'));
+    if(!confirmed)return;
+    if(button)button.disabled=true;
+    try{
+      const data=await rpc('mdm_school_revoke_pilot_seat',{p_invitation_id:invitationId});
+      if(data?.ok!==true||data?.revoked!==true)throw new Error(String(data?.error||'seat_revocation_failed'));
+      await refreshActivationQueue();
+    }catch(e){
+      if(button){button.disabled=false;button.textContent='Errore';}
+      state.error=String(e?.message||e||'seat_revocation_failed');
+    }
+  }
+
   function buildActivationPanel(host){
     let panel=activationPanel();
     if(panel&&panel.parentElement===host){refreshActivationQueue();return panel;}
@@ -243,7 +264,7 @@
     panel=document.createElement('div');
     panel.id='mdmPilotActivationQueuePanel';
     panel.style.cssText='margin-top:14px;padding:14px;border:1px solid rgba(22,129,95,.22);border-radius:14px;background:rgba(22,129,95,.05)';
-    panel.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><strong>✅ Attivazione posti Pilot</strong><p style="margin:5px 0 0;opacity:.74;font-size:11px">Dopo che lo studente ha riscattato l’invito, attiva qui il posto server reale.</p></div><button id="mdmPilotRefreshActivationQueue" class="btn secondary" type="button" style="padding:8px 10px">Aggiorna</button></div><div id="mdmPilotActivationQueueBody" style="margin-top:10px"></div>';
+    panel.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><strong>✅ '+esc(lang3('Gestione accessi Pilot','Pilot access management','Ġestjoni tal-aċċess Pilot'))+'</strong><p style="margin:5px 0 0;opacity:.74;font-size:11px">'+esc(lang3('Attiva, revoca o riattiva l’accesso senza eliminare account e progressi.','Activate, revoke or reactivate access without deleting accounts or progress.','Attiva, irrevoka jew erġa’ attiva l-aċċess mingħajr ma tħassar kontijiet jew progress.'))+'</p></div><button id="mdmPilotRefreshActivationQueue" class="btn secondary" type="button" style="padding:8px 10px">'+esc(lang3('Aggiorna','Refresh','Aġġorna'))+'</button></div><div id="mdmPilotActivationQueueBody" style="margin-top:10px"></div>';
     const invite=document.getElementById('mdmPilotRealInvitePanel');
     if(host.classList?.contains('sch35')&&invite&&invite.parentNode===host)invite.insertAdjacentElement('afterend',panel);
     else host.appendChild(panel);
@@ -258,7 +279,7 @@
     if(panel&&panel.parentElement===host)return panel;
     if(panel)panel.remove();
     panel=document.createElement('div');panel.id='mdmPilotRealInvitePanel';panel.style.cssText='margin-top:14px;padding:14px;border:1px solid rgba(45,125,255,.22);border-radius:14px;background:rgba(45,125,255,.05)';
-    panel.innerHTML=`<div style="display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap"><div><strong>✉️ ${esc(lang3('Invita studente Pilot','Invite Pilot student','Stieden student Pilot'))}</strong><p style="margin:6px 0 0;opacity:.78;font-size:12px">${esc(lang3('Inserisci l’email: MDM invia automaticamente il link allo studente.','Enter the email: MDM automatically sends the link to the student.','Daħħal l-email: MDM jibgħat il-link awtomatikament lill-istudent.'))}</p></div><span style="font-size:10px;font-weight:800;padding:5px 8px;border-radius:999px;background:#132d46;color:#fff">SHADOW · ENFORCEMENT OFF</span></div><div style="display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:8px;margin-top:12px"><input id="mdmPilotInviteEmail" type="email" maxlength="254" autocomplete="email" inputmode="email" placeholder="student@example.com" style="min-width:0;padding:11px;border:1px solid rgba(0,0,0,.18);border-radius:10px;background:var(--card,#fff);color:inherit"><select id="mdmPilotInviteHours" style="padding:11px;border:1px solid rgba(0,0,0,.18);border-radius:10px;background:var(--card,#fff);color:inherit"><option value="24">24 h</option><option value="72" selected>72 h</option><option value="168">7 days</option></select></div><button id="mdmPilotCreateRealInvite" class="btn" type="button" style="margin-top:9px;width:100%">${esc(lang3('Invia invito allo studente','Send invitation to student','Ibgħat stedina lill-istudent'))}</button><div id="mdmPilotInviteResult" style="display:none;margin-top:10px;padding:10px;border-radius:10px;background:rgba(0,0,0,.05);font-size:12px;word-break:break-word"></div>`;
+    panel.innerHTML=`<div style="display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap"><div><strong>✉️ ${esc(lang3('Invita studente Pilot','Invite Pilot student','Stieden student Pilot'))}</strong><p style="margin:6px 0 0;opacity:.78;font-size:12px">${esc(lang3('Inserisci l’email: MDM invia automaticamente il link allo studente.','Enter the email: MDM automatically sends the link to the student.','Daħħal l-email: MDM jibgħat il-link awtomatikament lill-istudent.'))}</p></div><span style="font-size:10px;font-weight:800;padding:5px 8px;border-radius:999px;background:#16815f;color:#fff">${esc(lang3('ACCESSO REALE ATTIVO','REAL ACCESS ACTIVE','AĊĊESS REALI ATTIV'))}</span></div><div style="display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:8px;margin-top:12px"><input id="mdmPilotInviteEmail" type="email" maxlength="254" autocomplete="email" inputmode="email" placeholder="student@example.com" style="min-width:0;padding:11px;border:1px solid rgba(0,0,0,.18);border-radius:10px;background:var(--card,#fff);color:inherit"><select id="mdmPilotInviteHours" style="padding:11px;border:1px solid rgba(0,0,0,.18);border-radius:10px;background:var(--card,#fff);color:inherit"><option value="24">24 h</option><option value="72" selected>72 h</option><option value="168">7 days</option></select></div><button id="mdmPilotCreateRealInvite" class="btn" type="button" style="margin-top:9px;width:100%">${esc(lang3('Invia invito allo studente','Send invitation to student','Ibgħat stedina lill-istudent'))}</button><div id="mdmPilotInviteResult" style="display:none;margin-top:10px;padding:10px;border-radius:10px;background:rgba(0,0,0,.05);font-size:12px;word-break:break-word"></div>`;
     if(host.classList?.contains('sch35')){
       const anchor=host.querySelector('.sch35-profile-entry')||host.querySelector('.sch35-head');
       if(anchor)anchor.insertAdjacentElement('afterend',panel); else host.insertBefore(panel,host.firstChild||null);
@@ -302,6 +323,6 @@
   window.addEventListener('load',()=>{schedule();processInboundInvite();},{once:true});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden){schedule();processInboundInvite();}});
 
-  window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE=Object.freeze({version:VERSION,mode:'shadow',getState:()=>JSON.parse(JSON.stringify(state)),mount,processInboundInvite,refreshActivationQueue});
+  window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE=Object.freeze({version:VERSION,mode:'enforced',getState:()=>JSON.parse(JSON.stringify(state)),mount,processInboundInvite,refreshActivationQueue});
   processInboundInvite();schedule();
 })();

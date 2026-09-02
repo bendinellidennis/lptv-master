@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.66 — Pilot UX & Clean-Up Gate
+/* Malta Driving Master 45.8.31.50.67 — Pilot UX & Clean-Up Gate
    Student-facing polish only.
    Goals:
    - hide technical diagnostics from students
@@ -13,7 +13,7 @@
   'use strict';
   if(window.MDM_PILOT_UX_CLEANUP)return;
 
-  const VERSION='45.8.31.50.66';
+  const VERSION='45.8.31.50.67';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
@@ -528,6 +528,72 @@
     });
   }
 
+  function simplifyPrivacyCenter(){
+    if(isOwner())return;
+    const grid=document.querySelector('.privacy-summary-grid');
+    if(!grid)return;
+
+    const labels=[
+      [t('Dati del profilo','Profile details','Dettalji tal-profil'),t('campi salvati','saved fields','oqsma ssejvjati')],
+      [t('Attività di studio','Study activity','Attività ta’ studju'),t('attività','activities','attivitajiet')],
+      [t('Percorso patente','Licence journey','Mixja tal-liċenzja'),t('controlli completati','completed checks','kontrolli kompluti')],
+      [t('Piano personale','Personal plan','Pjan personali'),t('elementi','items','elementi')],
+      [t('Collegamento scuola','School connection','Konnessjoni mal-iskola'),t('informazioni','details','informazzjoni')],
+      [t('Scelte sulla privacy','Privacy choices','Għażliet tal-privatezza'),t('scelte','choices','għażliet')]
+    ];
+    Array.from(grid.querySelectorAll('article')).forEach(function(card,index){
+      const copy=labels[index];if(!copy)return;
+      const title=card.querySelector('span');
+      const unit=card.querySelector('small');
+      if(title)title.textContent=copy[0];
+      if(unit)unit.textContent=copy[1];
+    });
+
+    const storage=document.querySelector('.privacy-explain-card');
+    if(storage){
+      const h=storage.querySelector('h3');
+      const p=storage.querySelector('p');
+      if(h)h.textContent=t('Dati salvati sul dispositivo','Data saved on this device','Data ssejvjata fuq dan l-apparat');
+      if(p)p.textContent=t(
+        'Questi dati servono a ricordare i tuoi progressi e le tue impostazioni. Puoi cancellarli quando vuoi.',
+        'This data remembers your progress and settings. You can delete it whenever you want.',
+        'Din id-data tiftakar il-progress u l-għażliet tiegħek. Tista’ tħassarha meta trid.'
+      );
+    }
+
+    const exportCard=document.querySelector('.privacy-export-card');
+    if(exportCard){
+      const h=exportCard.querySelector('h3');
+      const p=exportCard.querySelector('p');
+      const button=exportCard.querySelector('#privacyExportAll');
+      if(h)h.textContent=t('Scarica una copia dei tuoi dati','Download a copy of your data','Niżżel kopja tad-data tiegħek');
+      if(p)p.textContent=t(
+        'Crea un file con i dati personali e i progressi salvati da MDM.',
+        'Create a file containing the personal details and progress saved by MDM.',
+        'Oħloq fajl bid-dettalji personali u l-progress issejvjat minn MDM.'
+      );
+      if(button)button.textContent=t('Scarica copia','Download copy','Niżżel kopja');
+    }
+
+    const preferences=document.querySelector('.privacy-preferences-card');
+    if(preferences){
+      const h=preferences.querySelector('h3');
+      const p=preferences.querySelector('p');
+      const analytics=preferences.querySelector('#privacyAnalytics')?.closest('label')?.querySelector('span');
+      if(h)h.textContent=t('Scelte facoltative','Optional choices','Għażliet fakultattivi');
+      if(p)p.textContent=t(
+        'Queste opzioni sono disattivate automaticamente. Puoi scegliere se condividere informazioni anonime sull’uso dell’app per aiutarci a migliorarla. Non condividiamo risposte, messaggi o posizione.',
+        'These options are off automatically. You can choose to share anonymous information about app use to help us improve it. We do not share answers, messages or location.',
+        'Dawn l-għażliet huma mitfija awtomatikament. Tista’ taqsam informazzjoni anonima dwar l-użu biex tgħinna ntejbu l-app. Ma naqsmux tweġibiet, messaġġi jew post.'
+      );
+      if(analytics)analytics.textContent=t(
+        'Condividi dati anonimi per migliorare MDM',
+        'Share anonymous data to improve MDM',
+        'Aqsam data anonima biex intejbu MDM'
+      );
+    }
+  }
+
   function blockTechnicalRoute(){
     if(isOwner())return false;
     const ownerOnlyRoutes=new Set([
@@ -556,6 +622,7 @@
     if(blockTechnicalRoute())return;
     humanizeAccount();
     humanizeAccountSync();
+    simplifyPrivacyCenter();
     renderCleanPilotStatus();
     simplifyInvitedOnboarding();
     promoteToday();

@@ -11,7 +11,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_ISOLATION_SAFE)return;
 
-  const VERSION='45.8.31.50.61';
+  const VERSION='45.8.31.50.63';
   const TECH_OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const AUTH_KEY='mdm_auth_session_v4410';
   const MIGRATION_PREFIX='mdm_account_safe_migrated_v1::';
@@ -192,6 +192,56 @@
     return true;
   }
 
+  function recoverAccountFromMatchingBackup(a){
+    if(!a||!a.ok||accountType(a)==='owner'||!a.email)return {recovered:false,reason:'not_student'};
+    const targetProfile=scoped('mdm-v1-user-profile',a);
+    const currentProfile=rawGet.call(localStorage,targetProfile);
+    let currentEmail='';
+    try{currentEmail=currentProfile?findEmail(JSON.parse(currentProfile),0):'';}catch(_){}
+    if(currentEmail===a.email)return {recovered:false,reason:'healthy'};
+
+    const candidates=[];
+    for(let i=0;i<localStorage.length;i++){
+      const storageKey=localStorage.key(i);
+      if(!storageKey)continue;
+      const at=storageKey.indexOf('mdm-v1-user-profile');
+      if(at<0)continue;
+      const raw=rawGet.call(localStorage,storageKey);
+      let email='';
+      try{email=raw?findEmail(JSON.parse(raw),0):'';}catch(_){}
+      if(email!==a.email)continue;
+      const pre=storageKey.slice(0,at);
+      const post=storageKey.slice(at+'mdm-v1-user-profile'.length);
+      let count=0,total=0;
+      for(const key of USER_KEYS){
+        const value=rawGet.call(localStorage,pre+key+post);
+        if(value!==null){count++;total+=value.length;}
+      }
+      candidates.push({pre,post,count,total,profileKey:storageKey});
+    }
+    candidates.sort((x,y)=>(y.total-x.total)||(y.count-x.count));
+    const source=candidates[0];
+    if(!source)return {recovered:false,reason:'no_matching_backup'};
+
+    const stamp=Date.now();
+    let restored=0;
+    for(const key of USER_KEYS){
+      const sourceValue=rawGet.call(localStorage,source.pre+key+source.post);
+      if(sourceValue===null)continue;
+      const target=scoped(key,a);
+      const contaminated=rawGet.call(localStorage,target);
+      if(contaminated!==null){
+        rawSet.call(localStorage,'mdm_account_contamination_backup_v1::'+stamp+'::'+target,contaminated);
+      }
+      rawSet.call(localStorage,target,sourceValue);
+      restored++;
+    }
+    rawSet.call(localStorage,'mdm_account_recovered_v1::'+a.userId,JSON.stringify({
+      version:VERSION,email:a.email,restored,source:source.profileKey,at:new Date().toISOString()
+    }));
+    return {recovered:true,restored,source:source.profileKey};
+  }
+
   function readUserKey(key){
     const a=auth();
     if(!a.ok)return null;
@@ -261,7 +311,10 @@
   /* Preflight before the historical app runtime starts. */
   try{
     const preflight=auth();
-    if(preflight.ok)quarantineOwnerContamination(preflight);
+    if(preflight.ok){
+      quarantineOwnerContamination(preflight);
+      recoverAccountFromMatchingBackup(preflight);
+    }
   }catch(_){}
 
   window.MDM_ACCOUNT_ISOLATION_SAFE=Object.freeze({
@@ -270,6 +323,7 @@
     current:auth,
     accountType:()=>accountType(auth()),
     accountSwitchWriteLocked:()=>accountSwitchWriteLock,
+    recoverAccount:()=>recoverAccountFromMatchingBackup(auth()),
     quarantineOwner:()=>quarantineOwnerContamination(auth()),
     legacyOwnerEmail
   });

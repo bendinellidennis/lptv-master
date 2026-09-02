@@ -7,7 +7,7 @@
   'use strict';
   if(window.MDM_SIGNED_OUT_NEUTRAL_GATE)return;
 
-  const VERSION='45.8.31.50.55';
+  const VERSION='45.8.31.50.56';
   const AUTH_KEY='mdm_auth_session_v4410';
   let raf=0;
   let emailPrimed=false;
@@ -153,17 +153,9 @@
 
       if(response.ok&&payload?.access_token&&payload?.user?.id){
         if(!storeAuthenticatedSession(payload,email))throw new Error('session_store_failed');
-        authNote(t('Accesso riuscito.','Signed in successfully.','Id-dħul irnexxa.'),false);
-        clearClasses();
-        try{
-          if(typeof render==='function')render();
-        }catch(_){}
-        try{
-          window.MDM_PILOT_ACCESS_BRIDGE?.check?.();
-          window.MDM_PILOT_STUDENT_REDEEM_BRIDGE?.mount?.();
-          window.MDM_PILOT_SCHOOL_DASHBOARD_BRIDGE?.mount?.();
-        }catch(_){}
-        schedule();
+        authNote(t('Accesso riuscito. Caricamento del tuo profilo…','Signed in successfully. Loading your profile…','Id-dħul irnexxa. Qed jitgħabba l-profil tiegħek…'),false);
+        try{sessionStorage.setItem('mdm_post_login_reload_v1',String(payload.user.id));}catch(_){}
+        location.reload();
         return;
       }
 

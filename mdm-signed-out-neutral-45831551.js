@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.62 — Signed-Out Neutral Gate
+/* Malta Driving Master 45.8.31.50.64 — Signed-Out Neutral Gate
    Privacy-only visual isolation after logout / before login.
    Signed-out users never see the previous student's profile, progress or school data.
    Existing authenticated data remains untouched in storage.
@@ -7,7 +7,7 @@
   'use strict';
   if(window.MDM_SIGNED_OUT_NEUTRAL_GATE)return;
 
-  const VERSION='45.8.31.50.62';
+  const VERSION='45.8.31.50.64';
   const AUTH_KEY='mdm_auth_session_v4410';
   let raf=0;
   let emailPrimed=false;
@@ -16,7 +16,7 @@
 
   function restoreEmailDraft(){
     if(authenticated()||!emailDraft)return;
-    const email=document.getElementById('mdmAuthEmail');
+    const email=document.getElementById('mdmStableAuthEmail');
     if(email&&String(email.value||'')!==emailDraft)email.value=emailDraft;
   }
 
@@ -29,7 +29,7 @@
 
   function captureEmailDraft(event){
     const target=event&&event.target;
-    if(!target||target.id!=='mdmAuthEmail')return;
+    if(!target||target.id!=='mdmStableAuthEmail')return;
     emailDraft=String(target.value||'');
     emailEditedAt=Date.now();
     queueEmailRestore();
@@ -68,10 +68,10 @@
   }
 
   function setAuthBusy(busy){
-    const signIn=document.getElementById('mdmAuthSignIn');
-    const signUp=document.getElementById('mdmAuthSignUp');
-    const email=document.getElementById('mdmAuthEmail');
-    const password=document.getElementById('mdmAuthPassword');
+    const signIn=document.getElementById('mdmStableAuthSignIn');
+    const signUp=document.getElementById('mdmStableAuthSignUp');
+    const email=document.getElementById('mdmStableAuthEmail');
+    const password=document.getElementById('mdmStableAuthPassword');
     if(signIn)signIn.disabled=Boolean(busy);
     if(signUp)signUp.disabled=Boolean(busy);
     if(email)email.disabled=Boolean(busy);
@@ -117,8 +117,8 @@
 
   async function directAuth(action){
     const cfg=window.MDM_BACKEND_CONFIG;
-    const emailEl=document.getElementById('mdmAuthEmail');
-    const passwordEl=document.getElementById('mdmAuthPassword');
+    const emailEl=document.getElementById('mdmStableAuthEmail');
+    const passwordEl=document.getElementById('mdmStableAuthPassword');
     const email=String(emailEl?.value||emailDraft||'').trim().toLowerCase();
     const password=String(passwordEl?.value||'');
 
@@ -291,7 +291,7 @@
   }
 
   function findAuthCard(){
-    const direct=Array.from(document.querySelectorAll('#mdmAuthEmail,#mdmAuthSignIn,#mdmAuthSignUp'))
+    const direct=Array.from(document.querySelectorAll('#mdmStableAuthEmail,#mdmStableAuthSignIn,#mdmStableAuthSignUp'))
       .find(function(el){return !el.closest('#mdmSignedOutGate');});
     if(!direct)return null;
     return direct.closest('.account-identity-card,.card,section,article,div');
@@ -301,7 +301,7 @@
     if(!card)return;
     card.classList.add('mdm-public-auth-card');
 
-    const email=card.querySelector('#mdmAuthEmail');
+    const email=card.querySelector('#mdmStableAuthEmail');
     if(email){
       if(!emailPrimed){
         const userIsTyping=Date.now()-emailEditedAt<2000||document.activeElement===email;
@@ -356,17 +356,17 @@
       )+'</p>'+
       '<label style="display:block;text-align:left;margin:14px auto 7px;width:min(100%,420px);font-weight:800">'+
         'E-mail'+
-        '<input id="mdmAuthEmail" type="email" value="" autocomplete="email" autocapitalize="none" spellcheck="false" '+
+        '<input id="mdmStableAuthEmail" type="email" value="" autocomplete="email" autocapitalize="none" spellcheck="false" '+
         'style="box-sizing:border-box;width:100%;margin-top:6px;padding:12px;border:1px solid rgba(18,53,72,.18);border-radius:12px;background:#fff;color:#123548;font:600 16px system-ui">'+
       '</label>'+
       '<label style="display:block;text-align:left;margin:7px auto 12px;width:min(100%,420px);font-weight:800">'+
         t('Password','Password','Password')+
-        '<input id="mdmAuthPassword" type="password" value="" autocomplete="current-password" '+
+        '<input id="mdmStableAuthPassword" type="password" value="" autocomplete="current-password" '+
         'style="box-sizing:border-box;width:100%;margin-top:6px;padding:12px;border:1px solid rgba(18,53,72,.18);border-radius:12px;background:#fff;color:#123548;font:600 16px system-ui">'+
       '</label>'+
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;width:min(100%,420px);margin:0 auto">'+
-        '<button id="mdmAuthSignIn" class="btn" type="button">🔓 '+t('Accedi','Sign in','Idħol')+'</button>'+
-        '<button id="mdmAuthSignUp" class="btn secondary" type="button">＋ '+t('Crea account','Create account','Oħloq kont')+'</button>'+
+        '<button id="mdmStableAuthSignIn" class="btn" type="button">🔓 '+t('Accedi','Sign in','Idħol')+'</button>'+
+        '<button id="mdmStableAuthSignUp" class="btn secondary" type="button">＋ '+t('Crea account','Create account','Oħloq kont')+'</button>'+
       '</div>'+
       '<p id="mdmSignedOutAuthNote" style="margin-top:12px;font-size:11px">'+t(
         'I dati del precedente utente restano privati e ricompaiono solo dopo il suo accesso.',
@@ -375,14 +375,15 @@
       )+'</p>';
 
     screen.insertBefore(gate,screen.firstChild||null);
+    restoreEmailDraft();
 
-    const signIn=gate.querySelector('#mdmAuthSignIn');
-    const signUp=gate.querySelector('#mdmAuthSignUp');
+    const signIn=gate.querySelector('#mdmStableAuthSignIn');
+    const signUp=gate.querySelector('#mdmStableAuthSignUp');
 
     if(signIn)signIn.onclick=function(){directAuth('signin');};
     if(signUp)signUp.onclick=function(){directAuth('signup');};
 
-    const password=gate.querySelector('#mdmAuthPassword');
+    const password=gate.querySelector('#mdmStableAuthPassword');
     if(password)password.addEventListener('keydown',function(event){
       if(event.key==='Enter'){event.preventDefault();directAuth('signin');}
     });
@@ -403,16 +404,6 @@
 
     if(authenticated()){
       clearClasses();
-      return;
-    }
-
-    const authCard=findAuthCard();
-
-    if(authCard){
-      document.body?.classList?.remove('mdm-signed-out-home');
-      document.body?.classList?.add('mdm-signed-out-profile');
-      document.getElementById('mdmSignedOutGate')?.remove();
-      cleanSignedOutAuthCard(authCard);
       return;
     }
 

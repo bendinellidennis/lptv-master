@@ -1,8 +1,8 @@
 'use strict';
 
-/* Malta Driving Master 45.8.37 */
+/* Malta Driving Master 45.8.38 */
 
-const CACHE = 'mdm-build-45-8-37-malta-road-intelligence';
+const CACHE = 'mdm-build-45-8-38-instructor-cosign';
 const CORE = [
   './',
   './index.html',

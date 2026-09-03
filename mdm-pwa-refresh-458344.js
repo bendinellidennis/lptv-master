@@ -1,10 +1,12 @@
-/* Malta Driving Master 45.8.34.4 — PWA Update Reliability + synchronized Home -> Student activation queue.
+/* Malta Driving Master 45.8.38.23.6 — PWA Update Reliability + synchronized Home -> Student activation queue.
+   Startup polish: the yellow activation alert is created only when real pending students exist.
+   No transient "checking" alert is painted during app startup.
    Home alert no longer navigates through Profile.
    One tap opens the exact real seat-assignment queue as a focused modal over the current screen.
    SHADOW / enforcement unchanged. */
 (function(){
   'use strict';
-  const RELEASE='45.8.34.4';
+  const RELEASE='45.8.38.23.6';
   const AUTH_KEY='mdm_auth_session_v4410';
   let alertRequestSeq=0;
   let latestPendingRows=[];
@@ -84,9 +86,7 @@
     el.dataset.mdmSchoolAlertOwner=RELEASE;
     return el;
   }
-  function showCheckingAlert(){const el=ensureAlert();if(!el)return;el.innerHTML=`<span><strong>🔔 ${esc(lang3('Richieste studenti','Student requests','Talbiet tal-istudenti'))}</strong><small style="display:block;margin-top:3px;opacity:.72">${esc(lang3('Controllo studenti da attivare… Tocca per aprire','Checking students to activate… Tap to open','Qed jiġu ċċekkjati studenti biex jiġu attivati… Agħfas biex tiftaħ'))}</small></span><span style="font-size:22px;font-weight:900">›</span>`;}
   function showAlert(rows){latestPendingRows=Array.isArray(rows)?rows.slice():[];latestPendingAt=Date.now();if(!latestPendingRows.length){removeAlert();return;}const el=ensureAlert();if(!el)return;const n=latestPendingRows.length;el.innerHTML=`<span><strong>🔔 ${n} ${esc(n===1?lang3('studente da attivare','student to activate','student biex jiġi attivat'):lang3('studenti da attivare','students to activate','studenti biex jiġu attivati'))}</strong><small style="display:block;margin-top:3px;opacity:.72">${esc(lang3('Tocca: apri direttamente le richieste','Tap: open requests directly','Agħfas: iftaħ it-talbiet direttament'))}</small></span><span style="font-size:22px;font-weight:900">›</span>`;}
-
 
   function closeDirectQueue(){
     const overlay=document.getElementById('mdmDirectSeatQueueOverlay');
@@ -164,13 +164,12 @@
   async function refreshAlert(){
     const s=session();if(!s){removeAlert();return;}
     const seq=++alertRequestSeq;
-    const pendingTimer=setTimeout(()=>{if(seq===alertRequestSeq)showCheckingAlert();},350);
     try{
       let rows=await rpc('mdm_school_list_redeemed_pilot_invitations',{});
-      clearTimeout(pendingTimer);if(seq!==alertRequestSeq)return;
+      if(seq!==alertRequestSeq)return;
       if(!Array.isArray(rows))rows=rows?[rows]:[];
       showAlert(rows);
-    }catch(_){clearTimeout(pendingTimer);if(seq===alertRequestSeq)removeAlert();}
+    }catch(_){if(seq===alertRequestSeq)removeAlert();}
   }
 
   function boot(){bindRefresh();refreshAlert();}

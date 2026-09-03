@@ -1,8 +1,8 @@
 'use strict';
 
-/* Malta Driving Master 45.8.33.3 */
+/* Malta Driving Master 45.8.34 */
 
-const CACHE = 'mdm-build-45-8-33-3-proofloop-hard-refresh';
+const CACHE = 'mdm-build-45-8-34-real-exam-outcome';
 const CORE = [
   './',
   './index.html',

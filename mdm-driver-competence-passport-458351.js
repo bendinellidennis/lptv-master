@@ -1,11 +1,12 @@
-/* Malta Driving Master 45.8.35.1 — Driver Competence Passport Fail-safe */
+/* Malta Driving Master 45.8.38.24 — Driver Competence Passport + School Human Verification */
 (function(){
 'use strict';
 if(window.MDM_DRIVER_COMPETENCE_PASSPORT)return;
 
-const VERSION='45.8.35.1';
+const VERSION='45.8.38.24';
 const AUTH='mdm_auth_session_v4410';
 const STORE='mdm-driver-competence-passport-v1';
+const SCHOOL_CACHE='mdm-school-evidence-cache-v1';
 const OWNER='maltadrivingmaster@gmail.com';
 let raf=0,viewPack='';
 
@@ -109,6 +110,25 @@ function save(v){
 function proof(){try{return window.MDM_PROOFLOOP_ENGINE?.evaluate?.()||null}catch(_){return null}}
 function mission(){try{return window.MDM_PROOFLOOP_VERIFICATION?.current?.()||null}catch(_){return null}}
 function examOutcome(){try{return window.MDM_PROOFLOOP_EXAM_OUTCOME?.current?.()||null}catch(_){return null}}
+function schoolEvidence(){try{const x=read(SCHOOL_CACHE);return Array.isArray(x?.missions)?x.missions:[]}catch(_){return[]}}
+function applySchoolVerified(state){
+ const rows=schoolEvidence();
+ rows.forEach(m=>{
+  const p=m?.payload||{},packId=String(p.pack_id||''),competenceId=String(p.competence_id||''),missionId=String(m?.mission_id||m?.id||'');
+  if(m?.status!=='accepted'||String(m?.raw_status||'')!=='verified')return;
+  if(p.verification_scope!=='driver_competence'||!packId||!competenceId||!missionId)return;
+  if(!PACKS.some(x=>x.id===packId)||!m?.student_evidence)return;
+  const pack=ensurePack(state,packId),label=String(p.competence_label||competenceId);
+  const rec=pack.competencies[competenceId]||{id:competenceId,label,firstSeenAt:now()};
+  if(rec.status!=='verified')appendEvent(pack,'competence-status',missionId+'-school-verified',{competenceId,from:rec.status||'insufficient',to:'verified'});
+  rec.label=label;rec.status='verified';rec.source='school-human-verification';rec.serverMissionId=missionId;rec.missionStatus='accepted';rec.lastUpdatedAt=now();
+  rec.evidence={humanReview:true,studentEvidence:true,reviewedAt:String(m?.reviewed_at||''),submittedAt:String(m?.evidence_submitted_at||m?.student_completed_at||''),source:'school-human-verification'};
+  pack.competencies[competenceId]=rec;
+  appendEvent(pack,'school-human-verification',missionId,{competenceId,label,status:'verified',reviewedAt:String(m?.reviewed_at||'')});
+  pack.updatedAt=now();
+ });
+ return state
+}
 function licenceTaxonomy(packId){
  try{
   const p=window.LicensePacks?.get?.(packId);
@@ -182,6 +202,8 @@ function sync(){
   appendEvent(pack,'verification-mission',String(m.id||id),{competenceId:id,label:rec.label,status:rec.status});
  }
 
+ applySchoolVerified(state);
+
  if(out?.outcome?.result){
   const o=out.outcome;
   appendEvent(pack,'real-exam',String(o.recordedAt||o.date||o.result),{result:o.result,date:o.date,faults:Array.isArray(o.faults)?o.faults:[]});
@@ -254,7 +276,9 @@ function render(){
   const sm=statusMeta(r.status),ev=r.evidence||{};
   const detail=r.source==='proofloop-verification'
    ?'<small>'+esc(t('ProofLoop','ProofLoop','ProofLoop'))+' · '+Number(ev.independentSources||0)+'/'+Number(ev.sourceTotal||5)+' '+esc(t('fonti','sources','sorsi'))+(ev.requiresInstructorCheck?' · '+esc(t('verifica istruttore richiesta','instructor verification required','verifika tal-istruttur meħtieġa')):'')+'</small>'
-   :'<small>'+esc(t('Nessuna prova specifica ancora registrata','No specific evidence recorded yet','Għadha ma ġiet irreġistrata ebda evidenza speċifika'))+'</small>';
+   :r.source==='school-human-verification'
+    ?'<small>🏫 '+esc(t('Scuola · evidenza studente · verifica umana','School · student evidence · human review','Skola · evidenza tal-istudent · verifika umana'))+'</small>'
+    :'<small>'+esc(t('Nessuna prova specifica ancora registrata','No specific evidence recorded yet','Għadha ma ġiet irreġistrata ebda evidenza speċifika'))+'</small>';
   return '<div class="mdm-competence-row '+esc(r.status)+'"><div class="mdm-competence-status">'+sm.icon+'</div><div><strong>'+esc(r.label)+'</strong>'+detail+'</div><span>'+esc(sm.label)+'</span></div>';
  }).join('');
  const exam=pack.lastExamOutcome?'<div class="mdm-passport-exam">🏁 <strong>'+esc(String(pack.lastExamOutcome.result||'').toUpperCase())+'</strong><span>'+esc(pack.lastExamOutcome.date||'')+'</span></div>':'';
@@ -264,7 +288,7 @@ function render(){
   '<div class="mdm-passport-pack-title"><div><span>'+esc(active?t('Licenza attiva','Active licence','Liċenzja attiva'):t('Storico licenza','Licence history','Storja tal-liċenzja'))+'</span><strong>'+esc(packName(viewPack))+'</strong></div>'+exam+'</div>'+
   '<div class="mdm-passport-summary"><div><span>'+esc(t('Verificate','Verified','Ivverifikati'))+'</span><strong>'+c.verified+'</strong></div><div><span>'+esc(t('In verifica','In verification','Qed jiġu vverifikati'))+'</span><strong>'+c.in_verification+'</strong></div><div><span>'+esc(t('Contraddizioni','Contradictions','Kontradizzjonijiet'))+'</span><strong>'+c.contradictory+'</strong></div><div><span>'+esc(t('Da provare','Need evidence','Jeħtieġu evidenza'))+'</span><strong>'+c.insufficient+'</strong></div></div>'+
   '<div class="mdm-passport-map"><div class="mdm-passport-map-title"><strong>'+esc(t('Mappa competenze','Competence map','Mappa tal-kompetenzi'))+'</strong><span>'+esc(t('Nessun punteggio magico','No magic score','L-ebda punteġġ maġiku'))+'</span></div>'+rows+'</div>'+
-  '<div class="mdm-passport-rule">🔒 '+esc(t('Regola: una competenza diventa VERIFICATA solo con prova specifica e verifica richiesta. Le evidenze possono seguire il conducente tra licenze, ma la verifica non viene mai trasferita automaticamente.','Rule: a skill becomes VERIFIED only with specific evidence and the required verification. Evidence may follow the driver across licences, but verification is never transferred automatically.','Regola: ħila ssir IVVERIFIKATA biss b’evidenza speċifika u l-verifika meħtieġa. L-evidenza tista’ ssegwi lis-sewwieq bejn il-liċenzji, iżda l-verifika qatt ma tiġi trasferita awtomatikament.'))+'</div>'+
+  '<div class="mdm-passport-rule">🔒 '+esc(t('Regola: una competenza diventa VERIFICATA solo con prova specifica e verifica richiesta. Una missione scuola conta solo se è collegata esplicitamente a licenza e competenza, contiene evidenza dello studente ed è accettata da una verifica umana.','Rule: a skill becomes VERIFIED only with specific evidence and the required verification. A school mission counts only when explicitly linked to a licence and competence, contains student evidence, and is accepted by human review.','Regola: ħila ssir IVVERIFIKATA biss b’evidenza speċifika u l-verifika meħtieġa. Missjoni tal-iskola tgħodd biss meta tkun marbuta b’mod espliċitu ma’ liċenzja u ħila, ikollha evidenza tal-istudent u tiġi aċċettata minn verifika umana.'))+'</div>'+
   '<button id="mdmPassportCopy" type="button">'+esc(t('Copia Passport','Copy Passport','Ikkopja l-Passaport'))+'</button>';
  card.querySelectorAll('[data-mdm-passport-pack]').forEach(b=>b.onclick=()=>{viewPack=b.dataset.mdmPassportPack;render()});
  card.querySelector('#mdmPassportCopy')?.addEventListener('click',copyPassport);

@@ -1,16 +1,24 @@
-/* Malta Driving Master 45.8.38.19.4 — Telemetry bootstrap with Advanced Tools placement */
+/* Malta Driving Master 45.8.38.19.4.2 — Force-fresh Telemetry Advanced Tools loader */
 (function(){
 'use strict';
-if(window.MDM_SCHOOL_TELEMETRY_BOOTSTRAP_45838194)return;
-window.MDM_SCHOOL_TELEMETRY_BOOTSTRAP_45838194=true;
+if(window.MDM_SCHOOL_TELEMETRY_BOOTSTRAP_458381942)return;
+window.MDM_SCHOOL_TELEMETRY_BOOTSTRAP_458381942=true;
+
 function load(src,done){
  const s=document.createElement('script');
  s.src=src;
  s.async=false;
- if(done)s.onload=done;
+ s.onload=function(){if(done)done();};
  document.head.appendChild(s);
 }
-load('mdm-school-telemetry-engine-45838193.js?v=45838193-engine',function(){
- load('mdm-school-telemetry-placement-45838194.js?v=45838194-advanced-tools');
-});
+
+function loadPlacement(){
+ load('mdm-school-telemetry-placement-45838194.js?v=458381942-advanced-tools-forcefresh');
+}
+
+if(window.MDM_SCHOOL_TELEMETRY_4583819){
+ loadPlacement();
+}else{
+ load('mdm-school-telemetry-engine-45838193.js?v=458381942-engine-forcefresh',loadPlacement);
+}
 })();

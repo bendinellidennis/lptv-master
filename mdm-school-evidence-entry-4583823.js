@@ -1,11 +1,11 @@
-/* Malta Driving Master 45.8.38.23.2 — Safe dedicated School Evidence entry
+/* Malta Driving Master 45.8.38.23.3 — Safe dedicated School Evidence entry
    Uses the already verified Telemetry card as the primary mount anchor.
    Never replaces #screen, never overlays body, never modifies the School Home structure. */
 (function(){
 'use strict';
-if(window.MDM_SCHOOL_EVIDENCE_ENTRY_45838232)return;
-window.MDM_SCHOOL_EVIDENCE_ENTRY_45838232=true;
-const VERSION='45.8.38.23.2';
+if(window.MDM_SCHOOL_EVIDENCE_ENTRY_45838233)return;
+window.MDM_SCHOOL_EVIDENCE_ENTRY_45838233=true;
+const VERSION='45.8.38.23.3';
 const CARD_ID='mdmSchoolEvidenceSafeCard';
 function parse(v){try{return v?JSON.parse(v):null}catch(_){return null}}
 function lang(){try{return String(parse(localStorage.getItem('mdm-v1-settings'))?.lang||'en')}catch(_){return'en'}}
@@ -19,7 +19,6 @@ function advancedTitle(){
  return Array.from(document.querySelectorAll('main *')).find(el=>{const tx=norm(el.textContent||'');return tx.length<=90&&isAdvancedText(tx)})||null;
 }
 function advancedGrid(){
- /* Primary, safest anchor: Telemetry is already approved and visible in this exact grid. */
  const telemetry=document.getElementById('mdmSchoolTelemetryCard');
  if(telemetry?.parentElement)return telemetry.parentElement;
  const title=advancedTitle();
@@ -42,16 +41,10 @@ function makeCard(){
  card.id=CARD_ID;card.type='button';card.className='sch35-card blue';
  card.style.cssText='text-align:left;width:100%;cursor:pointer;border:0;font:inherit;color:inherit';
  card.innerHTML='<div style="font-size:30px;line-height:1;margin-bottom:12px">🔄</div><strong style="display:block;font-size:17px;margin-bottom:5px">'+tr('Evidenze studenti','Student Evidence','Evidenza tal-istudenti')+'</strong><span style="display:block;font-size:12px;opacity:.72">'+tr('Missioni, prove e verifica umana','Missions, evidence and human review','Missjonijiet, evidenza u verifika umana')+'</span>';
- card.addEventListener('click',function(){window.location.assign('mdm-school-evidence.html?v=45838232');});
+ card.addEventListener('click',function(){window.location.assign('mdm-school-evidence-45838233.html?v=45838233');});
  return card;
 }
-function place(){
- const grid=advancedGrid();
- if(!grid)return false;
- const card=makeCard();
- if(card.parentElement!==grid)grid.appendChild(card);
- return true;
-}
+function place(){const grid=advancedGrid();if(!grid)return false;const card=makeCard();if(card.parentElement!==grid)grid.appendChild(card);return true}
 function schedule(){[0,80,180,350,700,1200,2000,3500,5000,8000,12000,20000,30000].forEach(ms=>setTimeout(place,ms))}
 schedule();
 window.addEventListener('pageshow',schedule);

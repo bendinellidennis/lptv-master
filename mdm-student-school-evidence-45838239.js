@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.24 — Student School Evidence + Competence Passport Bridge
+/* Malta Driving Master 45.8.38.25 — Unified Mission Lifecycle Student Bridge
    Additive only: shows server-assigned school missions in Student Home.
    Does not replace #screen, does not alter local ProofLoop state. */
 (function(){
@@ -6,7 +6,7 @@
 if(window.MDM_STUDENT_SCHOOL_EVIDENCE_45838239)return;
 window.MDM_STUDENT_SCHOOL_EVIDENCE_45838239=true;
 
-const VERSION='45.8.38.24';
+const VERSION='45.8.38.25';
 const AUTH='mdm_auth_session_v4410';
 const HOST_ID='mdmStudentSchoolEvidence';
 const CACHE='mdm-school-evidence-cache-v1';
@@ -33,6 +33,15 @@ function cacheKey(){const id=String(session()?.user?.id||'').trim();return CACHE
 function saveMissionCache(items){try{localStorage.setItem(cacheKey(),JSON.stringify({schema:'mdm-school-evidence-cache-v1',version:VERSION,updatedAt:new Date().toISOString(),missions:Array.isArray(items)?items:[]}))}catch(_){}}
 function packLabel(id){return ({'MT-LPTV':'LPTV TAG','MT-B':'B','MT-A':'A','MT-C-CE':'C/CE','MT-D':'D'})[String(id||'')]||String(id||'')}
 function missionMeta(m){const p=m?.payload||{},parts=[];if(p.pack_id)parts.push(packLabel(p.pack_id));if(p.competence_label)parts.push(String(p.competence_label));return parts.join(' · ')}
+function missionId(m){return String(m?.mission_id||m?.id||'')}
+function currentMission(items){
+ const rows=Array.isArray(items)?items:(parse(localStorage.getItem(cacheKey()))?.missions||[]);
+ return rows.find(m=>['assigned','revision_requested','evidence_submitted'].includes(String(m?.status||'')))||null;
+}
+function historyMissionRows(items,current){
+ const cid=missionId(current);
+ return (Array.isArray(items)?items:[]).filter(m=>missionId(m)!==cid&&['assigned','revision_requested','evidence_submitted','accepted'].includes(String(m?.status||''))).slice(0,8);
+}
 function missionTitle(m){return String(m?.payload?.title||m?.payload?.objective||t('Missione della scuola','School mission','Missjoni tal-iskola'))}
 function missionObjective(m){const x=String(m?.payload?.objective||'').trim();return x&&x!==missionTitle(m)?x:''}
 function statusLabel(s){
@@ -108,7 +117,8 @@ function openEditor(mid,title){
    if(!summary){err.style.display='block';err.textContent=t('Scrivi prima una breve evidenza.','Write a short evidence note first.','Ikteb nota qasira tal-evidenza l-ewwel.');return}
    busy=true;send.disabled=true;
    try{
-     const d=await rpc('mdm_student_submit_mission_evidence',{p_mission_id:mid,p_evidence:{summary,source:'student-school-evidence',version:VERSION,submittedAt:new Date().toISOString()}});
+     const automaticEvidence=window.MDM_PROOFLOOP_VERIFICATION?.evidenceForServerMission?.(mid)||null;
+     const d=await rpc('mdm_student_submit_mission_evidence',{p_mission_id:mid,p_evidence:{summary,source:'unified-mission-lifecycle',version:VERSION,submittedAt:new Date().toISOString(),automaticEvidence}});
      if(d?.ok===false)throw new Error(String(d.error||'submit_failed'));
      try{localStorage.removeItem(draftKey(mid))}catch(_){}
      closeEditor();
@@ -132,9 +142,12 @@ async function load(force=false){
  try{
   const d=await rpc('mdm_student_evidence_list_missions',{}),items=Array.isArray(d?.missions)?d.missions:[];
   saveMissionCache(items);
+  const current=currentMission(items);
+  try{window.MDM_PROOFLOOP_VERIFICATION?.unifiedCurrent?.(window.MDM_PROOFLOOP_ENGINE?.evaluate?.()||null)}catch(_){}
   try{window.MDM_DRIVER_COMPETENCE_PASSPORT?.sync?.();window.MDM_DRIVER_COMPETENCE_PASSPORT?.render?.()}catch(_){}
-  const rows=items.filter(m=>['assigned','revision_requested','evidence_submitted','accepted'].includes(String(m?.status||''))).slice(0,8);
-  if(!rows.length){document.getElementById(HOST_ID)?.remove();return false}
+  try{window.MDM_PROOFLOOP_UI?.render?.();window.MDM_COMPACT_HOME_45836?.refresh?.()}catch(_){}
+  const rows=historyMissionRows(items,current);
+  if(!rows.length){document.getElementById(HOST_ID)?.remove();return true}
   const a=anchor();if(!a)return false;
   installStyle();
   let host=document.getElementById(HOST_ID);
@@ -145,7 +158,7 @@ async function load(force=false){
   const hasDraft=Array.from(host.querySelectorAll('textarea')).some(x=>String(x.value||'').length>0);
   if(!force&&host.dataset.sig===sig)return true;
   if(!force&&(editing||hasDraft))return true;
-  host.innerHTML='<div class="sse-head"><div><small>MDM · '+VERSION+'</small><strong>🏫 '+esc(t('Missioni della scuola','School missions','Missjonijiet tal-iskola'))+'</strong></div><button class="sse-refresh" type="button">↻</button></div><div class="sse-list">'+rows.map(cardHtml).join('')+'</div>';
+  host.innerHTML='<div class="sse-head"><div><small>MDM · '+VERSION+'</small><strong>🏫 '+esc(t('Storico e altre missioni','History and other missions','Storja u missjonijiet oħra'))+'</strong></div><button class="sse-refresh" type="button">↻</button></div><div class="sse-list">'+rows.map(cardHtml).join('')+'</div>';
   host.dataset.sig=sig;
   bind(host);return true;
  }catch(_){return false}
@@ -155,5 +168,5 @@ schedule();
 window.addEventListener('pageshow',schedule);
 window.addEventListener('popstate',schedule);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
-window.MDM_STUDENT_SCHOOL_EVIDENCE_45838239_API=Object.freeze({version:VERSION,load});
+window.MDM_STUDENT_SCHOOL_EVIDENCE_45838239_API=Object.freeze({version:VERSION,load,openEditor,currentMission:()=>currentMission()});
 })();

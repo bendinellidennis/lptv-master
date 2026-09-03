@@ -1,4 +1,9 @@
 
+/* 45.8.38.19.4.5 — Telemetry card-first paint guard.
+   The operational panel is never allowed to paint until the Advanced Tools card opens it. */
+#mdmSchoolTelemetryPanel{display:none!important}
+#mdmSchoolTelemetryPanel[data-mdm-open="1"]{display:block!important}
+
 .sch35,.sch35-profile{max-width:700px;margin:0 auto;padding-bottom:26px}
 .sch35-head{display:grid;grid-template-columns:64px 1fr auto;align-items:center;gap:14px;padding:17px;border-radius:22px;background:linear-gradient(145deg,#073a55,#0c536c);color:#fff;border:1px solid rgba(51,199,211,.28);box-shadow:0 10px 26px rgba(7,49,70,.12)}
 .sch35-logo{width:64px;height:64px;border-radius:16px;object-fit:cover;background:#fff}.sch35-logo-fallback{display:grid;place-items:center;font-size:34px}

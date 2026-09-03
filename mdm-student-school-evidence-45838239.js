@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.23.10 — Student School Evidence Bridge
+/* Malta Driving Master 45.8.38.23.11 — Student School Evidence Bridge
    Additive only: shows server-assigned school missions in Student Home.
    Does not replace #screen, does not alter local ProofLoop state. */
 (function(){
@@ -52,7 +52,7 @@ function installStyle(){
  +'#'+HOST_ID+' .sse-title{font-size:15px;font-weight:900;line-height:1.2}'
  +'#'+HOST_ID+' .sse-pill{font-size:10px;font-weight:900;border-radius:999px;padding:5px 8px;background:#edf5f7;white-space:nowrap}'
  +'#'+HOST_ID+' .sse-objective{font-size:12px;line-height:1.35;color:#617985;margin:8px 0 0}'
- +'#'+HOST_ID+' textarea{width:100%;min-height:82px;margin-top:10px;border:1px solid #cadde3;border-radius:13px;padding:11px;background:#fff;color:#103446;font-family:inherit;font-size:16px!important;line-height:1.35;resize:vertical;-webkit-text-size-adjust:100%}'
+ +'#'+HOST_ID+' .sse-open-editor{margin-top:10px;border:0;border-radius:13px;padding:12px 14px;background:#0b7488;color:#fff;font-weight:900}'
  +'#'+HOST_ID+' .sse-submit{margin-top:8px;border:0;border-radius:13px;padding:11px 13px;background:#0b7488;color:#fff;font-weight:900}'
  +'#'+HOST_ID+' .sse-wait{margin-top:9px;padding:9px 10px;border-radius:12px;background:#eef7f2;color:#315f47;font-size:12px;font-weight:750}'
  +'#'+HOST_ID+' .sse-revision{margin-top:8px;color:#8b6425;font-size:12px;font-weight:750}'
@@ -66,29 +66,60 @@ function cardHtml(m){
   +'<div class="sse-top"><div class="sse-title">🎯 '+esc(missionTitle(m))+'</div><span class="sse-pill">'+esc(statusLabel(m.status))+'</span></div>'
   +(missionObjective(m)?'<p class="sse-objective">'+esc(missionObjective(m))+'</p>':'')
   +(m.status==='revision_requested'&&review?'<div class="sse-revision">↺ '+esc(review)+'</div>':'')
-  +(canSubmit(m)?'<textarea maxlength="1200" placeholder="'+esc(t('Descrivi la prova o ciò che hai completato','Describe the evidence or what you completed','Iddeskrivi l-evidenza jew dak li lestejt'))+'"></textarea><button class="sse-submit" type="button">📤 '+esc(t('Invia evidenza alla scuola','Send evidence to school','Ibgħat l-evidenza lill-iskola'))+'</button><div class="sse-error" hidden></div>':'')
+  +(canSubmit(m)?'<button class="sse-open-editor" type="button">✍️ '+esc(t('Scrivi e invia evidenza','Write and send evidence','Ikteb u ibgħat evidenza'))+'</button><div class="sse-error" hidden></div>':'')
   +(m.status==='evidence_submitted'?'<div class="sse-wait">✓ '+esc(t('Inviata. In attesa della verifica della scuola.','Sent. Waiting for school review.','Mibgħuta. Qed tistenna r-reviżjoni tal-iskola.'))+'</div>':'')
   +(m.status==='accepted'?'<div class="sse-wait">✅ '+esc(t('Verifica completata dalla scuola.','School review completed.','Ir-reviżjoni tal-iskola tlestiet.'))+'</div>':'')
   +'</article>';
 }
 
+function draftKey(mid){return 'mdm-school-evidence-draft::'+String(mid||'')}
+function closeEditor(){
+ const m=document.getElementById('mdmEvidenceEditorModal');
+ if(m)m.remove();
+}
+function openEditor(mid,title){
+ closeEditor();
+ const modal=document.createElement('div');
+ modal.id='mdmEvidenceEditorModal';
+ modal.style.cssText='position:fixed;inset:0;z-index:100000;background:rgba(3,24,38,.74);display:flex;align-items:flex-start;justify-content:center;padding:calc(env(safe-area-inset-top) + 18px) 14px calc(env(safe-area-inset-bottom) + 18px);overflow:auto;-webkit-overflow-scrolling:touch';
+ const draft=localStorage.getItem(draftKey(mid))||'';
+ modal.innerHTML='<div style="width:min(680px,100%);margin:auto 0;background:#fff;border-radius:22px;padding:18px;box-shadow:0 18px 60px rgba(0,0,0,.28);color:#103446">'
+  +'<div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><small style="display:block;font-size:10px;letter-spacing:.08em;font-weight:900;color:#0b8798">MDM · '+VERSION+'</small><strong style="display:block;font-size:19px;line-height:1.2;margin-top:4px">🎯 '+esc(title)+'</strong></div><button id="mdmEvidenceEditorClose" type="button" style="border:1px solid #c8dce2;background:#fff;border-radius:12px;width:42px;height:42px;font-size:22px">×</button></div>'
+  +'<textarea id="mdmEvidenceEditorText" maxlength="1200" style="box-sizing:border-box;width:100%;min-height:150px;margin-top:14px;border:1px solid #bfd5dd;border-radius:14px;padding:13px;background:#fff;color:#103446;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;font-size:18px!important;line-height:1.4;resize:vertical;-webkit-text-size-adjust:100%" placeholder="'+esc(t('Descrivi la prova o ciò che hai completato','Describe the evidence or what you completed','Iddeskrivi l-evidenza jew dak li lestejt'))+'"></textarea>'
+  +'<div id="mdmEvidenceEditorError" style="display:none;margin-top:8px;color:#9a4d3c;font-size:13px"></div>'
+  +'<button id="mdmEvidenceEditorSend" type="button" style="margin-top:12px;width:100%;border:0;border-radius:14px;padding:13px 15px;background:#0b7488;color:#fff;font-size:16px;font-weight:900">📤 '+esc(t('Invia evidenza alla scuola','Send evidence to school','Ibgħat l-evidenza lill-iskola'))+'</button>'
+  +'</div>';
+ document.body.appendChild(modal);
+ const ta=modal.querySelector('#mdmEvidenceEditorText');
+ ta.value=draft;
+ ta.addEventListener('input',()=>{try{localStorage.setItem(draftKey(mid),ta.value)}catch(_){}});
+ modal.querySelector('#mdmEvidenceEditorClose').onclick=closeEditor;
+ modal.addEventListener('click',ev=>{if(ev.target===modal)closeEditor()});
+ modal.querySelector('#mdmEvidenceEditorSend').onclick=async()=>{
+   if(busy)return;
+   const summary=String(ta.value||'').trim(),err=modal.querySelector('#mdmEvidenceEditorError'),send=modal.querySelector('#mdmEvidenceEditorSend');
+   if(!summary){err.style.display='block';err.textContent=t('Scrivi prima una breve evidenza.','Write a short evidence note first.','Ikteb nota qasira tal-evidenza l-ewwel.');return}
+   busy=true;send.disabled=true;
+   try{
+     const d=await rpc('mdm_student_submit_mission_evidence',{p_mission_id:mid,p_evidence:{summary,source:'student-school-evidence',version:VERSION,submittedAt:new Date().toISOString()}});
+     if(d?.ok===false)throw new Error(String(d.error||'submit_failed'));
+     try{localStorage.removeItem(draftKey(mid))}catch(_){}
+     closeEditor();
+     await load(true);
+   }catch(_){
+     err.style.display='block';
+     err.textContent=t('Invio non riuscito. Riprova.','Could not send. Try again.','Ma setax jintbagħat. Erġa’ pprova.');
+   }finally{busy=false;send.disabled=false}
+ };
+ setTimeout(()=>{try{ta.focus({preventScroll:true});const n=ta.value.length;ta.setSelectionRange(n,n)}catch(_){}},180);
+}
 function bind(host){
  host.querySelector('.sse-refresh')?.addEventListener('click',()=>load(true));
- host.querySelectorAll('.sse-submit').forEach(btn=>btn.addEventListener('click',async()=>{
-  if(busy)return;
-  const card=btn.closest('[data-mid]'),ta=card?.querySelector('textarea'),err=card?.querySelector('.sse-error');
-  const summary=String(ta?.value||'').trim(),mid=String(card?.dataset.mid||'');
-  if(!mid||!summary){if(err){err.hidden=false;err.textContent=t('Scrivi prima una breve evidenza.','Write a short evidence note first.','Ikteb nota qasira tal-evidenza l-ewwel.')}return}
-  busy=true;btn.disabled=true;
-  try{
-   const d=await rpc('mdm_student_submit_mission_evidence',{p_mission_id:mid,p_evidence:{summary,source:'student-school-evidence',version:VERSION,submittedAt:new Date().toISOString()}});
-   if(d?.ok===false)throw new Error(String(d.error||'submit_failed'));
-   await load(true);
-  }catch(_){if(err){err.hidden=false;err.textContent=t('Invio non riuscito. Riprova.','Could not send. Try again.','Ma setax jintbagħat. Erġa’ pprova.')}}
-  finally{busy=false;btn.disabled=false}
+ host.querySelectorAll('.sse-open-editor').forEach(btn=>btn.addEventListener('click',()=>{
+   const card=btn.closest('[data-mid]'),mid=String(card?.dataset.mid||''),title=String(card?.querySelector('.sse-title')?.textContent||'').replace(/^🎯\s*/,'');
+   if(mid)openEditor(mid,title);
  }));
 }
-
 async function load(force=false){
  if(!home()||!session())return false;
  try{

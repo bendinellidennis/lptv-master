@@ -1,7 +1,8 @@
-/* Malta Driving Master 45.8.38.19 — School Telemetry Evidence Bridge */
+/* Malta Driving Master 45.8.38.19.2 — Dedicated School Telemetry Section Mount Fix */
 (function(){
 'use strict';
 if(window.MDM_SCHOOL_TELEMETRY_4583819)return;
+const VERSION='45.8.38.19.2';
 
 const AUTH='mdm_auth_session_v4410';
 const TELEMETRY_KEY='mdm-v1-real-road-telemetry';
@@ -111,16 +112,21 @@ function onGeoError(err){
 }
 async function loadStudents(){
  const d=await rpc('mdm_school_list_active_students',{});
- if(d.authorized!==true)return [];
+ if(d.authorized!==true){
+  schoolStudents=[];
+  selectedStudent='';
+  return {authorized:false,rows:[]};
+ }
  schoolStudents=Array.isArray(d.students)?d.students:[];
  if(!selectedStudent&&schoolStudents[0])selectedStudent=String(schoolStudents[0].student_user_id||'');
- return schoolStudents;
+ return {authorized:true,rows:schoolStudents};
 }
 function panelHtml(){
+ const hasStudents=schoolStudents.length>0;
  const opts=schoolStudents.map(s=>'<option value="'+esc(String(s.student_user_id||''))+'" '+(String(s.student_user_id||'')===selectedStudent?'selected':'')+'>'+esc(String(s.student_name||s.student_email||t('Studente','Student','Student')))+'</option>').join('');
- return '<section id="mdmSchoolTelemetryPanel" style="margin:14px 0;padding:15px;border:1px solid rgba(15,113,128,.22);border-radius:18px;background:rgba(238,248,250,.92);color:#173f4c">'+
-  '<div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><small style="font-weight:900;letter-spacing:.07em">MDM · '+VERSION+'</small><h3 style="margin:4px 0 5px">🚗 '+esc(t('Telemetria lezione pratica','Practical lesson telemetry','Telemetrija tal-lezzjoni prattika'))+'</h3><p style="margin:0;font-size:12px;line-height:1.4;opacity:.78">'+esc(t('La Scuola registra la sessione e la attribuisce allo studente selezionato. Il telefono deve restare fissato durante la guida.','The school records the session and assigns it to the selected learner. The phone must remain mounted while driving.','L-iskola tirreġistra s-sessjoni u torbotha mal-istudent magħżul. It-telefon għandu jibqa’ mwaħħal waqt is-sewqan.'))+'</p></div><span style="font-size:28px">📡</span></div>'+
-  '<label style="display:block;margin-top:12px"><span style="display:block;font-size:10px;font-weight:900;margin-bottom:5px">'+esc(t('Studente','Student','Student'))+'</span><select id="mdmTelemetryStudent" style="width:100%;padding:10px;border-radius:11px;border:1px solid rgba(15,113,128,.22);background:#fff">'+opts+'</select></label>'+
+ return '<section id="mdmSchoolTelemetryPanel" data-mdm-section="school-telemetry" style="margin:14px 0;padding:15px;border:1px solid rgba(15,113,128,.22);border-radius:18px;background:rgba(238,248,250,.92);color:#173f4c">'+
+  '<div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><small style="font-weight:900;letter-spacing:.07em">'+esc(t('SEZIONE SCUOLA · TELEMETRIA','SCHOOL SECTION · TELEMETRY','TAQSIMA SKOLA · TELEMETRIJA'))+'</small><h3 style="margin:4px 0 5px">📡 '+esc(t('Telemetria lezione pratica','Practical lesson telemetry','Telemetrija tal-lezzjoni prattika'))+'</h3><p style="margin:0;font-size:12px;line-height:1.4;opacity:.78">'+esc(t('Sezione dedicata esclusivamente alla telemetria della lezione pratica. La Scuola registra la sessione e la attribuisce allo studente selezionato. Il telefono deve restare fissato durante la guida.','Dedicated section exclusively for practical-lesson telemetry. The school records the session and assigns it to the selected learner. The phone must remain mounted while driving.','Taqsima ddedikata esklussivament għat-telemetrija tal-lezzjoni prattika. L-iskola tirreġistra s-sessjoni u torbotha mal-istudent magħżul. It-telefon għandu jibqa’ mwaħħal waqt is-sewqan.'))+'</p></div><span style="font-size:28px">🚗</span></div>'+
+  '<label style="display:block;margin-top:12px"><span style="display:block;font-size:10px;font-weight:900;margin-bottom:5px">'+esc(t('Studente','Student','Student'))+'</span><select id="mdmTelemetryStudent" '+(hasStudents?'':'disabled')+' style="width:100%;padding:10px;border-radius:11px;border:1px solid rgba(15,113,128,.22);background:#fff">'+opts+'</select></label>'+
   '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:11px">'+
    '<div style="padding:8px;border-radius:10px;background:#fff"><small>'+esc(t('Durata','Duration','Tul'))+'</small><strong id="mdmTelemetryDuration" style="display:block">0:00</strong></div>'+
    '<div style="padding:8px;border-radius:10px;background:#fff"><small>'+esc(t('Distanza','Distance','Distanza'))+'</small><strong id="mdmTelemetryDistance" style="display:block">0.00 km</strong></div>'+
@@ -128,11 +134,12 @@ function panelHtml(){
    '<div style="padding:8px;border-radius:10px;background:#fff"><small>'+esc(t('Campioni','Samples','Kampjuni'))+'</small><strong id="mdmTelemetrySamples" style="display:block">0</strong></div>'+
   '</div>'+
   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px">'+
-   '<button id="mdmTelemetryStart" type="button" style="border:0;border-radius:12px;padding:11px;font-weight:900;background:#0f7180;color:#fff">▶ '+esc(t('Avvia telemetria','Start telemetry','Ibda t-telemetrija'))+'</button>'+
+   '<button id="mdmTelemetryStart" type="button" '+(hasStudents?'':'disabled')+' style="border:0;border-radius:12px;padding:11px;font-weight:900;background:#0f7180;color:#fff;'+(hasStudents?'':'opacity:.5')+'">▶ '+esc(t('Avvia telemetria','Start telemetry','Ibda t-telemetrija'))+'</button>'+
    '<button id="mdmTelemetryStop" type="button" disabled style="border:0;border-radius:12px;padding:11px;font-weight:900;background:#173f4c;color:#fff;opacity:.5">■ '+esc(t('Termina e salva','Stop & save','Waqqaf u salva'))+'</button>'+
   '</div>'+
   '<div id="mdmSchoolTelemetryStatus" style="margin-top:10px;padding:9px 10px;border-radius:10px;background:rgba(15,113,128,.08);font-size:11px">'+esc(t('Pronta. Seleziona lo studente e avvia prima di partire.','Ready. Select the learner and start before driving.','Lesta. Agħżel l-istudent u ibda qabel issuq.'))+'</div>'+
   '<small style="display:block;margin-top:9px;opacity:.65">'+esc(t('Privacy: MDM salva metriche della sessione e coordinate iniziale/finale approssimate (~100 m), non il percorso GPS completo.','Privacy: MDM stores session metrics and approximate start/end coordinates (~100 m), not the full GPS track.','Privatezza: MDM jaħżen il-metriċi tas-sessjoni u koordinati approssimattivi tal-bidu/tmiem (~100 m), mhux ir-rotta GPS sħiħa.'))+'</small>'+
+  '<small style="display:block;margin-top:5px;opacity:.45">MDM '+VERSION+'</small>'+
  '</section>';
 }
 function bindPanel(){
@@ -150,14 +157,21 @@ async function mountSchool(){
  if(document.getElementById('mdmSchoolTelemetryPanel'))return true;
  mountBusy=true;
  try{
-  const rows=await loadStudents();
-  if(!rows.length)return false;
+  let loaded={authorized:false,rows:[]},loadError='';
+  try{loaded=await loadStudents()}catch(e){schoolStudents=[];selectedStudent='';loadError=String(e?.message||e||'')}
   const wrap=document.createElement('div');
   wrap.innerHTML=panelHtml();
   const panel=wrap.firstElementChild;
   const anchor=host.querySelector('.sch35-profile-entry')||host.querySelector('.sch35-head');
   if(anchor)anchor.insertAdjacentElement('afterend',panel);else host.insertBefore(panel,host.firstChild||null);
   bindPanel();
+  if(loadError){
+   setPanelStatus(t('Telemetria disponibile, ma non riesco a caricare gli studenti: ','Telemetry is available, but learners could not be loaded: ','It-telemetrija hija disponibbli, iżda l-istudenti ma setgħux jitgħabbew: ')+loadError,false);
+  }else if(loaded.authorized!==true){
+   setPanelStatus(t('Sezione Telemetria visibile, ma questo account non è autorizzato come Scuola.','Telemetry section is visible, but this account is not authorized as a School.','It-taqsima tat-Telemetrija tidher, iżda dan il-kont mhux awtorizzat bħala Skola.'),false);
+  }else if(!loaded.rows.length){
+   setPanelStatus(t('Sezione Telemetria pronta. Nessuno studente attivo disponibile da selezionare.','Telemetry section is ready. No active learner is currently available to select.','It-taqsima tat-Telemetrija lesta. Bħalissa m’hemm l-ebda student attiv disponibbli biex jintgħażel.'),null);
+  }
   return true;
  }catch(_){return false}
  finally{mountBusy=false}
@@ -262,8 +276,7 @@ async function syncStudentTelemetry(){
  finally{syncBusy=false}
 }
 function schedule(){
- setTimeout(mountSchool,120);
- setTimeout(mountSchool,700);
+ [120,400,900,1600,3000,5000].forEach(ms=>setTimeout(mountSchool,ms));
  setTimeout(syncStudentTelemetry,250);
  setTimeout(syncStudentTelemetry,1400);
 }

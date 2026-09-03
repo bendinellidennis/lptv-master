@@ -1,0 +1,102 @@
+name: Package MDM Runtime FULL 45.8.36.1
+on:
+  push:
+    branches:
+      - package-runtime-full-458361
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prune historical snapshots only
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -type f -name 'BUILD_CHECK*' -delete
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          keep = {
+              'app-3994.js',
+              'app-3994-4582852-part-a.js',
+              'app-3994-458293-part-b1.js',
+              'app-3994-458293-part-b2.js',
+          }
+
+          for p in Path('.').glob('app-3994-*.js'):
+              if p.name not in keep:
+                  p.unlink()
+
+          print('Kept current app runtime snapshots:')
+          for name in sorted(keep):
+              print(' -', name)
+          PY
+
+      - name: Validate current runtime references
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, sys
+
+          root = Path('.')
+          index = (root / 'index.html').read_text(encoding='utf-8', errors='ignore')
+
+          refs = set(
+              m.group(1).split('?', 1)[0]
+              for m in re.finditer(r'(?:src|href)=["\']([^"\'#]+)', index)
+              if not m.group(1).startswith(('http://','https://','data:','#'))
+          )
+          refs.update({'sw.js','manifest.webmanifest'})
+
+          missing = [r for r in sorted(refs) if r and not (root / r).exists()]
+          if missing:
+              print('Missing index/runtime references:')
+              for r in missing: print(' -', r)
+              sys.exit(1)
+
+          # Detect any retained text file that still points to a pruned app-3994 snapshot.
+          bad = []
+          pat = re.compile(r'(?<![A-Za-z0-9_./-])(app-3994-[A-Za-z0-9_. -]+\.js)')
+          for p in root.rglob('*'):
+              if not p.is_file() or p.suffix.lower() not in {'.js','.html','.css','.json','.webmanifest'}:
+                  continue
+              if '.git' in p.parts:
+                  continue
+              try:
+                  text = p.read_text(encoding='utf-8', errors='ignore')
+              except Exception:
+                  continue
+              for name in set(pat.findall(text)):
+                  target = root / name
+                  if not target.exists():
+                      bad.append((str(p), name))
+
+          if bad:
+              print('Retained runtime points to pruned snapshot(s):')
+              for src, name in bad[:100]:
+                  print(f' - {src} -> {name}')
+              sys.exit(1)
+
+          print(f'Runtime validation OK: {len(refs)} direct references present.')
+          PY
+
+      - name: Build clean runtime FULL ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .git .github
+          zip -r -q MDM_FULL_45_8_36_1_COMPACT_HOME_APPROVED_RUNTIME.zip .             -x 'MDM_FULL_45_8_36_1_COMPACT_HOME_APPROVED_RUNTIME.zip'
+
+      - name: Upload FULL
+        uses: actions/upload-artifact@v4
+        with:
+          name: MDM_FULL_45_8_36_1_COMPACT_HOME_APPROVED_RUNTIME
+          path: MDM_FULL_45_8_36_1_COMPACT_HOME_APPROVED_RUNTIME.zip
+          if-no-files-found: error

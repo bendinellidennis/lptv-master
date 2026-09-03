@@ -10,17 +10,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Prepare FULL
+      - name: Diagnose repository size
         shell: bash
         run: |
-          rm -f BUILD_CHECK_*.txt
-          rm -rf .git .github
-          mkdir -p /tmp/mdmfull
-          zip -r -q /tmp/mdmfull/MDM_FULL_45_8_38_19_4_5_APPROVED.zip .
-      - name: Upload FULL
-        uses: actions/upload-artifact@v4
-        with:
-          name: MDM_FULL_45_8_38_19_4_5_APPROVED
-          path: /tmp/mdmfull/MDM_FULL_45_8_38_19_4_5_APPROVED.zip
-          if-no-files-found: error
-          retention-days: 1
+          echo 'ROOT SIZES'
+          du -sh -- * .[^.]* 2>/dev/null | sort -h | tail -80
+          echo 'LARGEST FILES'
+          find . -type f -not -path './.git/*' -printf '%s %p\n' | sort -n | tail -80

@@ -1,8 +1,8 @@
 'use strict';
 
-/* Malta Driving Master 45.8.35.1 */
+/* Malta Driving Master 45.8.36 */
 
-const CACHE = 'mdm-build-45-8-35-1-passport-failsafe';
+const CACHE = 'mdm-build-45-8-36-compact-home';
 const CORE = [
   './',
   './index.html',

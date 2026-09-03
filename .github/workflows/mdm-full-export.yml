@@ -1,0 +1,26 @@
+name: MDM Full Export 45.8.38.19.4.5
+on:
+  push:
+    branches:
+      - mdm-full-export-458381945
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Prepare FULL
+        shell: bash
+        run: |
+          rm -f BUILD_CHECK_*.txt
+          rm -rf .git .github
+          mkdir -p /tmp/mdmfull
+          zip -r -q /tmp/mdmfull/MDM_FULL_45_8_38_19_4_5_APPROVED.zip .
+      - name: Upload FULL
+        uses: actions/upload-artifact@v4
+        with:
+          name: MDM_FULL_45_8_38_19_4_5_APPROVED
+          path: /tmp/mdmfull/MDM_FULL_45_8_38_19_4_5_APPROVED.zip
+          if-no-files-found: error
+          retention-days: 1

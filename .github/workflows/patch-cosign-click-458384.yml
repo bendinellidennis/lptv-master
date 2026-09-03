@@ -1,0 +1,58 @@
+name: Patch CoSign Click 45.8.38.4
+on:
+  push:
+    branches: [cosign-click-bridge-staging-458384]
+    paths: ['.github/workflows/patch-cosign-click-458384.yml']
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cosign-click-bridge-staging-458384
+      - name: Patch both co-sign bridges
+        shell: python
+        run: |
+          from pathlib import Path
+          insert = r'''
+function installGlobalCosignClickBridge(){
+ if(window.__MDM_COSIGN_GLOBAL_CLICK_458384)return;
+ window.__MDM_COSIGN_GLOBAL_CLICK_458384=true;
+ document.addEventListener('click',async function(ev){
+  const btn=ev.target&&ev.target.closest?ev.target.closest('[data-cosign-copy]'):null;
+  if(!btn)return;
+  ev.preventDefault();
+  ev.stopPropagation();
+  btn.textContent='⏳ '+t('Preparazione codice…','Preparing code…','Qed jitħejja l-kodiċi…');
+  try{await copyCosignCode()}catch(_){
+   btn.textContent='⚠️ '+t('Errore copia','Copy error','Żball fil-kopja');
+  }
+ },true);
+}
+'''
+          anchor='function schedule(){'
+          for name in ['mdm-instructor-cosign-458381.js','mdm-instructor-cosign-458382.js']:
+              p=Path(name); s=p.read_text(encoding='utf-8')
+              if '__MDM_COSIGN_GLOBAL_CLICK_458384' in s: continue
+              if anchor not in s: raise SystemExit(f'schedule anchor missing in {name}')
+              s=s.replace(anchor,insert+'\n'+anchor,1)
+              end='installOverlay();'
+              if end not in s: raise SystemExit(f'installOverlay call missing in {name}')
+              s=s.replace(end,end+'\ninstallGlobalCosignClickBridge();',1)
+              p.write_text(s,encoding='utf-8')
+          Path('.github/workflows/patch-cosign-click-458384.yml').unlink(missing_ok=True)
+      - name: Validate
+        run: |
+          node --check mdm-instructor-cosign-458381.js
+          node --check mdm-instructor-cosign-458382.js
+          grep -q '__MDM_COSIGN_GLOBAL_CLICK_458384' mdm-instructor-cosign-458381.js
+          grep -q '__MDM_COSIGN_GLOBAL_CLICK_458384' mdm-instructor-cosign-458382.js
+      - name: Commit
+        run: |
+          git config user.name 'bendinellidennis'
+          git config user.email 'bendinellidennis@gmail.com'
+          git add -A
+          git commit -m '45.8.38.4 Global Co-Sign Click Bridge'
+          git push origin HEAD:cosign-click-bridge-staging-458384

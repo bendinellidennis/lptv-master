@@ -1,10 +1,10 @@
-/* Malta Driving Master 45.8.31.49.20 — synchronized Home -> Student activation queue.
+/* Malta Driving Master 45.8.34.4 — PWA Update Reliability + synchronized Home -> Student activation queue.
    Home alert no longer navigates through Profile.
    One tap opens the exact real seat-assignment queue as a focused modal over the current screen.
    SHADOW / enforcement unchanged. */
 (function(){
   'use strict';
-  const RELEASE='45.8.31.49.20';
+  const RELEASE='45.8.34.4';
   const AUTH_KEY='mdm_auth_session_v4410';
   let alertRequestSeq=0;
   let latestPendingRows=[];
@@ -35,7 +35,39 @@
     }finally{clearTimeout(timer);}
   }
 
-  async function hardRefresh(){try{const regs=await navigator.serviceWorker?.getRegistrations?.();if(Array.isArray(regs))await Promise.all(regs.map(async reg=>{try{await reg.update();}catch(_){}}));if(window.caches){const keys=await caches.keys();await Promise.all(keys.map(k=>caches.delete(k)));}}catch(_){}try{const url=new URL(location.href);url.searchParams.set('mdm_release',RELEASE.replace(/\./g,'_'));location.replace(url.toString());}catch(_){location.reload();}}
+  async function hardRefresh(){
+    const stamp=Date.now().toString(36);
+    try{
+      const regs=await navigator.serviceWorker?.getRegistrations?.();
+      if(Array.isArray(regs)&&regs.length){
+        await Promise.all(regs.map(async reg=>{
+          try{await reg.update();}catch(_){}
+          try{await reg.unregister();}catch(_){}
+        }));
+      }else{
+        const reg=await navigator.serviceWorker?.getRegistration?.();
+        if(reg){
+          try{await reg.update();}catch(_){}
+          try{await reg.unregister();}catch(_){}
+        }
+      }
+    }catch(_){}
+    try{
+      if(window.caches){
+        const keys=await caches.keys();
+        await Promise.all(keys.map(k=>caches.delete(k)));
+      }
+    }catch(_){}
+    try{
+      const base=new URL(location.href);
+      base.searchParams.set('mdm_release',RELEASE.replace(/\./g,'_'));
+      base.searchParams.set('mdm_update',stamp);
+      base.hash='';
+      location.replace(base.toString());
+    }catch(_){
+      location.reload();
+    }
+  }
   function bindRefresh(){const btn=document.getElementById('refreshAppBtn');if(!btn||btn.dataset.mdmPwaRefresh==='1')return;btn.dataset.mdmPwaRefresh='1';btn.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();hardRefresh();},true);}
 
   function removeAlert(){document.getElementById('mdmSchoolActivationAlert')?.remove();}

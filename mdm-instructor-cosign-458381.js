@@ -1,7 +1,7 @@
 /* Malta Driving Master 45.8.38.1 — Instructor Co-Sign Strict Binding Fix */
 (function(){
 'use strict';
-if(window.MDM_INSTRUCTOR_COSIGN_45838)return;
+if(window.MDM_INSTRUCTOR_COSIGN_458381)return;
 
 const VERSION='45.8.38.1';
 const AUTH='mdm_auth_session_v4410';
@@ -228,5 +228,5 @@ const screen=document.getElementById('screen');if(screen){const o=new MutationOb
 window.addEventListener('pageshow',()=>{schedule();syncStudent();refreshSchoolContext()});
 window.addEventListener('storage',schedule);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){schedule();syncStudent()}});
-window.MDM_INSTRUCTOR_COSIGN_45838=Object.freeze({version:VERSION,syncStudent,submitForReview,refreshSchoolContext,loadSchoolMissions,schoolReview,copyCosignCode,schoolAssignCode,current:loadState});
+window.MDM_INSTRUCTOR_COSIGN_458381=Object.freeze({version:VERSION,syncStudent,submitForReview,refreshSchoolContext,loadSchoolMissions,schoolReview,copyCosignCode,schoolAssignCode,current:loadState});
 })();

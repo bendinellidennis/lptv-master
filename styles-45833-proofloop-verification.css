@@ -1,0 +1,18 @@
+/* Malta Driving Master 45.8.33 — ProofLoop Verification Missions */
+.mdm-proofloop-verification{margin-top:12px;padding:13px;border:1px solid rgba(18,53,72,.10);border-radius:15px;background:rgba(255,255,255,.76)}
+.mdm-proofloop-verification.create{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}
+.mdm-proofloop-verification.create strong{display:block;font-size:13px}.mdm-proofloop-verification.create p{margin:4px 0 0;font-size:11px;line-height:1.4;color:#637986}
+.mdm-proofloop-verification button{border:0;border-radius:12px;padding:10px 12px;background:#0f7180;color:#fff;font:850 12px/1.1 system-ui}
+.mdm-proofloop-verification button.secondary{margin-top:10px;background:#eef6f8;color:#174b58;border:1px solid rgba(23,75,88,.12)}
+.mdm-proofloop-verification-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}
+.mdm-proofloop-verification-head small{display:block;font-size:9px;letter-spacing:.07em;color:#71838d}.mdm-proofloop-verification-head strong{display:block;margin-top:3px;font-size:13px}
+.mdm-proofloop-verification-head>span{font-size:10px;font-weight:900;padding:6px 8px;border-radius:999px;background:#eef6f8;color:#245666;white-space:nowrap}
+.mdm-proofloop-verification.ready .mdm-proofloop-verification-head>span{background:#e8f7ef;color:#1d7b55}
+.mdm-proofloop-verification.conflict .mdm-proofloop-verification-head>span{background:#fff0c7;color:#8a5a00}
+.mdm-proofloop-verification-status{margin:9px 0 0;font-size:11px;line-height:1.42;color:#627985}
+.mdm-proofloop-verification-target{margin-top:10px;padding:10px;border-radius:12px;background:#f4f8fa}.mdm-proofloop-verification-target span{display:block;font-size:9px;color:#71838d}.mdm-proofloop-verification-target strong{display:block;margin-top:3px;font-size:13px}
+.mdm-proofloop-verification ol{margin:10px 0 0;padding-left:20px}.mdm-proofloop-verification li{margin:5px 0;font-size:11px;line-height:1.38}
+.mdm-proofloop-verification-evidence{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.mdm-proofloop-verification-evidence span{font-size:10px;padding:6px 8px;border-radius:999px;background:#f1f5f7}
+.mdm-proofloop-verification-lock{margin-top:10px;padding:9px 10px;border-radius:11px;background:#eef8f2;font-size:10px;line-height:1.4;color:#2b6550}
+[data-theme="dark"] .mdm-proofloop-verification{background:rgba(255,255,255,.05);border-color:#3b5263}[data-theme="dark"] .mdm-proofloop-verification.create p,[data-theme="dark"] .mdm-proofloop-verification-status{color:#a8bcc8}[data-theme="dark"] .mdm-proofloop-verification-target,[data-theme="dark"] .mdm-proofloop-verification-evidence span{background:#243543}[data-theme="dark"] .mdm-proofloop-verification button.secondary{background:#233845;color:#dcebf1;border-color:#3b5263}[data-theme="dark"] .mdm-proofloop-verification-lock{background:#1f3a30;color:#bfe5d0}
+@media(max-width:620px){.mdm-proofloop-verification.create{grid-template-columns:1fr}.mdm-proofloop-verification.create button{width:100%}.mdm-proofloop-verification-head{grid-template-columns:1fr}.mdm-proofloop-verification-head>span{justify-self:start}}

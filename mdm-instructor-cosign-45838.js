@@ -65,6 +65,50 @@ function matchServerMission(local,items){
   ||candidates.find(x=>target&&String(x?.payload?.priority||'')===target)
   ||null;
 }
+function cosignPayload(local){
+ const m=local||rawMission();if(!m)return null;
+ return {
+  schema:'mdm-proofloop-cosign-v1',
+  id:String(m.id||''),
+  title:String(m.title||''),
+  priority:String(m.target?.label||''),
+  instruction:t('Verifica questa competenza osservando comportamento, decisione, controllo e consistenza.','Verify this skill by observing behaviour, decision-making, control and consistency.','Ivverifika din il-ħila billi tosserva l-imġiba, id-deċiżjoni, il-kontroll u l-konsistenza.'),
+  criteria:Array.isArray(m.criteria)?m.criteria.slice(0,3):[],
+  due:'next-lesson',
+  requiresInstructorCheck:true,
+  proofLoop:{missionId:String(m.id||''),target:m.target||{},createdAt:String(m.createdAt||''),baseline:m.baseline||{},evidence:m.evidence||{},requiresInstructorCheck:true}
+ };
+}
+function encodeCosign(local){
+ const payload=cosignPayload(local);if(!payload)return '';
+ try{return 'MDM-COSIGN-1.'+btoa(unescape(encodeURIComponent(JSON.stringify(payload))))}catch(_){return ''}
+}
+function decodeCosign(code){
+ const raw=String(code||'').trim();
+ if(!raw.startsWith('MDM-COSIGN-1.'))return null;
+ try{
+  const p=JSON.parse(decodeURIComponent(escape(atob(raw.slice(13)))));
+  if(p?.schema!=='mdm-proofloop-cosign-v1'||!p?.proofLoop?.missionId||p?.requiresInstructorCheck!==true)return null;
+  return p;
+ }catch(_){return null}
+}
+async function copyCosignCode(){
+ const code=encodeCosign(rawMission());if(!code)return false;
+ try{await navigator.clipboard.writeText(code);return true}catch(_){
+  const ta=document.createElement('textarea');ta.value=code;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();return true
+ }
+}
+async function schoolAssignCode(code){
+ const payload=decodeCosign(code);if(!payload||!schoolSelected)return false;
+ schoolBusy=true;
+ try{
+  const d=await rpc('mdm_school_assign_mission',{p_student_user_id:schoolSelected,p_payload:payload});
+  if(d?.ok===false)return false;
+  await loadSchoolMissions(schoolSelected);return true;
+ }catch(_){return false}
+ finally{schoolBusy=false;schedule()}
+}
+
 function reviewStateFromServer(local,item){
  const st=loadState();
  st.localMissionId=String(local?.id||'');
@@ -104,7 +148,7 @@ function studentBox(){
  if(st.serverStatus==='verified')return '<div class="mdm-cosign-state verified"><strong>✅ '+esc(t('Co-sign istruttore registrato','Instructor co-sign recorded','Co-sign tal-istruttur irreġistrat'))+'</strong><small>'+esc(st.reviewedAt?new Date(st.reviewedAt).toLocaleString():'')+'</small></div>';
  if(st.serverStatus==='revision_requested')return '<div class="mdm-cosign-state revision"><strong>🔁 '+esc(t('Revisione richiesta dall’istruttore','Instructor requested revision','L-istruttur talab reviżjoni'))+'</strong><p>'+esc(st.reviewNote||t('Serve una nuova prova prima di ripresentare la missione.','New evidence is required before resubmission.','Hemm bżonn evidenza ġdida qabel terġa’ tintbagħat il-missjoni.'))+'</p></div>';
  if(st.serverStatus==='awaiting_review')return '<div class="mdm-cosign-state waiting"><strong>⏳ '+esc(t('Inviata all’istruttore','Sent to instructor','Mibgħuta lill-istruttur'))+'</strong><small>'+esc(t('La competenza non è ancora verificata.','The skill is not verified yet.','Il-ħila għadha mhix ivverifikata.'))+'</small><button type="button" data-cosign-refresh>↻ '+esc(t('Aggiorna stato','Refresh status','Aġġorna l-istatus'))+'</button></div>';
- if(!st.linked)return '<div class="mdm-cosign-state neutral"><strong>🔗 '+esc(t('Missione non ancora collegata alla scuola','Mission not yet linked to the school','Il-missjoni għadha mhix marbuta mal-iskola'))+'</strong><small>'+esc(t('MDM non inventa il collegamento: serve una missione server assegnata dalla scuola con lo stesso ProofLoop.','MDM does not invent the link: a server mission assigned by the school with the same ProofLoop is required.','MDM ma jivvintax il-link: hemm bżonn missjoni tas-server assenjata mill-iskola bl-istess ProofLoop.'))+'</small><button type="button" data-cosign-refresh>↻ '+esc(t('Controlla collegamento','Check link','Iċċekkja l-link'))+'</button></div>';
+ if(!st.linked)return '<div class="mdm-cosign-state neutral"><strong>🔗 '+esc(t('Missione non ancora collegata alla scuola','Mission not yet linked to the school','Il-missjoni għadha mhix marbuta mal-iskola'))+'</strong><small>'+esc(t('Copia il codice co-sign e invialo alla tua scuola. La scuola lo assegna sul server prima della verifica.','Copy the co-sign code and send it to your school. The school assigns it on the server before review.','Ikkopja l-kodiċi co-sign u ibagħtu lill-iskola. L-iskola tassigjah fuq is-server qabel ir-review.'))+'</small><div class="mdm-cosign-actions"><button type="button" data-cosign-copy>📋 '+esc(t('Copia codice co-sign','Copy co-sign code','Ikkopja kodiċi co-sign'))+'</button><button type="button" class="secondary" data-cosign-refresh>↻ '+esc(t('Controlla collegamento','Check link','Iċċekkja l-link'))+'</button></div></div>';
  const ready=local.status==='awaiting_instructor'||Number(local.evidence?.roadDelta||0)>0||Number(local.evidence?.telemetryDelta||0)>0;
  return '<div class="mdm-cosign-state linked"><strong>🔗 '+esc(t('Missione collegata al server scuola','Mission linked to school server','Missjoni marbuta mas-server tal-iskola'))+'</strong><small>'+esc(t('Stato server','Server status','Status tas-server'))+': '+esc(st.serverStatus||'assigned')+'</small>'+(ready?'<button type="button" data-cosign-submit>👨‍🏫 '+esc(t('Invia alla verifica istruttore','Send for instructor review','Ibgħat għall-verifika tal-istruttur'))+'</button>':'')+'</div>';
 }
@@ -114,6 +158,7 @@ function decorateStudent(){
  if(!box){box=document.createElement('div');box.className='mdm-instructor-cosign-box';const copy=host.querySelector('#mdmProofLoopCopyMission');if(copy)copy.before(box);else host.appendChild(box)}
  const html=studentBox();if(box.dataset.sig!==html){box.innerHTML=html;box.dataset.sig=html}
  box.querySelector('[data-cosign-refresh]')?.addEventListener('click',syncStudent);
+ box.querySelector('[data-cosign-copy]')?.addEventListener('click',copyCosignCode);
  box.querySelector('[data-cosign-submit]')?.addEventListener('click',submitForReview);
  const local=overlayMission(rawMission());
  if(local?.status==='verified'){
@@ -159,7 +204,7 @@ function schoolPanelHtml(){
   const p=x.payload||{};
   return '<article class="mdm-cosign-review-card"><div><small>'+esc(String(x.id||''))+'</small><strong>🎯 '+esc(String(p.title||p.priority||t('Missione di verifica','Verification mission','Missjoni ta’ verifika')))+'</strong><p>'+esc(String(p.priority||''))+'</p></div><textarea data-review-note="'+esc(String(x.id||''))+'" placeholder="'+esc(t('Nota revisione (obbligatoria solo se richiedi revisione)','Revision note (required only for revision)','Nota tar-reviżjoni (meħtieġa biss għar-reviżjoni)'))+'"></textarea><div><button type="button" data-review-approve="'+esc(String(x.id||''))+'">✅ '+esc(t('Approva','Approve','Approva'))+'</button><button type="button" class="secondary" data-review-revision="'+esc(String(x.id||''))+'">🔁 '+esc(t('Richiedi revisione','Request revision','Itlob reviżjoni'))+'</button></div></article>';
  }).join(''):'<p class="mdm-cosign-empty">'+esc(t('Nessuna missione in attesa di co-sign per questo studente.','No missions awaiting co-sign for this learner.','L-ebda missjoni qed tistenna co-sign għal dan l-istudent.'))+'</p>';
- return '<div class="mdm-cosign-school-head"><div><small>MDM · '+VERSION+'</small><h2>👨‍🏫 '+esc(t('Instructor Verified Co-Sign','Instructor Verified Co-Sign','Instructor Verified Co-Sign'))+'</h2><p>'+esc(t('Solo una review server autorizzata può trasformare una missione in competenza verificata.','Only an authorised server review can turn a mission into a verified skill.','Review awtorizzata tas-server biss tista’ tbiddel missjoni f’ħila ivverifikata.'))+'</p></div><span>🛡️</span></div><div class="mdm-cosign-school-select"><select id="mdmCosignStudent">'+opts+'</select><button id="mdmCosignLoad" type="button">↻ '+esc(t('Carica missioni','Load missions','Tella’ l-missjonijiet'))+'</button></div><div class="mdm-cosign-review-list">'+cards+'</div>';
+ return '<div class="mdm-cosign-school-head"><div><small>MDM · '+VERSION+'</small><h2>👨‍🏫 '+esc(t('Instructor Verified Co-Sign','Instructor Verified Co-Sign','Instructor Verified Co-Sign'))+'</h2><p>'+esc(t('Solo una review server autorizzata può trasformare una missione in competenza verificata.','Only an authorised server review can turn a mission into a verified skill.','Review awtorizzata tas-server biss tista’ tbiddel missjoni f’ħila ivverifikata.'))+'</p></div><span>🛡️</span></div><div class="mdm-cosign-school-select"><select id="mdmCosignStudent">'+opts+'</select><button id="mdmCosignLoad" type="button">↻ '+esc(t('Carica missioni','Load missions','Tella’ l-missjonijiet'))+'</button></div><div class="mdm-cosign-assign"><strong>🔗 '+esc(t('Collega una Verification Mission','Link a Verification Mission','Qabbad Verification Mission'))+'</strong><textarea id="mdmCosignCode" placeholder="MDM-COSIGN-1.…"></textarea><button id="mdmCosignAssign" type="button">🎯 '+esc(t('Assegna missione server','Assign server mission','Assenja missjoni tas-server'))+'</button></div><div class="mdm-cosign-review-list">'+cards+'</div>';
 }
 function mountSchoolPanel(){
  const old=document.getElementById('mdmInstructorCosignSchool');
@@ -169,6 +214,7 @@ function mountSchoolPanel(){
  const html=schoolPanelHtml();if(panel.dataset.sig!==html){panel.innerHTML=html;panel.dataset.sig=html}
  const sel=panel.querySelector('#mdmCosignStudent');if(sel)sel.onchange=()=>{schoolSelected=sel.value;schoolMissions=[]};
  panel.querySelector('#mdmCosignLoad')?.addEventListener('click',()=>loadSchoolMissions(schoolSelected));
+ panel.querySelector('#mdmCosignAssign')?.addEventListener('click',()=>schoolAssignCode(panel.querySelector('#mdmCosignCode')?.value||''));
  panel.querySelectorAll('[data-review-approve]').forEach(b=>b.onclick=()=>schoolReview(b.dataset.reviewApprove,'approve',''));
  panel.querySelectorAll('[data-review-revision]').forEach(b=>b.onclick=()=>{
   const id=b.dataset.reviewRevision,note=String(panel.querySelector('[data-review-note="'+CSS.escape(id)+'"]')?.value||'').trim();
@@ -183,5 +229,5 @@ const screen=document.getElementById('screen');if(screen){const o=new MutationOb
 window.addEventListener('pageshow',()=>{schedule();syncStudent();refreshSchoolContext()});
 window.addEventListener('storage',schedule);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){schedule();syncStudent()}});
-window.MDM_INSTRUCTOR_COSIGN_45838=Object.freeze({version:VERSION,syncStudent,submitForReview,refreshSchoolContext,loadSchoolMissions,schoolReview,current:loadState});
+window.MDM_INSTRUCTOR_COSIGN_45838=Object.freeze({version:VERSION,syncStudent,submitForReview,refreshSchoolContext,loadSchoolMissions,schoolReview,copyCosignCode,schoolAssignCode,current:loadState});
 })();

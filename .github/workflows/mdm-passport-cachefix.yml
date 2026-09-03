@@ -27,7 +27,6 @@ jobs:
           old_js='<script src="mdm-driver-competence-passport-458351.js?v=458351-driver-competence-passport-failsafe"></script>'
           new_js='<script src="mdm-driver-competence-passport-458351.js?v=45838201-passport-base-refresh"></script>\n<script src="mdm-driver-competence-passport-completion-4583820.js?v=45838201-passport-completion-direct"></script>'
           s=s.replace(old_js,new_js)
-          # remove any earlier duplicate completion loader line if it exists
           s=s.replace('\n<script src="mdm-driver-competence-passport-completion-4583820.js?v=4583820-passport-complete"></script>','')
           s=s.replace('\n<link rel="stylesheet" href="styles-4583820-driver-competence-passport-completion.css?v=4583820-passport-complete">','')
           p.write_text(s,encoding='utf-8')
@@ -41,3 +40,5 @@ jobs:
             git commit -m "45.8.38.20.1 Passport Direct Loader Cache Fix"
             git push origin HEAD:main
           fi
+      - name: Trigger marker
+        run: echo "passport-cache-fix-45838201"

@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.23.9 — Student School Evidence Bridge
+/* Malta Driving Master 45.8.38.23.10 — Student School Evidence Bridge
    Additive only: shows server-assigned school missions in Student Home.
    Does not replace #screen, does not alter local ProofLoop state. */
 (function(){
@@ -52,7 +52,7 @@ function installStyle(){
  +'#'+HOST_ID+' .sse-title{font-size:15px;font-weight:900;line-height:1.2}'
  +'#'+HOST_ID+' .sse-pill{font-size:10px;font-weight:900;border-radius:999px;padding:5px 8px;background:#edf5f7;white-space:nowrap}'
  +'#'+HOST_ID+' .sse-objective{font-size:12px;line-height:1.35;color:#617985;margin:8px 0 0}'
- +'#'+HOST_ID+' textarea{width:100%;min-height:82px;margin-top:10px;border:1px solid #cadde3;border-radius:13px;padding:11px;background:#fff;color:#103446;font:inherit;resize:vertical}'
+ +'#'+HOST_ID+' textarea{width:100%;min-height:82px;margin-top:10px;border:1px solid #cadde3;border-radius:13px;padding:11px;background:#fff;color:#103446;font-family:inherit;font-size:16px!important;line-height:1.35;resize:vertical;-webkit-text-size-adjust:100%}'
  +'#'+HOST_ID+' .sse-submit{margin-top:8px;border:0;border-radius:13px;padding:11px 13px;background:#0b7488;color:#fff;font-weight:900}'
  +'#'+HOST_ID+' .sse-wait{margin-top:9px;padding:9px 10px;border-radius:12px;background:#eef7f2;color:#315f47;font-size:12px;font-weight:750}'
  +'#'+HOST_ID+' .sse-revision{margin-top:8px;color:#8b6425;font-size:12px;font-weight:750}'
@@ -73,7 +73,7 @@ function cardHtml(m){
 }
 
 function bind(host){
- host.querySelector('.sse-refresh')?.addEventListener('click',load);
+ host.querySelector('.sse-refresh')?.addEventListener('click',()=>load(true));
  host.querySelectorAll('.sse-submit').forEach(btn=>btn.addEventListener('click',async()=>{
   if(busy)return;
   const card=btn.closest('[data-mid]'),ta=card?.querySelector('textarea'),err=card?.querySelector('.sse-error');
@@ -83,13 +83,13 @@ function bind(host){
   try{
    const d=await rpc('mdm_student_submit_mission_evidence',{p_mission_id:mid,p_evidence:{summary,source:'student-school-evidence',version:VERSION,submittedAt:new Date().toISOString()}});
    if(d?.ok===false)throw new Error(String(d.error||'submit_failed'));
-   await load();
+   await load(true);
   }catch(_){if(err){err.hidden=false;err.textContent=t('Invio non riuscito. Riprova.','Could not send. Try again.','Ma setax jintbagħat. Erġa’ pprova.')}}
   finally{busy=false;btn.disabled=false}
  }));
 }
 
-async function load(){
+async function load(force=false){
  if(!home()||!session())return false;
  try{
   const d=await rpc('mdm_student_evidence_list_missions',{}),items=Array.isArray(d?.missions)?d.missions:[];
@@ -99,7 +99,14 @@ async function load(){
   installStyle();
   let host=document.getElementById(HOST_ID);
   if(!host){host=document.createElement('section');host.id=HOST_ID;a.insertAdjacentElement('afterend',host)}
+  const sig=lang()+'|'+JSON.stringify(rows.map(m=>[m?.mission_id||m?.id||'',m?.status||'',m?.updated_at||'',m?.review_note||'',m?.payload?.title||'',m?.payload?.objective||'',m?.student_evidence?.summary||'']));
+  const active=document.activeElement;
+  const editing=!!(active&&host.contains(active)&&active.matches('textarea'));
+  const hasDraft=Array.from(host.querySelectorAll('textarea')).some(x=>String(x.value||'').length>0);
+  if(!force&&host.dataset.sig===sig)return true;
+  if(!force&&(editing||hasDraft))return true;
   host.innerHTML='<div class="sse-head"><div><small>MDM · '+VERSION+'</small><strong>🏫 '+esc(t('Missioni della scuola','School missions','Missjonijiet tal-iskola'))+'</strong></div><button class="sse-refresh" type="button">↻</button></div><div class="sse-list">'+rows.map(cardHtml).join('')+'</div>';
+  host.dataset.sig=sig;
   bind(host);return true;
  }catch(_){return false}
 }

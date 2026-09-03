@@ -9,11 +9,83 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: 84280d377e2aafde43821b789e07bd51683b842c
           fetch-depth: 1
-      - name: Diagnose repository size
+      - name: Build approved runtime FULL
         shell: bash
         run: |
-          echo 'ROOT SIZES'
-          du -sh -- * .[^.]* 2>/dev/null | sort -h | tail -80
-          echo 'LARGEST FILES'
-          find . -type f -not -path './.git/*' -printf '%s %p\n' | sort -n | tail -80
+          python3 - <<'PY'
+          import os,re,shutil,pathlib
+          root=pathlib.Path('.').resolve()
+          out=pathlib.Path('/tmp/mdmfull/runtime')
+          out.mkdir(parents=True,exist_ok=True)
+          excluded_prefix=('BUILD_CHECK_','MALTA_DRIVING_MASTER_VISUAL_QA_CONTACT_SHEET_')
+          excluded_names={'events.txt','top.txt'}
+          text_ext={'.html','.js','.css','.json','.webmanifest','.sql','.txt'}
+          asset_ext={'.png','.jpg','.jpeg','.webp','.svg','.gif','.mp4','.webm','.woff','.woff2','.ttf','.ico'}
+          ref_re=re.compile(r'''(?:src|href)\s*=\s*["']([^"'#?]+)|["']([^"']+\.(?:js|css|json|webmanifest|png|jpg|jpeg|webp|svg|gif|mp4|webm|woff2?|ttf|ico))[?#]?[^"']*["']''',re.I)
+          included=set()
+          queue=[]
+          def okfile(p):
+            return p.is_file() and '.git' not in p.parts and '.github' not in p.parts
+          def add(rel):
+            rel=str(rel).lstrip('./')
+            if not rel or rel.startswith(('http:','https:','data:','blob:')): return
+            p=root/rel
+            if not okfile(p): return
+            if p.name.startswith(excluded_prefix) or p.name in excluded_names: return
+            if rel not in included:
+              included.add(rel); queue.append(rel)
+          for seed in ['index.html','sw.js','manifest.webmanifest','icon-192.png','icon-512.png']:
+            add(seed)
+          # Preserve all compact runtime/support files and migrations; huge historical app snapshots are pulled only if actually referenced.
+          for p in root.iterdir():
+            if not okfile(p): continue
+            if p.name.startswith(excluded_prefix) or p.name in excluded_names: continue
+            ext=p.suffix.lower()
+            if ext in text_ext|asset_ext:
+              try: size=p.stat().st_size
+              except: continue
+              if size <= 10*1024*1024 or ext in {'.sql','.html','.json','.webmanifest'}:
+                add(p.name)
+          # Assets directory is small and part of the stable runtime.
+          ap=root/'assets'
+          if ap.exists():
+            for p in ap.rglob('*'):
+              if okfile(p): add(p.relative_to(root))
+          # Recursively follow explicit local file references from active files.
+          i=0
+          while i < len(queue):
+            rel=queue[i]; i+=1
+            p=root/rel
+            if p.suffix.lower() not in text_ext: continue
+            try: text=p.read_text('utf-8',errors='ignore')
+            except: continue
+            for m in ref_re.finditer(text):
+              ref=m.group(1) or m.group(2)
+              if not ref: continue
+              ref=ref.split('?',1)[0].split('#',1)[0]
+              cand=(p.parent/ref).resolve()
+              try: r=cand.relative_to(root)
+              except: continue
+              add(r)
+          # Copy exact approved snapshot files.
+          for rel in sorted(included):
+            src=root/rel; dst=out/rel
+            dst.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copy2(src,dst)
+          (out/'MDM_FULL_VERSION.txt').write_text('Malta Driving Master FULL 45.8.38.19.4.5 APPROVED\nSource commit: 84280d377e2aafde43821b789e07bd51683b842c\nBUILD_CHECK files intentionally excluded.\n',encoding='utf-8')
+          print('FILES',len(included))
+          print('BYTES',sum((root/r).stat().st_size for r in included))
+          PY
+          cd /tmp/mdmfull/runtime
+          zip -r -q /tmp/mdmfull/MDM_FULL_45_8_38_19_4_5_APPROVED.zip .
+          ls -lh /tmp/mdmfull/MDM_FULL_45_8_38_19_4_5_APPROVED.zip
+      - name: Upload approved FULL
+        uses: actions/upload-artifact@v4
+        with:
+          name: MDM_FULL_45_8_38_19_4_5_APPROVED_COMPACT
+          path: /tmp/mdmfull/MDM_FULL_45_8_38_19_4_5_APPROVED.zip
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0

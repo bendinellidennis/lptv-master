@@ -3,7 +3,7 @@
 'use strict';
 if(window.MDM_PROOFLOOP_VERIFICATION)return;
 
-const VERSION='45.8.33';
+const VERSION='45.8.33.2';
 const AUTH_KEY='mdm_auth_session_v4410';
 const BASE_KEY='mdm-proofloop-verification-v1';
 
@@ -20,7 +20,7 @@ function save(v){localStorage.setItem(key(),JSON.stringify(v));return v}
 function now(){return new Date().toISOString()}
 function shortId(){return 'PLV-'+Date.now().toString(36).slice(-7).toUpperCase()+'-'+Math.random().toString(36).slice(2,5).toUpperCase()}
 
-const GENERIC=new Set(['high','medium','low','ready','stable','verified','completed','open','active','pending','true','false','student','school','instructor','theory','practice','road','replay','telemetry']);
+const GENERIC=new Set(['high','medium','low','ready','stable','verified','completed','open','active','pending','true','false','student','school','instructor','theory','practice','road','replay','telemetry','risk','status','score','priority','accuracy','confidence','severity','level','category','pattern','weakness','focus','critical','warning','pass','fail']);
 function candidates(value,baseWeight){
  const out=[],seen=new WeakSet();
  function walk(node,depth,path){
@@ -32,7 +32,7 @@ function candidates(value,baseWeight){
     const child=node[k],low=String(k).toLowerCase();
     if(typeof child==='string'&&/(title|label|name|topic|category|pattern|priority|weakness|skill|competence|area|focus)/i.test(low)){
       const s=child.trim();
-      if(s.length>=3&&s.length<=90&&!/@|https?:|^[A-Z0-9_-]{12,}$/i.test(s)&&!GENERIC.has(s.toLowerCase())){
+      if(validTargetLabel(s)){
         let bonus=0;
         if(/weakness|skill|competence|focus|pattern/i.test(low))bonus=35;
         else if(/priority|topic|category/i.test(low))bonus=25;
@@ -46,6 +46,15 @@ function candidates(value,baseWeight){
  }
  walk(value,0,'');
  return out;
+}
+function validTargetLabel(value){
+ const s=String(value||'').trim();
+ const low=s.toLowerCase();
+ if(s.length<3||s.length>90)return false;
+ if(GENERIC.has(low))return false;
+ if(/@|https?:|^[A-Z0-9_-]{12,}$/i.test(s))return false;
+ if(/^(risk|status|score|priority|accuracy|confidence|severity|level|category|pattern|weakness|focus)\s*[:=-]?\s*/i.test(s))return false;
+ return true;
 }
 function targetFor(result){
  const sources=[
@@ -109,6 +118,13 @@ function create(result){
 function refresh(result){
  const mission=load();
  if(!mission||!result)return mission;
+ if(!validTargetLabel(mission.target?.label)){
+  const repaired=targetFor(result);
+  mission.target=repaired;
+  mission.title=t('Missione di verifica','Verification Mission','Missjoni ta’ verifika')+' · '+repaired.label;
+  mission.criteria=criteriaFor(repaired.label);
+  mission.repairedTargetAt=now();
+ }
  const roadNow=Number(result.sources?.road?.records||0);
  const telemetryNow=Number(result.sources?.telemetry?.sessions||0);
  const roadDelta=Math.max(0,roadNow-Number(mission.baseline?.roadRecords||0));

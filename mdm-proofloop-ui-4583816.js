@@ -1,0 +1,44 @@
+/* Malta Driving Master 45.8.33 — ProofLoop Student UI + Verification Missions */
+(function(){
+'use strict';
+if(window.MDM_PROOFLOOP_UI)return;
+const VERSION='45.8.33',AUTH='mdm_auth_session_v4410',OWNER='maltadrivingmaster@gmail.com';let raf=0;
+function parse(v){try{return v?JSON.parse(v):null}catch(_){return null}}
+function lang(){return String(parse(localStorage.getItem('mdm-v1-settings'))?.lang||'en')}
+function t(it,en,mt){const l=lang();return l==='it'?it:l==='mt'?mt:en}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function email(){const s=parse(localStorage.getItem(AUTH));return String(s?.user?.email||s?.email||'').trim().toLowerCase()}
+function isOwner(){return email()===OWNER}
+function home(){const h=String(location.hash||'').replace(/^#/,'');return !h||h==='home'}
+function sourceLabel(id){return ({theory:t('Teoria','Theory','Teorija'),replay:t('Replay / scenari','Replay / scenarios','Replay / xenarji'),road:t('Guida reale','Real road','Sewqan reali'),telemetry:t('Telemetria','Telemetry','Telemetrija'),instructor:t('Istruttore','Instructor','Istruttur')})[id]||id}
+function icon(id){return ({theory:'📘',replay:'🎬',road:'🛣️',telemetry:'📡',instructor:'👨‍🏫'})[id]||'•'}
+function quality(q){return q==='high'?t('Alta','High','Għolja'):q==='medium'?t('Media','Medium','Medja'):t('Bassa','Low','Baxxa')}
+function next(code){return ({resolve_contradiction:t('Prima va chiarita la prova che non concorda.','Resolve the conflicting evidence first.','L-ewwel trid tiġi ċċarata l-evidenza li ma taqbilx.'),theory:t('Serve altra evidenza di teoria.','More theory evidence is needed.','Hemm bżonn aktar evidenza tat-teorija.'),road:t('Serve una verifica nella guida reale.','A real-road check is still needed.','Għad hemm bżonn verifika fis-sewqan reali.'),instructor:t('Serve una valutazione dell’istruttore.','An instructor assessment is still needed.','Għad hemm bżonn valutazzjoni tal-istruttur.'),retention:t('Ripeti la competenza in un momento diverso per verificarne la stabilità.','Repeat the skill later to verify stability.','Erġa’ agħmel il-ħila aktar tard biex tiġi vverifikata l-istabbiltà.'),telemetry:t('La telemetria può aggiungere un’altra fonte indipendente durante la guida.','Telemetry can add another independent source while driving.','It-telemetrija tista’ żżid sors indipendenti ieħor waqt is-sewqan.'),verification:t('Le prove sono ben coperte: il prossimo passo sarà una missione di verifica dedicata.','Evidence coverage is strong: the next step will be a dedicated verification mission.','Il-kopertura tal-evidenza hija b’saħħitha: il-pass li jmiss ikun missjoni ta’ verifika ddedikata.')})[code]||''}
+function stateCopy(st){if(st==='contradictory')return ['⚠️',t('Evidenze da chiarire','Evidence needs resolving','L-evidenza trid tiġi ċċarata'),t('Alcune prove non concordano. MDM non le nasconde e non ti dichiara pronto finché la contraddizione non è risolta.','Some evidence does not agree. MDM does not hide it and will not call you ready until it is resolved.','Xi evidenza ma taqbilx. MDM ma jaħbihiex u ma jqisekx lest sakemm tiġi solvuta.')];if(st==='evidence')return ['🛡️',t('Prove presenti','Evidence present','Hemm evidenza'),t('MDM sta collegando fonti indipendenti. Un punteggio alto da solo non basta per dichiarare una competenza verificata.','MDM is linking independent evidence sources. A high score alone is not enough to declare a skill verified.','MDM qed jgħaqqad sorsi indipendenti. Punteġġ għoli waħdu mhux biżżejjed biex ħila titqies ivverifikata.')];return ['🔎',t('Servono più prove','More evidence needed','Hemm bżonn aktar evidenza'),t('MDM non inventa una certezza quando mancano dati. Continuerà a costruire la prova mentre studi e guidi.','MDM does not invent certainty when data is missing. It keeps building the proof as you study and drive.','MDM ma joħloqx ċertezza meta d-data tkun nieqsa. Jibqa’ jibni l-prova waqt li tistudja u ssuq.')]}
+function render(){
+ const e=window.MDM_PROOFLOOP_ENGINE,m=window.MDM_PROOFLOOP_MODEL,old=document.getElementById('mdmProofLoopCard');
+ if(!e||!m||isOwner()||!home()){old?.remove();return false}
+ const r=e.evaluate();if(!r||!r.authenticated||['school','owner','admin'].includes(r.role)){old?.remove();return false}
+ const screen=document.getElementById('screen');if(!screen)return false;let card=old;
+ if(!card){card=document.createElement('section');card.id='mdmProofLoopCard';card.className='mdm-proofloop-card';const a=screen.querySelector('.premium-focus-card')||document.getElementById('mdmPilotWelcome')||screen.firstElementChild;if(a)a.insertAdjacentElement('afterend',card);else screen.appendChild(card)}
+ const sc=stateCopy(r.state);
+ const verification=window.MDM_PROOFLOOP_VERIFICATION;
+ const verificationHtml=verification&&typeof verification.html==='function'?verification.html(r):'';
+ const sources=m.SOURCE_IDS.map(id=>{const x=r.sources[id]||{},present=x.present===true,conflict=id==='road'&&r.contradictions>0,cls=conflict?'conflict':present?'present':'missing',label=conflict?t('Da chiarire','Needs review','Trid tiġi ċċarata'):present?t('Presente','Present','Preżenti'):t('Non ancora','Not yet','Għadu mhux');let detail='';if(id==='telemetry'&&x.sessions)detail=' · '+x.sessions+' '+t('sessioni','sessions','sessjonijiet');if(id==='road'&&x.records)detail=' · '+x.records+' '+t('evidenze','evidence','evidenza');return '<div class="mdm-proofloop-source '+cls+'"><span>'+icon(id)+'</span><div><strong>'+esc(sourceLabel(id))+'</strong><small>'+esc(label+detail)+'</small></div><b>'+(conflict?'!':present?'✓':'—')+'</b></div>'}).join('');
+ const nextHtml='<div class="mdm-proofloop-head"><div><small>MDM PROOFLOOP</small><h2>'+esc(t('La tua preparazione, con prove','Your preparation, backed by evidence','Il-preparazzjoni tiegħek, b’evidenza'))+'</h2></div><span>🛡️</span></div>'+
+ '<div class="mdm-proofloop-state '+esc(r.state)+'"><span>'+sc[0]+'</span><div><strong>'+esc(sc[1])+'</strong><p>'+esc(sc[2])+'</p></div></div>'+
+ '<div class="mdm-proofloop-summary"><div><span>'+esc(t('Qualità evidenze','Evidence quality','Kwalità tal-evidenza'))+'</span><strong>'+esc(quality(r.quality))+'</strong></div><div><span>'+esc(t('Fonti indipendenti','Independent sources','Sorsi indipendenti'))+'</span><strong>'+r.independentSources+' / '+r.sourceTotal+'</strong></div><div><span>'+esc(t('Contraddizioni','Contradictions','Kontradizzjonijiet'))+'</span><strong>'+r.contradictions+'</strong></div></div>'+
+ '<div class="mdm-proofloop-sources">'+sources+'</div><div class="mdm-proofloop-next"><strong>🎯 '+esc(t('Prossima prova necessaria','Next evidence needed','L-evidenza li jmiss meħtieġa'))+'</strong><p>'+esc(next(r.nextNeed))+'</p></div>'+
+ '<p class="mdm-proofloop-rule">'+esc(t('Regola ProofLoop: una competenza non viene considerata verificata solo perché un quiz o un singolo tentativo è andato bene.','ProofLoop rule: a skill is not considered verified just because one quiz or one attempt went well.','Regola ProofLoop: ħila ma titqiesx ivverifikata sempliċement għax quiz jew tentattiv wieħed mar tajjeb.'))+'</p>'+verificationHtml;
+ if(card.__mdmProofSignature!==nextHtml){
+  card.innerHTML=nextHtml;
+  card.__mdmProofSignature=nextHtml;
+ }
+ if(verification&&typeof verification.bind==='function')verification.bind(r,render);
+ return true;
+}
+function schedule(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;render()})}
+render();const screen=document.getElementById('screen');if(screen){const o=new MutationObserver(schedule);o.observe(screen,{childList:true,subtree:true});window.__MDM_PROOFLOOP_UI_OBSERVER__=o}
+window.addEventListener('popstate',schedule);window.addEventListener('pageshow',schedule);window.addEventListener('storage',schedule);document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
+window.MDM_PROOFLOOP_UI=Object.freeze({version:VERSION,render});
+})();

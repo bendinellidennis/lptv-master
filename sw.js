@@ -1,8 +1,8 @@
 'use strict';
 
-/* Malta Driving Master 45.8.38.1 */
+/* Malta Driving Master 45.8.38.2 */
 
-const CACHE = 'mdm-build-45-8-38-1-cosign-strict-binding';
+const CACHE = 'mdm-build-45-8-38-2-cosign-copy-feedback';
 const CORE = [
   './',
   './index.html',

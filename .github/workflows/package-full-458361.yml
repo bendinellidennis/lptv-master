@@ -1,0 +1,25 @@
+name: Package MDM FULL 45.8.36.1
+on:
+  push:
+    branches:
+      - package-full-458361
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build clean FULL ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -type f -name 'BUILD_CHECK*' -delete
+          rm -rf .git .github
+          zip -r -q MDM_FULL_45_8_36_1_COMPACT_HOME_APPROVED.zip .             -x 'MDM_FULL_45_8_36_1_COMPACT_HOME_APPROVED.zip'
+      - name: Upload FULL
+        uses: actions/upload-artifact@v4
+        with:
+          name: MDM_FULL_45_8_36_1_COMPACT_HOME_APPROVED
+          path: MDM_FULL_45_8_36_1_COMPACT_HOME_APPROVED.zip
+          if-no-files-found: error

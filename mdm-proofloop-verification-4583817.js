@@ -1,11 +1,13 @@
-/* Malta Driving Master 45.8.33 — ProofLoop Verification Missions */
+/* Malta Driving Master 45.8.38.25 — Unified Mission Lifecycle */
 (function(){
 'use strict';
 if(window.MDM_PROOFLOOP_VERIFICATION)return;
 
-const VERSION='45.8.38.17';
+const VERSION='45.8.38.25';
 const AUTH_KEY='mdm_auth_session_v4410';
 const BASE_KEY='mdm-proofloop-verification-v1';
+const SCHOOL_CACHE='mdm-school-evidence-cache-v1';
+const UNIFIED_BASE='mdm-unified-mission-baseline-v1';
 
 function parse(v){try{return v?JSON.parse(v):null}catch(_){return null}}
 function auth(){return parse(localStorage.getItem(AUTH_KEY))}
@@ -19,6 +21,64 @@ function load(){return parse(localStorage.getItem(key()))}
 function save(v){localStorage.setItem(key(),JSON.stringify(v));return v}
 function now(){return new Date().toISOString()}
 function shortId(){return 'PLV-'+Date.now().toString(36).slice(-7).toUpperCase()+'-'+Math.random().toString(36).slice(2,5).toUpperCase()}
+function scopedKey(base){const id=uid();return base+(id?'::user:'+id:'::signed-out')}
+function schoolCache(){try{return parse(localStorage.getItem(scopedKey(SCHOOL_CACHE)))||{}}catch(_){return{}}}
+function schoolMissions(){const x=schoolCache();return Array.isArray(x?.missions)?x.missions:[]}
+function serverMissionId(m){return String(m?.mission_id||m?.id||'').trim()}
+function activeSchoolMission(){
+ return schoolMissions().find(m=>['assigned','revision_requested','evidence_submitted'].includes(String(m?.status||'')))||null;
+}
+function normLabel(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim()}
+function labelSimilarity(a,b){
+ const A=new Set(normLabel(a).split(/\s+/).filter(x=>x.length>2)),B=new Set(normLabel(b).split(/\s+/).filter(x=>x.length>2));
+ if(!A.size||!B.size)return 0;let n=0;A.forEach(x=>{if(B.has(x))n++});return n/Math.min(A.size,B.size);
+}
+function unifiedBaselineKey(mid){return scopedKey(UNIFIED_BASE)+'::'+String(mid||'')}
+function unifiedBaseline(result,server){
+ const mid=serverMissionId(server);if(!mid||!result)return null;
+ let b=parse(localStorage.getItem(unifiedBaselineKey(mid)));
+ if(!b){
+  b={schema:'mdm-unified-mission-baseline-v1',version:VERSION,missionId:mid,createdAt:now(),
+   roadRecords:Number(result.sources?.road?.records||0),telemetrySessions:Number(result.sources?.telemetry?.sessions||0),
+   contradictions:Number(result.contradictions||0),independentSources:Number(result.independentSources||0)};
+  try{localStorage.setItem(unifiedBaselineKey(mid),JSON.stringify(b))}catch(_){}
+ }
+ return b;
+}
+function evidenceForServerMission(mid,result){
+ const server=schoolMissions().find(m=>serverMissionId(m)===String(mid||''));if(!server)return null;
+ const r=result||window.MDM_PROOFLOOP_ENGINE?.evaluate?.()||null;if(!r)return null;
+ const b=unifiedBaseline(r,server);if(!b)return null;
+ return {schema:'mdm-unified-proof-evidence-v1',version:VERSION,missionId:serverMissionId(server),
+  collectedAt:now(),roadDelta:Math.max(0,Number(r.sources?.road?.records||0)-Number(b.roadRecords||0)),
+  telemetryDelta:Math.max(0,Number(r.sources?.telemetry?.sessions||0)-Number(b.telemetrySessions||0)),
+  contradictions:Number(r.contradictions||0),independentSources:Number(r.independentSources||0),
+  sourceTotal:Number(r.sourceTotal||5),quality:String(r.quality||''),baseline:b};
+}
+function unifiedCurrent(result){
+ const server=activeSchoolMission();
+ if(server){
+  const p=server.payload||{};if(result)unifiedBaseline(result,server);
+  return {source:'school',id:serverMissionId(server),serverMissionId:serverMissionId(server),status:String(server.status||'assigned'),
+   title:String(p.title||p.objective||t('Missione della scuola','School mission','Missjoni tal-iskola')),
+   target:{label:String(p.competence_label||p.objective||p.title||t('Competenza da verificare','Skill to verify','Ħila li trid tiġi vverifikata'))},
+   payload:p,server};
+ }
+ syncAcceptedSchoolMission();
+ const local=load();return local?{...local,source:'proofloop'}:null;
+}
+function syncAcceptedSchoolMission(){
+ const local=load();if(!local?.target?.label)return local;
+ const accepted=schoolMissions().filter(m=>String(m?.status||'')==='accepted'&&String(m?.raw_status||'')==='verified'&&m?.payload?.verification_scope==='driver_competence');
+ const hit=accepted.find(m=>labelSimilarity(local.target.label,m?.payload?.competence_label||'')>=0.72);
+ if(!hit)return local;
+ if(local.status!=='verified'||local.serverMissionId!==serverMissionId(hit)){
+  local.status='verified';local.instructorVerified=true;local.requiresInstructorCheck=true;
+  local.serverMissionId=serverMissionId(hit);local.verifiedAt=String(hit.reviewed_at||now());
+  local.verifiedBy='school-human-review';local.version=VERSION;save(local);
+ }
+ return local;
+}
 
 const GENERIC=new Set(['high','medium','low','ready','stable','verified','completed','open','active','pending','true','false','student','school','instructor','theory','practice','road','replay','telemetry','risk','status','score','priority','accuracy','confidence','severity','level','category','pattern','weakness','focus','critical','warning','pass','fail']);
 function candidates(value,baseWeight){
@@ -137,8 +197,10 @@ function create(result){
  return mission;
 }
 function refresh(result){
+ syncAcceptedSchoolMission();
  const mission=load();
  if(!mission||!result)return mission;
+ if(mission.status==='verified')return mission;
  if(!validTargetLabel(mission.target?.label)){
   const repaired=fallbackTarget(result);
   mission.target=repaired;
@@ -182,6 +244,7 @@ function assignmentPayload(mission){
  };
 }
 function statusCopy(status){
+ if(status==='verified')return ['ready',t('Verificata dalla scuola','Verified by school','Ivverifikata mill-iskola'),t('La verifica umana della scuola ha chiuso questa missione. La competenza può ora aggiornare il Competence Passport.','Human school review closed this mission. The skill can now update the Competence Passport.','Il-verifika umana tal-iskola għalqet din il-missjoni. Il-ħila issa tista’ taġġorna l-Passaport tal-Kompetenzi.')];
  if(status==='awaiting_instructor')return ['ready',t('Nuova prova acquisita','New evidence captured','Inġabret evidenza ġdida'),t('MDM ha rilevato nuova evidenza dopo l’avvio. La missione è pronta per la verifica dell’istruttore, ma non è ancora verificata.','MDM detected new evidence after the mission started. It is ready for instructor review, but it is not verified yet.','MDM sab evidenza ġdida wara li bdiet il-missjoni. Hija lesta għall-verifika tal-istruttur, iżda għadha mhix ivverifikata.')];
  if(status==='evidence_conflict')return ['conflict',t('Prova da chiarire','Evidence needs resolving','L-evidenza trid tiġi ċċarata'),t('È presente una contraddizione. La missione resta aperta finché le prove non concordano.','A contradiction is present. The mission stays open until the evidence agrees.','Hemm kontradizzjoni. Il-missjoni tibqa’ miftuħa sakemm l-evidenza taqbel.')];
  return ['active',t('Missione attiva','Mission active','Missjoni attiva'),t('Serve nuova evidenza successiva all’avvio. Le prove precedenti non vengono riutilizzate per chiudere la missione.','New evidence recorded after mission start is required. Earlier evidence is not reused to close the mission.','Hemm bżonn evidenza ġdida rreġistrata wara l-bidu tal-missjoni. Evidenza eqdem ma terġax tintuża biex tingħalaq il-missjoni.')];
@@ -314,7 +377,27 @@ function bindCosign(local,rerender){
  },'mdmCheckBound');
 }
 
+function schoolStatusCopy(status){
+ if(status==='revision_requested')return [t('Nuova evidenza richiesta','New evidence requested','Evidenza ġdida mitluba'),t('La scuola ha chiesto una nuova prova. ProofLoop continua a raccogliere segnali mentre completi la missione.','The school requested new evidence. ProofLoop keeps collecting signals while you complete the mission.','L-iskola talbet evidenza ġdida. ProofLoop jibqa’ jiġbor sinjali waqt li tlesti l-missjoni.')];
+ if(status==='evidence_submitted')return [t('In attesa della scuola','Waiting for school review','Qed tistenna l-iskola'),t('L’evidenza è stata inviata. Solo la verifica umana della scuola può chiudere la missione.','Evidence was submitted. Only human school review can close the mission.','L-evidenza ntbagħtet. Il-verifika umana tal-iskola biss tista’ tagħlaq il-missjoni.')];
+ return [t('Assegnata dalla scuola','Assigned by school','Assenjata mill-iskola'),t('Questa è la missione attiva unica. ProofLoop, strada e telemetria alimentano la stessa catena di evidenza.','This is the single active mission. ProofLoop, road and telemetry feed the same evidence chain.','Din hija l-missjoni attiva waħda. ProofLoop, it-triq u t-telemetrija jsaħħu l-istess katina ta’ evidenza.')];
+}
+function schoolMissionHtml(server,result){
+ const p=server?.payload||{},mid=serverMissionId(server),sc=schoolStatusCopy(server?.status),auto=evidenceForServerMission(mid,result)||{};
+ const meta=[p.pack_id||'',p.competence_label||''].filter(Boolean).join(' · ');
+ return '<div class="mdm-proofloop-verification active" data-mdm-unified-school-mission="'+esc(mid)+'">'+
+  '<div class="mdm-proofloop-verification-head"><div><small>MDM UNIFIED MISSION · '+esc(VERSION)+'</small><strong>🎯 '+esc(String(p.title||p.objective||t('Missione della scuola','School mission','Missjoni tal-iskola')))+'</strong></div><span>'+esc(sc[0])+'</span></div>'+
+  '<p class="mdm-proofloop-verification-status">'+esc(sc[1])+'</p>'+
+  (meta?'<div class="mdm-proofloop-verification-target"><span>'+esc(t('Licenza e competenza','Licence and competence','Liċenzja u ħila'))+'</span><strong>'+esc(meta)+'</strong></div>':'')+
+  '<div class="mdm-proofloop-verification-evidence"><span>🛣️ +'+Number(auto.roadDelta||0)+' '+esc(t('evidenze strada','road evidence','evidenza fit-triq'))+'</span><span>📡 +'+Number(auto.telemetryDelta||0)+' '+esc(t('sessioni','sessions','sessjonijiet'))+'</span></div>'+
+  (server?.status==='evidence_submitted'
+    ?'<div class="mdm-proofloop-verification-lock">🔒 '+esc(t('Evidenza inviata: in attesa della verifica umana della scuola.','Evidence submitted: waiting for human school review.','Evidenza mibgħuta: qed tistenna l-verifika umana tal-iskola.'))+'</div>'
+    :'<button id="mdmUnifiedSchoolEvidenceSend" class="secondary" type="button">✍️ '+esc(t('Scrivi e invia evidenza','Write and send evidence','Ikteb u ibgħat evidenza'))+'</button>')+
+  '</div>';
+}
 function html(result){
+ const server=activeSchoolMission();
+ if(server)return schoolMissionHtml(server,result);
  const mission=refresh(result);
  if(!mission){
   return '<div class="mdm-proofloop-verification create">'+
@@ -362,6 +445,12 @@ async function copyBrief(){
  }
 }
 function bind(result,rerender){
+ const unifiedBtn=document.getElementById('mdmUnifiedSchoolEvidenceSend');
+ if(unifiedBtn)unifiedBtn.onclick=function(){
+  const m=activeSchoolMission(),mid=serverMissionId(m),title=String(m?.payload?.title||m?.payload?.objective||t('Missione della scuola','School mission','Missjoni tal-iskola'));
+  const api=window.MDM_STUDENT_SCHOOL_EVIDENCE_45838239_API;
+  if(api&&typeof api.openEditor==='function'&&mid)api.openEditor(mid,title);
+ };
  const createBtn=document.getElementById('mdmProofLoopCreateMission');
  if(createBtn)createBtn.onclick=function(){create(result);if(typeof rerender==='function')rerender()};
  const copyBtn=document.getElementById('mdmProofLoopCopyMission');
@@ -374,6 +463,10 @@ window.MDM_PROOFLOOP_VERIFICATION=Object.freeze({
  create,
  refresh,
  current:load,
+ unifiedCurrent,
+ activeSchoolMission,
+ evidenceForServerMission,
+ syncAcceptedSchoolMission,
  assignmentPayload,
  html,
  bind

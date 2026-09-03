@@ -1,9 +1,9 @@
-/* Malta Driving Master 45.8.38.1 — Instructor Co-Sign Strict Binding Fix */
+/* Malta Driving Master 45.8.38.2 — Instructor Co-Sign Copy Feedback */
 (function(){
 'use strict';
-if(window.MDM_INSTRUCTOR_COSIGN_458381)return;
+if(window.MDM_INSTRUCTOR_COSIGN_458382)return;
 
-const VERSION='45.8.38.1';
+const VERSION='45.8.38.2';
 const AUTH='mdm_auth_session_v4410';
 const STATE='mdm-proofloop-cosign-v2';
 let raf=0,studentBusy=false,schoolBusy=false;
@@ -91,11 +91,31 @@ function decodeCosign(code){
   return p;
  }catch(_){return null}
 }
+function showCopyFeedback(ok,code){
+ const host=document.querySelector('.mdm-instructor-cosign-box');if(!host)return;
+ let box=host.querySelector('.mdm-cosign-copy-result');
+ if(!box){box=document.createElement('div');box.className='mdm-cosign-copy-result mdm-cosign-state';host.appendChild(box)}
+ if(ok){
+  box.className='mdm-cosign-copy-result mdm-cosign-state verified';
+  box.innerHTML='<strong>✅ '+esc(t('Codice co-sign copiato','Co-sign code copied','Kodiċi co-sign ikkupjat'))+'</strong><small>'+esc(t('Ora passa al profilo Scuola e incollalo nel pannello Instructor Co-Sign.','Now switch to the School profile and paste it into Instructor Co-Sign.','Issa mur fil-profil tal-Iskola u waħħlu fil-pannell Instructor Co-Sign.'))+'</small>';
+ }else{
+  box.className='mdm-cosign-copy-result mdm-cosign-state revision';
+  box.innerHTML='<strong>📋 '+esc(t('Copia manualmente questo codice','Copy this code manually','Ikkopja dan il-kodiċi manwalment'))+'</strong><textarea readonly></textarea><small>'+esc(t('Tocca il codice, seleziona tutto e copia.','Tap the code, select all and copy.','Mess il-kodiċi, agħżel kollox u kkopja.'))+'</small>';
+  const ta=box.querySelector('textarea');if(ta){ta.value=code;ta.onclick=()=>{ta.focus();ta.select();try{ta.setSelectionRange(0,ta.value.length)}catch(_){}}}
+ }
+}
 async function copyCosignCode(){
  const code=encodeCosign(rawMission());if(!code)return false;
- try{await navigator.clipboard.writeText(code);return true}catch(_){
-  const ta=document.createElement('textarea');ta.value=code;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();return true
+ let ok=false;
+ try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(code);ok=true}}catch(_){}
+ if(!ok){
+  try{
+   const ta=document.createElement('textarea');ta.value=code;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.focus();ta.select();try{ta.setSelectionRange(0,code.length)}catch(_){}ok=document.execCommand('copy')===true;ta.remove();
+  }catch(_){}
  }
+ showCopyFeedback(ok,code);
+ const btn=document.querySelector('[data-cosign-copy]');if(ok&&btn)btn.textContent='✅ '+t('Codice copiato','Code copied','Kodiċi ikkupjat');
+ return ok;
 }
 async function schoolAssignCode(code){
  const payload=decodeCosign(code);if(!payload||!schoolSelected)return false;
@@ -228,5 +248,5 @@ const screen=document.getElementById('screen');if(screen){const o=new MutationOb
 window.addEventListener('pageshow',()=>{schedule();syncStudent();refreshSchoolContext()});
 window.addEventListener('storage',schedule);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){schedule();syncStudent()}});
-window.MDM_INSTRUCTOR_COSIGN_458381=Object.freeze({version:VERSION,syncStudent,submitForReview,refreshSchoolContext,loadSchoolMissions,schoolReview,copyCosignCode,schoolAssignCode,current:loadState});
+window.MDM_INSTRUCTOR_COSIGN_458382=Object.freeze({version:VERSION,syncStudent,submitForReview,refreshSchoolContext,loadSchoolMissions,schoolReview,copyCosignCode,schoolAssignCode,current:loadState});
 })();

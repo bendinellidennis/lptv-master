@@ -1,8 +1,8 @@
-/* Malta Driving Master 45.8.32 — ProofLoop Student UI */
+/* Malta Driving Master 45.8.33 — ProofLoop Student UI + Verification Missions */
 (function(){
 'use strict';
 if(window.MDM_PROOFLOOP_UI)return;
-const VERSION='45.8.32',AUTH='mdm_auth_session_v4410',OWNER='maltadrivingmaster@gmail.com';let raf=0;
+const VERSION='45.8.33',AUTH='mdm_auth_session_v4410',OWNER='maltadrivingmaster@gmail.com';let raf=0;
 function parse(v){try{return v?JSON.parse(v):null}catch(_){return null}}
 function lang(){return String(parse(localStorage.getItem('mdm-v1-settings'))?.lang||'en')}
 function t(it,en,mt){const l=lang();return l==='it'?it:l==='mt'?mt:en}
@@ -22,12 +22,15 @@ function render(){
  const screen=document.getElementById('screen');if(!screen)return false;let card=old;
  if(!card){card=document.createElement('section');card.id='mdmProofLoopCard';card.className='mdm-proofloop-card';const a=screen.querySelector('.premium-focus-card')||document.getElementById('mdmPilotWelcome')||screen.firstElementChild;if(a)a.insertAdjacentElement('afterend',card);else screen.appendChild(card)}
  const sc=stateCopy(r.state);
+ const verification=window.MDM_PROOFLOOP_VERIFICATION;
+ const verificationHtml=verification&&typeof verification.html==='function'?verification.html(r):'';
  const sources=m.SOURCE_IDS.map(id=>{const x=r.sources[id]||{},present=x.present===true,conflict=id==='road'&&r.contradictions>0,cls=conflict?'conflict':present?'present':'missing',label=conflict?t('Da chiarire','Needs review','Trid tiġi ċċarata'):present?t('Presente','Present','Preżenti'):t('Non ancora','Not yet','Għadu mhux');let detail='';if(id==='telemetry'&&x.sessions)detail=' · '+x.sessions+' '+t('sessioni','sessions','sessjonijiet');if(id==='road'&&x.records)detail=' · '+x.records+' '+t('evidenze','evidence','evidenza');return '<div class="mdm-proofloop-source '+cls+'"><span>'+icon(id)+'</span><div><strong>'+esc(sourceLabel(id))+'</strong><small>'+esc(label+detail)+'</small></div><b>'+(conflict?'!':present?'✓':'—')+'</b></div>'}).join('');
  card.innerHTML='<div class="mdm-proofloop-head"><div><small>MDM PROOFLOOP</small><h2>'+esc(t('La tua preparazione, con prove','Your preparation, backed by evidence','Il-preparazzjoni tiegħek, b’evidenza'))+'</h2></div><span>🛡️</span></div>'+
  '<div class="mdm-proofloop-state '+esc(r.state)+'"><span>'+sc[0]+'</span><div><strong>'+esc(sc[1])+'</strong><p>'+esc(sc[2])+'</p></div></div>'+
  '<div class="mdm-proofloop-summary"><div><span>'+esc(t('Qualità evidenze','Evidence quality','Kwalità tal-evidenza'))+'</span><strong>'+esc(quality(r.quality))+'</strong></div><div><span>'+esc(t('Fonti indipendenti','Independent sources','Sorsi indipendenti'))+'</span><strong>'+r.independentSources+' / '+r.sourceTotal+'</strong></div><div><span>'+esc(t('Contraddizioni','Contradictions','Kontradizzjonijiet'))+'</span><strong>'+r.contradictions+'</strong></div></div>'+
  '<div class="mdm-proofloop-sources">'+sources+'</div><div class="mdm-proofloop-next"><strong>🎯 '+esc(t('Prossima prova necessaria','Next evidence needed','L-evidenza li jmiss meħtieġa'))+'</strong><p>'+esc(next(r.nextNeed))+'</p></div>'+
- '<p class="mdm-proofloop-rule">'+esc(t('Regola ProofLoop: una competenza non viene considerata verificata solo perché un quiz o un singolo tentativo è andato bene.','ProofLoop rule: a skill is not considered verified just because one quiz or one attempt went well.','Regola ProofLoop: ħila ma titqiesx ivverifikata sempliċement għax quiz jew tentattiv wieħed mar tajjeb.'))+'</p>';
+ '<p class="mdm-proofloop-rule">'+esc(t('Regola ProofLoop: una competenza non viene considerata verificata solo perché un quiz o un singolo tentativo è andato bene.','ProofLoop rule: a skill is not considered verified just because one quiz or one attempt went well.','Regola ProofLoop: ħila ma titqiesx ivverifikata sempliċement għax quiz jew tentattiv wieħed mar tajjeb.'))+'</p>'+verificationHtml;
+ if(verification&&typeof verification.bind==='function')verification.bind(r,render);
  return true;
 }
 function schedule(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;render()})}

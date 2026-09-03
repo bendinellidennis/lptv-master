@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.23.11 — Student School Evidence Bridge
+/* Malta Driving Master 45.8.38.24 — Student School Evidence + Competence Passport Bridge
    Additive only: shows server-assigned school missions in Student Home.
    Does not replace #screen, does not alter local ProofLoop state. */
 (function(){
@@ -6,9 +6,10 @@
 if(window.MDM_STUDENT_SCHOOL_EVIDENCE_45838239)return;
 window.MDM_STUDENT_SCHOOL_EVIDENCE_45838239=true;
 
-const VERSION='45.8.38.23.9';
+const VERSION='45.8.38.24';
 const AUTH='mdm_auth_session_v4410';
 const HOST_ID='mdmStudentSchoolEvidence';
+const CACHE='mdm-school-evidence-cache-v1';
 let busy=false;
 
 function parse(v){try{return v?JSON.parse(v):null}catch(_){return null}}
@@ -28,6 +29,10 @@ async function rpc(name,payload){
  return d||{};
 }
 function anchor(){return document.getElementById('mdmCompactRealPreparation')||document.querySelector('.mdm-compact-real-preparation')||null}
+function cacheKey(){const id=String(session()?.user?.id||'').trim();return CACHE+(id?'::user:'+id:'::signed-out')}
+function saveMissionCache(items){try{localStorage.setItem(cacheKey(),JSON.stringify({schema:'mdm-school-evidence-cache-v1',version:VERSION,updatedAt:new Date().toISOString(),missions:Array.isArray(items)?items:[]}))}catch(_){}}
+function packLabel(id){return ({'MT-LPTV':'LPTV TAG','MT-B':'B','MT-A':'A','MT-C-CE':'C/CE','MT-D':'D'})[String(id||'')]||String(id||'')}
+function missionMeta(m){const p=m?.payload||{},parts=[];if(p.pack_id)parts.push(packLabel(p.pack_id));if(p.competence_label)parts.push(String(p.competence_label));return parts.join(' · ')}
 function missionTitle(m){return String(m?.payload?.title||m?.payload?.objective||t('Missione della scuola','School mission','Missjoni tal-iskola'))}
 function missionObjective(m){const x=String(m?.payload?.objective||'').trim();return x&&x!==missionTitle(m)?x:''}
 function statusLabel(s){
@@ -52,6 +57,7 @@ function installStyle(){
  +'#'+HOST_ID+' .sse-title{font-size:15px;font-weight:900;line-height:1.2}'
  +'#'+HOST_ID+' .sse-pill{font-size:10px;font-weight:900;border-radius:999px;padding:5px 8px;background:#edf5f7;white-space:nowrap}'
  +'#'+HOST_ID+' .sse-objective{font-size:12px;line-height:1.35;color:#617985;margin:8px 0 0}'
+ +'#'+HOST_ID+' .sse-meta{font-size:11px;line-height:1.3;color:#0b7488;margin:7px 0 0;font-weight:800}'
  +'#'+HOST_ID+' .sse-open-editor{margin-top:10px;border:0;border-radius:13px;padding:12px 14px;background:#0b7488;color:#fff;font-weight:900}'
  +'#'+HOST_ID+' .sse-submit{margin-top:8px;border:0;border-radius:13px;padding:11px 13px;background:#0b7488;color:#fff;font-weight:900}'
  +'#'+HOST_ID+' .sse-wait{margin-top:9px;padding:9px 10px;border-radius:12px;background:#eef7f2;color:#315f47;font-size:12px;font-weight:750}'
@@ -65,6 +71,7 @@ function cardHtml(m){
  return '<article class="sse-card" data-mid="'+id+'">'
   +'<div class="sse-top"><div class="sse-title">🎯 '+esc(missionTitle(m))+'</div><span class="sse-pill">'+esc(statusLabel(m.status))+'</span></div>'
   +(missionObjective(m)?'<p class="sse-objective">'+esc(missionObjective(m))+'</p>':'')
+  +(missionMeta(m)?'<p class="sse-meta">🪪 '+esc(missionMeta(m))+'</p>':'')
   +(m.status==='revision_requested'&&review?'<div class="sse-revision">↺ '+esc(review)+'</div>':'')
   +(canSubmit(m)?'<button class="sse-open-editor" type="button">✍️ '+esc(t('Scrivi e invia evidenza','Write and send evidence','Ikteb u ibgħat evidenza'))+'</button><div class="sse-error" hidden></div>':'')
   +(m.status==='evidence_submitted'?'<div class="sse-wait">✓ '+esc(t('Inviata. In attesa della verifica della scuola.','Sent. Waiting for school review.','Mibgħuta. Qed tistenna r-reviżjoni tal-iskola.'))+'</div>':'')
@@ -124,6 +131,8 @@ async function load(force=false){
  if(!home()||!session())return false;
  try{
   const d=await rpc('mdm_student_evidence_list_missions',{}),items=Array.isArray(d?.missions)?d.missions:[];
+  saveMissionCache(items);
+  try{window.MDM_DRIVER_COMPETENCE_PASSPORT?.sync?.();window.MDM_DRIVER_COMPETENCE_PASSPORT?.render?.()}catch(_){}
   const rows=items.filter(m=>['assigned','revision_requested','evidence_submitted','accepted'].includes(String(m?.status||''))).slice(0,8);
   if(!rows.length){document.getElementById(HOST_ID)?.remove();return false}
   const a=anchor();if(!a)return false;

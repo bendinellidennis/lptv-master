@@ -241,8 +241,39 @@ function mountSchoolPanel(){
   schoolReview(id,'revision',note);
  });
 }
-function schedule(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;installOverlay();decorateStudent();mountSchoolPanel()})}
-installOverlay();schedule();
+
+function installDirectCosignFix458387(){
+ if(window.__MDM_COSIGN_DIRECT_FIX_458387)return;
+ window.__MDM_COSIGN_DIRECT_FIX_458387=true;
+ let lastFire=0;
+ function buttonAt(ev){
+  const direct=ev.target?.closest?.('[data-cosign-copy]');
+  if(direct)return direct;
+  const p=ev.changedTouches?.[0]||ev.touches?.[0]||ev;
+  if(typeof p?.clientX!=='number'||typeof p?.clientY!=='number')return null;
+  const b=document.querySelector('[data-cosign-copy]');
+  if(!b)return null;
+  const r=b.getBoundingClientRect();
+  return p.clientX>=r.left&&p.clientX<=r.right&&p.clientY>=r.top&&p.clientY<=r.bottom?b:null;
+ }
+ async function fire(ev){
+  const b=buttonAt(ev);if(!b)return;
+  const now=Date.now();if(now-lastFire<650)return;lastFire=now;
+  ev.preventDefault?.();ev.stopImmediatePropagation?.();
+  b.textContent='⏳ '+t('Preparazione codice…','Preparing code…','Qed jitħejja l-kodiċi…');
+  try{
+   const ok=await copyCosignCode();
+   if(!ok&&b.isConnected)b.textContent='📋 '+t('Copia il codice sotto','Copy the code below','Ikkopja l-kodiċi hawn taħt');
+  }catch(_){
+   if(b.isConnected)b.textContent='⚠️ '+t('Errore copia','Copy error','Żball fil-kopja');
+  }
+ }
+ document.addEventListener('pointerup',fire,true);
+ document.addEventListener('touchend',fire,{capture:true,passive:false});
+ document.addEventListener('click',fire,true);
+}
+\nfunction schedule(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;installOverlay();decorateStudent();mountSchoolPanel()})}
+installOverlay();installDirectCosignFix458387();schedule();
 setTimeout(()=>{syncStudent();refreshSchoolContext()},900);
 const screen=document.getElementById('screen');if(screen){const o=new MutationObserver(schedule);o.observe(screen,{childList:true,subtree:true});window.__MDM_COSIGN_OBSERVER__=o}
 window.addEventListener('pageshow',()=>{schedule();syncStudent();refreshSchoolContext()});

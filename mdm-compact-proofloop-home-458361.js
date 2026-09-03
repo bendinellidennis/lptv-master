@@ -1,8 +1,8 @@
-/* Malta Driving Master 45.8.36.1 — Compact Home Stability Fix */
+/* Malta Driving Master 45.8.38.25 — Compact Unified Mission Home */
 (function(){
 'use strict';
 if(window.MDM_COMPACT_HOME_45836)return;
-const V='45.8.36.1', HUB='mdmCompactRealPreparation';
+const V='45.8.38.25', HUB='mdmCompactRealPreparation';
 let open='', raf=0;
 
 function p(v){try{return v?JSON.parse(v):null}catch(_){return null}}
@@ -10,7 +10,7 @@ function lang(){return String(p(localStorage.getItem('mdm-v1-settings'))?.lang||
 function t(it,en,mt){const l=lang();return l==='it'?it:l==='mt'?mt:en}
 function home(){const h=String(location.hash||'').replace(/^#/,'');return !h||h==='home'}
 function proof(){try{return window.MDM_PROOFLOOP_ENGINE?.evaluate?.()||null}catch(_){return null}}
-function mission(){try{return window.MDM_PROOFLOOP_VERIFICATION?.current?.()||null}catch(_){return null}}
+function mission(){try{return window.MDM_PROOFLOOP_VERIFICATION?.unifiedCurrent?.(window.MDM_PROOFLOOP_ENGINE?.evaluate?.()||null)||window.MDM_PROOFLOOP_VERIFICATION?.current?.()||null}catch(_){return null}}
 function exam(){try{return window.MDM_PROOFLOOP_EXAM_OUTCOME?.current?.()||null}catch(_){return null}}
 function passport(){try{return window.MDM_DRIVER_COMPETENCE_PASSPORT?.current?.()||null}catch(_){return null}}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -22,10 +22,17 @@ function proofText(){
 }
 function missionText(){
  const m=mission();if(!m)return t('Nessuna missione attiva','No active mission','L-ebda missjoni attiva');
- const label=String(m.target?.label||t('Competenza da verificare','Skill to verify','Ħila li trid tiġi vverifikata'));
+ const label=String(m.target?.label||m.payload?.competence_label||t('Competenza da verificare','Skill to verify','Ħila li trid tiġi vverifikata'));
  let state=t('Missione attiva','Mission active','Missjoni attiva');
- if(m.status==='awaiting_instructor')state=t('Pronta per istruttore','Ready for instructor','Lesta għall-istruttur');
- if(m.status==='evidence_conflict')state=t('Da chiarire','Needs resolving','Trid tiġi ċċarata');
+ if(m.source==='school'){
+  if(m.status==='assigned')state=t('Assegnata dalla scuola','Assigned by school','Assenjata mill-iskola');
+  if(m.status==='revision_requested')state=t('Nuova evidenza richiesta','New evidence requested','Evidenza ġdida mitluba');
+  if(m.status==='evidence_submitted')state=t('In attesa della scuola','Waiting for school review','Qed tistenna l-iskola');
+ }else{
+  if(m.status==='awaiting_instructor')state=t('Pronta per istruttore','Ready for instructor','Lesta għall-istruttur');
+  if(m.status==='evidence_conflict')state=t('Da chiarire','Needs resolving','Trid tiġi ċċarata');
+  if(m.status==='verified')state=t('Verificata dalla scuola','Verified by school','Ivverifikata mill-iskola');
+ }
  return label+' · '+state;
 }
 function examText(){

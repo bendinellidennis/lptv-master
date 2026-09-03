@@ -1,8 +1,8 @@
-/* Malta Driving Master 45.8.38.19.2 — Dedicated School Telemetry Section Mount Fix */
+/* Malta Driving Master 45.8.38.19.3 — Real School Home Telemetry Mount Fix */
 (function(){
 'use strict';
 if(window.MDM_SCHOOL_TELEMETRY_4583819)return;
-const VERSION='45.8.38.19.2';
+const VERSION='45.8.38.19.3';
 
 const AUTH='mdm_auth_session_v4410';
 const TELEMETRY_KEY='mdm-v1-real-road-telemetry';
@@ -13,6 +13,8 @@ let watchId=null;
 let active=null;
 let mountBusy=false;
 let syncBusy=false;
+let retryTimer=null;
+let retryUntil=0;
 
 function parse(v){try{return v?JSON.parse(v):null}catch(_){return null}}
 function session(){return parse(localStorage.getItem(AUTH))}
@@ -44,12 +46,20 @@ async function rpc(name,payload){
  if(!r.ok)throw new Error(String(d?.message||d?.error||('http_'+r.status)));
  return d||{};
 }
+function textOf(el){return String(el?.innerText||el?.textContent||'')}
 function findSchoolHost(){
- const direct=document.querySelector('.sch35');
+ const direct=document.querySelector('.sch35,.sch35-profile');
  if(direct)return direct;
  const account=document.querySelector('.account-enroll-card');
  if(account)return account;
- return Array.from(document.querySelectorAll('section,article,.card,div')).find(el=>/CONSOLE\s+SCUOLA\s+SERVER/i.test(String(el.innerText||'')))||null;
+ const nodes=Array.from(document.querySelectorAll('main,section,article,.card,div'));
+ const exact=nodes.find(el=>/GESTIONE\s+SCUOLA/i.test(textOf(el))&&/STRUMENTI\s+AVANZATI/i.test(textOf(el)));
+ if(exact)return exact;
+ const dashboard=nodes.find(el=>/School\s+Dashboard/i.test(textOf(el))&&/Assegnazioni/i.test(textOf(el))&&/Studenti/i.test(textOf(el)));
+ if(dashboard)return dashboard;
+ const legacy=nodes.find(el=>/CONSOLE\s+SCUOLA\s+SERVER/i.test(textOf(el)));
+ if(legacy)return legacy;
+ return null;
 }
 function fmt(n,d){return Number.isFinite(Number(n))?Number(n).toFixed(d):'0'}
 function haversine(a,b){
@@ -88,7 +98,6 @@ function onPosition(pos){
  active.bestAccuracy=Math.min(active.bestAccuracy,p.accuracy);
  if(!active.start)active.start=p;
  active.end=p;
-
  let segment=0;
  if(active.last&&p.accuracy<=60&&active.last.accuracy<=60){
   segment=haversine(active.last,p);
@@ -107,16 +116,10 @@ function onPosition(pos){
  active.last=p;
  live();
 }
-function onGeoError(err){
- setPanelStatus(t('GPS non disponibile: ','GPS unavailable: ','GPS mhux disponibbli: ')+String(err?.message||err||''),false);
-}
+function onGeoError(err){setPanelStatus(t('GPS non disponibile: ','GPS unavailable: ','GPS mhux disponibbli: ')+String(err?.message||err||''),false)}
 async function loadStudents(){
  const d=await rpc('mdm_school_list_active_students',{});
- if(d.authorized!==true){
-  schoolStudents=[];
-  selectedStudent='';
-  return {authorized:false,rows:[]};
- }
+ if(d.authorized!==true){schoolStudents=[];selectedStudent='';return {authorized:false,rows:[]}}
  schoolStudents=Array.isArray(d.students)?d.students:[];
  if(!selectedStudent&&schoolStudents[0])selectedStudent=String(schoolStudents[0].student_user_id||'');
  return {authorized:true,rows:schoolStudents};
@@ -124,22 +127,23 @@ async function loadStudents(){
 function panelHtml(){
  const hasStudents=schoolStudents.length>0;
  const opts=schoolStudents.map(s=>'<option value="'+esc(String(s.student_user_id||''))+'" '+(String(s.student_user_id||'')===selectedStudent?'selected':'')+'>'+esc(String(s.student_name||s.student_email||t('Studente','Student','Student')))+'</option>').join('');
- return '<section id="mdmSchoolTelemetryPanel" data-mdm-section="school-telemetry" style="margin:14px 0;padding:15px;border:1px solid rgba(15,113,128,.22);border-radius:18px;background:rgba(238,248,250,.92);color:#173f4c">'+
-  '<div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><small style="font-weight:900;letter-spacing:.07em">'+esc(t('SEZIONE SCUOLA · TELEMETRIA','SCHOOL SECTION · TELEMETRY','TAQSIMA SKOLA · TELEMETRIJA'))+'</small><h3 style="margin:4px 0 5px">📡 '+esc(t('Telemetria lezione pratica','Practical lesson telemetry','Telemetrija tal-lezzjoni prattika'))+'</h3><p style="margin:0;font-size:12px;line-height:1.4;opacity:.78">'+esc(t('Sezione dedicata esclusivamente alla telemetria della lezione pratica. La Scuola registra la sessione e la attribuisce allo studente selezionato. Il telefono deve restare fissato durante la guida.','Dedicated section exclusively for practical-lesson telemetry. The school records the session and assigns it to the selected learner. The phone must remain mounted while driving.','Taqsima ddedikata esklussivament għat-telemetrija tal-lezzjoni prattika. L-iskola tirreġistra s-sessjoni u torbotha mal-istudent magħżul. It-telefon għandu jibqa’ mwaħħal waqt is-sewqan.'))+'</p></div><span style="font-size:28px">🚗</span></div>'+
-  '<label style="display:block;margin-top:12px"><span style="display:block;font-size:10px;font-weight:900;margin-bottom:5px">'+esc(t('Studente','Student','Student'))+'</span><select id="mdmTelemetryStudent" '+(hasStudents?'':'disabled')+' style="width:100%;padding:10px;border-radius:11px;border:1px solid rgba(15,113,128,.22);background:#fff">'+opts+'</select></label>'+
+ return '<section id="mdmSchoolTelemetryPanel" data-mdm-section="school-telemetry" style="margin:18px 0 20px;padding:16px;border:1px solid rgba(15,113,128,.24);border-radius:20px;background:linear-gradient(145deg,#eef8fb,#dff2f4);color:#173f4c;box-shadow:0 6px 18px rgba(20,55,74,.07)">'+
+  '<div style="font-size:20px;font-weight:950;margin:0 0 12px;color:#0d3049">📡 '+esc(t('TELEMETRIA','TELEMETRY','TELEMETRIJA'))+'</div>'+ 
+  '<div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><h3 style="margin:0 0 5px">'+esc(t('Telemetria lezione pratica','Practical lesson telemetry','Telemetrija tal-lezzjoni prattika'))+'</h3><p style="margin:0;font-size:12px;line-height:1.4;opacity:.78">'+esc(t('Sezione dedicata esclusivamente alla telemetria. La Scuola registra la sessione e la attribuisce allo studente selezionato.','Dedicated telemetry section. The school records the session and assigns it to the selected learner.','Taqsima ddedikata għat-telemetrija. L-iskola tirreġistra s-sessjoni u torbotha mal-istudent magħżul.'))+'</p></div><span style="font-size:30px">🚗</span></div>'+ 
+  '<label style="display:block;margin-top:12px"><span style="display:block;font-size:10px;font-weight:900;margin-bottom:5px">'+esc(t('Studente','Student','Student'))+'</span><select id="mdmTelemetryStudent" '+(hasStudents?'':'disabled')+' style="width:100%;padding:10px;border-radius:11px;border:1px solid rgba(15,113,128,.22);background:#fff">'+opts+'</select></label>'+ 
   '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:11px">'+
-   '<div style="padding:8px;border-radius:10px;background:#fff"><small>'+esc(t('Durata','Duration','Tul'))+'</small><strong id="mdmTelemetryDuration" style="display:block">0:00</strong></div>'+
-   '<div style="padding:8px;border-radius:10px;background:#fff"><small>'+esc(t('Distanza','Distance','Distanza'))+'</small><strong id="mdmTelemetryDistance" style="display:block">0.00 km</strong></div>'+
-   '<div style="padding:8px;border-radius:10px;background:#fff"><small>'+esc(t('Velocità','Speed','Veloċità'))+'</small><strong id="mdmTelemetrySpeed" style="display:block">0 km/h</strong></div>'+
-   '<div style="padding:8px;border-radius:10px;background:#fff"><small>'+esc(t('Campioni','Samples','Kampjuni'))+'</small><strong id="mdmTelemetrySamples" style="display:block">0</strong></div>'+
-  '</div>'+
+   '<div style="padding:8px;border-radius:10px;background:#fff"><small>'+esc(t('Durata','Duration','Tul'))+'</small><strong id="mdmTelemetryDuration" style="display:block">0:00</strong></div>'+ 
+   '<div style="padding:8px;border-radius:10px;background:#fff"><small>'+esc(t('Distanza','Distance','Distanza'))+'</small><strong id="mdmTelemetryDistance" style="display:block">0.00 km</strong></div>'+ 
+   '<div style="padding:8px;border-radius:10px;background:#fff"><small>'+esc(t('Velocità','Speed','Veloċità'))+'</small><strong id="mdmTelemetrySpeed" style="display:block">0 km/h</strong></div>'+ 
+   '<div style="padding:8px;border-radius:10px;background:#fff"><small>'+esc(t('Campioni','Samples','Kampjuni'))+'</small><strong id="mdmTelemetrySamples" style="display:block">0</strong></div>'+ 
+  '</div>'+ 
   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px">'+
-   '<button id="mdmTelemetryStart" type="button" '+(hasStudents?'':'disabled')+' style="border:0;border-radius:12px;padding:11px;font-weight:900;background:#0f7180;color:#fff;'+(hasStudents?'':'opacity:.5')+'">▶ '+esc(t('Avvia telemetria','Start telemetry','Ibda t-telemetrija'))+'</button>'+
-   '<button id="mdmTelemetryStop" type="button" disabled style="border:0;border-radius:12px;padding:11px;font-weight:900;background:#173f4c;color:#fff;opacity:.5">■ '+esc(t('Termina e salva','Stop & save','Waqqaf u salva'))+'</button>'+
-  '</div>'+
-  '<div id="mdmSchoolTelemetryStatus" style="margin-top:10px;padding:9px 10px;border-radius:10px;background:rgba(15,113,128,.08);font-size:11px">'+esc(t('Pronta. Seleziona lo studente e avvia prima di partire.','Ready. Select the learner and start before driving.','Lesta. Agħżel l-istudent u ibda qabel issuq.'))+'</div>'+
-  '<small style="display:block;margin-top:9px;opacity:.65">'+esc(t('Privacy: MDM salva metriche della sessione e coordinate iniziale/finale approssimate (~100 m), non il percorso GPS completo.','Privacy: MDM stores session metrics and approximate start/end coordinates (~100 m), not the full GPS track.','Privatezza: MDM jaħżen il-metriċi tas-sessjoni u koordinati approssimattivi tal-bidu/tmiem (~100 m), mhux ir-rotta GPS sħiħa.'))+'</small>'+
-  '<small style="display:block;margin-top:5px;opacity:.45">MDM '+VERSION+'</small>'+
+   '<button id="mdmTelemetryStart" type="button" '+(hasStudents?'':'disabled')+' style="border:0;border-radius:12px;padding:11px;font-weight:900;background:#0f7180;color:#fff;'+(hasStudents?'':'opacity:.5')+'">▶ '+esc(t('Avvia telemetria','Start telemetry','Ibda t-telemetrija'))+'</button>'+ 
+   '<button id="mdmTelemetryStop" type="button" disabled style="border:0;border-radius:12px;padding:11px;font-weight:900;background:#173f4c;color:#fff;opacity:.5">■ '+esc(t('Termina e salva','Stop & save','Waqqaf u salva'))+'</button>'+ 
+  '</div>'+ 
+  '<div id="mdmSchoolTelemetryStatus" style="margin-top:10px;padding:9px 10px;border-radius:10px;background:rgba(15,113,128,.08);font-size:11px">'+esc(t('Pronta. Seleziona lo studente e avvia prima di partire.','Ready. Select the learner and start before driving.','Lesta. Agħżel l-istudent u ibda qabel issuq.'))+'</div>'+ 
+  '<small style="display:block;margin-top:9px;opacity:.65">'+esc(t('Privacy: MDM salva metriche della sessione e coordinate iniziale/finale approssimate (~100 m), non il percorso GPS completo.','Privacy: MDM stores session metrics and approximate start/end coordinates (~100 m), not the full GPS track.','Privatezza: MDM jaħżen il-metriċi tas-sessjoni u koordinati approssimattivi tal-bidu/tmiem (~100 m), mhux ir-rotta GPS sħiħa.'))+'</small>'+ 
+  '<small style="display:block;margin-top:5px;opacity:.45">MDM '+VERSION+'</small>'+ 
  '</section>';
 }
 function bindPanel(){
@@ -151,7 +155,7 @@ function bindPanel(){
  if(stop)stop.onclick=stopTelemetry;
 }
 async function mountSchool(){
- if(mountBusy||!authenticated())return false;
+ if(mountBusy)return false;
  const host=findSchoolHost();
  if(!host){document.getElementById('mdmSchoolTelemetryPanel')?.remove();return false}
  if(document.getElementById('mdmSchoolTelemetryPanel'))return true;
@@ -165,13 +169,9 @@ async function mountSchool(){
   const anchor=host.querySelector('.sch35-profile-entry')||host.querySelector('.sch35-head');
   if(anchor)anchor.insertAdjacentElement('afterend',panel);else host.insertBefore(panel,host.firstChild||null);
   bindPanel();
-  if(loadError){
-   setPanelStatus(t('Telemetria disponibile, ma non riesco a caricare gli studenti: ','Telemetry is available, but learners could not be loaded: ','It-telemetrija hija disponibbli, iżda l-istudenti ma setgħux jitgħabbew: ')+loadError,false);
-  }else if(loaded.authorized!==true){
-   setPanelStatus(t('Sezione Telemetria visibile, ma questo account non è autorizzato come Scuola.','Telemetry section is visible, but this account is not authorized as a School.','It-taqsima tat-Telemetrija tidher, iżda dan il-kont mhux awtorizzat bħala Skola.'),false);
-  }else if(!loaded.rows.length){
-   setPanelStatus(t('Sezione Telemetria pronta. Nessuno studente attivo disponibile da selezionare.','Telemetry section is ready. No active learner is currently available to select.','It-taqsima tat-Telemetrija lesta. Bħalissa m’hemm l-ebda student attiv disponibbli biex jintgħażel.'),null);
-  }
+  if(loadError){setPanelStatus(t('Telemetria visibile. Caricamento studenti non riuscito: ','Telemetry visible. Learner loading failed: ','Telemetrija viżibbli. It-tagħbija tal-istudenti falliet: ')+loadError,false)}
+  else if(loaded.authorized!==true){setPanelStatus(t('Telemetria visibile, ma questo account non è autorizzato come Scuola.','Telemetry is visible, but this account is not authorized as a School.','It-telemetrija tidher, iżda dan il-kont mhux awtorizzat bħala Skola.'),false)}
+  else if(!loaded.rows.length){setPanelStatus(t('Telemetria pronta. Nessuno studente attivo disponibile.','Telemetry ready. No active learner is available.','Telemetrija lesta. M’hemm l-ebda student attiv disponibbli.'),null)}
   return true;
  }catch(_){return false}
  finally{mountBusy=false}
@@ -180,14 +180,7 @@ function startTelemetry(){
  if(active||watchId!==null)return;
  if(!selectedStudent){setPanelStatus(t('Seleziona uno studente.','Select a learner.','Agħżel student.'),false);return}
  if(!navigator.geolocation){setPanelStatus(t('GPS non supportato su questo dispositivo.','GPS is not supported on this device.','GPS mhux appoġġjat fuq dan l-apparat.'),false);return}
- active={
-  sessionId:'TEL-'+Date.now().toString(36).toUpperCase(),
-  studentUserId:selectedStudent,
-  startedAt:new Date().toISOString(),
-  startedMs:Date.now(),
-  samples:0,distanceM:0,maxSpeedKph:0,lastSpeedKph:0,stops:0,
-  accuracySum:0,bestAccuracy:9999,start:null,end:null,last:null,wasMoving:false
- };
+ active={sessionId:'TEL-'+Date.now().toString(36).toUpperCase(),studentUserId:selectedStudent,startedAt:new Date().toISOString(),startedMs:Date.now(),samples:0,distanceM:0,maxSpeedKph:0,lastSpeedKph:0,stops:0,accuracySum:0,bestAccuracy:9999,start:null,end:null,last:null,wasMoving:false};
  watchId=navigator.geolocation.watchPosition(onPosition,onGeoError,{enableHighAccuracy:true,maximumAge:1000,timeout:12000});
  const start=document.getElementById('mdmTelemetryStart'),stop=document.getElementById('mdmTelemetryStop');
  if(start){start.disabled=true;start.style.opacity='.5'}
@@ -203,46 +196,15 @@ async function stopTelemetry(){
  const start=document.getElementById('mdmTelemetryStart'),stop=document.getElementById('mdmTelemetryStop');
  if(start){start.disabled=false;start.style.opacity='1'}
  if(stop){stop.disabled=true;stop.style.opacity='.5'}
-
  const endedAt=new Date().toISOString();
  const duration=Math.max(0,Math.round((Date.now()-snapshot.startedMs)/1000));
  const valid=duration>=30&&snapshot.samples>=3;
- if(!valid){
-  setPanelStatus(t('Sessione troppo breve: servono almeno 30 secondi e 3 campioni GPS. Non salvata.','Session too short: at least 30 seconds and 3 GPS samples are required. Not saved.','Sessjoni qasira wisq: hemm bżonn mill-inqas 30 sekonda u 3 kampjuni GPS. Ma ġietx salvata.'),false);
-  return;
- }
- const telemetry={
-  sessionId:snapshot.sessionId,
-  source:'school_instructor',
-  valid:true,
-  startedAt:snapshot.startedAt,
-  endedAt,
-  durationSeconds:duration,
-  distanceKm:Number((snapshot.distanceM/1000).toFixed(3)),
-  avgSpeedKph:duration>0?Number(((snapshot.distanceM/1000)/(duration/3600)).toFixed(1)):0,
-  maxSpeedKph:Number(snapshot.maxSpeedKph.toFixed(1)),
-  stops:Number(snapshot.stops||0),
-  sampleCount:Number(snapshot.samples||0),
-  avgAccuracyM:snapshot.samples?Number((snapshot.accuracySum/snapshot.samples).toFixed(1)):null,
-  bestAccuracyM:Number.isFinite(snapshot.bestAccuracy)?Number(snapshot.bestAccuracy.toFixed(1)):null,
-  coarseStart:snapshot.start?{lat:coarse(snapshot.start.lat),lon:coarse(snapshot.start.lon)}:null,
-  coarseEnd:snapshot.end?{lat:coarse(snapshot.end.lat),lon:coarse(snapshot.end.lon)}:null
- };
- const payload={
-  schema:SCHEMA,
-  evidenceType:'telemetry_session',
-  title:t('Telemetria lezione pratica','Practical lesson telemetry','Telemetrija tal-lezzjoni prattika'),
-  priority:'telemetry',
-  requiresInstructorCheck:false,
-  telemetry
- };
+ if(!valid){setPanelStatus(t('Sessione troppo breve: servono almeno 30 secondi e 3 campioni GPS. Non salvata.','Session too short: at least 30 seconds and 3 GPS samples are required. Not saved.','Sessjoni qasira wisq: hemm bżonn mill-inqas 30 sekonda u 3 kampjuni GPS. Ma ġietx salvata.'),false);return}
+ const telemetry={sessionId:snapshot.sessionId,source:'school_instructor',valid:true,startedAt:snapshot.startedAt,endedAt,durationSeconds:duration,distanceKm:Number((snapshot.distanceM/1000).toFixed(3)),avgSpeedKph:duration>0?Number(((snapshot.distanceM/1000)/(duration/3600)).toFixed(1)):0,maxSpeedKph:Number(snapshot.maxSpeedKph.toFixed(1)),stops:Number(snapshot.stops||0),sampleCount:Number(snapshot.samples||0),avgAccuracyM:snapshot.samples?Number((snapshot.accuracySum/snapshot.samples).toFixed(1)):null,bestAccuracyM:Number.isFinite(snapshot.bestAccuracy)?Number(snapshot.bestAccuracy.toFixed(1)):null,coarseStart:snapshot.start?{lat:coarse(snapshot.start.lat),lon:coarse(snapshot.start.lon)}:null,coarseEnd:snapshot.end?{lat:coarse(snapshot.end.lat),lon:coarse(snapshot.end.lon)}:null};
+ const payload={schema:SCHEMA,evidenceType:'telemetry_session',title:t('Telemetria lezione pratica','Practical lesson telemetry','Telemetrija tal-lezzjoni prattika'),priority:'telemetry',requiresInstructorCheck:false,telemetry};
  setPanelStatus(t('Salvataggio server in corso…','Saving to server…','Qed tissejvja fuq is-server…'),null);
- try{
-  await rpc('mdm_school_assign_mission',{p_student_user_id:snapshot.studentUserId,p_payload:payload});
-  setPanelStatus('✅ '+t('Sessione salvata e attribuita allo studente.','Session saved and assigned to the learner.','Is-sessjoni ġiet salvata u marbuta mal-istudent.'),true);
- }catch(e){
-  setPanelStatus('❌ '+t('Salvataggio non riuscito: ','Save failed: ','Is-salvataġġ falla: ')+String(e?.message||e||''),false);
- }
+ try{await rpc('mdm_school_assign_mission',{p_student_user_id:snapshot.studentUserId,p_payload:payload});setPanelStatus('✅ '+t('Sessione salvata e attribuita allo studente.','Session saved and assigned to the learner.','Is-sessjoni ġiet salvata u marbuta mal-istudent.'),true)}
+ catch(e){setPanelStatus('❌ '+t('Salvataggio non riuscito: ','Save failed: ','Is-salvataġġ falla: ')+String(e?.message||e||''),false)}
 }
 function readLocalTelemetry(){return parse(localStorage.getItem(TELEMETRY_KEY))||{sessions:[]}}
 function writeLocalTelemetry(v){try{localStorage.setItem(TELEMETRY_KEY,JSON.stringify(v))}catch(_){}}
@@ -259,30 +221,35 @@ async function syncStudentTelemetry(){
   const store=readLocalTelemetry();
   const existing=Array.isArray(store.sessions)?store.sessions:[];
   const byId=new Map(existing.map(x=>[String(x?.sessionId||x?.id||''),x]));
-  incoming.forEach(x=>{
-   const id=String(x.sessionId||'');
-   if(id)byId.set(id,Object.assign({},x,{verified:true,serverEvidence:true}));
-  });
+  incoming.forEach(x=>{const id=String(x.sessionId||'');if(id)byId.set(id,Object.assign({},x,{verified:true,serverEvidence:true}))});
   const sessions=Array.from(byId.values()).sort((a,b)=>String(a.startedAt||'').localeCompare(String(b.startedAt||'')));
   if(sessions.length===existing.length&&incoming.every(x=>existing.some(e=>String(e?.sessionId||'')===String(x.sessionId||''))))return false;
-  store.sessions=sessions;
-  store.updatedAt=new Date().toISOString();
-  store.source='server_school_telemetry_sync';
-  writeLocalTelemetry(store);
+  store.sessions=sessions;store.updatedAt=new Date().toISOString();store.source='server_school_telemetry_sync';writeLocalTelemetry(store);
   try{window.MDM_PROOFLOOP_UI?.render?.()}catch(_){}
   try{window.MDM_COMPACT_HOME_45836?.refresh?.()}catch(_){}
   return true;
  }catch(_){return false}
  finally{syncBusy=false}
 }
+function startRetryWindow(){
+ retryUntil=Date.now()+30000;
+ if(retryTimer)return;
+ retryTimer=setInterval(async function(){
+  if(Date.now()>retryUntil){clearInterval(retryTimer);retryTimer=null;return}
+  const ok=await mountSchool();
+  if(ok){clearInterval(retryTimer);retryTimer=null}
+ },500);
+}
 function schedule(){
- [120,400,900,1600,3000,5000].forEach(ms=>setTimeout(mountSchool,ms));
+ setTimeout(mountSchool,60);
  setTimeout(syncStudentTelemetry,250);
  setTimeout(syncStudentTelemetry,1400);
+ startRetryWindow();
 }
 schedule();
 window.addEventListener('pageshow',schedule);
 window.addEventListener('popstate',schedule);
+window.addEventListener('hashchange',schedule);
 document.addEventListener('visibilitychange',function(){if(!document.hidden)schedule()});
 window.MDM_SCHOOL_TELEMETRY_4583819=Object.freeze({version:VERSION,mount:mountSchool,sync:syncStudentTelemetry});
 })();

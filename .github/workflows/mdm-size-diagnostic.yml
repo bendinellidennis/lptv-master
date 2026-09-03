@@ -1,0 +1,19 @@
+name: MDM Size Diagnostic
+on:
+  push:
+    branches:
+      - mdm-full-export-458381945
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Repository size report
+        shell: bash
+        run: |
+          echo 'ROOT SIZES'
+          du -sh -- * .[^.]* 2>/dev/null | sort -h | tail -80
+          echo 'LARGEST FILES'
+          find . -type f -not -path './.git/*' -printf '%s %p\n' | sort -n | tail -80

@@ -1,11 +1,11 @@
-/* Malta Driving Master 45.8.38.25.2.7 — Smart Match full course catalogue
+/* Malta Driving Master 45.8.38.25.2.8 — Smart Match course catalogue persistence
    Adds every active Malta licence pack to the "required course" selector.
    No MutationObserver: finite retries + existing SPA/page/language events only. */
 (function(){
   'use strict';
   if(window.MDM_SMART_MATCH_COURSES_458382527)return;
 
-  const VERSION='45.8.38.25.2.7';
+  const VERSION='45.8.38.25.2.8';
   const SETTINGS_KEY='mdm-v1-settings';
 
   function parse(v){try{return v?JSON.parse(v):null}catch(_){return null}}
@@ -42,6 +42,20 @@
     if(b==='B')return type==='A'?'A':type==='C/CE'?'C/CE':'D';
     if(/category[-_ ]?b/i.test(b))return type==='A'?'category-a':type==='C/CE'?'category-c-ce':'category-d';
     return type==='A'?'a':type==='C/CE'?'cce':'d';
+  }
+
+  let observedSelect=null;
+  let optionObserver=null;
+
+  function bindOptionPersistence(sel){
+    if(observedSelect===sel)return;
+    if(optionObserver)optionObserver.disconnect();
+    observedSelect=sel;
+    optionObserver=new MutationObserver(()=>{
+      clearTimeout(bindOptionPersistence._t);
+      bindOptionPersistence._t=setTimeout(()=>patch(),20);
+    });
+    optionObserver.observe(sel,{childList:true});
   }
 
   function patch(){
@@ -87,13 +101,14 @@
 
     if(Array.from(sel.options).some(o=>o.value===current))sel.value=current;
     sel.dataset.mdmFullCourseCatalog='true';
+    bindOptionPersistence(sel);
     return true;
   }
 
   let timers=[];
   function schedule(){
     timers.forEach(clearTimeout);timers=[];
-    [0,120,400,900,1800,3200].forEach(ms=>{
+    [0,120,400,900,1800,3200,5000,8000,12000].forEach(ms=>{
       timers.push(setTimeout(()=>{patch()},ms));
     });
   }

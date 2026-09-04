@@ -1,9 +1,9 @@
-/* Malta Driving Master 45.8.38.24 — Driver Competence Passport + School Human Verification */
+/* Malta Driving Master 45.8.38.25.1 — Driver Competence Passport + Unified Mission Human Verification */
 (function(){
 'use strict';
 if(window.MDM_DRIVER_COMPETENCE_PASSPORT)return;
 
-const VERSION='45.8.38.24';
+const VERSION='45.8.38.25.1';
 const AUTH='mdm_auth_session_v4410';
 const STORE='mdm-driver-competence-passport-v1';
 const SCHOOL_CACHE='mdm-school-evidence-cache-v1';

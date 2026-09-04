@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.25.2.3 — Student Home performance-card route fix
+/* Malta Driving Master 45.8.38.25.2.4 — Student Home performance-card route fix
    Fixes two wrong Home links without touching the core learning engines:
    Readiness -> Exam Day readiness predictor
    Pattern   -> AI cognitive pattern analysis
@@ -43,32 +43,30 @@ function rememberFocus(event){
   try{sessionStorage.setItem(FOCUS_KEY,focus)}catch(_){}
  }
 }
-function calibratedTop(target,behavior){
- if(!target)return false;
- const header=document.querySelector('.app-header');
- const headerH=Math.ceil(header?.getBoundingClientRect?.().height||0);
- const gap=10;
- const y=Math.max(0,Math.round((window.scrollY||window.pageYOffset||0)+target.getBoundingClientRect().top-headerH-gap));
- try{window.scrollTo({top:y,left:0,behavior:behavior||'auto'});return true}catch(_){
-  try{window.scrollTo(0,y);return true}catch(__){return false}
- }
-}
 function focusDestination(){
  let focus='';
  try{focus=sessionStorage.getItem(FOCUS_KEY)||''}catch(_){}
  const route=routeName();
+
  let target=null;
  if(focus==='readiness'&&route==='examday')target=document.querySelector('.ai-readiness-predictor');
  if(focus==='pattern'&&route==='aiinstructor')target=document.querySelector('.ai-pattern-engine');
  if(!target)return false;
 
- /* Route pages keep rendering briefly after navigation. Re-apply the same top alignment
-    after layout settles so the requested section lands directly below the sticky header,
-    never in the middle of the page. */
- [50,180,420,800].forEach((ms,i)=>setTimeout(()=>{
-   calibratedTop(target,i===0?'auto':'smooth');
-   if(i===3){try{sessionStorage.removeItem(FOCUS_KEY)}catch(_){}}
- },ms));
+ /*
+   Do not scroll into the middle of a long host page.
+   These Home cards represent a specific feature, so when opened from Home
+   the requested feature is temporarily promoted directly below the page title.
+   The underlying page/engine is untouched; a normal re-render restores its
+   original layout.
+ */
+ const title=document.querySelector('#screen > .section-title')||document.querySelector('#screen .section-title');
+ if(title&&target.previousElementSibling!==title){
+   title.insertAdjacentElement('afterend',target);
+ }
+
+ try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(_){try{window.scrollTo(0,0)}catch(__){}}
+ try{sessionStorage.removeItem(FOCUS_KEY)}catch(_){}
  return true;
 }
 function sync(){

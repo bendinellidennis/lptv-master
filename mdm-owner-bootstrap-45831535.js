@@ -1,51 +1,41 @@
-/* Malta Driving Master 45.8.31.50.37 — Technical Owner Bootstrap
-   Purpose: give the authenticated technical Owner its own complete local identity
-   and professional Home role before the historical app runtime starts.
-   No navigation, no reload, no timers, no server-role grants. */
+/* Malta Driving Master 45.8.38.25.2 — Server-Authoritative Technical Owner Bootstrap
+   Local Owner presentation is created only after MDM_OWNER_AUTHORITY verifies auth.uid()
+   against public.mdm_platform_owners. Email/localStorage alone never grants Owner UI. */
 (function(){
   'use strict';
   if(window.MDM_TECH_OWNER_BOOTSTRAP)return;
 
-  const VERSION='45.8.31.50.41';
+  const VERSION='45.8.38.25.2';
   const AUTH_KEY='mdm_auth_session_v4410';
-  const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const PROFILE_KEY='mdm-v1-user-profile';
   const ENROLLMENT_KEY='mdm-v1-account-enrollment';
   const ONBOARDING_KEY='mdm-v1-onboarding';
 
-  function readJson(key){
-    try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):null;}catch(_){return null;}
-  }
-  function writeJson(key,value){
-    try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(_){return false;}
-  }
+  function readJson(key){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):null}catch(_){return null}}
+  function writeJson(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch(_){return false}}
   function session(){
     const s=readJson(AUTH_KEY);
-    if(!s||s.status!=='authenticated'||!s.user?.id)return null;
+    if(!s||s.status!=='authenticated'||!s.user?.id||!s.accessToken)return null;
     if(Number(s.expiresAt||0)>0&&Number(s.expiresAt)<=Date.now())return null;
-    const email=String(s.user?.email||s.email||'').trim().toLowerCase();
-    return email===OWNER_EMAIL?s:null;
+    return s;
   }
-  function clean(v,max=80){
-    return String(v||'').trim().replace(/\s+/g,' ').slice(0,max);
-  }
-  function ownerNameParts(){return {first:'MDM',last:'Owner'};}
-
+  function isVerifiedOwner(){return window.MDM_OWNER_AUTHORITY?.isOwner?.()===true}
   function ensure(){
     const s=session();
-    if(!s)return {active:false,reason:'not_owner'};
+    if(!s||!isVerifiedOwner())return {active:false,reason:'owner_not_server_verified'};
 
     const now=new Date().toISOString();
-    const parts=ownerNameParts(s);
+    const email=String(s.user?.email||s.email||'').trim().toLowerCase();
 
     const currentProfile=readJson(PROFILE_KEY)||{};
     writeJson(PROFILE_KEY,{
       ...currentProfile,
       firstName:'MDM',
       lastName:'Owner',
-      email:OWNER_EMAIL,
+      email,
       accountType:'technical_owner',
       ownerUserId:String(s.user.id),
+      ownerVerifiedBy:'server_rpc',
       updatedAt:now
     });
 
@@ -54,10 +44,11 @@
       ...currentEnrollment,
       role:'school',
       name:'MDM Owner',
-      email:OWNER_EMAIL,
+      email,
       schoolName:'Malta Driving Master',
       ownerUserId:String(s.user.id),
       technicalOwner:true,
+      ownerVerifiedBy:'server_rpc',
       updatedAt:now
     });
 
@@ -68,29 +59,40 @@
       completed:true,
       technicalOwner:true,
       ownerUserId:String(s.user.id),
+      ownerVerifiedBy:'server_rpc',
       updatedAt:now
     });
 
-    return {active:true,userId:String(s.user.id),email:OWNER_EMAIL,role:'school'};
+    return {active:true,userId:String(s.user.id),email,role:'school',verifiedBy:'server_rpc'};
   }
-
   function signal(state){
     if(!state||state.active!==true)return;
-    try{window.dispatchEvent(new CustomEvent('mdm:owner-ready',{detail:state}));}catch(_){}
+    try{window.dispatchEvent(new CustomEvent('mdm:owner-ready',{detail:state}))}catch(_){}
+  }
+  function refresh(){
+    const state=ensure();
+    signal(state);
+    return state;
   }
 
   const previousSetItem=Storage.prototype.setItem;
-  Storage.prototype.setItem=function(key,value){
-    const out=previousSetItem.apply(this,arguments);
-    try{
-      if(this===window.localStorage&&String(key)===AUTH_KEY){
-        const next=ensure();
-        signal(next);
-      }
-    }catch(_){}
-    return out;
-  };
+  if(!Storage.prototype.__mdmOwnerBootstrapAuthHook45838252){
+    Object.defineProperty(Storage.prototype,'__mdmOwnerBootstrapAuthHook45838252',{value:true,configurable:false,enumerable:false,writable:false});
+    Storage.prototype.setItem=function(key,value){
+      const out=previousSetItem.apply(this,arguments);
+      try{
+        if(this===window.localStorage&&String(key)===AUTH_KEY){
+          Promise.resolve(window.MDM_OWNER_AUTHORITY?.verify?.(true)).then(refresh);
+        }
+      }catch(_){}
+      return out;
+    };
+  }
 
-  const state=ensure();
-  window.MDM_TECH_OWNER_BOOTSTRAP=Object.freeze({version:VERSION,state,ensure});
+  window.addEventListener('mdm:owner-authority',function(ev){
+    if(ev?.detail?.authorized===true&&ev?.detail?.status==='verified')refresh();
+  });
+
+  const state=refresh();
+  window.MDM_TECH_OWNER_BOOTSTRAP=Object.freeze({version:VERSION,state,ensure:refresh,isOwner:isVerifiedOwner});
 })();

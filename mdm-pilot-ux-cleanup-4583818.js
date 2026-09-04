@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.67 — Pilot UX & Clean-Up Gate
+/* Malta Driving Master 45.8.38.25.2 — Pilot UX & Clean-Up Gate · Server-Authoritative Owner UI
    Student-facing polish only.
    Goals:
    - hide technical diagnostics from students
@@ -13,9 +13,8 @@
   'use strict';
   if(window.MDM_PILOT_UX_CLEANUP)return;
 
-  const VERSION='45.8.38.18';
+  const VERSION='45.8.38.25.2';
   const AUTH_KEY='mdm_auth_session_v4410';
-  const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const PENDING_KEY='mdm_pilot_pending_invite_v1';
   const FEEDBACK_EMAIL='maltadrivingmaster@gmail.com';
   let raf=0;
@@ -25,9 +24,10 @@
   }
   function session(){return readJson(AUTH_KEY);}
   function normalize(v){return String(v||'').trim().toLowerCase();}
-  function isOwner(){
-    const s=session();
-    return normalize(s?.user?.email||s?.email||'')===OWNER_EMAIL;
+  function isOwner(){return window.MDM_OWNER_AUTHORITY?.isOwner?.()===true;}
+  function ownerAuthorityPending(){
+    const a=window.MDM_OWNER_AUTHORITY?.snapshot?.();
+    return isAuthenticated()&&Boolean(a&&(a.status==='idle'||a.status==='checking'));
   }
   function isAuthenticated(){
     const s=session();
@@ -619,6 +619,7 @@
 
   function sync(){
     installStyle();
+    if(ownerAuthorityPending())return;
     const student=applyMode();
     if(!student)return;
     if(blockTechnicalRoute())return;
@@ -657,6 +658,7 @@
 
   window.addEventListener('popstate',schedule);
   window.addEventListener('pageshow',schedule);
+  window.addEventListener('mdm:owner-authority',schedule);
   document.addEventListener('visibilitychange',function(){if(!document.hidden)schedule();});
 
   window.MDM_PILOT_UX_CLEANUP=Object.freeze({

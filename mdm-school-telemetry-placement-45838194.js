@@ -2,10 +2,22 @@
 (function(){
 'use strict';
 if(window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944)return;
-const VERSION='45.8.38.19.4.4';
+const VERSION='45.8.38.25.2.1';
 const CARD_ID='mdmSchoolTelemetryCard';
 
 function norm(v){return String(v||'').replace(/\s+/g,' ').trim().toUpperCase();}
+function routeName(){return String(location.hash||'').replace(/^#/,'').split('?')[0].trim();}
+function authorizedSchoolHome(){
+ if(routeName()!=='schoolhome')return false;
+ if(window.MDM_OWNER_AUTHORITY?.isOwner?.()===true)return true;
+ const s=window.MDM_PRIVILEGED_ROUTE_GUARD?.schoolSnapshot?.();
+ return Boolean(s&&s.status==='verified'&&s.authorized===true);
+}
+function removeSchoolOnlyUi(){
+ document.getElementById(CARD_ID)?.remove();
+ const panel=document.getElementById('mdmSchoolTelemetryPanel');
+ if(panel){panel.removeAttribute('data-mdm-open');panel.style.display='none';}
+}
 function lang(){try{return String(JSON.parse(localStorage.getItem('mdm-v1-settings')||'{}').lang||'en')}catch(_){return'en'}}
 function tr(it,en,mt){const l=lang();return l==='it'?it:l==='mt'?mt:en}
 function isAdvancedText(tx){return tx.includes('STRUMENTI AVANZATI')||tx.includes('ADVANCED TOOLS')||tx.includes('GĦODOD AVVANZATI');}
@@ -75,6 +87,7 @@ function makeCard(grid){
  return card;
 }
 function place(){
+ if(!authorizedSchoolHome()){removeSchoolOnlyUi();return false;}
  const title=advancedTitle();
  const grid=advancedGrid(title);
  if(!title||!grid)return false;
@@ -88,6 +101,7 @@ function schedule(){[0,80,180,350,700,1200,2000,3500,5000,8000,12000,20000,30000
 schedule();
 window.addEventListener('pageshow',schedule);
 window.addEventListener('popstate',schedule);
+window.addEventListener('mdm:owner-authority',schedule);
 document.addEventListener('visibilitychange',function(){if(!document.hidden)schedule()});
 window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944=Object.freeze({version:VERSION,place});
 })();

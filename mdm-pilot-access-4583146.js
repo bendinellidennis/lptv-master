@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.68 — Pilot Access Enforcement
+/* Malta Driving Master 45.8.38.25.2 — Pilot Access Server-Authoritative Enforcement
    Uses the existing verified MDM auth session key.
    Entitlement + device registration run only after authenticated readiness.
    Denied student access is blocked without deleting local or server data. */
@@ -9,13 +9,12 @@
 
   const AUTH_KEY='mdm_auth_session_v4410';
   const DEVICE_TOKEN_KEY='mdm_pilot_device_token_v4583146';
-  const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   let lastAuthFingerprint='';
   let checkInFlight=false;
   let deviceInFlight=false;
 
   const state={
-    version:'45.8.31.50.68',
+    version:'45.8.38.25.2',
     mode:'enforced',
     enforcement:true,
     status:'ready',
@@ -31,16 +30,12 @@
 
   function snapshot(){return Object.assign({},state)}
 
-  function normalizeEmail(value){return String(value||'').trim().toLowerCase()}
-
   function lang3(it,en,mt){try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en}}
-
-  function isTechnicalOwner(session){return normalizeEmail(session&&session.user&&session.user.email||session&&session.email||'')===OWNER_EMAIL}
 
   function removeAccessBlock(){try{document.getElementById('mdmPilotAccessBlock')?.remove();}catch(_){}}
 
   function renderAccessBlock(session){
-    if(!session||isTechnicalOwner(session)||state.authorized!==false){removeAccessBlock();return;}
+    if(!session||state.authorized!==false){removeAccessBlock();return;}
     let el=document.getElementById('mdmPilotAccessBlock');
     if(!el){
       el=document.createElement('div');
@@ -308,7 +303,7 @@
   }catch(_){}
 
   window.MDM_PILOT_ACCESS_BRIDGE=Object.freeze({
-    version:'45.8.31.50.68',
+    version:'45.8.38.25.2',
     mode:'enforced',
     getState:snapshot,
     check:check

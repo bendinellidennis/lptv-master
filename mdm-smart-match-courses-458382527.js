@@ -1,11 +1,11 @@
-/* Malta Driving Master 45.8.38.25.2.8 — Smart Match course catalogue persistence
+/* Malta Driving Master 45.8.38.25.2.9 — Smart Match route persistence
    Adds every active Malta licence pack to the "required course" selector.
    No MutationObserver: finite retries + existing SPA/page/language events only. */
 (function(){
   'use strict';
   if(window.MDM_SMART_MATCH_COURSES_458382527)return;
 
-  const VERSION='45.8.38.25.2.8';
+  const VERSION='45.8.38.25.2.9';
   const SETTINGS_KEY='mdm-v1-settings';
 
   function parse(v){try{return v?JSON.parse(v):null}catch(_){return null}}
@@ -115,6 +115,7 @@
 
   window.addEventListener('pageshow',schedule);
   window.addEventListener('popstate',schedule);
+  window.addEventListener('hashchange',schedule);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
 
   const langBtn=document.getElementById('langBtn');

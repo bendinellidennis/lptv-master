@@ -1,9 +1,9 @@
-/* Malta Driving Master 45.8.38.25.2.12 — Smart Match no-flash full course catalog */
+/* Malta Driving Master 45.8.38.25.2.13 — Smart Match pre-render course catalog */
 (function(){
 'use strict';
 if(window.MDM_SMART_MATCH_COURSES_458382527)return;
 
-const VERSION='45.8.38.25.2.12';
+const VERSION='45.8.38.25.2.13';
 const ORDER=['MT-LPTV','MT-B','MT-A','MT-C-CE','MT-D'];
 const KEEP_KEY='mdm-smart-match-course-v1';
 const LABELS={
@@ -120,7 +120,13 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()
 
 /* The Smart Match view is rebuilt by the SPA after navigation.
    A tiny idempotent check keeps only this selector in sync without a global MutationObserver. */
+const screen=document.getElementById('screen');
+let screenObserver=null;
+if(screen){
+  screenObserver=new MutationObserver(()=>{ apply(); });
+  screenObserver.observe(screen,{childList:true,subtree:true});
+}
 const heartbeat=setInterval(()=>{if(!document.hidden)apply()},750);
-window.MDM_SMART_MATCH_COURSES_458382527=Object.freeze({version:VERSION,apply,schedule,heartbeat});
+window.MDM_SMART_MATCH_COURSES_458382527=Object.freeze({version:VERSION,apply,schedule,heartbeat,screenObserver});
 schedule();
 })();

@@ -13,7 +13,7 @@
     'investorproduction','investorpreview','pilotreadiness','cloudready'
   ]);
   const SCHOOL_ROUTES=new Set([
-    'schoolhome','schoolprofile','schoolportal2','instructorportal','practicallesson',
+    'schoolhome','schoolprofile','schoolportal2','instructorportal','practicallesson','fleetcorporate',
     'schooloperations','schoolroster','schooldashboard','instructorassignments',
     'instructorintelligence','schoolcommandcenter','instructorstudio'
   ]);

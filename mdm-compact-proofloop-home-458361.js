@@ -1,8 +1,8 @@
-/* Malta Driving Master 45.8.38.25 — Compact Unified Mission Home */
+/* Malta Driving Master 45.8.38.25.1 — Compact Unified Mission Home Telemetry Fix */
 (function(){
 'use strict';
 if(window.MDM_COMPACT_HOME_45836)return;
-const V='45.8.38.25', HUB='mdmCompactRealPreparation';
+const V='45.8.38.25.1', HUB='mdmCompactRealPreparation';
 let open='', raf=0;
 
 function p(v){try{return v?JSON.parse(v):null}catch(_){return null}}

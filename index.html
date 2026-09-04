@@ -504,6 +504,16 @@ html,body,.app-shell,main,#screen{max-width:100%;overflow-x:hidden!important}
 @media (prefers-reduced-motion:reduce){.mdm-startup-loader{animation:none}.mdm-startup-splash{transition:none}}
 </style>
 
+<style id="bottom-nav-five-column-fix-458382526">
+/* 45.8.38.25.2.6 — Bottom navigation always has five items. */
+.bottom-nav{
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+}
+.bottom-nav button{
+  min-width:0!important;
+}
+</style>
+
 <link rel="stylesheet" href="styles-4583030-home-reference.css?v=458312">
 <link rel="stylesheet" href="styles-4583037-school-home.css?v=4583037">
 </head>

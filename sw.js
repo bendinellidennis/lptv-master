@@ -1,8 +1,15 @@
 'use strict';
 
-/* Malta Driving Master 45.8.36.1 */
+/* Malta Driving Master 45.8.38.25.2 — Pre-Pentest Cache Hygiene */
 
-const CACHE = 'mdm-build-45-8-36-1-compact-home-stability';
+const CACHE = 'mdm-build-45-8-38-25-2-prepentest-hygiene';
+const BLOCKED_LEGACY = new Set([
+  '/lptv-master/account-storage-inspector.html',
+  '/lptv-master/pilot-entitlement-test.html',
+  '/lptv-master/mdm-school-evidence.html',
+  '/lptv-master/mdm-school-evidence-v2.html',
+  '/lptv-master/mdm-school-evidence-45838233.html'
+]);
 const CORE = [
   './',
   './index.html',
@@ -40,6 +47,11 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+
+  if (BLOCKED_LEGACY.has(url.pathname)) {
+    event.respondWith(Promise.resolve(new Response('Not Found',{status:404,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}})));
+    return;
+  }
 
   event.respondWith(
     fetch(request, { cache: 'no-store' })

@@ -5,7 +5,7 @@
   'use strict';
   if(window.MDM_PRIVILEGED_ROUTE_GUARD)return;
 
-  const VERSION='45.8.38.25.2';
+  const VERSION='45.8.38.25.2.5';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_ROUTES=new Set([
     'backendreal','externalvalidation','pilotanalytics','securitytrust',
@@ -13,7 +13,7 @@
     'investorproduction','investorpreview','pilotreadiness','cloudready'
   ]);
   const SCHOOL_ROUTES=new Set([
-    'schoolhome','schoolprofile','schoolportal2','instructorportal','practicallesson','fleetcorporate',
+    'schoolhome','schoolprofile','schoolportal2','instructorportal','fleetcorporate',
     'schooloperations','schoolroster','schooldashboard','instructorassignments',
     'instructorintelligence','schoolcommandcenter','instructorstudio'
   ]);

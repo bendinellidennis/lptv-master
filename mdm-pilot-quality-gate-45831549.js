@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.31.50.49 — Pilot Quality Gate
+/* Malta Driving Master 45.8.38.25.2 — Pilot Quality Gate · Server-Authoritative Owner UI
    Local-only pilot quality metrics + Owner preflight.
    No analytics upload. No email/body capture. No answers, GPS or stack traces.
    Student-facing UI stays clean; Owner gets a compact operational readiness card. */
@@ -6,9 +6,8 @@
   'use strict';
   if(window.MDM_PILOT_QUALITY_GATE)return;
 
-  const VERSION='45.8.31.50.49.1';
+  const VERSION='45.8.38.25.2';
   const AUTH_KEY='mdm_auth_session_v4410';
-  const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const METRICS_KEY_PREFIX='mdm_pilot_quality_metrics_v1::';
   let lastRoute='';
   let raf=0;
@@ -20,8 +19,7 @@
     try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(_){return false;}
   }
   function session(){return readJson(AUTH_KEY,null);}
-  function norm(v){return String(v||'').trim().toLowerCase();}
-  function isOwner(){const s=session();return norm(s?.user?.email||s?.email||'')===OWNER_EMAIL;}
+  function isOwner(){return window.MDM_OWNER_AUTHORITY?.isOwner?.()===true;}
   function isAuthenticated(){
     const s=session();
     return Boolean(s&&s.status==='authenticated'&&s.accessToken&&s.user?.id&&(!(Number(s.expiresAt)>0)||Number(s.expiresAt)>Date.now()));
@@ -198,6 +196,7 @@
   }
   window.addEventListener('popstate',schedule);
   window.addEventListener('pageshow',schedule);
+  window.addEventListener('mdm:owner-authority',schedule);
   document.addEventListener('visibilitychange',function(){if(!document.hidden)schedule();});
 
   window.MDM_PILOT_QUALITY_GATE=Object.freeze({

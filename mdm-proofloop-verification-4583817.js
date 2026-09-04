@@ -1,9 +1,9 @@
-/* Malta Driving Master 45.8.38.25 — Unified Mission Lifecycle */
+/* Malta Driving Master 45.8.38.25.1 — Unified Mission Lifecycle Telemetry Attribution Fix */
 (function(){
 'use strict';
 if(window.MDM_PROOFLOOP_VERIFICATION)return;
 
-const VERSION='45.8.38.25';
+const VERSION='45.8.38.25.1';
 const AUTH_KEY='mdm_auth_session_v4410';
 const BASE_KEY='mdm-proofloop-verification-v1';
 const SCHOOL_CACHE='mdm-school-evidence-cache-v1';
@@ -25,8 +25,13 @@ function scopedKey(base){const id=uid();return base+(id?'::user:'+id:'::signed-o
 function schoolCache(){try{return parse(localStorage.getItem(scopedKey(SCHOOL_CACHE)))||{}}catch(_){return{}}}
 function schoolMissions(){const x=schoolCache();return Array.isArray(x?.missions)?x.missions:[]}
 function serverMissionId(m){return String(m?.mission_id||m?.id||'').trim()}
+function isUnifiedLifecycleMission(m){
+ const p=m?.payload||{};
+ return p.lifecycle==='unified_mission_v1'||p.verification_scope==='driver_competence';
+}
 function activeSchoolMission(){
- return schoolMissions().find(m=>['assigned','revision_requested','evidence_submitted'].includes(String(m?.status||'')))||null;
+ const rows=schoolMissions().filter(m=>['assigned','revision_requested','evidence_submitted'].includes(String(m?.status||''))&&isUnifiedLifecycleMission(m));
+ return rows.find(m=>m?.payload?.lifecycle==='unified_mission_v1')||rows[0]||null;
 }
 function normLabel(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim()}
 function labelSimilarity(a,b){
@@ -45,13 +50,28 @@ function unifiedBaseline(result,server){
  }
  return b;
 }
+function missionStartMs(server){
+ const raw=server?.assigned_at||server?.created_at||server?.payload?.createdAt||'';
+ const ms=Date.parse(String(raw||''));return Number.isFinite(ms)?ms:0;
+}
+function serverTelemetryAfterMission(server){
+ const start=missionStartMs(server);
+ return schoolMissions().filter(m=>{
+  const p=m?.payload||{},tm=p.telemetry||{};
+  if(p.schema!=='mdm-school-telemetry-evidence-v1'||p.evidenceType!=='telemetry_session'||tm.valid!==true)return false;
+  const ms=Date.parse(String(tm.startedAt||m?.created_at||m?.assigned_at||''));
+  return Number.isFinite(ms)&&ms>=start;
+ }).length;
+}
 function evidenceForServerMission(mid,result){
- const server=schoolMissions().find(m=>serverMissionId(m)===String(mid||''));if(!server)return null;
+ const server=schoolMissions().find(m=>serverMissionId(m)===String(mid||''));if(!server||!isUnifiedLifecycleMission(server))return null;
  const r=result||window.MDM_PROOFLOOP_ENGINE?.evaluate?.()||null;if(!r)return null;
  const b=unifiedBaseline(r,server);if(!b)return null;
+ const serverTelemetry=serverTelemetryAfterMission(server);
  return {schema:'mdm-unified-proof-evidence-v1',version:VERSION,missionId:serverMissionId(server),
   collectedAt:now(),roadDelta:Math.max(0,Number(r.sources?.road?.records||0)-Number(b.roadRecords||0)),
-  telemetryDelta:Math.max(0,Number(r.sources?.telemetry?.sessions||0)-Number(b.telemetrySessions||0)),
+  telemetryDelta:Math.max(serverTelemetry,Math.max(0,Number(r.sources?.telemetry?.sessions||0)-Number(b.telemetrySessions||0))),
+  telemetryServerSessions:serverTelemetry,
   contradictions:Number(r.contradictions||0),independentSources:Number(r.independentSources||0),
   sourceTotal:Number(r.sourceTotal||5),quality:String(r.quality||''),baseline:b};
 }

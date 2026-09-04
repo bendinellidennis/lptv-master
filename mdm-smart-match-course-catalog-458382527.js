@@ -1,9 +1,9 @@
-/* Malta Driving Master 45.8.38.25.2.11 — Smart Match persistent full course catalog */
+/* Malta Driving Master 45.8.38.25.2.12 — Smart Match no-flash full course catalog */
 (function(){
 'use strict';
 if(window.MDM_SMART_MATCH_COURSES_458382527)return;
 
-const VERSION='45.8.38.25.2.11';
+const VERSION='45.8.38.25.2.12';
 const ORDER=['MT-LPTV','MT-B','MT-A','MT-C-CE','MT-D'];
 const KEEP_KEY='mdm-smart-match-course-v1';
 const LABELS={
@@ -62,6 +62,7 @@ function apply(){
     return true;
   }
 
+  s.style.visibility='hidden';
   const old=[...s.options];
   const values={};
   for(const o of old){
@@ -94,6 +95,7 @@ function apply(){
   const canKeep=[...s.options].some(o=>o.value===keep);
   s.value=canKeep?keep:allValue;
   s.dataset.mdmFullCourseCatalog=VERSION;
+  requestAnimationFrame(()=>{s.style.visibility='';});
   if(!s.dataset.mdmCourseBound){
     s.addEventListener('change',()=>save(s.value));
     s.dataset.mdmCourseBound='1';
@@ -104,7 +106,10 @@ function apply(){
 let timers=[];
 function schedule(){
   timers.forEach(clearTimeout); timers=[];
-  [0,60,150,300,600,1000,1800,3000,5000,8000,12000].forEach(ms=>{
+  for(let ms=0;ms<=1200;ms+=16){
+    timers.push(setTimeout(apply,ms));
+  }
+  [1400,1700,2200,3000,5000,8000,12000].forEach(ms=>{
     timers.push(setTimeout(apply,ms));
   });
 }

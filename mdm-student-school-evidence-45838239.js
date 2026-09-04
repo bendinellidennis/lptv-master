@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.25 — Unified Mission Lifecycle Student Bridge
+/* Malta Driving Master 45.8.38.25.1 — Unified Mission Lifecycle Student Bridge Telemetry Fix
    Additive only: shows server-assigned school missions in Student Home.
    Does not replace #screen, does not alter local ProofLoop state. */
 (function(){
@@ -6,7 +6,7 @@
 if(window.MDM_STUDENT_SCHOOL_EVIDENCE_45838239)return;
 window.MDM_STUDENT_SCHOOL_EVIDENCE_45838239=true;
 
-const VERSION='45.8.38.25';
+const VERSION='45.8.38.25.1';
 const AUTH='mdm_auth_session_v4410';
 const HOST_ID='mdmStudentSchoolEvidence';
 const CACHE='mdm-school-evidence-cache-v1';
@@ -34,13 +34,22 @@ function saveMissionCache(items){try{localStorage.setItem(cacheKey(),JSON.string
 function packLabel(id){return ({'MT-LPTV':'LPTV TAG','MT-B':'B','MT-A':'A','MT-C-CE':'C/CE','MT-D':'D'})[String(id||'')]||String(id||'')}
 function missionMeta(m){const p=m?.payload||{},parts=[];if(p.pack_id)parts.push(packLabel(p.pack_id));if(p.competence_label)parts.push(String(p.competence_label));return parts.join(' · ')}
 function missionId(m){return String(m?.mission_id||m?.id||'')}
+function isUnifiedMission(m){
+ const p=m?.payload||{};
+ return p.lifecycle==='unified_mission_v1'||p.verification_scope==='driver_competence';
+}
+function isTechnicalEvidence(m){
+ const p=m?.payload||{};
+ return p.schema==='mdm-school-telemetry-evidence-v1'||p.evidenceType==='telemetry_session';
+}
 function currentMission(items){
  const rows=Array.isArray(items)?items:(parse(localStorage.getItem(cacheKey()))?.missions||[]);
- return rows.find(m=>['assigned','revision_requested','evidence_submitted'].includes(String(m?.status||'')))||null;
+ const active=rows.filter(m=>['assigned','revision_requested','evidence_submitted'].includes(String(m?.status||''))&&isUnifiedMission(m));
+ return active.find(m=>m?.payload?.lifecycle==='unified_mission_v1')||active[0]||null;
 }
 function historyMissionRows(items,current){
  const cid=missionId(current);
- return (Array.isArray(items)?items:[]).filter(m=>missionId(m)!==cid&&['assigned','revision_requested','evidence_submitted','accepted'].includes(String(m?.status||''))).slice(0,8);
+ return (Array.isArray(items)?items:[]).filter(m=>missionId(m)!==cid&&!isTechnicalEvidence(m)&&['assigned','revision_requested','evidence_submitted','accepted'].includes(String(m?.status||''))).slice(0,8);
 }
 function missionTitle(m){return String(m?.payload?.title||m?.payload?.objective||t('Missione della scuola','School mission','Missjoni tal-iskola'))}
 function missionObjective(m){const x=String(m?.payload?.objective||'').trim();return x&&x!==missionTitle(m)?x:''}

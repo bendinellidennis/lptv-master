@@ -1,8 +1,8 @@
-/* Malta Driving Master 45.8.38.25.2.7 — Smart Match full course catalog */
+/* Malta Driving Master 45.8.38.25.2.10 — Smart Match full course catalog persistent */
 (function(){
 'use strict';
 if(window.MDM_SMART_MATCH_COURSES_458382527)return;
-const VERSION='45.8.38.25.2.7';
+const VERSION='45.8.38.25.2.10';
 const ORDER=['MT-LPTV','MT-B','MT-A','MT-C-CE','MT-D'];
 const LABELS={
   it:{all:'Tutti i corsi','MT-LPTV':'LPTV / TAG','MT-B':'Patente B','MT-A':'Moto','MT-C-CE':'C / CE','MT-D':'Bus D'},
@@ -51,9 +51,12 @@ function apply(){
   s.dataset.mdmFullCourseCatalog=VERSION;
   return true;
 }
-function schedule(){[80,300,800,1600,3000].forEach(ms=>setTimeout(apply,ms))}
+function schedule(){
+  [0,80,200,500,1000,1800,3000,5000,8000,12000].forEach(ms=>setTimeout(apply,ms));
+}
 window.addEventListener('pageshow',schedule);
 window.addEventListener('popstate',schedule);
+window.addEventListener('hashchange',schedule);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
 window.MDM_SMART_MATCH_COURSES_458382527=Object.freeze({version:VERSION,apply});
 schedule();

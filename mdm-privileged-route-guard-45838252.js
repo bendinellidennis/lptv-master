@@ -5,7 +5,7 @@
   'use strict';
   if(window.MDM_PRIVILEGED_ROUTE_GUARD)return;
 
-  const VERSION='45.8.38.25.2.29';
+  const VERSION='45.8.38.25.2.29.1';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_ROUTES=new Set([
     'backendreal','externalvalidation','pilotanalytics','securitytrust',
@@ -37,20 +37,6 @@
   function ownerState(){return window.MDM_OWNER_AUTHORITY?.snapshot?.()||{status:'idle',authorized:false}}
   function ownerAllowed(){return window.MDM_OWNER_AUTHORITY?.isOwner?.()===true}
   function schoolSnapshot(){return Object.freeze({...school})}
-  function syncLegacySchoolConsole(s){
-    if(!s||school.authorized!==true)return false;
-    try{
-      if(typeof mdmSchoolAdminConsole==='undefined')return false;
-      mdmSchoolAdminConsole={
-        ...mdmSchoolAdminConsole,
-        loadedForUserId:String(s.user?.id||''),
-        authorized:true,
-        role:'school_admin',
-        loadedAt:new Date().toISOString()
-      };
-      return true;
-    }catch(_){return false;}
-  }
   function schoolAllowed(){
     const s=session();
     return Boolean(s&&school.status==='verified'&&school.authorized===true&&schoolFingerprint===fp(s));
@@ -93,7 +79,6 @@
         school.authorized=Boolean(r.ok&&d?.authorized===true&&String(d?.role||'')==='school_admin'&&String(d?.membership_status||'')==='active');
         school.reason=school.authorized?'':String(d?.error||d?.reason||'school_admin_required');
         school.checkedAt=new Date().toISOString();schoolFingerprint=f;
-        if(school.authorized)syncLegacySchoolConsole(s);
       }catch(e){
         school.status='error';school.authorized=false;school.reason=String(e?.message||e||'school_authorization_failed');school.checkedAt=new Date().toISOString();
       }finally{schoolInFlight=null}

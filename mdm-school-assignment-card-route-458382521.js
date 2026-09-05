@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.25.2.23 — School Assignments direct verified action
+/* Malta Driving Master 45.8.38.25.2.25 — School Assignments fresh server verification
    Root fix for intermittent Account/Enrollment redirect:
    capture ONLY the School Home Assignments action before the legacy School gate,
    verify current Owner/School authority server-side, then navigate to instructorassignments.
@@ -7,7 +7,7 @@
 'use strict';
 if(window.MDM_SCHOOL_ASSIGNMENTS_DIRECT_458382523)return;
 
-const VERSION='45.8.38.25.2.23';
+const VERSION='45.8.38.25.2.25';
 const TARGET='instructorassignments';
 let busy=false;
 
@@ -24,21 +24,37 @@ function navigate(name){
   history.pushState(st,'','#'+st.name);
   window.dispatchEvent(new PopStateEvent('popstate',{state:st}));
 }
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
 async function authorized(){
-  try{await window.MDM_OWNER_AUTHORITY?.verify?.(false);}catch(_){}
-  try{if(window.MDM_OWNER_AUTHORITY?.isOwner?.()===true)return true;}catch(_){}
   try{
-    const s=await window.MDM_PRIVILEGED_ROUTE_GUARD?.verifySchool?.(false);
-    return Boolean(s&&s.status==='verified'&&s.authorized===true);
-  }catch(_){return false;}
+    await window.MDM_OWNER_AUTHORITY?.verify?.(true);
+    if(window.MDM_OWNER_AUTHORITY?.isOwner?.()===true)return true;
+  }catch(_){}
+
+  for(let attempt=0;attempt<2;attempt++){
+    try{
+      const s=await window.MDM_PRIVILEGED_ROUTE_GUARD?.verifySchool?.(true);
+      if(s&&s.status==='verified'&&s.authorized===true)return true;
+    }catch(_){}
+    if(attempt===0)await wait(120);
+  }
+  return false;
 }
 async function open(card){
   if(busy)return;
   busy=true;
   try{
     card?.setAttribute?.('aria-busy','true');
-    if(await authorized())navigate(TARGET);
-    else navigate('accountenrollment');
+    if(await authorized()){
+      navigate(TARGET);
+      return;
+    }
+    try{
+      window.dispatchEvent(new CustomEvent('mdm:authorization-denied',{
+        detail:{route:TARGET,kind:'school',message:'fresh_school_verification_failed'}
+      }));
+    }catch(_){}
+    /* Stay on School Home. Never misroute an ACTIVE School Admin to enrollment. */
   }finally{
     card?.removeAttribute?.('aria-busy');
     busy=false;

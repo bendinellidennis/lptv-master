@@ -2585,9 +2585,19 @@ const MDM_SCHOOL_ADMIN_ROUTES=new Set([
 ]);
 function mdmSchoolAdminServerAllowed(){
  const auth=mdmAuthSummary();
+ if(!auth.authenticated||!auth.userId)return false;
+
+ /* 45.8.38.25.2.30 — Core School authorization fix.
+    Trust the current server-verified Owner / ACTIVE School Admin gate
+    before falling back to the legacy console cache. */
+ try{
+  if(window.MDM_OWNER_AUTHORITY?.isOwner?.()===true)return true;
+ }catch(_){}
+ try{
+  if(window.MDM_PRIVILEGED_ROUTE_GUARD?.isSchoolAllowed?.()===true)return true;
+ }catch(_){}
+
  return Boolean(
-  auth.authenticated &&
-  auth.userId &&
   mdmSchoolAdminConsole &&
   mdmSchoolAdminConsole.authorized===true &&
   String(mdmSchoolAdminConsole.loadedForUserId||'')===String(auth.userId)

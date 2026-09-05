@@ -2,7 +2,7 @@
 
 /* Malta Driving Master 45.8.38.25.2 — Pre-Pentest Cache Hygiene */
 
-const CACHE = 'mdm-build-45-8-38-25-2-18-school-tools-dom-authoritative';
+const CACHE = 'mdm-build-45-8-38-25-2-19-auth-school-context-recovery';
 const BLOCKED_LEGACY = new Set([
   '/lptv-master/account-storage-inspector.html',
   '/lptv-master/pilot-entitlement-test.html',

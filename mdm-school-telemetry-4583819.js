@@ -42,15 +42,15 @@ function start(){
  st.textContent='#mdmSchoolTelemetryPanel{display:none!important}#mdmSchoolTelemetryPanel[data-mdm-open="1"]{display:block!important}';
  document.head.appendChild(st);
 
- load('mdm-school-telemetry-placement-45838194.js?v=458382517-school-only',function(){
+ load('mdm-school-telemetry-placement-45838194.js?v=458382518-school-only',function(){
   if(window.MDM_SCHOOL_TELEMETRY_4583819){
    try{window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944?.place?.();}catch(_){}
-   load('mdm-school-evidence-entry-4583823.js?v=458382517-school-only',function(){restoreLoadedUi();});
+   load('mdm-school-evidence-entry-4583823.js?v=458382518-school-only',function(){restoreLoadedUi();});
    return;
   }
   load('mdm-school-telemetry-engine-45838193.js?v=458381944-engine-no-flash',function(){
    try{window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944?.place?.();}catch(_){}
-   load('mdm-school-evidence-entry-4583823.js?v=458382517-school-only',function(){restoreLoadedUi();});
+   load('mdm-school-evidence-entry-4583823.js?v=458382518-school-only',function(){restoreLoadedUi();});
   });
  });
 }

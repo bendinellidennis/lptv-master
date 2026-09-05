@@ -5,7 +5,7 @@
   'use strict';
   if(window.MDM_PRIVILEGED_ROUTE_GUARD)return;
 
-  const VERSION='45.8.38.25.2.20';
+  const VERSION='45.8.38.25.2.22';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_ROUTES=new Set([
     'backendreal','externalvalidation','pilotanalytics','securitytrust',
@@ -161,7 +161,7 @@
 
   window.MDM_PRIVILEGED_ROUTE_GUARD=Object.freeze({
     version:VERSION,ownerRoutes:Object.freeze([...OWNER_ROUTES]),schoolRoutes:Object.freeze([...SCHOOL_ROUTES]),
-    verifySchool,schoolSnapshot,enforce:enforceCurrent
+    verifySchool,schoolSnapshot,isSchoolAllowed:schoolAllowed,enforce:enforceCurrent
   });
 
   verifySchool(false).then(enforceCurrent);

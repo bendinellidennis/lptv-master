@@ -1,17 +1,14 @@
-/* Malta Driving Master 45.8.38.25.2.18 — Advanced Tools Telemetry DOM-authoritative placement */
+/* Malta Driving Master 45.8.38.19.4.4 — Advanced Tools Telemetry card-first placement */
 (function(){
 'use strict';
 if(window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944)return;
-const VERSION='45.8.38.25.2.18';
+const VERSION='45.8.38.25.2.1';
 const CARD_ID='mdmSchoolTelemetryCard';
 
 function norm(v){return String(v||'').replace(/\s+/g,' ').trim().toUpperCase();}
 function routeName(){return String(location.hash||'').replace(/^#/,'').split('?')[0].trim();}
 function authorizedSchoolHome(){
- const schoolDom=Boolean(document.querySelector('.sch35'));
- const route=routeName();
- if(route!=='schoolhome'&&!schoolDom)return false;
- if(!schoolDom&&route==='schoolhome')return false;
+ if(routeName()!=='schoolhome')return false;
  if(window.MDM_OWNER_AUTHORITY?.isOwner?.()===true)return true;
  const s=window.MDM_PRIVILEGED_ROUTE_GUARD?.schoolSnapshot?.();
  return Boolean(s&&s.status==='verified'&&s.authorized===true);

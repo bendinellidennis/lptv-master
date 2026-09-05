@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.25.2.29 — Core School protected-route alignment
+/* Malta Driving Master 45.8.38.25.2.29.2 — Core School protected-route alignment
    Fixes the actual mismatch inside the main renderer:
    School routes accept the current server-verified Platform Owner OR ACTIVE School Admin.
    This aligns the legacy core gate with the server-authoritative route guard.
@@ -7,7 +7,7 @@
 'use strict';
 if(window.MDM_CORE_SCHOOL_ROUTE_ALIGNMENT_458382529)return;
 
-const VERSION='45.8.38.25.2.29';
+const VERSION='45.8.38.25.2.29.2';
 
 let originalDecision=null;
 try{

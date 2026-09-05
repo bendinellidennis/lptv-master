@@ -5,7 +5,7 @@
   'use strict';
   if(window.MDM_OWNER_AUTHORITY)return;
 
-  const VERSION='45.8.38.25.2';
+  const VERSION='45.8.38.25.2.19';
   const AUTH_KEY='mdm_auth_session_v4410';
   let inFlight=null;
   let lastFingerprint='';
@@ -23,8 +23,12 @@
   function fingerprint(s){
     return s?String(s.user?.id||'')+'|'+String(s.accessToken||'').slice(-32)+'|'+String(s.expiresAt||''):'';
   }
-  function snapshot(){return Object.freeze({...state})}
-  function isOwner(){return state.status==='verified'&&state.authorized===true}
+  function currentSessionVerified(){
+    const s=readSession();
+    return Boolean(s&&lastFingerprint&&lastFingerprint===fingerprint(s)&&state.status==='verified');
+  }
+  function snapshot(){return Object.freeze({...state,currentSessionVerified:currentSessionVerified()})}
+  function isOwner(){return currentSessionVerified()&&state.authorized===true}
   function signal(){
     try{window.dispatchEvent(new CustomEvent('mdm:owner-authority',{detail:snapshot()}));}catch(_){}
   }
@@ -72,6 +76,6 @@
 
   window.addEventListener('pageshow',()=>verify(false));
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)verify(false)});
-  window.MDM_OWNER_AUTHORITY=Object.freeze({version:VERSION,isOwner,snapshot,verify,reset});
+  window.MDM_OWNER_AUTHORITY=Object.freeze({version:VERSION,isOwner,snapshot,verify,reset,currentSessionVerified});
   verify(false);
 })();

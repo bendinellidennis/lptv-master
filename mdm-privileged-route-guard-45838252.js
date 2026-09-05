@@ -5,7 +5,7 @@
   'use strict';
   if(window.MDM_PRIVILEGED_ROUTE_GUARD)return;
 
-  const VERSION='45.8.38.25.2.19';
+  const VERSION='45.8.38.25.2.20';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_ROUTES=new Set([
     'backendreal','externalvalidation','pilotanalytics','securitytrust',
@@ -40,11 +40,6 @@
   function schoolAllowed(){
     const s=session();
     return Boolean(s&&school.status==='verified'&&school.authorized===true&&schoolFingerprint===fp(s));
-  }
-  function resetSchool(reason){
-    schoolInFlight=null;schoolFingerprint='';
-    school.status='idle';school.authorized=false;school.checkedAt=new Date().toISOString();school.reason=String(reason||'session_changed');
-    return schoolSnapshot();
   }
 
   function guardOverlay(show){
@@ -97,7 +92,7 @@
     const n=String(name||'');
     if(OWNER_ROUTES.has(n)){
       const o=ownerState();
-      if(o.status==='idle'||o.status==='checking'||o.currentSessionVerified!==true)return {pending:true,kind:'owner'};
+      if(o.status==='idle'||o.status==='checking')return {pending:true,kind:'owner'};
       return ownerAllowed()?{allow:true,kind:'owner'}:{allow:false,kind:'owner'};
     }
     if(SCHOOL_ROUTES.has(n)){
@@ -166,7 +161,7 @@
 
   window.MDM_PRIVILEGED_ROUTE_GUARD=Object.freeze({
     version:VERSION,ownerRoutes:Object.freeze([...OWNER_ROUTES]),schoolRoutes:Object.freeze([...SCHOOL_ROUTES]),
-    verifySchool,schoolSnapshot,resetSchool,enforce:enforceCurrent
+    verifySchool,schoolSnapshot,enforce:enforceCurrent
   });
 
   verifySchool(false).then(enforceCurrent);

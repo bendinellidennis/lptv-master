@@ -1,0 +1,86 @@
+name: MDM Core School Gate Fix 458382530
+
+on:
+  push:
+    paths:
+      - '.github/workflows/mdm-core-school-gate-fix-458382530.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-core-school-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch core School gate
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path("app-3994-458293-part-b1.js")
+          s = p.read_text(encoding="utf-8")
+          old = """function mdmSchoolAdminServerAllowed(){
+           const auth=mdmAuthSummary();
+           return Boolean(
+            auth.authenticated &&
+            auth.userId &&
+            mdmSchoolAdminConsole &&
+            mdmSchoolAdminConsole.authorized===true &&
+            String(mdmSchoolAdminConsole.loadedForUserId||'')===String(auth.userId)
+           );
+          }"""
+          new = """function mdmSchoolAdminServerAllowed(){
+           const auth=mdmAuthSummary();
+           if(!auth.authenticated||!auth.userId)return false;
+
+           /* 45.8.38.25.2.30 — Core School authorization fix.
+              Trust the current server-verified Owner / ACTIVE School Admin gate
+              before falling back to the legacy console cache. */
+           try{
+            if(window.MDM_OWNER_AUTHORITY?.isOwner?.()===true)return true;
+           }catch(_){}
+           try{
+            if(window.MDM_PRIVILEGED_ROUTE_GUARD?.isSchoolAllowed?.()===true)return true;
+           }catch(_){}
+
+           return Boolean(
+            mdmSchoolAdminConsole &&
+            mdmSchoolAdminConsole.authorized===true &&
+            String(mdmSchoolAdminConsole.loadedForUserId||'')===String(auth.userId)
+           );
+          }"""
+          if old not in s:
+              raise SystemExit("Exact mdmSchoolAdminServerAllowed block not found")
+          p.write_text(s.replace(old, new, 1), encoding="utf-8")
+
+          ip = Path("index.html")
+          h = ip.read_text(encoding="utf-8")
+          h = re.sub(r'\s*<script src="mdm-core-school-route-alignment-458382529\.js\?v=[^"]+"></script>', '\n', h)
+          h = re.sub(r'app-3994-458293-part-b1\.js\?v=[^"]+', 'app-3994-458293-part-b1.js?v=458382530-core-school-gate', h)
+          h = h.replace('\\\\n', '\n')
+          ip.write_text(h, encoding="utf-8")
+
+          sp = Path("sw.js")
+          w = sp.read_text(encoding="utf-8")
+          w = re.sub(r"mdm-build-45-8-38-25-2-[^']+", "mdm-build-45-8-38-25-2-30-core-school-gate", w, count=1)
+          sp.write_text(w, encoding="utf-8")
+          PY
+
+      - name: Commit core fix
+        shell: bash
+        run: |
+          git config user.name "MDM Core Fix"
+          git config user.email "actions@users.noreply.github.com"
+          git add app-3994-458293-part-b1.js index.html sw.js
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "45.8.38.25.2.30 Fix core School route authorization"
+          git push origin HEAD:main

@@ -1,11 +1,11 @@
-/* Malta Driving Master 45.8.38.25.2.19 — Server-authoritative School Area alignment
+/* Malta Driving Master 45.8.38.25.2.28 — Server-authoritative School Area route-safe alignment
    Prevents a Student session from entering the operational School Home through the local role toggle.
    No route remapping. No question/replay changes. */
 (function(){
 'use strict';
 if(window.MDM_SCHOOL_SERVER_ROLE_ALIGNMENT_458382519)return;
 
-const VERSION='45.8.38.25.2.19';
+const VERSION='45.8.38.25.2.28';
 let busy=false;
 
 function routeName(){return String(location.hash||'').replace(/^#/,'').split('?')[0].trim();}
@@ -35,7 +35,10 @@ async function enterSchool(){
   }finally{busy=false;}
 }
 async function auditCurrent(){
-  if(routeName()!=='schoolhome'&&!document.querySelector('.sch35'))return true;
+  /* Only audit the actual School Home route.
+     The old School Home DOM can remain for a few milliseconds during SPA navigation;
+     using .sch35 presence here caused false redirects after opening School tools. */
+  if(routeName()!=='schoolhome')return true;
   if(busy)return false;
   busy=true;
   try{

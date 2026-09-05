@@ -1,16 +1,19 @@
-/* Malta Driving Master 45.8.38.25.2 — Safe dedicated School Evidence entry
+/* Malta Driving Master 45.8.38.25.2.18 — Safe dedicated School Evidence entry
    Uses the already verified Telemetry card as the primary mount anchor.
    Never replaces #screen, never overlays body, never modifies the School Home structure. */
 (function(){
 'use strict';
 if(window.MDM_SCHOOL_EVIDENCE_ENTRY_45838252)return;
 window.MDM_SCHOOL_EVIDENCE_ENTRY_45838252=true;
-const VERSION='45.8.38.25.2.1';
+const VERSION='45.8.38.25.2.18';
 const CARD_ID='mdmSchoolEvidenceSafeCard';
 function parse(v){try{return v?JSON.parse(v):null}catch(_){return null}}
 function routeName(){return String(location.hash||'').replace(/^#/,'').split('?')[0].trim()}
 function authorizedSchoolHome(){
- if(routeName()!=='schoolhome')return false;
+ const schoolDom=Boolean(document.querySelector('.sch35'));
+ const route=routeName();
+ if(route!=='schoolhome'&&!schoolDom)return false;
+ if(!schoolDom&&route==='schoolhome')return false;
  if(window.MDM_OWNER_AUTHORITY?.isOwner?.()===true)return true;
  const s=window.MDM_PRIVILEGED_ROUTE_GUARD?.schoolSnapshot?.();
  return Boolean(s&&s.status==='verified'&&s.authorized===true);

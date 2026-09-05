@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.25.2.19 — Deterministic server-authorized School tools bootstrap
+/* Malta Driving Master 45.8.38.25.2.24 — Immediate School tools mount
    Telemetry and the School Evidence entry are loaded only inside the server-authorized School Home.
    Student Home never mounts these School tools. */
 (function(){
@@ -30,24 +30,34 @@ function restoreLoadedUi(){
  try{window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944?.place?.();}catch(_){}
  try{window.MDM_SCHOOL_EVIDENCE_ENTRY_4583823_API?.place?.();}catch(_){}
 }
+function fastRestore(){
+ [0,16,32,50,80,120,180,250,350,500,700,900,1200,1600,2200,3000].forEach(ms=>{
+  setTimeout(function(){
+   if(routeName()!=='schoolhome')return;
+   restoreLoadedUi();
+  },ms);
+ });
+}
 function start(){
  if(!authorizedSchoolHome()){cleanStudentHome();return;}
- if(started){restoreLoadedUi();return;}
+ if(started){restoreLoadedUi();fastRestore();return;}
  started=true;
  const st=document.createElement('style');
  st.id='mdmTelemetryCardFirstGuard';
  st.textContent='#mdmSchoolTelemetryPanel{display:none!important}#mdmSchoolTelemetryPanel[data-mdm-open="1"]{display:block!important}';
  document.head.appendChild(st);
 
- load('mdm-school-telemetry-placement-45838194.js?v=458382519-school-only',function(){
+ load('mdm-school-telemetry-placement-45838194.js?v=458382524-immediate-school-only',function(){
   if(window.MDM_SCHOOL_TELEMETRY_4583819){
    try{window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944?.place?.();}catch(_){}
-   load('mdm-school-evidence-entry-4583823.js?v=458382519-school-only');
+   load('mdm-school-evidence-entry-4583823.js?v=458382524-immediate-school-only',function(){restoreLoadedUi();fastRestore();});
+   fastRestore();
    return;
   }
   load('mdm-school-telemetry-engine-45838193.js?v=458381944-engine-no-flash',function(){
    try{window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944?.place?.();}catch(_){}
-   load('mdm-school-evidence-entry-4583823.js?v=458382519-school-only');
+   load('mdm-school-evidence-entry-4583823.js?v=458382524-immediate-school-only',function(){restoreLoadedUi();fastRestore();});
+   fastRestore();
   });
  });
 }
@@ -61,7 +71,7 @@ async function sync(){
  }catch(_){}
  cleanStudentHome();
 }
-[0,100,250,500,900,1500,2500,4000].forEach(ms=>setTimeout(sync,ms));
+[0,40,100,180,300,500,800,1200,1800,2600,4000].forEach(ms=>setTimeout(sync,ms));
 window.addEventListener('pageshow',sync);
 window.addEventListener('popstate',sync);
 window.addEventListener('mdm:owner-authority',sync);

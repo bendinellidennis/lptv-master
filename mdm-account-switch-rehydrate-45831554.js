@@ -6,14 +6,13 @@
   'use strict';
   if(window.MDM_ACCOUNT_SWITCH_REHYDRATE)return;
 
-  const VERSION='45.8.38.25.2.19';
+  const VERSION='45.8.38.25.2.20';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const PROFILE_KEY='mdm-v1-user-profile';
   const ENROLLMENT_KEY='mdm-v1-account-enrollment';
   const ONBOARDING_KEY='mdm-v1-onboarding';
   let scheduled=false;
-  let lastSessionFingerprint='';
 
   function readJson(key){
     try{
@@ -31,9 +30,6 @@
 
   function emailOfSession(s){
     return String(s?.user?.email||s?.email||'').trim().toLowerCase();
-  }
-  function fingerprint(s){
-    return s?String(s.user?.id||'')+'|'+String(s.accessToken||'').slice(-32)+'|'+String(s.expiresAt||''):'';
   }
 
   function replaceObject(target,fresh){
@@ -121,53 +117,13 @@
     }catch(_){return false;}
   }
 
-  function forceStudentHome(){
-    try{
-      const armed=document.querySelector('[data-nav="schoolhome"][data-mdm-owner-home="1"]');
-      if(armed){armed.setAttribute('data-nav','home');armed.removeAttribute('data-mdm-owner-home');}
-      document.body?.classList?.remove('mdm-tech-owner');
-      const st={name:'home',data:null};
-      history.replaceState(st,'','#home');
-      window.dispatchEvent(new PopStateEvent('popstate',{state:st}));
-      if(typeof render==='function')render();
-      return true;
-    }catch(_){return false}
-  }
-
-  async function refreshServerAuthority(){
-    try{
-      const owner=await window.MDM_OWNER_AUTHORITY?.verify?.(true);
-      const school=await window.MDM_PRIVILEGED_ROUTE_GUARD?.verifySchool?.(true);
-      const ownerOk=window.MDM_OWNER_AUTHORITY?.isOwner?.()===true;
-      const schoolOk=Boolean(school&&school.status==='verified'&&school.authorized===true);
-      restoreStudentNavIfNeeded(ownerOk);
-      if(ownerOk){
-        try{window.MDM_TECH_OWNER_HOME_GUARD?.sync?.();}catch(_){}
-        return {owner:true,school:true};
-      }
-      if(!schoolOk&&document.querySelector('.sch35'))forceStudentHome();
-      return {owner:false,school:schoolOk};
-    }catch(_){
-      restoreStudentNavIfNeeded(false);
-      if(document.querySelector('.sch35'))forceStudentHome();
-      return {owner:false,school:false};
-    }
-  }
-
   function sync(){
     scheduled=false;
     const s=session();
     if(!s)return {ok:false,reason:'signed_out'};
 
-    const f=fingerprint(s);
-    if(f!==lastSessionFingerprint){
-      lastSessionFingerprint=f;
-      try{window.MDM_OWNER_AUTHORITY?.reset?.('session_changed');}catch(_){}
-      try{window.MDM_PRIVILEGED_ROUTE_GUARD?.resetSchool?.('session_changed');}catch(_){}
-    }
-
     const state=freshAccountState(s);
-    const isOwner=window.MDM_OWNER_AUTHORITY?.isOwner?.()===true;
+    const isOwner=state.email===OWNER_EMAIL;
 
     const updated={
       auth:rehydrateRuntimeObject('mdmAuthSession',s),
@@ -187,7 +143,6 @@
 
     try{window.MDM_PILOT_UX_CLEANUP?.sync?.();}catch(_){}
     try{window.MDM_SIGNED_OUT_NEUTRAL_GATE?.sync?.();}catch(_){}
-    Promise.resolve().then(refreshServerAuthority);
 
     return {ok:true,email:state.email,isOwner,updated};
   }

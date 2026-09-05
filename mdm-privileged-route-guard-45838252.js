@@ -5,7 +5,7 @@
   'use strict';
   if(window.MDM_PRIVILEGED_ROUTE_GUARD)return;
 
-  const VERSION='45.8.38.25.2.5';
+  const VERSION='45.8.38.25.2.19';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_ROUTES=new Set([
     'backendreal','externalvalidation','pilotanalytics','securitytrust',
@@ -37,7 +37,15 @@
   function ownerState(){return window.MDM_OWNER_AUTHORITY?.snapshot?.()||{status:'idle',authorized:false}}
   function ownerAllowed(){return window.MDM_OWNER_AUTHORITY?.isOwner?.()===true}
   function schoolSnapshot(){return Object.freeze({...school})}
-  function schoolAllowed(){return school.status==='verified'&&school.authorized===true}
+  function schoolAllowed(){
+    const s=session();
+    return Boolean(s&&school.status==='verified'&&school.authorized===true&&schoolFingerprint===fp(s));
+  }
+  function resetSchool(reason){
+    schoolInFlight=null;schoolFingerprint='';
+    school.status='idle';school.authorized=false;school.checkedAt=new Date().toISOString();school.reason=String(reason||'session_changed');
+    return schoolSnapshot();
+  }
 
   function guardOverlay(show){
     let el=document.getElementById('mdmPrivilegedRouteGuardOverlay');
@@ -89,12 +97,14 @@
     const n=String(name||'');
     if(OWNER_ROUTES.has(n)){
       const o=ownerState();
-      if(o.status==='idle'||o.status==='checking')return {pending:true,kind:'owner'};
+      if(o.status==='idle'||o.status==='checking'||o.currentSessionVerified!==true)return {pending:true,kind:'owner'};
       return ownerAllowed()?{allow:true,kind:'owner'}:{allow:false,kind:'owner'};
     }
     if(SCHOOL_ROUTES.has(n)){
       if(ownerAllowed())return {allow:true,kind:'owner'};
-      if(school.status==='idle'||school.status==='checking')return {pending:true,kind:'school'};
+      const s=session(),f=fp(s);
+      if(!s)return {allow:false,kind:'school'};
+      if(school.status==='idle'||school.status==='checking'||schoolFingerprint!==f)return {pending:true,kind:'school'};
       return schoolAllowed()?{allow:true,kind:'school'}:{allow:false,kind:'school'};
     }
     return {allow:true,kind:'public'};
@@ -156,7 +166,7 @@
 
   window.MDM_PRIVILEGED_ROUTE_GUARD=Object.freeze({
     version:VERSION,ownerRoutes:Object.freeze([...OWNER_ROUTES]),schoolRoutes:Object.freeze([...SCHOOL_ROUTES]),
-    verifySchool,schoolSnapshot,enforce:enforceCurrent
+    verifySchool,schoolSnapshot,resetSchool,enforce:enforceCurrent
   });
 
   verifySchool(false).then(enforceCurrent);

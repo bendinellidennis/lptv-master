@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.25.2.18 — School tools DOM-authoritative mount fix
+/* Malta Driving Master 45.8.38.25.2.19 — School-only Telemetry bootstrap recovered
    Telemetry and the School Evidence entry are loaded only inside the server-authorized School Home.
    Student Home never mounts these School tools. */
 (function(){
@@ -9,10 +9,7 @@ window.MDM_SCHOOL_TELEMETRY_BOOTSTRAP_458382521=true;
 let started=false;
 function routeName(){return String(location.hash||'').replace(/^#/,'').split('?')[0].trim();}
 function authorizedSchoolHome(){
- const schoolDom=Boolean(document.querySelector('.sch35'));
- const route=routeName();
- if(route!=='schoolhome'&&!schoolDom)return false;
- if(!schoolDom&&route==='schoolhome')return false;
+ if(routeName()!=='schoolhome')return false;
  if(window.MDM_OWNER_AUTHORITY?.isOwner?.()===true)return true;
  const s=window.MDM_PRIVILEGED_ROUTE_GUARD?.schoolSnapshot?.();
  return Boolean(s&&s.status==='verified'&&s.authorized===true);
@@ -42,20 +39,20 @@ function start(){
  st.textContent='#mdmSchoolTelemetryPanel{display:none!important}#mdmSchoolTelemetryPanel[data-mdm-open="1"]{display:block!important}';
  document.head.appendChild(st);
 
- load('mdm-school-telemetry-placement-45838194.js?v=458382518-school-only',function(){
+ load('mdm-school-telemetry-placement-45838194.js?v=458382519-recovered-school-only',function(){
   if(window.MDM_SCHOOL_TELEMETRY_4583819){
    try{window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944?.place?.();}catch(_){}
-   load('mdm-school-evidence-entry-4583823.js?v=458382518-school-only',function(){restoreLoadedUi();});
+   load('mdm-school-evidence-entry-4583823.js?v=458382519-recovered-school-only');
    return;
   }
   load('mdm-school-telemetry-engine-45838193.js?v=458381944-engine-no-flash',function(){
    try{window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944?.place?.();}catch(_){}
-   load('mdm-school-evidence-entry-4583823.js?v=458382518-school-only',function(){restoreLoadedUi();});
+   load('mdm-school-evidence-entry-4583823.js?v=458382519-recovered-school-only');
   });
  });
 }
 function sync(){if(authorizedSchoolHome())start();else cleanStudentHome();}
-[0,80,180,350,700,1200,2000,3500,5000,8000,12000,20000,30000].forEach(ms=>setTimeout(sync,ms));
+[0,100,250,500,900,1500,2500,4000].forEach(ms=>setTimeout(sync,ms));
 window.addEventListener('pageshow',sync);
 window.addEventListener('popstate',sync);
 window.addEventListener('mdm:owner-authority',sync);

@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.25.2.19 — School-only Telemetry bootstrap recovered
+/* Malta Driving Master 45.8.38.25.2.1 — School-only Telemetry bootstrap
    Telemetry and the School Evidence entry are loaded only inside the server-authorized School Home.
    Student Home never mounts these School tools. */
 (function(){
@@ -26,28 +26,24 @@ function load(src,done){
  s.onload=function(){if(done)done();};
  document.head.appendChild(s);
 }
-function restoreLoadedUi(){
- try{window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944?.place?.();}catch(_){}
- try{window.MDM_SCHOOL_EVIDENCE_ENTRY_4583823_API?.place?.();}catch(_){}
-}
 function start(){
+ if(started)return;
  if(!authorizedSchoolHome()){cleanStudentHome();return;}
- if(started){restoreLoadedUi();return;}
  started=true;
  const st=document.createElement('style');
  st.id='mdmTelemetryCardFirstGuard';
  st.textContent='#mdmSchoolTelemetryPanel{display:none!important}#mdmSchoolTelemetryPanel[data-mdm-open="1"]{display:block!important}';
  document.head.appendChild(st);
 
- load('mdm-school-telemetry-placement-45838194.js?v=458382519-recovered-school-only',function(){
+ load('mdm-school-telemetry-placement-45838194.js?v=458382521-school-only',function(){
   if(window.MDM_SCHOOL_TELEMETRY_4583819){
    try{window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944?.place?.();}catch(_){}
-   load('mdm-school-evidence-entry-4583823.js?v=458382519-recovered-school-only');
+   load('mdm-school-evidence-entry-4583823.js?v=458382521-school-only');
    return;
   }
   load('mdm-school-telemetry-engine-45838193.js?v=458381944-engine-no-flash',function(){
    try{window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944?.place?.();}catch(_){}
-   load('mdm-school-evidence-entry-4583823.js?v=458382519-recovered-school-only');
+   load('mdm-school-evidence-entry-4583823.js?v=458382521-school-only');
   });
  });
 }

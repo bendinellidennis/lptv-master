@@ -1,8 +1,8 @@
-/* Malta Driving Master 45.8.38.25.2.32.10 — Auth-render synchronized Parent entry */
+/* Malta Driving Master 45.8.38.25.2.32.11 — Parent Home native section mount */
 (function(){
 'use strict';
-if(window.MDM_RUNTIME_RECOVERY_4583825330)return;
-const V='45.8.38.25.2.32.10',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'},PASSPORT='evidencepassport';
+if(window.MDM_RUNTIME_RECOVERY_4583825331)return;
+const V='45.8.38.25.2.32.11',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'},PASSPORT='evidencepassport';
 const CUSTOM=new Set(Object.values(R));
 const $=s=>document.querySelector(s),parse=v=>{try{return v?JSON.parse(v):null}catch(_){return null}},esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function lang(){const l=String(parse(localStorage.getItem('mdm-v1-settings'))?.lang||'en');return ['it','en','mt'].includes(l)?l:'en'}
@@ -95,7 +95,7 @@ function norm(v){return String(v||'').replace(/\s+/g,' ').trim().toUpperCase()}
 function studentSchoolGrid(){
  const direct=document.querySelector('#screen [data-go="practicallesson"],#screen [data-go="schoolportal2"],#screen [data-go="schoolhome"]');
  if(direct?.parentElement)return direct.parentElement;
- const titles=Array.from(document.querySelectorAll('#screen h1,#screen h2,#screen h3,#screen h4,#screen strong'));
+ const titles=Array.from(document.querySelectorAll('#screen .hm30-title,#screen h1,#screen h2,#screen h3,#screen h4,#screen strong'));
  const title=titles.find(e=>{
    const x=norm(e.textContent);
    return x.includes('SCUOLA E ISTRUTTORE')||x.includes('SCHOOL AND INSTRUCTOR')||(x.includes('SKOLA')&&x.includes('GĦALLIEM'));
@@ -127,8 +127,11 @@ function entries(){
  if((!r||r==='home')&&!owner()){
    const g=studentSchoolGrid();
    if(g){
-     const b=card('mdmParentSponsorHomeCard','👪','Parent / Sponsor Portal',t('Report condiviso solo su scelta dello studente.','Report shared only by learner choice.','Rapport maqsum biss bl-għażla tal-istudent.'),R.parent);
-     b.className=g.querySelector?.('.hm30-card')?'hm30-card':($('.hm30-card')?'hm30-card':'home-card');
+     let b=document.getElementById('mdmParentSponsorHomeCard');
+     if(!b){b=document.createElement('button');b.id='mdmParentSponsorHomeCard';b.type='button';}
+     b.className='hm30-card c-pink';
+     b.setAttribute('data-recovery-go',R.parent);
+     b.innerHTML='<i>👪</i><h3>Parent / Sponsor</h3><p>'+esc(t('Condivisione controllata','Controlled sharing','Qsim ikkontrollat'))+'</p>';
      if(b.parentElement!==g)g.appendChild(b);
    }
  }
@@ -174,5 +177,5 @@ window.addEventListener('mdm:account-rehydrated',()=>{
 });
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
 schedule();
-window.MDM_RUNTIME_RECOVERY_4583825330=Object.freeze({version:V,routes:R,passport:PASSPORT,refresh:schedule,resetTop,place,studentSchoolGrid});
+window.MDM_RUNTIME_RECOVERY_4583825331=Object.freeze({version:V,routes:R,passport:PASSPORT,refresh:schedule,resetTop,place,studentSchoolGrid});
 })();

@@ -1,8 +1,8 @@
-/* Malta Driving Master 45.8.38.25.2.32.5 — Runtime recovery no-flicker navigation */
+/* Malta Driving Master 45.8.38.25.2.32.6 — AI Debrief viewport stability */
 (function(){
 'use strict';
-if(window.MDM_RUNTIME_RECOVERY_4583825325)return;
-const V='45.8.38.25.2.32.5',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'};
+if(window.MDM_RUNTIME_RECOVERY_4583825326)return;
+const V='45.8.38.25.2.32.6',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'};
 const CUSTOM=new Set(Object.values(R));
 const $=s=>document.querySelector(s),parse=v=>{try{return v?JSON.parse(v):null}catch(_){return null}},esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function lang(){const l=String(parse(localStorage.getItem('mdm-v1-settings'))?.lang||'en');return ['it','en','mt'].includes(l)?l:'en'}
@@ -13,9 +13,15 @@ function owner(){return window.MDM_OWNER_AUTHORITY?.isOwner?.()===true}
 function school(){if(owner())return true;const s=window.MDM_PRIVILEGED_ROUTE_GUARD?.schoolSnapshot?.();return !!(s&&s.status==='verified'&&s.authorized===true)}
 function student(){return !!session()&&!owner()&&!school()}
 function nativeGo(name){history.pushState({name},'','#'+name);window.dispatchEvent(new PopStateEvent('popstate',{state:{name}}))}
+function resetTop(){
+  try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(_){try{window.scrollTo(0,0)}catch(__){}}
+  try{document.documentElement.scrollTop=0;document.body.scrollTop=0}catch(_){}
+}
 function customGo(name){
   history.pushState({mdmRecovery:name},'','#'+name);
+  resetTop();
   render();
+  requestAnimationFrame(resetTop);
 }
 function go(name){if(CUSTOM.has(name))customGo(name);else nativeGo(name)}
 function button(label,name){return '<button type="button" class="btn" data-recovery-go="'+name+'">'+esc(label)+' →</button>'}
@@ -57,7 +63,7 @@ function render(){
  const r=route();
  if(!CUSTOM.has(r))return false;
  if(r===R.parent){if(!student())return false;return shell('Parent / Sponsor Portal',t('Condivisione controllata dallo studente.','Sharing controlled by the learner.','Qsim ikkontrollat mill-istudent.'),'<div class="card"><h3>'+esc(t('Report condivisibile','Shareable report','Rapport li jista’ jinqasam'))+'</h3><p>'+esc(t('Progresso, evidenze e prossimo obiettivo restano sotto il controllo dello studente.','Progress, evidence and the next goal remain under learner control.','Il-progress, l-evidenza u l-għan li jmiss jibqgħu taħt il-kontroll tal-istudent.'))+'</p>'+button(t('Apri Competence Passport','Open Competence Passport','Iftaħ il-Competence Passport'),'evidencepassport')+'</div>','home')}
- if(r===R.debrief){if(!student())return false;return shell('AI Lesson Debrief',t('Debrief post-lezione basato sulle prove già registrate.','Post-lesson debrief grounded in evidence already recorded.','Debrief wara l-lezzjoni bbażat fuq evidenza diġà rreġistrata.'),'<div class="card">'+button(t('Torna alla lezione pratica','Return to practical lesson','Erġa’ lura għal-lezzjoni prattika'),'practicallesson')+'</div>','practicallesson')}
+ if(r===R.debrief){if(!student())return false;if(document.querySelector('#screen .ai-debrief-hero,#screen .ai-debrief-title')){resetTop();return true}return shell('AI Lesson Debrief',t('Debrief post-lezione basato sulle prove già registrate.','Post-lesson debrief grounded in evidence already recorded.','Debrief wara l-lezzjoni bbażat fuq evidenza diġà rreġistrata.'),'<div class="card">'+button(t('Torna alla lezione pratica','Return to practical lesson','Erġa’ lura għal-lezzjoni prattika'),'practicallesson')+'</div>','practicallesson')}
  if(r===R.ops){if(!school())return false;return shell(t('Operazioni scuola','School Operations','Operazzjonijiet tal-Iskola'),t('Area operativa riservata alla scuola verificata.','Operational area reserved for the verified school.','Żona operattiva riservata għall-iskola vverifikata.'),'<div class="card">'+button(t('Apri studenti','Open students','Iftaħ l-istudenti'),'schoolroster')+'</div>','schoolhome')}
  if(r===R.fleet){if(!school())return false;return shell('Fleet / Corporate Driver Intelligence',t('Vista professionale riservata alla scuola verificata.','Professional view reserved for the verified school.','Veduta professjonali riservata għall-iskola vverifikata.'),'<div class="card">'+button(t('Torna alla scuola','Return to school','Erġa’ lura għall-iskola'),'schoolhome')+'</div>','schoolhome')}
  return false;
@@ -95,15 +101,17 @@ function entries(){
 function place(){if(!render()){restoreScreen();entries()}}
 function schedule(){let n=0;function tick(){place();if(++n<45)requestAnimationFrame(tick)}requestAnimationFrame(tick);[150,300,600,1000,1600,2500,4000].forEach(ms=>setTimeout(place,ms))}
 document.addEventListener('click',e=>{
+ const nativeDebrief=e.target?.closest?.('[data-go="lessondebrief"]');
+ if(nativeDebrief){[0,60,160].forEach(ms=>setTimeout(resetTop,ms))}
  const back=e.target?.closest?.('[data-recovery-back]');
  if(back){e.preventDefault();e.stopImmediatePropagation();const fallback=back.getAttribute('data-recovery-back');if(history.length>1)history.back();else nativeGo(fallback);return}
  const b=e.target?.closest?.('[data-recovery-go]');if(!b)return;
  e.preventDefault();e.stopImmediatePropagation();go(b.getAttribute('data-recovery-go'));
 },true);
-window.addEventListener('popstate',schedule);
-window.addEventListener('pageshow',schedule);
+window.addEventListener('popstate',()=>{schedule();if(CUSTOM.has(route())){resetTop();requestAnimationFrame(resetTop)}});
+window.addEventListener('pageshow',()=>{schedule();if(CUSTOM.has(route()))resetTop()});
 window.addEventListener('mdm:owner-authority',schedule);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
 schedule();
-window.MDM_RUNTIME_RECOVERY_4583825325=Object.freeze({version:V,routes:R,refresh:schedule});
+window.MDM_RUNTIME_RECOVERY_4583825326=Object.freeze({version:V,routes:R,refresh:schedule,resetTop});
 })();

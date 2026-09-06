@@ -1,8 +1,8 @@
-/* Malta Driving Master 45.8.38.25.2.32.13 — Resume-safe idempotent Parent mount */
+/* Malta Driving Master 45.8.38.25.2.32.11 — Parent Home native section mount */
 (function(){
 'use strict';
 if(window.MDM_RUNTIME_RECOVERY_4583825331)return;
-const V='45.8.38.25.2.32.13',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'},PASSPORT='evidencepassport';
+const V='45.8.38.25.2.32.11',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'},PASSPORT='evidencepassport';
 const CUSTOM=new Set(Object.values(R));
 const $=s=>document.querySelector(s),parse=v=>{try{return v?JSON.parse(v):null}catch(_){return null}},esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function lang(){const l=String(parse(localStorage.getItem('mdm-v1-settings'))?.lang||'en');return ['it','en','mt'].includes(l)?l:'en'}
@@ -128,17 +128,11 @@ function entries(){
    const g=studentSchoolGrid();
    if(g){
      let b=document.getElementById('mdmParentSponsorHomeCard');
-     if(!b){
-       b=document.createElement('button');
-       b.id='mdmParentSponsorHomeCard';
-       b.type='button';
-       b.className='hm30-card c-pink';
-       b.setAttribute('data-recovery-go',R.parent);
-       b.innerHTML='<i>👪</i><h3>Parent / Sponsor</h3><p>'+esc(t('Condivisione controllata','Controlled sharing','Qsim ikkontrollat'))+'</p>';
-       g.appendChild(b);
-     }else if(b.parentElement!==g){
-       g.appendChild(b);
-     }
+     if(!b){b=document.createElement('button');b.id='mdmParentSponsorHomeCard';b.type='button';}
+     b.className='hm30-card c-pink';
+     b.setAttribute('data-recovery-go',R.parent);
+     b.innerHTML='<i>👪</i><h3>Parent / Sponsor</h3><p>'+esc(t('Condivisione controllata','Controlled sharing','Qsim ikkontrollat'))+'</p>';
+     if(b.parentElement!==g)g.appendChild(b);
    }
  }
  if(r==='schoolhome'&&school()){
@@ -183,7 +177,5 @@ window.addEventListener('mdm:account-rehydrated',()=>{
 });
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
 schedule();
-const API=Object.freeze({version:V,routes:R,passport:PASSPORT,refresh:schedule,resetTop,place,studentSchoolGrid});
-window.MDM_RUNTIME_RECOVERY_4583825331=API;
-window.MDM_RUNTIME_RECOVERY=API;
+window.MDM_RUNTIME_RECOVERY_4583825331=Object.freeze({version:V,routes:R,passport:PASSPORT,refresh:schedule,resetTop,place,studentSchoolGrid});
 })();

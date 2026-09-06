@@ -2,7 +2,7 @@
 
 /* Malta Driving Master 45.8.38.25.2 — Pre-Pentest Cache Hygiene */
 
-const CACHE = 'mdm-build-45-8-38-25-2-31-assignment-delivery-integrity';
+const CACHE = 'mdm-build-45-8-38-25-2-32-restored-cumulative-runtime';
 const BLOCKED_LEGACY = new Set([
   '/lptv-master/account-storage-inspector.html',
   '/lptv-master/pilot-entitlement-test.html',

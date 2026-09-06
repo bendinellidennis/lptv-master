@@ -1,0 +1,65 @@
+name: Fetch MDM29 Audio
+
+on:
+  push:
+    branches:
+      - full-package-45838253218
+    paths:
+      - .github/workflows/fetch-mdm29-audio.yml
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download narration blocks
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p audio
+          fetch() { echo "Fetching $1"; curl --fail --retry 4 --retry-delay 2 -L "$2" -o "audio/$1.mp3"; }
+
+          fetch INTRO "https://storage.moknah.io/mcp/tts/3846/683d7ee9-07f3-44dc-938a-564474e560e0.mp3"
+          fetch IT01 "https://storage.moknah.io/mcp/tts/3846/2dc009ab-908c-45d4-b402-8f16d74e8d29.mp3"
+          fetch IT02 "https://storage.moknah.io/mcp/tts/3846/bcf1d5bf-417a-4a05-8f04-1599418b804a.mp3"
+          fetch IT03 "https://storage.moknah.io/mcp/tts/3846/17b23543-5ba5-40ab-b426-7b439790c715.mp3"
+          fetch IT04 "https://storage.moknah.io/mcp/tts/3846/48b43c6d-a3b0-44f8-9009-126382a117dc.mp3"
+          fetch IT05 "https://storage.moknah.io/mcp/tts/3846/73f73a94-59f4-4679-b3f3-11e1943eb1a7.mp3"
+          fetch IT06 "https://storage.moknah.io/mcp/tts/3846/4218b3f5-39f4-45c8-83f7-eaa7ca98f3b3.mp3"
+          fetch IT07 "https://storage.moknah.io/mcp/tts/3846/e340029c-7d17-4139-88d8-1c3b7c93ebf4.mp3"
+          fetch IT08 "https://storage.moknah.io/mcp/tts/3846/a18285d1-7a0b-4be8-8016-2c617af9eaa0.mp3"
+          fetch IT09 "https://storage.moknah.io/mcp/tts/3846/269d319a-11c2-4078-bb92-382fa9b343c2.mp3"
+          fetch IT10 "https://storage.moknah.io/mcp/tts/3846/d36fc496-cd3f-465d-a52c-763ea758484b.mp3"
+          fetch IT11 "https://storage.moknah.io/mcp/tts/3846/ea81c9a6-acca-41e5-9b21-d4827f274fdc.mp3"
+          fetch IT12 "https://storage.moknah.io/mcp/tts/3846/f054a52f-218e-46ae-9003-b70346ecb5e4.mp3"
+          fetch IT13 "https://storage.moknah.io/mcp/tts/3846/b2d6d82a-ff45-410a-bb23-a7f91aec613a.mp3"
+          fetch IT14 "https://storage.moknah.io/mcp/tts/3846/64fe5a94-f11d-4250-9b6e-75a9a435fc48.mp3"
+          fetch IT15 "https://storage.moknah.io/mcp/tts/3846/0ae91885-6600-4fa6-993e-5befaeed2683.mp3"
+          fetch IT16 "https://storage.moknah.io/mcp/tts/3846/f0f25a27-bb5d-463a-a898-014ea0e62220.mp3"
+          fetch IT17 "https://storage.moknah.io/mcp/tts/3846/3dc16117-ac68-4842-bf52-833b72cbdaaa.mp3"
+          fetch IT18 "https://storage.moknah.io/mcp/tts/3846/6ab83e7b-1e47-4716-ac1d-1a1449aa4c9a.mp3"
+          fetch IT19 "https://storage.moknah.io/mcp/tts/3846/9c778cdb-2435-4bc0-b17d-7733bc4d7aa8.mp3"
+          fetch IT20 "https://storage.moknah.io/mcp/tts/3846/30aa7900-4ec4-4966-98a9-c9a0a0e1f131.mp3"
+          fetch IT21 "https://storage.moknah.io/mcp/tts/3846/d5f0040e-0c82-4bb6-a42e-95b0fd692cdc.mp3"
+          fetch IT22 "https://storage.moknah.io/mcp/tts/3846/79e74768-befc-464b-9ded-7b2e3fb239a9.mp3"
+          fetch IT23 "https://storage.moknah.io/mcp/tts/3846/280b92ac-df30-478b-b9c9-c2a5d65222b5.mp3"
+          fetch IT24 "https://storage.moknah.io/mcp/tts/3846/64eb4b9c-d185-4562-965a-716298fd44e7.mp3"
+          fetch IT25 "https://storage.moknah.io/mcp/tts/3846/19da7b49-3b4b-4da8-b948-c084bfcf0bbc.mp3"
+          fetch IT26 "https://storage.moknah.io/mcp/tts/3846/6618a673-a727-4e76-ac70-6b3114416283.mp3"
+          fetch IT27 "https://storage.moknah.io/mcp/tts/3846/e659cddf-9b30-45e5-ae05-bf9cbcbd6ef0.mp3"
+          fetch IT28 "https://storage.moknah.io/mcp/tts/3846/0f65b1de-8188-45f5-9e48-b07b464363a6.mp3"
+          fetch IT29 "https://storage.moknah.io/mcp/tts/3846/6ae4bf7a-4399-4358-b1da-253ccd8dc1b1.mp3"
+
+          printf '%s\n' audio/*.mp3 | sort
+          test "$(find audio -name '*.mp3' | wc -l)" -eq 30
+
+      - name: Upload narration artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MDM29_AUDIO
+          path: audio/
+          if-no-files-found: error

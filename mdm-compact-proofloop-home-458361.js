@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MDM_COMPACT_HOME_45836)return;
-const V='45.8.38.25.1', HUB='mdmCompactRealPreparation';
+const V='45.8.38.25.2.31', HUB='mdmCompactRealPreparation';
 let open='', raf=0;
 
 function p(v){try{return v?JSON.parse(v):null}catch(_){return null}}
@@ -22,7 +22,9 @@ function proofText(){
 }
 function missionText(){
  const m=mission();if(!m)return t('Nessuna missione attiva','No active mission','L-ebda missjoni attiva');
- const label=String(m.target?.label||m.payload?.competence_label||t('Competenza da verificare','Skill to verify','Ħila li trid tiġi vverifikata'));
+ const label=String(m.source==='school'
+  ?(m.payload?.title||m.payload?.competence_label||m.target?.label||t('Missione della scuola','School mission','Missjoni tal-iskola'))
+  :(m.target?.label||m.payload?.competence_label||t('Competenza da verificare','Skill to verify','Ħila li trid tiġi vverifikata')));
  let state=t('Missione attiva','Mission active','Missjoni attiva');
  if(m.source==='school'){
   if(m.status==='assigned')state=t('Assegnata dalla scuola','Assigned by school','Assenjata mill-iskola');

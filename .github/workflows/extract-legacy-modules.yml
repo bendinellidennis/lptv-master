@@ -1,0 +1,55 @@
+name: Extract legacy module deltas
+on:
+  push:
+    branches: [audit-legacy-modules-20260906]
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract diffs
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import subprocess, difflib, pathlib, json
+          pairs = [
+            ("debrief",
+             "610fd145e1a63d6bbedc4ece1b061e44a97b48da","app-3994-458212evidence-link-integrity-final.js",
+             "610fd145e1a63d6bbedc4ece1b061e44a97b48da","app-3994-458223ai-lesson-debrief-integrated.js"),
+            ("parent",
+             "fff36c108efdda10feb1da3835ffa7e6c4ec674b","app-3994-458223ai-lesson-debrief-integrated.js",
+             "fff36c108efdda10feb1da3835ffa7e6c4ec674b","app-3994-45823parent-sponsor-portal-final.js"),
+            ("school_ops",
+             "84ed922c8735a23debe64dec6d6768a2fad80756","app-3994-45823parent-sponsor-portal-final.js",
+             "84ed922c8735a23debe64dec6d6768a2fad80756","app-3994-45824school-operations-final.js"),
+            ("school_ops_lang",
+             "6eaa0c5b1760a3bb01f8cbfc968690b17cac5765","app-3994-45824school-operations-final.js",
+             "6eaa0c5b1760a3bb01f8cbfc968690b17cac5765","app-3994-458241school-operations-language-purity.js"),
+            ("fleet",
+             "6da48b7520dc78a072fad8b162fc140ddc4ed8fc","app-3994-458241school-operations-language-purity.js",
+             "6da48b7520dc78a072fad8b162fc140ddc4ed8fc","app-3994-45825fleet-corporate-final.js"),
+          ]
+          out = pathlib.Path("legacy-deltas"); out.mkdir()
+          summary=[]
+          def show(ref,path):
+              return subprocess.check_output(["git","show",f"{ref}:{path}"], text=True, errors="replace").splitlines(True)
+          for name,ra,pa,rb,pb in pairs:
+              try:
+                  a,b=show(ra,pa),show(rb,pb)
+                  diff=list(difflib.unified_diff(a,b,fromfile=pa,tofile=pb,n=8))
+                  (out/f"{name}.diff").write_text("".join(diff),encoding="utf-8")
+                  added=[x[1:] for x in diff if x.startswith("+") and not x.startswith("+++")]
+                  (out/f"{name}.added.txt").write_text("".join(added),encoding="utf-8")
+                  summary.append({"name":name,"a_lines":len(a),"b_lines":len(b),"diff_lines":len(diff),"added_lines":len(added)})
+              except Exception as e:
+                  summary.append({"name":name,"error":repr(e)})
+          (out/"summary.json").write_text(json.dumps(summary,indent=2),encoding="utf-8")
+          print(json.dumps(summary,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: legacy-module-deltas
+          path: legacy-deltas/
+          retention-days: 1

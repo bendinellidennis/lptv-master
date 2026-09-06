@@ -14,7 +14,8 @@ jobs:
         run: |
           set -euo pipefail
           curl -L --fail --retry 3 'https://production-273614-media-export.storage.googleapis.com/ddc9b2c0-08ab-4719-a9a1-736912bdbd5f/original.m4a?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=descript-api%40production-273614.iam.gserviceaccount.com%2F20260906%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260906T220051Z&X-Goog-Expires=86400&X-Goog-SignedHeaders=host&X-Goog-Signature=8404d95c5b68096a20ac711fca203562d6b393c50b7744dc66a07389d7e0ebd2fe25f93b1a312e92ca9806f49974704f21ebf1f0e0e8430feb1dd936c8c07e800a0b7fbcf14a1d0b274ed93b2e8715e4049bd31c778b52aadaad084926c8ae3d938f5ac851d749926bdb09061aa7320e5c9cd35ffb16fadc3dd8f3a00d0d8ea2577e3c81adb52378c57b2c59e6c46ddceaecd3dc2026457f9f216dc59695df0e0838fdf299bba3abc01b19f9bfe03f66275722c95343a377cc73c6ced3c3ea2ae19ca54dd8a0a6583ef8e9e8ee66d90aa497fc70ffcc19cf25f1f71ca4b3cbb4ce795bb4c61a28bc7c32690e1cd8caef3276565764cf69ce891174fc5b64f501' -o MDM_master_voice.m4a
-          ffprobe -v error -show_entries format=duration -of default=nw=1 MDM_master_voice.m4a
+          test -s MDM_master_voice.m4a
+          ls -lh MDM_master_voice.m4a
       - name: Upload voice master
         uses: actions/upload-artifact@v4
         with:

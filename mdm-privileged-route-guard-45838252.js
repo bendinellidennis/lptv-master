@@ -5,7 +5,7 @@
   'use strict';
   if(window.MDM_PRIVILEGED_ROUTE_GUARD)return;
 
-  const VERSION='45.8.38.25.2.29.1';
+  const VERSION='45.8.38.25.2.32.17';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_ROUTES=new Set([
     'backendreal','externalvalidation','pilotanalytics','securitytrust',
@@ -37,6 +37,9 @@
   function ownerState(){return window.MDM_OWNER_AUTHORITY?.snapshot?.()||{status:'idle',authorized:false}}
   function ownerAllowed(){return window.MDM_OWNER_AUTHORITY?.isOwner?.()===true}
   function schoolSnapshot(){return Object.freeze({...school})}
+  function signalSchoolAuthority(){
+    try{window.dispatchEvent(new CustomEvent('mdm:school-authority',{detail:schoolSnapshot()}));}catch(_){}
+  }
   function schoolAllowed(){
     const s=session();
     return Boolean(s&&school.status==='verified'&&school.authorized===true&&schoolFingerprint===fp(s));
@@ -57,13 +60,15 @@
   async function verifySchool(force=false){
     const s=session();
     if(!s){
-      school.status='signed_out';school.authorized=false;school.reason='authentication_required';school.checkedAt=new Date().toISOString();schoolFingerprint='';return schoolSnapshot();
+      school.status='signed_out';school.authorized=false;school.reason='authentication_required';school.checkedAt=new Date().toISOString();schoolFingerprint='';
+      signalSchoolAuthority();
+      return schoolSnapshot();
     }
     const f=fp(s);
     if(!force&&f&&f===schoolFingerprint&&school.status==='verified')return schoolSnapshot();
     if(schoolInFlight)return schoolInFlight;
     const c=cfg();
-    if(!c){school.status='error';school.authorized=false;school.reason='backend_config_unavailable';school.checkedAt=new Date().toISOString();return schoolSnapshot()}
+    if(!c){school.status='error';school.authorized=false;school.reason='backend_config_unavailable';school.checkedAt=new Date().toISOString();signalSchoolAuthority();return schoolSnapshot()}
 
     school.status='checking';school.authorized=false;school.reason='';
     schoolInFlight=(async()=>{
@@ -82,6 +87,7 @@
       }catch(e){
         school.status='error';school.authorized=false;school.reason=String(e?.message||e||'school_authorization_failed');school.checkedAt=new Date().toISOString();
       }finally{schoolInFlight=null}
+      signalSchoolAuthority();
       return schoolSnapshot();
     })();
     return schoolInFlight;

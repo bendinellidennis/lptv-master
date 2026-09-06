@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.25.2.32.16 — School Home render-synchronized tools mount
+/* Malta Driving Master 45.8.38.25.2.32.17 — School authority immediate mount
    Telemetry and the School Evidence entry are loaded only inside the server-authorized School Home.
    Student Home never mounts these School tools. */
 (function(){
@@ -116,5 +116,13 @@ async function sync(){
 window.addEventListener('pageshow',sync);
 window.addEventListener('popstate',sync);
 window.addEventListener('mdm:owner-authority',sync);
+window.addEventListener('mdm:school-authority',function(ev){
+ const s=ev?.detail;
+ if(routeName()!=='schoolhome')return;
+ if(window.MDM_OWNER_AUTHORITY?.isOwner?.()===true||(s&&s.status==='verified'&&s.authorized===true)){
+  start();
+  signalSchoolHomeReady();
+ }
+});
 document.addEventListener('visibilitychange',function(){if(!document.hidden)sync();});
 })();

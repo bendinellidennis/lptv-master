@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.25.2.32.7 — Student Home performance-card route fix
+/* Malta Driving Master 45.8.38.25.2.32.15 — Resume-safe Parent remount
    Fixes two wrong Home links without touching the core learning engines:
    Readiness -> Exam Day readiness predictor
    Pattern   -> AI cognitive pattern analysis
@@ -9,7 +9,7 @@
 if(window.MDM_HOME_PERFORMANCE_ROUTE_FIX_458382522)return;
 window.MDM_HOME_PERFORMANCE_ROUTE_FIX_458382522=true;
 
-const VERSION='45.8.38.25.2.32.7';
+const VERSION='45.8.38.25.2.32.15';
 const FOCUS_KEY='mdm-home-performance-focus-v1';
 
 function routeName(){
@@ -69,10 +69,18 @@ function focusDestination(){
  try{sessionStorage.removeItem(FOCUS_KEY)}catch(_){}
  return true;
 }
+function restoreParentIfMissing(){
+ const route=routeName();
+ if(route&&route!=='home')return false;
+ if(document.getElementById('mdmParentSponsorHomeCard'))return true;
+ if(!document.querySelector('#screen .hm30'))return false;
+ try{window.MDM_RUNTIME_RECOVERY_4583825331?.place?.()}catch(_){}
+ return Boolean(document.getElementById('mdmParentSponsorHomeCard'));
+}
 function sync(){
  patchHome();
  focusDestination();
- try{window.MDM_RUNTIME_RECOVERY_4583825327?.place?.()}catch(_){}
+ restoreParentIfMissing();
 }
 document.addEventListener('click',rememberFocus,true);
 const screen=document.getElementById('screen');

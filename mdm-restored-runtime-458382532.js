@@ -1,8 +1,8 @@
-/* Malta Driving Master 45.8.38.25.2.32.7 — Stable Parent entry and header back */
+/* Malta Driving Master 45.8.38.25.2.32.8 — Passport header back */
 (function(){
 'use strict';
-if(window.MDM_RUNTIME_RECOVERY_4583825327)return;
-const V='45.8.38.25.2.32.7',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'};
+if(window.MDM_RUNTIME_RECOVERY_4583825328)return;
+const V='45.8.38.25.2.32.8',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'},PASSPORT='evidencepassport';
 const CUSTOM=new Set(Object.values(R));
 const $=s=>document.querySelector(s),parse=v=>{try{return v?JSON.parse(v):null}catch(_){return null}},esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function lang(){const l=String(parse(localStorage.getItem('mdm-v1-settings'))?.lang||'en');return ['it','en','mt'].includes(l)?l:'en'}
@@ -114,11 +114,19 @@ function entries(){
    const s=$('#screen');if(s){const b=document.createElement('section');b.id='mdmAIDebriefPracticalLaunch';b.className='card';b.innerHTML='<h3>AI Lesson Debrief</h3><p>'+esc(t('Debrief post-lezione basato sulle prove già registrate.','Post-lesson debrief grounded in evidence already recorded.','Debrief wara l-lezzjoni bbażat fuq evidenza diġà rreġistrata.'))+'</p>'+button(t('Apri debrief','Open debrief','Iftaħ id-debrief'),R.debrief);s.appendChild(b)}
  }
 }
-function place(){if(!render()){restoreHeaderBack();restoreScreen();entries()}}
+function place(){
+ const r=route();
+ if(r===PASSPORT)showHeaderBack('home');
+ if(!render()){
+   if(r!==PASSPORT)restoreHeaderBack();
+   restoreScreen();
+   entries();
+ }
+}
 function schedule(){let n=0;function tick(){place();if(++n<45)requestAnimationFrame(tick)}requestAnimationFrame(tick);[150,300,600,1000,1600,2500,4000].forEach(ms=>setTimeout(place,ms))}
 document.addEventListener('click',e=>{
  const headerBack=e.target?.closest?.('#backBtn');
- if(headerBack&&CUSTOM.has(route())){
+ if(headerBack&&(CUSTOM.has(route())||route()===PASSPORT)){
    e.preventDefault();e.stopImmediatePropagation();
    const fallback=headerBack.dataset.mdmRecoveryBack||'home';
    if(history.length>1)history.back();else nativeGo(fallback);
@@ -136,5 +144,5 @@ window.addEventListener('pageshow',()=>{schedule();if(CUSTOM.has(route()))resetT
 window.addEventListener('mdm:owner-authority',schedule);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
 schedule();
-window.MDM_RUNTIME_RECOVERY_4583825327=Object.freeze({version:V,routes:R,refresh:schedule,resetTop,place});
+window.MDM_RUNTIME_RECOVERY_4583825328=Object.freeze({version:V,routes:R,passport:PASSPORT,refresh:schedule,resetTop,place});
 })();

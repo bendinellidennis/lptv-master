@@ -1,8 +1,8 @@
-/* Malta Driving Master 45.8.38.25.2.32.6 — AI Debrief viewport stability */
+/* Malta Driving Master 45.8.38.25.2.32.7 — Stable Parent entry and header back */
 (function(){
 'use strict';
-if(window.MDM_RUNTIME_RECOVERY_4583825326)return;
-const V='45.8.38.25.2.32.6',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'};
+if(window.MDM_RUNTIME_RECOVERY_4583825327)return;
+const V='45.8.38.25.2.32.7',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'};
 const CUSTOM=new Set(Object.values(R));
 const $=s=>document.querySelector(s),parse=v=>{try{return v?JSON.parse(v):null}catch(_){return null}},esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function lang(){const l=String(parse(localStorage.getItem('mdm-v1-settings'))?.lang||'en');return ['it','en','mt'].includes(l)?l:'en'}
@@ -25,6 +25,21 @@ function customGo(name){
 }
 function go(name){if(CUSTOM.has(name))customGo(name);else nativeGo(name)}
 function button(label,name){return '<button type="button" class="btn" data-recovery-go="'+name+'">'+esc(label)+' →</button>'}
+function showHeaderBack(fallback){
+ const b=document.getElementById('backBtn');if(!b)return;
+ if(b.dataset.mdmRecoveryOwned!=='1'){
+   b.dataset.mdmRecoveryOwned='1';
+   b.dataset.mdmRecoveryWasHidden=b.classList.contains('hidden')?'1':'0';
+ }
+ b.dataset.mdmRecoveryBack=fallback||'home';
+ b.classList.remove('hidden');
+ b.setAttribute('aria-label',t('Indietro','Back','Lura'));
+}
+function restoreHeaderBack(){
+ const b=document.getElementById('backBtn');if(!b||b.dataset.mdmRecoveryOwned!=='1')return;
+ if(b.dataset.mdmRecoveryWasHidden==='1')b.classList.add('hidden');else b.classList.remove('hidden');
+ delete b.dataset.mdmRecoveryOwned;delete b.dataset.mdmRecoveryWasHidden;delete b.dataset.mdmRecoveryBack;
+}
 function restoreScreen(){
  const s=$('#screen');if(!s)return;
  const host=document.getElementById('mdmRecoveryRouteHost');if(host)host.remove();
@@ -54,6 +69,7 @@ function hostFor(r){
  return host;
 }
 function shell(title,lead,body,back){
+ showHeaderBack(back);
  const r=route(),h=hostFor(r);if(!h)return false;
  if(h.dataset.ready==='1'&&h.dataset.route===r)return true;
  h.innerHTML='<section class="card mdm-recovered-route"><small>MDM · '+V+'</small><h2>'+esc(title)+'</h2><p>'+esc(lead)+'</p>'+body+'<div style="margin-top:18px"><button type="button" class="btn secondary" data-recovery-back="'+esc(back)+'">← '+esc(t('Indietro','Back','Lura'))+'</button></div></section>';
@@ -63,7 +79,7 @@ function render(){
  const r=route();
  if(!CUSTOM.has(r))return false;
  if(r===R.parent){if(!student())return false;return shell('Parent / Sponsor Portal',t('Condivisione controllata dallo studente.','Sharing controlled by the learner.','Qsim ikkontrollat mill-istudent.'),'<div class="card"><h3>'+esc(t('Report condivisibile','Shareable report','Rapport li jista’ jinqasam'))+'</h3><p>'+esc(t('Progresso, evidenze e prossimo obiettivo restano sotto il controllo dello studente.','Progress, evidence and the next goal remain under learner control.','Il-progress, l-evidenza u l-għan li jmiss jibqgħu taħt il-kontroll tal-istudent.'))+'</p>'+button(t('Apri Competence Passport','Open Competence Passport','Iftaħ il-Competence Passport'),'evidencepassport')+'</div>','home')}
- if(r===R.debrief){if(!student())return false;if(document.querySelector('#screen .ai-debrief-hero,#screen .ai-debrief-title')){resetTop();return true}return shell('AI Lesson Debrief',t('Debrief post-lezione basato sulle prove già registrate.','Post-lesson debrief grounded in evidence already recorded.','Debrief wara l-lezzjoni bbażat fuq evidenza diġà rreġistrata.'),'<div class="card">'+button(t('Torna alla lezione pratica','Return to practical lesson','Erġa’ lura għal-lezzjoni prattika'),'practicallesson')+'</div>','practicallesson')}
+ if(r===R.debrief){if(!student())return false;if(document.querySelector('#screen .ai-debrief-hero,#screen .ai-debrief-title')){showHeaderBack('practicallesson');resetTop();return true}return shell('AI Lesson Debrief',t('Debrief post-lezione basato sulle prove già registrate.','Post-lesson debrief grounded in evidence already recorded.','Debrief wara l-lezzjoni bbażat fuq evidenza diġà rreġistrata.'),'<div class="card">'+button(t('Torna alla lezione pratica','Return to practical lesson','Erġa’ lura għal-lezzjoni prattika'),'practicallesson')+'</div>','practicallesson')}
  if(r===R.ops){if(!school())return false;return shell(t('Operazioni scuola','School Operations','Operazzjonijiet tal-Iskola'),t('Area operativa riservata alla scuola verificata.','Operational area reserved for the verified school.','Żona operattiva riservata għall-iskola vverifikata.'),'<div class="card">'+button(t('Apri studenti','Open students','Iftaħ l-istudenti'),'schoolroster')+'</div>','schoolhome')}
  if(r===R.fleet){if(!school())return false;return shell('Fleet / Corporate Driver Intelligence',t('Vista professionale riservata alla scuola verificata.','Professional view reserved for the verified school.','Veduta professjonali riservata għall-iskola vverifikata.'),'<div class="card">'+button(t('Torna alla scuola','Return to school','Erġa’ lura għall-iskola'),'schoolhome')+'</div>','schoolhome')}
  return false;
@@ -98,9 +114,16 @@ function entries(){
    const s=$('#screen');if(s){const b=document.createElement('section');b.id='mdmAIDebriefPracticalLaunch';b.className='card';b.innerHTML='<h3>AI Lesson Debrief</h3><p>'+esc(t('Debrief post-lezione basato sulle prove già registrate.','Post-lesson debrief grounded in evidence already recorded.','Debrief wara l-lezzjoni bbażat fuq evidenza diġà rreġistrata.'))+'</p>'+button(t('Apri debrief','Open debrief','Iftaħ id-debrief'),R.debrief);s.appendChild(b)}
  }
 }
-function place(){if(!render()){restoreScreen();entries()}}
+function place(){if(!render()){restoreHeaderBack();restoreScreen();entries()}}
 function schedule(){let n=0;function tick(){place();if(++n<45)requestAnimationFrame(tick)}requestAnimationFrame(tick);[150,300,600,1000,1600,2500,4000].forEach(ms=>setTimeout(place,ms))}
 document.addEventListener('click',e=>{
+ const headerBack=e.target?.closest?.('#backBtn');
+ if(headerBack&&CUSTOM.has(route())){
+   e.preventDefault();e.stopImmediatePropagation();
+   const fallback=headerBack.dataset.mdmRecoveryBack||'home';
+   if(history.length>1)history.back();else nativeGo(fallback);
+   return;
+ }
  const nativeDebrief=e.target?.closest?.('[data-go="lessondebrief"]');
  if(nativeDebrief){[0,60,160].forEach(ms=>setTimeout(resetTop,ms))}
  const back=e.target?.closest?.('[data-recovery-back]');
@@ -113,5 +136,5 @@ window.addEventListener('pageshow',()=>{schedule();if(CUSTOM.has(route()))resetT
 window.addEventListener('mdm:owner-authority',schedule);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
 schedule();
-window.MDM_RUNTIME_RECOVERY_4583825326=Object.freeze({version:V,routes:R,refresh:schedule,resetTop});
+window.MDM_RUNTIME_RECOVERY_4583825327=Object.freeze({version:V,routes:R,refresh:schedule,resetTop,place});
 })();

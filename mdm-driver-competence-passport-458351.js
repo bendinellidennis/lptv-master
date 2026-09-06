@@ -3,7 +3,7 @@
 'use strict';
 if(window.MDM_DRIVER_COMPETENCE_PASSPORT)return;
 
-const VERSION='45.8.38.25.2.32.1';
+const VERSION='45.8.38.25.2.32.18';
 const AUTH='mdm_auth_session_v4410';
 const STORE='mdm-driver-competence-passport-v1';
 const SCHOOL_CACHE='mdm-school-evidence-cache-v1';
@@ -114,18 +114,51 @@ function schoolEvidence(){try{const x=read(SCHOOL_CACHE);return Array.isArray(x?
 function applySchoolVerified(state){
  const rows=schoolEvidence();
  rows.forEach(m=>{
-  const p=m?.payload||{},packId=String(p.pack_id||''),competenceId=String(p.competence_id||''),missionId=String(m?.mission_id||m?.id||'');
+  const payload=m?.payload||{},packId=String(payload.pack_id||''),serverCompetenceId=String(payload.competence_id||''),missionId=String(m?.mission_id||m?.id||'');
   if(m?.status!=='accepted'||String(m?.raw_status||'')!=='verified')return;
-  if(p.verification_scope!=='driver_competence'||!packId||!competenceId||!missionId)return;
+  if(payload.verification_scope!=='driver_competence'||!packId||!serverCompetenceId||!missionId)return;
   if(!PACKS.some(x=>x.id===packId)||!m?.student_evidence)return;
-  const pack=ensurePack(state,packId),label=String(p.competence_label||competenceId);
-  const duplicate=Object.entries(pack.competencies||{}).find(([id,r])=>id!==competenceId&&r?.source==='proofloop-verification'&&slug(r?.label||'')===slug(label));
-  const rec=pack.competencies[competenceId]||duplicate?.[1]||{id:competenceId,label,firstSeenAt:now()};
-  if(duplicate){delete pack.competencies[duplicate[0]];appendEvent(pack,'competence-merge',missionId+'-school-merge',{from:duplicate[0],to:competenceId,label});}
+
+  const pack=ensurePack(state,packId),rawLabel=String(payload.competence_label||serverCompetenceId);
+  const catalog=licenceTaxonomy(packId);
+  let canonical=null,bestScore=0;
+  catalog.forEach(a=>{
+   const exact=a.id===serverCompetenceId||slug(a.label)===slug(rawLabel);
+   const score=exact?1:similarity(rawLabel,a.label);
+   if(score>bestScore){bestScore=score;canonical=a}
+  });
+  const competenceId=(canonical&&bestScore>=0.60)?canonical.id:serverCompetenceId;
+  const label=(canonical&&bestScore>=0.60)?canonical.label:rawLabel;
+
+  const matches=Object.entries(pack.competencies||{}).filter(([id,r])=>{
+   if(id===competenceId)return false;
+   if(id===serverCompetenceId)return true;
+   return slug(r?.label||'')===slug(label);
+  });
+  const schoolMatch=matches.find(([,r])=>r?.source==='school-human-verification');
+  const proofMatch=matches.find(([,r])=>r?.source==='proofloop-verification');
+  const current=pack.competencies[competenceId];
+  const rec=schoolMatch?.[1]||current||proofMatch?.[1]||{id:competenceId,label,firstSeenAt:now()};
+
+  let proofEvidence=null;
+  if(rec?.source==='proofloop-verification'&&rec.evidence)proofEvidence={...rec.evidence};
+  if(rec?.proofloopEvidence)proofEvidence={...rec.proofloopEvidence};
+  for(const [,r] of matches){
+   if(r?.source==='proofloop-verification'&&r.evidence)proofEvidence={...r.evidence};
+   if(r?.proofloopEvidence)proofEvidence={...r.proofloopEvidence};
+  }
+
+  for(const [id] of matches){
+   delete pack.competencies[id];
+   appendEvent(pack,'competence-merge',missionId+'-school-merge-'+id,{from:id,to:competenceId,label});
+  }
+
   rec.id=competenceId;
+  rec.serverCompetenceId=serverCompetenceId;
   if(rec.status!=='verified')appendEvent(pack,'competence-status',missionId+'-school-verified',{competenceId,from:rec.status||'insufficient',to:'verified'});
   rec.label=label;rec.status='verified';rec.source='school-human-verification';rec.serverMissionId=missionId;rec.missionStatus='accepted';rec.lastUpdatedAt=now();
   rec.evidence={humanReview:true,studentEvidence:true,reviewedAt:String(m?.reviewed_at||''),submittedAt:String(m?.evidence_submitted_at||m?.student_completed_at||''),source:'school-human-verification'};
+  if(proofEvidence)rec.proofloopEvidence=proofEvidence;
   pack.competencies[competenceId]=rec;
   appendEvent(pack,'school-human-verification',missionId,{competenceId,label,status:'verified',reviewedAt:String(m?.reviewed_at||'')});
   pack.updatedAt=now();
@@ -276,11 +309,12 @@ function render(){
   const order={verified:0,in_verification:1,contradictory:2,consolidate:3,insufficient:4};
   return (order[a.status]??9)-(order[b.status]??9)||a.label.localeCompare(b.label);
  }).map(r=>{
-  const sm=statusMeta(r.status),ev=r.evidence||{};
-  const detail=r.source==='proofloop-verification'
-   ?'<small>'+esc(t('ProofLoop','ProofLoop','ProofLoop'))+' · '+Number(ev.independentSources||0)+'/'+Number(ev.sourceTotal||5)+' '+esc(t('fonti','sources','sorsi'))+(ev.requiresInstructorCheck?' · '+esc(t('verifica istruttore richiesta','instructor verification required','verifika tal-istruttur meħtieġa')):'')+'</small>'
-   :r.source==='school-human-verification'
-    ?'<small>🏫 '+esc(t('Scuola · evidenza studente · verifica umana','School · student evidence · human review','Skola · evidenza tal-istudent · verifika umana'))+'</small>'
+  const sm=statusMeta(r.status),ev=r.evidence||{},pev=r.proofloopEvidence||(r.source==='proofloop-verification'?ev:null);
+  const proofDetail=pev?'<small>🛡️ '+esc(t('ProofLoop','ProofLoop','ProofLoop'))+' · '+Number(pev.independentSources||0)+'/'+Number(pev.sourceTotal||5)+' '+esc(t('fonti','sources','sorsi'))+(pev.requiresInstructorCheck?' · '+esc(t('verifica istruttore richiesta','instructor verification required','verifika tal-istruttur meħtieġa')):'')+'</small>':'';
+  const detail=r.source==='school-human-verification'
+   ?'<small>🏫 '+esc(t('Scuola · evidenza studente · verifica umana','School · student evidence · human review','Skola · evidenza tal-istudent · verifika umana'))+'</small>'+proofDetail
+   :r.source==='proofloop-verification'
+    ?proofDetail
     :'<small>'+esc(t('Nessuna prova specifica ancora registrata','No specific evidence recorded yet','Għadha ma ġiet irreġistrata ebda evidenza speċifika'))+'</small>';
   return '<div class="mdm-competence-row '+esc(r.status)+'"><div class="mdm-competence-status">'+sm.icon+'</div><div><strong>'+esc(r.label)+'</strong>'+detail+'</div><span>'+esc(sm.label)+'</span></div>';
  }).join('');

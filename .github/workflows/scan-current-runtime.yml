@@ -1,0 +1,37 @@
+name: Scan current runtime modules
+on:
+  push:
+    branches: [audit-legacy-modules-20260906]
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan runtime
+        run: |
+          python3 - <<'PY'
+          import pathlib, json
+          files=["app-3994-4582852-part-a.js","app-3994-458293-part-b1.js","app-3994-458293-part-b2.js"]
+          terms={
+            "debrief":["AI_LESSON_DEBRIEF_BUILD","aiLessonDebriefViewHtml","lessondebrief"],
+            "parent":["PARENT_SPONSOR_BUILD","parentSponsorPortalViewHtml","parentportal"],
+            "school_ops":["SCHOOL_OPERATIONS_BUILD","schoolOperationsViewHtml","schooloperations"],
+            "fleet":["FLEET_CORPORATE_BUILD","fleetCorporateViewHtml","fleetcorporate"],
+            "investor":["investorproduction","investorpreview"],
+            "passport":["evidencepassport","competencepassport"]
+          }
+          result={}
+          for f in files:
+              p=pathlib.Path(f)
+              t=p.read_text(encoding="utf-8",errors="replace") if p.exists() else ""
+              result[f]={"bytes":len(t.encode("utf-8"))}
+              for group,needles in terms.items():
+                  result[f][group]={n:(t.find(n)) for n in needles}
+          pathlib.Path("runtime-scan.json").write_text(json.dumps(result,indent=2),encoding="utf-8")
+          print(json.dumps(result,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: runtime-scan
+          path: runtime-scan.json
+          retention-days: 1

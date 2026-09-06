@@ -2,7 +2,7 @@
 
 /* Malta Driving Master 45.8.38.25.2 — Pre-Pentest Cache Hygiene */
 
-const CACHE = 'mdm-build-45-8-38-25-2-32-restored-cumulative-runtime';
+const CACHE = 'mdm-build-45-8-38-25-2-32-1-passport-dedupe';
 const BLOCKED_LEGACY = new Set([
   '/lptv-master/account-storage-inspector.html',
   '/lptv-master/pilot-entitlement-test.html',

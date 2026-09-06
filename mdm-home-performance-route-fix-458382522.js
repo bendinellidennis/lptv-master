@@ -1,4 +1,4 @@
-/* Malta Driving Master 45.8.38.25.2.32.12 — Resume-safe Home recovery bridge
+/* Malta Driving Master 45.8.38.25.2.32.13 — Resume-safe Home recovery bridge
    Fixes two wrong Home links without touching the core learning engines:
    Readiness -> Exam Day readiness predictor
    Pattern   -> AI cognitive pattern analysis
@@ -9,7 +9,7 @@
 if(window.MDM_HOME_PERFORMANCE_ROUTE_FIX_458382522)return;
 window.MDM_HOME_PERFORMANCE_ROUTE_FIX_458382522=true;
 
-const VERSION='45.8.38.25.2.32.12';
+const VERSION='45.8.38.25.2.32.13';
 const FOCUS_KEY='mdm-home-performance-focus-v1';
 
 function routeName(){
@@ -72,7 +72,10 @@ function focusDestination(){
 function sync(){
  patchHome();
  focusDestination();
- try{window.MDM_RUNTIME_RECOVERY_4583825331?.place?.()}catch(_){}
+ try{
+   const route=routeName();
+   if(!route||route==='home')window.MDM_RUNTIME_RECOVERY?.place?.();
+ }catch(_){}
 }
 document.addEventListener('click',rememberFocus,true);
 const screen=document.getElementById('screen');

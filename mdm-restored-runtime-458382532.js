@@ -1,8 +1,8 @@
-/* Malta Driving Master 45.8.38.25.2.32.8 — Passport header back */
+/* Malta Driving Master 45.8.38.25.2.32.9 — Immediate Parent Home entry */
 (function(){
 'use strict';
-if(window.MDM_RUNTIME_RECOVERY_4583825328)return;
-const V='45.8.38.25.2.32.8',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'},PASSPORT='evidencepassport';
+if(window.MDM_RUNTIME_RECOVERY_4583825329)return;
+const V='45.8.38.25.2.32.9',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'},PASSPORT='evidencepassport';
 const CUSTOM=new Set(Object.values(R));
 const $=s=>document.querySelector(s),parse=v=>{try{return v?JSON.parse(v):null}catch(_){return null}},esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function lang(){const l=String(parse(localStorage.getItem('mdm-v1-settings'))?.lang||'en');return ['it','en','mt'].includes(l)?l:'en'}
@@ -92,6 +92,28 @@ function card(id,icon,title,sub,name){
  return b;
 }
 function norm(v){return String(v||'').replace(/\s+/g,' ').trim().toUpperCase()}
+function studentSchoolGrid(){
+ const direct=document.querySelector('#screen [data-go="practicallesson"],#screen [data-go="schoolportal2"],#screen [data-go="schoolhome"]');
+ if(direct?.parentElement)return direct.parentElement;
+ const titles=Array.from(document.querySelectorAll('#screen h1,#screen h2,#screen h3,#screen h4,#screen strong'));
+ const title=titles.find(e=>{
+   const x=norm(e.textContent);
+   return x.includes('SCUOLA E ISTRUTTORE')||x.includes('SCHOOL AND INSTRUCTOR')||(x.includes('SKOLA')&&x.includes('GĦALLIEM'));
+ });
+ if(!title)return null;
+ let n=title.nextElementSibling;
+ for(let i=0;n&&i<5;i++,n=n.nextElementSibling){
+   if(n.matches?.('.hm30-grid,.grid,[class*="grid"]'))return n;
+ }
+ const box=title.parentElement;
+ if(box){
+   const grids=Array.from(box.querySelectorAll?.('.hm30-grid,.grid,[class*="grid"]')||[]);
+   const t=title.getBoundingClientRect?.().top||0;
+   const g=grids.filter(x=>(x.getBoundingClientRect?.().top||0)>=t-2).sort((a,b)=>(a.getBoundingClientRect?.().top||0)-(b.getBoundingClientRect?.().top||0))[0];
+   if(g)return g;
+ }
+ return null;
+}
 function advancedGrid(){
  const a=document.getElementById('mdmSchoolTelemetryCard')||document.getElementById('mdmSchoolEvidenceSafeCard');if(a?.parentElement)return a.parentElement;
  const titles=Array.from(document.querySelectorAll('#screen .sch35-title,#screen h1,#screen h2,#screen h3,#screen h4,#screen strong'));
@@ -102,9 +124,13 @@ function advancedGrid(){
 }
 function entries(){
  const r=route();
- if((!r||r==='home')&&student()){
-   const g=$('#screen [data-go="evidencepassport"]')?.parentElement||$('#screen .hm30-grid,#screen .grid');
-   if(g&&!document.getElementById('mdmParentSponsorHomeCard')){const b=card('mdmParentSponsorHomeCard','👪','Parent / Sponsor Portal',t('Report condiviso solo su scelta dello studente.','Report shared only by learner choice.','Rapport maqsum biss bl-għażla tal-istudent.'),R.parent);b.className=$('.hm30-card')?'hm30-card':'home-card';g.appendChild(b)}
+ if((!r||r==='home')&&!owner()){
+   const g=studentSchoolGrid();
+   if(g){
+     const b=card('mdmParentSponsorHomeCard','👪','Parent / Sponsor Portal',t('Report condiviso solo su scelta dello studente.','Report shared only by learner choice.','Rapport maqsum biss bl-għażla tal-istudent.'),R.parent);
+     b.className=g.querySelector?.('.hm30-card')?'hm30-card':($('.hm30-card')?'hm30-card':'home-card');
+     if(b.parentElement!==g)g.appendChild(b);
+   }
  }
  if(r==='schoolhome'&&school()){
    const g=advancedGrid();
@@ -123,7 +149,7 @@ function place(){
    entries();
  }
 }
-function schedule(){let n=0;function tick(){place();if(++n<45)requestAnimationFrame(tick)}requestAnimationFrame(tick);[150,300,600,1000,1600,2500,4000].forEach(ms=>setTimeout(place,ms))}
+function schedule(){let n=0;function tick(){place();if(++n<120)requestAnimationFrame(tick)}requestAnimationFrame(tick);[120,240,480,800,1200,1800,2600].forEach(ms=>setTimeout(place,ms))}
 document.addEventListener('click',e=>{
  const headerBack=e.target?.closest?.('#backBtn');
  if(headerBack&&(CUSTOM.has(route())||route()===PASSPORT)){
@@ -144,5 +170,5 @@ window.addEventListener('pageshow',()=>{schedule();if(CUSTOM.has(route()))resetT
 window.addEventListener('mdm:owner-authority',schedule);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
 schedule();
-window.MDM_RUNTIME_RECOVERY_4583825328=Object.freeze({version:V,routes:R,passport:PASSPORT,refresh:schedule,resetTop,place});
+window.MDM_RUNTIME_RECOVERY_4583825329=Object.freeze({version:V,routes:R,passport:PASSPORT,refresh:schedule,resetTop,place,studentSchoolGrid});
 })();

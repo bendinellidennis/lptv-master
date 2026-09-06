@@ -1,172 +1,29 @@
-/* Malta Driving Master 45.8.38.25.2.32.2 — Cumulative feature entrypoint bridge
-   Restores reachability of approved modules already present in the active split runtime.
-   It does NOT reimplement their logic and does NOT touch Auth, question banks, Replay,
-   Telemetry, Evidence, ProofLoop or mission engines. */
+/* Malta Driving Master 45.8.38.25.2.32.3 — Runtime recovery
+   Isolated route renderers for four approved modules missing from the split runtime.
+   No Auth, question bank, Replay, Telemetry, Evidence or ProofLoop mutation. */
 (function(){
 'use strict';
-if(window.MDM_CUMULATIVE_ENTRYPOINT_BRIDGE_4583825322)return;
-
-const VERSION='45.8.38.25.2.32.2';
-const ROUTES=Object.freeze({
-  parent:'parentportal',
-  debrief:'lessondebrief',
-  operations:'schooloperations',
-  fleet:'fleetcorporate'
-});
-
-function parse(v){try{return v?JSON.parse(v):null}catch(_){return null}}
-function lang(){try{const l=String(parse(localStorage.getItem('mdm-v1-settings'))?.lang||'en');return ['it','en','mt'].includes(l)?l:'en'}catch(_){return'en'}}
-function t(it,en,mt){const l=lang();return l==='it'?it:l==='mt'?mt:en}
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function routeName(){return String(location.hash||'').replace(/^#/,'').split('?')[0].trim()}
-function session(){
-  const s=parse(localStorage.getItem('mdm_auth_session_v4410'));
-  if(!s||s.status!=='authenticated'||!s.user?.id)return null;
-  if(Number(s.expiresAt||0)>0&&Number(s.expiresAt)<=Date.now())return null;
-  return s;
-}
-function isOwner(){return window.MDM_OWNER_AUTHORITY?.isOwner?.()===true}
-function schoolAllowed(){
-  if(isOwner())return true;
-  const s=window.MDM_PRIVILEGED_ROUTE_GUARD?.schoolSnapshot?.();
-  return Boolean(s&&s.status==='verified'&&s.authorized===true);
-}
-function studentAllowed(){
-  if(!session()||isOwner())return false;
-  const s=window.MDM_PRIVILEGED_ROUTE_GUARD?.schoolSnapshot?.();
-  return !(s&&s.status==='verified'&&s.authorized===true);
-}
-function norm(v){return String(v||'').replace(/\s+/g,' ').trim().toUpperCase()}
-
-function makeCard(id,school,icon,title,sub,route){
-  let card=document.getElementById(id);
-  if(!card){
-    card=document.createElement('button');
-    card.id=id;
-    card.type='button';
-  }
-  card.className=school?'sch35-card blue':(document.querySelector('.hm30-card')?'hm30-card':'home-card');
-  card.setAttribute('data-go',route);
-  card.setAttribute('data-mdm-cumulative-entry','1');
-  card.removeAttribute('data-mdm-restored-route');
-  card.style.cssText='text-align:left;width:100%;cursor:pointer;border:0;font:inherit;color:inherit';
-  card.innerHTML='<div style="font-size:30px;line-height:1;margin-bottom:12px">'+icon+'</div><strong style="display:block;font-size:17px;margin-bottom:5px">'+esc(title)+'</strong><span style="display:block;font-size:12px;opacity:.72">'+esc(sub)+'</span>';
-  return card;
-}
-
-function studentGrid(){
-  const screen=document.getElementById('screen');if(!screen)return null;
-  const anchor=screen.querySelector('[data-go="evidencepassport"]')||screen.querySelector('[data-go="studentos"]')||screen.querySelector('.hm30-card,.home-card');
-  if(anchor?.parentElement)return anchor.parentElement;
-  return screen.querySelector('.hm30-grid,.grid')||null;
-}
-function mountStudentHome(){
-  const r=routeName();
-  if(r&&r!=='home')return false;
-  if(!studentAllowed())return false;
-  const grid=studentGrid();if(!grid)return false;
-  const card=makeCard(
-    'mdmParentSponsorHomeCard',false,'👪',
-    t('Parent / Sponsor Portal','Parent / Sponsor Portal','Portal tal-Ġenitur / Sponsor'),
-    t('Report trasparente su progresso, evidenze e prossimo obiettivo, condiviso solo su scelta dello studente.','Transparent report on progress, evidence and the next goal, shared only by learner choice.','Rapport trasparenti dwar progress, evidenza u l-għan li jmiss, maqsum biss bl-għażla tal-istudent.'),
-    ROUTES.parent
-  );
-  if(card.parentElement!==grid)grid.appendChild(card);
-  return true;
-}
-
-function advancedTitle(){
-  const preferred=Array.from(document.querySelectorAll('.sch35-title,h1,h2,h3,h4,h5,strong,b'));
-  return preferred.find(el=>{
-    const tx=norm(el.textContent||'');
-    return tx.length<=90&&(tx.includes('STRUMENTI AVANZATI')||tx.includes('ADVANCED TOOLS')||tx.includes('GĦODOD AVVANZATI'));
-  })||null;
-}
-function schoolGrid(){
-  const telemetry=document.getElementById('mdmSchoolTelemetryCard');
-  if(telemetry?.parentElement)return telemetry.parentElement;
-  const evidence=document.getElementById('mdmSchoolEvidenceSafeCard');
-  if(evidence?.parentElement)return evidence.parentElement;
-  const title=advancedTitle();if(!title)return null;
-  const school=title.closest('.sch35,.sch35-profile')||title.parentElement;if(!school)return null;
-  const titleTop=title.getBoundingClientRect?.().top||0;
-  const candidates=Array.from(school.querySelectorAll('.sch35-grid,[class*="grid"]')).filter(el=>{
-    if(el===title||el.contains(title))return false;
-    const r=el.getBoundingClientRect?.();if(r&&r.top<titleTop-2)return false;
-    const tx=norm(el.textContent||'');
-    return tx.includes('INTELLIGENZA ISTRUTTORE')||tx.includes('INSTRUCTOR INTELLIGENCE')||
-      tx.includes('CENTRO DI COMANDO')||tx.includes('COMMAND CENTER')||
-      tx.includes('TRUST CENTER')||tx.includes('TELEMETRIA')||tx.includes('TELEMETRY');
-  });
-  return candidates.sort((a,b)=>(a.getBoundingClientRect?.().top||0)-(b.getBoundingClientRect?.().top||0))[0]||null;
-}
-function mountSchoolHome(){
-  if(routeName()!=='schoolhome'||!schoolAllowed())return false;
-  const grid=schoolGrid();if(!grid)return false;
-  const ops=makeCard(
-    'mdmSchoolOperationsHomeCard',true,'🏫',
-    t('Operazioni scuola','School Operations','Operazzjonijiet tal-Iskola'),
-    t('Prenotazioni, pagamenti, CRM e operazioni della scuola.','Bookings, payments, CRM and school operations.','Ibbukkjar, ħlasijiet, CRM u operazzjonijiet tal-iskola.'),
-    ROUTES.operations
-  );
-  const fleet=makeCard(
-    'mdmFleetCorporateHomeCard',true,'🚚',
-    t('Fleet / Corporate Driver Intelligence','Fleet / Corporate Driver Intelligence','Intelliġenza tas-Sewwieq għall-Flotta / Kumpanija'),
-    t('Twin, Passport, strada e telemetria nel contesto professionale.','Twin, Passport, road evidence and telemetry in the professional context.','Twin, Passport, evidenza tat-triq u telemetrija fil-kuntest professjonali.'),
-    ROUTES.fleet
-  );
-  if(ops.parentElement!==grid)grid.appendChild(ops);
-  if(fleet.parentElement!==grid)grid.appendChild(fleet);
-  return true;
-}
-
-function mountPracticalDebrief(){
-  if(routeName()!=='practicallesson'||!studentAllowed())return false;
-  const screen=document.getElementById('screen');if(!screen)return false;
-  if(screen.querySelector('[data-go="lessondebrief"]'))return true;
-  let box=document.getElementById('mdmAIDebriefPracticalLaunch');
-  if(!box){
-    box=document.createElement('section');
-    box.id='mdmAIDebriefPracticalLaunch';
-    box.className='card practical-lesson-debrief-launch';
-    box.innerHTML='<small>MDM · '+VERSION+'</small><h3>'+esc(t('AI Lesson Debrief','AI Lesson Debrief','AI Lesson Debrief'))+'</h3><p>'+esc(t('Debrief post-lezione basato sulle prove già registrate.','Post-lesson debrief grounded in evidence already recorded.','Debrief wara l-lezzjoni bbażat fuq evidenza diġà rreġistrata.'))+'</p><button type="button" class="btn" data-go="'+ROUTES.debrief+'">'+esc(t('Apri debrief della lezione','Open lesson debrief','Iftaħ id-debrief tal-lezzjoni'))+' →</button>';
-  }
-  const title=screen.querySelector('.section-title');
-  if(box.parentElement!==screen){
-    if(title)title.insertAdjacentElement('afterend',box);
-    else screen.insertBefore(box,screen.firstChild||null);
-  }
-  return true;
-}
-
-function cleanWrongContext(){
-  if(routeName()!=='home'||!studentAllowed())document.getElementById('mdmParentSponsorHomeCard')?.remove();
-  if(routeName()!=='schoolhome'||!schoolAllowed()){
-    document.getElementById('mdmSchoolOperationsHomeCard')?.remove();
-    document.getElementById('mdmFleetCorporateHomeCard')?.remove();
-  }
-  if(routeName()!=='practicallesson')document.getElementById('mdmAIDebriefPracticalLaunch')?.remove();
-}
-function place(){
-  cleanWrongContext();
-  mountStudentHome();
-  mountSchoolHome();
-  mountPracticalDebrief();
-}
-function schedule(){[0,60,160,350,700,1200,2200,4000].forEach(ms=>setTimeout(place,ms))}
-
-schedule();
-window.addEventListener('pageshow',schedule);
-window.addEventListener('popstate',schedule);
-window.addEventListener('mdm:owner-authority',schedule);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
-document.addEventListener('click',ev=>{
-  if(ev.target?.closest?.('[data-nav],.brand,[data-go],#langBtn'))setTimeout(schedule,40);
-},true);
-
-window.MDM_CUMULATIVE_ENTRYPOINT_BRIDGE_4583825322=Object.freeze({
-  version:VERSION,
-  routes:ROUTES,
-  refresh:schedule
-});
+if(window.MDM_RUNTIME_RECOVERY_4583825323)return;
+const V='45.8.38.25.2.32.3', R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'};
+const $=s=>document.querySelector(s), parse=v=>{try{return v?JSON.parse(v):null}catch(_){return null}}, esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function lang(){const l=String(parse(localStorage.getItem('mdm-v1-settings'))?.lang||'en');return ['it','en','mt'].includes(l)?l:'en'}
+function t(it,en,mt){return lang()==='it'?it:lang()==='mt'?mt:en} function route(){return String(location.hash||'').replace(/^#/,'').split('?')[0]}
+function session(){const s=parse(localStorage.getItem('mdm_auth_session_v4410'));return s&&s.status==='authenticated'&&s.user?.id&&(!Number(s.expiresAt)||Number(s.expiresAt)>Date.now())?s:null}
+function owner(){return window.MDM_OWNER_AUTHORITY?.isOwner?.()===true} function school(){if(owner())return true;const s=window.MDM_PRIVILEGED_ROUTE_GUARD?.schoolSnapshot?.();return !!(s&&s.status==='verified'&&s.authorized===true)} function student(){return !!session()&&!owner()&&!school()}
+function go(name){history.pushState({name},'','#'+name);window.dispatchEvent(new PopStateEvent('popstate',{state:{name}}))}
+function button(label,name){return '<button type="button" class="btn" data-recovery-go="'+name+'">'+esc(label)+' →</button>'}
+function shell(title,lead,body,back){const screen=$('#screen');if(!screen)return false;screen.innerHTML='<section class="card mdm-recovered-route"><small>MDM · '+V+'</small><h2>'+esc(title)+'</h2><p>'+esc(lead)+'</p>'+body+'<div style="margin-top:18px"><button type="button" class="btn secondary" data-recovery-go="'+back+'">← '+esc(t('Indietro','Back','Lura'))+'</button></div></section>';return true}
+function render(){const r=route();
+ if(r===R.parent){if(!student())return false;return shell(t('Parent / Sponsor Portal','Parent / Sponsor Portal','Portal tal-Ġenitur / Sponsor'),t('Condivisione controllata dallo studente.','Sharing controlled by the learner.','Qsim ikkontrollat mill-istudent.'),'<div class="card"><h3>'+esc(t('Report condivisibile','Shareable report','Rapport li jista’ jinqasam'))+'</h3><p>'+esc(t('Progresso, evidenze già disponibili e prossimo obiettivo restano sotto il controllo dello studente.','Progress, evidence already available and the next goal remain under learner control.','Il-progress, l-evidenza diġà disponibbli u l-għan li jmiss jibqgħu taħt il-kontroll tal-istudent.'))+'</p>'+button(t('Apri Competence Passport','Open Competence Passport','Iftaħ il-Competence Passport'),'evidencepassport')+'</div>','home')}
+ if(r===R.debrief){if(!student())return false;return shell('AI Lesson Debrief',t('Debrief post-lezione senza inventare nuovi dati.','Post-lesson debrief without inventing new data.','Debrief wara l-lezzjoni mingħajr ma jinħolqu data ġdida.'),'<div class="card"><h3>'+esc(t('Prove della lezione','Lesson evidence','Evidenza tal-lezzjoni'))+'</h3><p>'+esc(t('Il debrief usa il percorso pratico e le evidenze già registrate nell’app.','The debrief uses the practical journey and evidence already recorded in the app.','Id-debrief juża l-vjaġġ prattiku u l-evidenza diġà rreġistrata fl-app.'))+'</p>'+button(t('Torna alla lezione pratica','Return to practical lesson','Erġa’ lura għal-lezzjoni prattika'),'practicallesson')+'</div>','practicallesson')}
+ if(r===R.ops){if(!school())return false;return shell(t('Operazioni scuola','School Operations','Operazzjonijiet tal-Iskola'),t('Area operativa riservata alla scuola verificata.','Operational area reserved for the verified school.','Żona operattiva riservata għall-iskola vverifikata.'),'<div class="card"><h3>'+esc(t('Gestione scuola','School management','Ġestjoni tal-iskola'))+'</h3><p>'+esc(t('Accesso alle funzioni operative già autorizzate dal profilo School Admin.','Access to operational functions already authorized for the School Admin profile.','Aċċess għall-funzjonijiet operattivi diġà awtorizzati għall-profil School Admin.'))+'</p>'+button(t('Apri studenti','Open students','Iftaħ l-istudenti'),'schoolroster')+'</div>','schoolhome')}
+ if(r===R.fleet){if(!school())return false;return shell('Fleet / Corporate Driver Intelligence',t('Vista professionale riservata alla scuola verificata.','Professional view reserved for the verified school.','Veduta professjonali riservata għall-iskola vverifikata.'),'<div class="card"><h3>'+esc(t('Intelligenza conducente','Driver intelligence','Intelliġenza tas-sewwieq'))+'</h3><p>'+esc(t('Collega il contesto professionale agli strumenti già presenti: Twin, Passport, strada e telemetria.','Connects the professional context to existing tools: Twin, Passport, road and telemetry.','Jgħaqqad il-kuntest professjonali mal-għodod eżistenti: Twin, Passport, triq u telemetrija.'))+'</p>'+button(t('Apri Telemetria','Open Telemetry','Iftaħ it-Telemetrija'),'schooltelemetry')+'</div>','schoolhome')}
+ return false}
+function card(id,schoolCard,icon,title,sub,name){let b=document.getElementById(id);if(!b){b=document.createElement('button');b.id=id;b.type='button'}b.className=schoolCard?'sch35-card blue':($('.hm30-card')?'hm30-card':'home-card');b.style.cssText='text-align:left;width:100%;cursor:pointer;border:0;font:inherit;color:inherit';b.setAttribute('data-recovery-go',name);b.innerHTML='<div style="font-size:30px;line-height:1;margin-bottom:12px">'+icon+'</div><strong style="display:block;font-size:17px;margin-bottom:5px">'+esc(title)+'</strong><span style="display:block;font-size:12px;opacity:.72">'+esc(sub)+'</span>';return b}
+function entries(){const r=route();if((!r||r==='home')&&student()){const g=$('#screen [data-go="evidencepassport"]')?.parentElement||$('#screen .hm30-grid,#screen .grid');if(g){const b=card('mdmParentSponsorHomeCard',false,'👪','Parent / Sponsor Portal',t('Report condiviso solo su scelta dello studente.','Report shared only by learner choice.','Rapport maqsum biss bl-għażla tal-istudent.'),R.parent);if(b.parentElement!==g)g.appendChild(b)}}
+ if(r==='schoolhome'&&school()){const a=document.getElementById('mdmSchoolTelemetryCard')||document.getElementById('mdmSchoolEvidenceSafeCard'),g=a?.parentElement;if(g){[['mdmSchoolOperationsHomeCard','🏫',t('Operazioni scuola','School Operations','Operazzjonijiet tal-Iskola'),R.ops],['mdmFleetCorporateHomeCard','🚚','Fleet / Corporate Driver Intelligence',R.fleet]].forEach(x=>{const b=card(x[0],true,x[1],x[2],t('Modulo operativo verificato.','Verified operational module.','Modulu operattiv ivverifikat.'),x[3]);if(b.parentElement!==g)g.appendChild(b)})}}
+ if(r==='practicallesson'&&student()&&!document.getElementById('mdmAIDebriefPracticalLaunch')){const s=$('#screen');if(s){const b=document.createElement('section');b.id='mdmAIDebriefPracticalLaunch';b.className='card';b.innerHTML='<h3>AI Lesson Debrief</h3><p>'+esc(t('Debrief post-lezione basato sulle prove già registrate.','Post-lesson debrief grounded in evidence already recorded.','Debrief wara l-lezzjoni bbażat fuq evidenza diġà rreġistrata.'))+'</p>'+button(t('Apri debrief','Open debrief','Iftaħ id-debrief'),R.debrief);s.appendChild(b)}}}
+function place(){if(!render())entries()} function schedule(){[0,80,220,500,1000].forEach(ms=>setTimeout(place,ms))}
+document.addEventListener('click',e=>{const b=e.target?.closest?.('[data-recovery-go]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();go(b.getAttribute('data-recovery-go'))},true);window.addEventListener('popstate',schedule);window.addEventListener('pageshow',schedule);window.addEventListener('mdm:owner-authority',schedule);document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});schedule();
+window.MDM_RUNTIME_RECOVERY_4583825323=Object.freeze({version:V,routes:R,refresh:schedule});
 })();

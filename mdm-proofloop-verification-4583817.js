@@ -3,7 +3,7 @@
 'use strict';
 if(window.MDM_PROOFLOOP_VERIFICATION)return;
 
-const VERSION='45.8.38.25.1';
+const VERSION='45.8.38.25.2.31';
 const AUTH_KEY='mdm_auth_session_v4410';
 const BASE_KEY='mdm-proofloop-verification-v1';
 const SCHOOL_CACHE='mdm-school-evidence-cache-v1';
@@ -27,7 +27,7 @@ function schoolMissions(){const x=schoolCache();return Array.isArray(x?.missions
 function serverMissionId(m){return String(m?.mission_id||m?.id||'').trim()}
 function isUnifiedLifecycleMission(m){
  const p=m?.payload||{};
- return p.lifecycle==='unified_mission_v1'||p.verification_scope==='driver_competence';
+ return p.lifecycle==='unified_mission_v1'||p.verification_scope==='driver_competence'||p.schema==='mdm-instructor-assignment-v1';
 }
 function activeSchoolMission(){
  const rows=schoolMissions().filter(m=>['assigned','revision_requested','evidence_submitted'].includes(String(m?.status||''))&&isUnifiedLifecycleMission(m));
@@ -405,9 +405,13 @@ function schoolStatusCopy(status){
 function schoolMissionHtml(server,result){
  const p=server?.payload||{},mid=serverMissionId(server),sc=schoolStatusCopy(server?.status),auto=evidenceForServerMission(mid,result)||{};
  const meta=[p.pack_id||'',p.competence_label||''].filter(Boolean).join(' · ');
+ const instruction=String(p.instruction||p.objective||'').trim();
+ const criteria=Array.isArray(p.criteria)?p.criteria.map(x=>String(x||'').trim()).filter(Boolean).slice(0,3):[];
  return '<div class="mdm-proofloop-verification active" data-mdm-unified-school-mission="'+esc(mid)+'">'+
   '<div class="mdm-proofloop-verification-head"><div><small>MDM UNIFIED MISSION · '+esc(VERSION)+'</small><strong>🎯 '+esc(String(p.title||p.objective||t('Missione della scuola','School mission','Missjoni tal-iskola')))+'</strong></div><span>'+esc(sc[0])+'</span></div>'+
   '<p class="mdm-proofloop-verification-status">'+esc(sc[1])+'</p>'+
+  (instruction?'<div class="mdm-proofloop-verification-target"><span>'+esc(t('Istruzione della scuola','School instruction','Istruzzjoni tal-iskola'))+'</span><strong>'+esc(instruction)+'</strong></div>':'')+
+  (criteria.length?'<ol>'+criteria.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol>':'')+
   (meta?'<div class="mdm-proofloop-verification-target"><span>'+esc(t('Licenza e competenza','Licence and competence','Liċenzja u ħila'))+'</span><strong>'+esc(meta)+'</strong></div>':'')+
   '<div class="mdm-proofloop-verification-evidence"><span>🛣️ +'+Number(auto.roadDelta||0)+' '+esc(t('evidenze strada','road evidence','evidenza fit-triq'))+'</span><span>📡 +'+Number(auto.telemetryDelta||0)+' '+esc(t('sessioni','sessions','sessjonijiet'))+'</span></div>'+
   (server?.status==='evidence_submitted'

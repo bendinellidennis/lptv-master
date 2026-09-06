@@ -1,8 +1,8 @@
-/* Malta Driving Master 45.8.38.25.2.32.9 — Immediate Parent Home entry */
+/* Malta Driving Master 45.8.38.25.2.32.10 — Auth-render synchronized Parent entry */
 (function(){
 'use strict';
-if(window.MDM_RUNTIME_RECOVERY_4583825329)return;
-const V='45.8.38.25.2.32.9',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'},PASSPORT='evidencepassport';
+if(window.MDM_RUNTIME_RECOVERY_4583825330)return;
+const V='45.8.38.25.2.32.10',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'},PASSPORT='evidencepassport';
 const CUSTOM=new Set(Object.values(R));
 const $=s=>document.querySelector(s),parse=v=>{try{return v?JSON.parse(v):null}catch(_){return null}},esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function lang(){const l=String(parse(localStorage.getItem('mdm-v1-settings'))?.lang||'en');return ['it','en','mt'].includes(l)?l:'en'}
@@ -168,7 +168,11 @@ document.addEventListener('click',e=>{
 window.addEventListener('popstate',()=>{schedule();if(CUSTOM.has(route())){resetTop();requestAnimationFrame(resetTop)}});
 window.addEventListener('pageshow',()=>{schedule();if(CUSTOM.has(route()))resetTop()});
 window.addEventListener('mdm:owner-authority',schedule);
+window.addEventListener('mdm:account-rehydrated',()=>{
+  place();
+  requestAnimationFrame(()=>{place();requestAnimationFrame(place)});
+});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
 schedule();
-window.MDM_RUNTIME_RECOVERY_4583825329=Object.freeze({version:V,routes:R,passport:PASSPORT,refresh:schedule,resetTop,place,studentSchoolGrid});
+window.MDM_RUNTIME_RECOVERY_4583825330=Object.freeze({version:V,routes:R,passport:PASSPORT,refresh:schedule,resetTop,place,studentSchoolGrid});
 })();

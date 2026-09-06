@@ -6,7 +6,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_SWITCH_REHYDRATE)return;
 
-  const VERSION='45.8.38.25.2.20';
+  const VERSION='45.8.38.25.2.32.10';
   const AUTH_KEY='mdm_auth_session_v4410';
   const OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const PROFILE_KEY='mdm-v1-user-profile';
@@ -137,6 +137,10 @@
 
     try{
       if(typeof render==='function')render();
+    }catch(_){}
+
+    try{
+      window.dispatchEvent(new CustomEvent('mdm:account-rehydrated',{detail:{authenticated:true}}));
     }catch(_){}
 
     enforceIdentityCard(state);

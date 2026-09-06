@@ -3,7 +3,7 @@
 'use strict';
 if(window.MDM_DRIVER_COMPETENCE_PASSPORT)return;
 
-const VERSION='45.8.38.25.1';
+const VERSION='45.8.38.25.2.32.1';
 const AUTH='mdm_auth_session_v4410';
 const STORE='mdm-driver-competence-passport-v1';
 const SCHOOL_CACHE='mdm-school-evidence-cache-v1';
@@ -119,7 +119,10 @@ function applySchoolVerified(state){
   if(p.verification_scope!=='driver_competence'||!packId||!competenceId||!missionId)return;
   if(!PACKS.some(x=>x.id===packId)||!m?.student_evidence)return;
   const pack=ensurePack(state,packId),label=String(p.competence_label||competenceId);
-  const rec=pack.competencies[competenceId]||{id:competenceId,label,firstSeenAt:now()};
+  const duplicate=Object.entries(pack.competencies||{}).find(([id,r])=>id!==competenceId&&r?.source==='proofloop-verification'&&slug(r?.label||'')===slug(label));
+  const rec=pack.competencies[competenceId]||duplicate?.[1]||{id:competenceId,label,firstSeenAt:now()};
+  if(duplicate){delete pack.competencies[duplicate[0]];appendEvent(pack,'competence-merge',missionId+'-school-merge',{from:duplicate[0],to:competenceId,label});}
+  rec.id=competenceId;
   if(rec.status!=='verified')appendEvent(pack,'competence-status',missionId+'-school-verified',{competenceId,from:rec.status||'insufficient',to:'verified'});
   rec.label=label;rec.status='verified';rec.source='school-human-verification';rec.serverMissionId=missionId;rec.missionStatus='accepted';rec.lastUpdatedAt=now();
   rec.evidence={humanReview:true,studentEvidence:true,reviewedAt:String(m?.reviewed_at||''),submittedAt:String(m?.evidence_submitted_at||m?.student_completed_at||''),source:'school-human-verification'};

@@ -1,0 +1,64 @@
+name: Build clean MDM FULL package
+
+on:
+  push:
+    branches:
+      - full-package-45838253218
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Prepare clean FULL
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .git .github
+          find . -type f -iname '*BUILD_CHECK*' -delete
+          python3 - <<'PY'
+          import os
+          keep = {
+              'app-3994-4582852-part-a.js',
+              'app-3994-458293-part-b1.js',
+              'app-3994-458293-part-b2.js',
+          }
+          for name in os.listdir('.'):
+              if name.startswith('app-3994') and name.endswith('.js') and name not in keep:
+                  os.remove(name)
+          PY
+          cat > FULL_BUILD_INFO.txt <<'EOF'
+          Malta Driving Master — CLEAN FULL
+          Source main HEAD: 0b503fd7508d6a5e3d5fd8e215d092dd317534f6
+          Build: 45.8.38.25.2.32.18
+          Package policy:
+          - excludes BUILD_CHECK files
+          - excludes historical app-3994 cumulative bundles
+          - retains active split runtime app-3994-4582852-part-a.js, app-3994-458293-part-b1.js, app-3994-458293-part-b2.js
+          - source runtime otherwise mirrors the stable main snapshot
+          EOF
+          test -f index.html
+          test -f sw.js
+          test -f mdm-restored-runtime-458382532.js
+          test -f mdm-driver-competence-passport-458351.js
+          test -f mdm-school-telemetry-4583819.js
+          ! find . -type f -iname '*BUILD_CHECK*' | grep -q .
+          test ! -f app-3994-45823parent-sponsor-portal-final.js
+          test ! -f app-3994-458223ai-lesson-debrief-integrated.js
+          test ! -f app-3994-45824school-operations-final.js
+          test ! -f app-3994-45825fleet-corporate-final.js
+          du -sh .
+
+      - name: Upload clean FULL
+        uses: actions/upload-artifact@v4
+        with:
+          name: MDM_FULL_45_8_38_25_2_32_18_FINAL_CLEAN
+          path: .
+          if-no-files-found: error
+          include-hidden-files: true
+          compression-level: 6

@@ -1,0 +1,39 @@
+name: Fetch MDM V5 Narrative
+
+on:
+  push:
+    branches:
+      - full-package-45838253218
+    paths:
+      - .github/workflows/fetch-mdm-v5-narrative.yml
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download V5 narration
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p audio
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/82682509-7fd6-46e4-8db7-707312a28556.mp3" -o audio/01.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/4f8ce906-f79a-4adb-8637-7820cb6a64a9.mp3" -o audio/02.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/bbb5bc1f-e95e-4ebb-8832-859aee4dea2d.mp3" -o audio/03.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/8ce43271-738b-44fb-8164-b4f705ab88e4.mp3" -o audio/04.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/786baa6c-61a1-425d-b619-468c2644e5d5.mp3" -o audio/05.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/8fb10d50-ccb8-4335-a821-46e8d377dcb8.mp3" -o audio/06.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/d5ddc30c-e83c-4d9d-b5c7-2c98c5522cac.mp3" -o audio/07.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/8606cb49-0663-41ab-9b24-dacf2eb1bed7.mp3" -o audio/08.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/abb3fab2-f34a-4fc7-b0c7-a03f4a1a5987.mp3" -o audio/09.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/1c72d12a-1774-47d6-8ea0-5c1808f6c77c.mp3" -o audio/10.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/1ca4c7c2-c8af-4c2e-baf0-1c0460153df3.mp3" -o audio/11.mp3
+          test "$(find audio -name '*.mp3' | wc -l)" -eq 11
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MDM_V5_NARRATIVE
+          path: audio/
+          if-no-files-found: error

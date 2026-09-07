@@ -1,14 +1,15 @@
-/* Malta Driving Master 45.8.38.19.4.4 — Advanced Tools Telemetry card-first placement */
+/* Malta Driving Master 45.8.38.25.2.32.19 — Immediate Telemetry card shell */
 (function(){
 'use strict';
 if(window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944)return;
-const VERSION='45.8.38.25.2.1';
+const VERSION='45.8.38.25.2.32.19';
 const CARD_ID='mdmSchoolTelemetryCard';
 
 function norm(v){return String(v||'').replace(/\s+/g,' ').trim().toUpperCase();}
 function routeName(){return String(location.hash||'').replace(/^#/,'').split('?')[0].trim();}
-function authorizedSchoolHome(){
- if(routeName()!=='schoolhome')return false;
+function isSchoolHome(){return routeName()==='schoolhome';}
+function schoolAuthorized(){
+ if(!isSchoolHome())return false;
  if(window.MDM_OWNER_AUTHORITY?.isOwner?.()===true)return true;
  const s=window.MDM_PRIVILEGED_ROUTE_GUARD?.schoolSnapshot?.();
  return Boolean(s&&s.status==='verified'&&s.authorized===true);
@@ -87,14 +88,18 @@ function makeCard(grid){
  return card;
 }
 function place(){
- if(!authorizedSchoolHome()){removeSchoolOnlyUi();return false;}
+ if(!isSchoolHome()){removeSchoolOnlyUi();return false;}
  const title=advancedTitle();
  const grid=advancedGrid(title);
  if(!title||!grid)return false;
  const card=makeCard(grid);
+ const allowed=schoolAuthorized();
+ card.disabled=!allowed;
+ card.setAttribute('aria-disabled',allowed?'false':'true');
+ card.style.opacity=allowed?'':'.72';
  if(card.parentNode!==grid)grid.appendChild(card);
  const panel=movePanelBelowGrid(grid);
- if(panel&&card.getAttribute('aria-expanded')!=='true')panel.removeAttribute('data-mdm-open');
+ if(panel&&(!allowed||card.getAttribute('aria-expanded')!=='true'))panel.removeAttribute('data-mdm-open');
  return true;
 }
 function schedule(){[0,80,180,350,700,1200,2000,3500,5000,8000,12000,20000,30000].forEach(ms=>setTimeout(place,ms));}
@@ -102,6 +107,7 @@ schedule();
 window.addEventListener('pageshow',schedule);
 window.addEventListener('popstate',schedule);
 window.addEventListener('mdm:owner-authority',schedule);
+window.addEventListener('mdm:school-authority',schedule);
 document.addEventListener('visibilitychange',function(){if(!document.hidden)schedule()});
 window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944=Object.freeze({version:VERSION,place});
 })();

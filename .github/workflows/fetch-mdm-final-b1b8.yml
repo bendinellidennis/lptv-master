@@ -1,0 +1,94 @@
+name: Fetch MDM Final Narration B1-B8
+
+on:
+  push:
+    branches:
+      - full-package-45838253218
+    paths:
+      - .github/workflows/fetch-mdm-final-b1b8.yml
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch AI voice pages and resolve audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out/raw out/audio
+          cat > /tmp/items.txt <<'EOF'
+          B1 e96ba1cb470645c39752797b0a25c7e2
+          B2 b715dd56c0014bebbdcf1707570ff14a
+          B3 79fb9f573cb74146b79cbd397717cfda
+          B4 fb077a67847f49f99f6d53d32994504e
+          B5 198674acd406412a9cc571df406f39f9
+          B6 0818dc9828da48718836f271b5ea7199
+          B7 f1a1650cc0d04fb2b2081af1a8ab710b
+          B8 d3ec6d17ef7f4c089df91a87eaf92fee
+          EOF
+          while read -r label id; do
+            url="https://www.aidocmaker.com/g0/audio?name=$id"
+            echo "Fetching $label"
+            curl -L --fail --silent --show-error -A "Mozilla/5.0" -D "out/raw/$label.headers" "$url" -o "out/raw/$label.body"
+          done < /tmp/items.txt
+          python - <<'PY'
+          import re, pathlib, subprocess, mimetypes
+          root=pathlib.Path("out/raw")
+          audio=pathlib.Path("out/audio")
+          report=[]
+          for body in sorted(root.glob("B*.body")):
+              label=body.stem.split('.')[0]
+              data=body.read_bytes()
+              head=data[:32]
+              # Direct media signatures
+              if data.startswith(b'ID3') or head[:2] in (b'\xff\xfb',b'\xff\xf3',b'\xff\xf2'):
+                  (audio/f"{label}.mp3").write_bytes(data)
+                  report.append(f"{label}: direct mp3 {len(data)} bytes")
+                  continue
+              if b'ftyp' in head:
+                  (audio/f"{label}.m4a").write_bytes(data)
+                  report.append(f"{label}: direct m4a {len(data)} bytes")
+                  continue
+              text=data.decode('utf-8','ignore')
+              (root/f"{label}.html").write_text(text,encoding='utf-8')
+              urls=[]
+              pats=[
+                  r'https?://[^"\'<>\s]+\.(?:mp3|m4a|wav)(?:\?[^"\'<>\s]*)?',
+                  r'https?://[^"\'<>\s]*(?:storage\.googleapis\.com|cloudfront\.net|amazonaws\.com)[^"\'<>\s]*',
+                  r'(?:"audio_url"|"url"|"src")\s*[:=]\s*["\'](https?://[^"\']+)'
+              ]
+              for pat in pats:
+                  urls += re.findall(pat,text,re.I)
+              cleaned=[]
+              for u in urls:
+                  if isinstance(u,tuple): u=u[0]
+                  u=u.replace('&amp;','&')
+                  if u not in cleaned: cleaned.append(u)
+              report.append(f"{label}: html {len(data)} bytes urls={len(cleaned)}")
+              for i,u in enumerate(cleaned[:10]):
+                  report.append(f"  {i+1}. {u}")
+                  out=audio/f"{label}_{i+1}.bin"
+                  try:
+                      subprocess.run(['curl','-L','--fail','--silent','--show-error','-A','Mozilla/5.0',u,'-o',str(out)],check=True,timeout=60)
+                      d=out.read_bytes()[:32]
+                      if out.stat().st_size>1000 and (d.startswith(b'ID3') or d[:2] in (b'\xff\xfb',b'\xff\xf3',b'\xff\xf2')):
+                          out.rename(audio/f"{label}.mp3"); break
+                      if out.stat().st_size>1000 and b'ftyp' in d:
+                          out.rename(audio/f"{label}.m4a"); break
+                  except Exception as e:
+                      report.append(f"    download error: {e}")
+                  finally:
+                      if out.exists(): out.unlink()
+          pathlib.Path("out/report.txt").write_text("\n".join(report),encoding='utf-8')
+          print("\n".join(report))
+          PY
+          ls -lah out/audio || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MDM_FINAL_B1B8_FETCH
+          path: out/
+          if-no-files-found: error

@@ -105,6 +105,32 @@ jobs:
             curl -L --fail --silent --show-error -A "Mozilla/5.0" "$url" -o "out/js/$name" || true
           done < out/script_urls.txt
           grep -RniE "audio_url|audioUrl|context_id|contextId|/api/|g0/audio|name=|blob:|storage.googleapis|cloudfront|amazonaws|generate.*audio|voice.*audio" out/js > out/js_hits.txt || true
+          mkdir -p out/document_json out/resolved_audio
+          while read -r label id; do
+            echo "Resolving document $label"
+            curl -L --fail --silent --show-error               -H 'Content-Type: application/json'               --data "{\"context_id\":\"$id\",\"context_type\":\"audio\",\"refresh\":true}"               "https://level2labs-prod--adm-agent-helper-user-fetch-document.modal.run"               -o "out/document_json/$label.json" || true
+          done < /tmp/items.txt
+          python - <<'PY'
+          import json, pathlib, subprocess
+          src=pathlib.Path('out/document_json'); dst=pathlib.Path('out/resolved_audio')
+          report=[]
+          for p in sorted(src.glob('B*.json')):
+              label=p.stem
+              try:
+                  d=json.loads(p.read_text(errors='ignore'))
+              except Exception as e:
+                  report.append(f'{label}: bad json {e}'); continue
+              data=d.get('data',{}) if isinstance(d,dict) else {}
+              url=data.get('playback_url') or data.get('audio_url') or d.get('playback_url')
+              report.append(f"{label}: status keys={list(d)[:10]} data_keys={list(data)[:20] if isinstance(data,dict) else []} playback={url}")
+              if url:
+                  out=dst/f'{label}.mp3'
+                  cp=subprocess.run(['curl','-L','--fail','--silent','--show-error',url,'-o',str(out)])
+                  if cp.returncode!=0 and out.exists(): out.unlink()
+          pathlib.Path('out/document_report.txt').write_text('\n'.join(report),encoding='utf-8')
+          print('\n'.join(report))
+          PY
+          ls -lah out/resolved_audio || true
       - uses: actions/upload-artifact@v4
         with:
           name: MDM_FINAL_B1B8_FETCH

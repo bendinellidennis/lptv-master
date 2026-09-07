@@ -1,8 +1,8 @@
-/* Malta Driving Master 45.8.38.25.2.32.16 — School Home render sync */
+/* Malta Driving Master 45.8.38.25.2.32.19 — Immediate School tools shell */
 (function(){
 'use strict';
 if(window.MDM_RUNTIME_RECOVERY_4583825331)return;
-const V='45.8.38.25.2.32.16',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'},PASSPORT='evidencepassport';
+const V='45.8.38.25.2.32.19',R={parent:'parentportal',debrief:'lessondebrief',ops:'schooloperations',fleet:'fleetcorporate'},PASSPORT='evidencepassport';
 const CUSTOM=new Set(Object.values(R));
 const $=s=>document.querySelector(s),parse=v=>{try{return v?JSON.parse(v):null}catch(_){return null}},esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function lang(){const l=String(parse(localStorage.getItem('mdm-v1-settings'))?.lang||'en');return ['it','en','mt'].includes(l)?l:'en'}
@@ -135,9 +135,16 @@ function entries(){
      if(b.parentElement!==g)g.appendChild(b);
    }
  }
- if(r==='schoolhome'&&school()){
+ if(r==='schoolhome'){
    const g=advancedGrid();
-   if(g)[['mdmSchoolOperationsHomeCard','🏫',t('Operazioni scuola','School Operations','Operazzjonijiet tal-Iskola'),R.ops],['mdmFleetCorporateHomeCard','🚚','Fleet / Corporate Driver Intelligence',R.fleet]].forEach(x=>{const b=card(x[0],x[1],x[2],t('Modulo operativo verificato.','Verified operational module.','Modulu operattiv ivverifikat.'),x[3]);if(b.parentElement!==g)g.appendChild(b)});
+   if(g)[['mdmSchoolOperationsHomeCard','🏫',t('Operazioni scuola','School Operations','Operazzjonijiet tal-Iskola'),R.ops],['mdmFleetCorporateHomeCard','🚚','Fleet / Corporate Driver Intelligence',R.fleet]].forEach(x=>{
+     const b=card(x[0],x[1],x[2],t('Modulo operativo verificato.','Verified operational module.','Modulu operattiv ivverifikat.'),x[3]);
+     const locked=!school();
+     b.disabled=locked;
+     b.setAttribute('aria-disabled',locked?'true':'false');
+     b.style.opacity=locked?'.72':'';
+     if(b.parentElement!==g)g.appendChild(b);
+   });
  }
  if(r==='practicallesson'&&student()&&!document.getElementById('mdmAIDebriefPracticalLaunch')){
    const s=$('#screen');if(s){const b=document.createElement('section');b.id='mdmAIDebriefPracticalLaunch';b.className='card';b.innerHTML='<h3>AI Lesson Debrief</h3><p>'+esc(t('Debrief post-lezione basato sulle prove già registrate.','Post-lesson debrief grounded in evidence already recorded.','Debrief wara l-lezzjoni bbażat fuq evidenza diġà rreġistrata.'))+'</p>'+button(t('Apri debrief','Open debrief','Iftaħ id-debrief'),R.debrief);s.appendChild(b)}
@@ -171,6 +178,7 @@ document.addEventListener('click',e=>{
 window.addEventListener('popstate',()=>{schedule();if(CUSTOM.has(route())){resetTop();requestAnimationFrame(resetTop)}});
 window.addEventListener('pageshow',()=>{schedule();if(CUSTOM.has(route()))resetTop()});
 window.addEventListener('mdm:owner-authority',schedule);
+window.addEventListener('mdm:school-authority',schedule);
 window.addEventListener('mdm:school-home-rendered',()=>{if(route()==='schoolhome')place();});
 window.addEventListener('mdm:account-rehydrated',()=>{
   place();

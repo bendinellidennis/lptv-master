@@ -1,0 +1,36 @@
+name: Fetch MDM V4 Narrative
+
+on:
+  push:
+    branches:
+      - full-package-45838253218
+    paths:
+      - .github/workflows/fetch-mdm-v4-narrative.yml
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download narrative
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p audio
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/2110eb63-5c77-41c2-a8e0-2be5de6675cd.mp3" -o audio/01.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/cf07fb47-2888-4539-81f9-9f777a03c779.mp3" -o audio/02.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/ce8fab73-0fd0-4dda-89c3-489cafbaafaf.mp3" -o audio/03.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/cb2adf01-3564-4dcc-948a-3781d21d3e05.mp3" -o audio/04.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/fa974f9b-b52f-4738-8758-fdb29adb1668.mp3" -o audio/05.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/039ebd9c-cf02-4665-a7ae-c803e3f51300.mp3" -o audio/06.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/68ec29c4-63c4-4f3e-8674-e637a982f96a.mp3" -o audio/07.mp3
+          curl --fail -L "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/9cfb9f8b-e6a4-426d-9204-b34db9b9744a.mp3" -o audio/08.mp3
+          test "$(find audio -name '*.mp3' | wc -l)" -eq 8
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MDM_V4_NARRATIVE
+          path: audio/
+          if-no-files-found: error

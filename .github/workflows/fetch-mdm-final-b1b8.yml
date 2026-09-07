@@ -87,6 +87,24 @@ jobs:
           print("\n".join(report))
           PY
           ls -lah out/audio || true
+          mkdir -p out/js
+          python - <<'PY'
+          import re, pathlib
+          html=pathlib.Path('out/raw/B1.html').read_text(encoding='utf-8',errors='ignore')
+          scripts=re.findall(r'<script[^>]+src="([^"]+)"',html)
+          pathlib.Path('out/script_urls.txt').write_text('\n'.join(scripts),encoding='utf-8')
+          PY
+          while IFS= read -r rel; do
+            [ -n "$rel" ] || continue
+            url="$rel"
+            case "$url" in
+              http*) ;;
+              *) url="https://www.aidocmaker.com$url" ;;
+            esac
+            name=$(printf '%s' "$rel" | sed 's#[/?&=]#_#g')
+            curl -L --fail --silent --show-error -A "Mozilla/5.0" "$url" -o "out/js/$name" || true
+          done < out/script_urls.txt
+          grep -RniE "audio_url|audioUrl|context_id|contextId|/api/|g0/audio|name=|blob:|storage.googleapis|cloudfront|amazonaws|generate.*audio|voice.*audio" out/js > out/js_hits.txt || true
       - uses: actions/upload-artifact@v4
         with:
           name: MDM_FINAL_B1B8_FETCH

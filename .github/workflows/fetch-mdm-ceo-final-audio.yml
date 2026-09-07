@@ -1,0 +1,44 @@
+name: MDM CEO Tutorial Audio Fetch
+on:
+  push:
+    branches:
+      - tutorial-audio-ceo-final-20260908
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download narration clips
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p audio
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7f0dd2f9-e8c8-4d5e-ba74-06e0508c2d65.mp3" -o audio/01_intro.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/517203b5-ada5-4d8a-920f-e292ecbe94f7.mp3" -o audio/02_studio.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/b0fa1a0e-5a1e-4270-a065-98c96371d08a.mp3" -o audio/03_esame.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/33db0390-06de-404f-8bdc-a03be89c322e.mp3" -o audio/04_progressi.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/e7ac7c4d-d5c7-477a-b547-4693767c15da.mp3" -o audio/05_coach.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/34c67b95-89e5-4f8e-b497-996ce0e1524b.mp3" -o audio/06_replay.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/0cede990-adb9-48a0-aa27-40df4c2911f1.mp3" -o audio/07_twin.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/3c68e751-31d9-440c-a529-b13b32138d64.mp3" -o audio/08_recovery.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7e405af9-fd29-4f7d-955c-e27376f91b56.mp3" -o audio/09_theory_practice.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/ce126fb6-c83f-4145-84cc-86e01a3c7a20.mp3" -o audio/10_school.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/9152b53f-d18a-47ce-af5e-304d4e82bdbe.mp3" -o audio/11_mission.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/550f03c0-04b0-4aa5-9e85-09659843c7a9.mp3" -o audio/12_telemetry.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/025e8ad3-6f3d-41be-bc23-c8c527c27b40.mp3" -o audio/13_evidence.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/b91c6802-d476-4706-9420-57d7f4245f00.mp3" -o audio/14_passport.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/d441f3da-ff07-4d93-90f0-68a5c67f2c8a.mp3" -o audio/15_instructor.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/01a245a0-bcbc-4a17-add5-b0e7aea03655.mp3" -o audio/16_command.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/132ff1b6-bd4c-4c6e-bef4-d46e9f94a153.mp3" -o audio/17_parent.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/ccff5b0e-8ffc-414e-bc73-a94049eebff6.mp3" -o audio/18_fleet.mp3
+          curl -L --fail --retry 5 "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/ecd4c31f-2fb5-486e-a34d-5f09df2aa88c.mp3" -o audio/19_finale.mp3
+          ls -lh audio
+      - name: Upload audio artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MDM_CEO_FINAL_AUDIO
+          path: audio/
+          if-no-files-found: error

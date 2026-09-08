@@ -287,17 +287,22 @@ function saveCosignState(v){
  return v||{};
 }
 async function cosignRpc(name,payload){
+ const mdmDataOwner0=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const cfg=window.MDM_BACKEND_CONFIG,a=cosignAuth();
  if(!cfg?.enabled||!cfg.endpoint||!cfg.publishableKey||!a)throw new Error('auth_required');
- const r=await fetch(String(cfg.endpoint).replace(/\/$/,'')+'/rest/v1/rpc/'+name,{
+ const r=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0,await fetch(String(cfg.endpoint).replace(/\/$/,'')+'/rest/v1/rpc/'+name,{
   method:'POST',
   headers:{'Content-Type':'application/json','apikey':cfg.publishableKey,'Authorization':'Bearer '+a.accessToken},
   body:JSON.stringify(payload||{}),
   cache:'no-store'
- });
- const text=await r.text();let d={};try{d=text?JSON.parse(text):{}}catch(_){}
+ }));
+ const text=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0,await r.text());let d={};try{d=text?JSON.parse(text):{}}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0);}
  if(!r.ok)throw new Error(String(d?.message||d?.error||('http_'+r.status)));
  return d;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner0)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function cosignRequiresReview(x){
  return Boolean(x?.payload?.requiresInstructorCheck||x?.payload?.proofLoop?.requiresInstructorCheck);
@@ -326,7 +331,10 @@ function cosignEncode(local){
  try{return 'MDM-COSIGN-1.'+btoa(unescape(encodeURIComponent(JSON.stringify(p))))}catch(_){return''}
 }
 async function cosignSync(local){
- const d=await cosignRpc('mdm_student_list_missions',{});
+ const mdmDataOwner1=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
+ const d=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1,await cosignRpc('mdm_student_list_missions',{}));
  const items=Array.isArray(d?.missions)?d.missions:(Array.isArray(d)?d:[]);
  const item=cosignMatch(local,items),st=cosignState();
  if(item){
@@ -338,6 +346,8 @@ async function cosignSync(local){
   st.linked=false;st.serverMissionId='';st.serverStatus='';
  }
  return saveCosignState(st);
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner1)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function cosignHtml(local){
  if(!local?.id)return'';
@@ -387,14 +397,19 @@ function bindCosign(local,rerender){
  },'mdmShowBound');
 
  if(check)bindLocal(check,async function(){
+ const mdmDataOwner2=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
   if(check.disabled)return;
   check.disabled=true;
-  try{await cosignSync(local)}catch(_){}
-  finally{
+  try{window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2,await cosignSync(local))}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2);}
+  finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner2)){
    check.disabled=false;
    if(typeof rerender==='function')rerender();
-  }
- },'mdmCheckBound');
+  }}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner2)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+},'mdmCheckBound');
 }
 
 function schoolStatusCopy(status){
@@ -463,10 +478,15 @@ function brief(mission){
  ].join('\n');
 }
 async function copyBrief(){
+ const mdmDataOwner3=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const text=brief(load());if(!text)return;
- try{await navigator.clipboard.writeText(text)}catch(_){
+ try{window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3,await navigator.clipboard.writeText(text))}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3);
   const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
  }
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner3)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function bind(result,rerender){
  const unifiedBtn=document.getElementById('mdmUnifiedSchoolEvidenceSend');

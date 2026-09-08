@@ -187,7 +187,7 @@ const ui = {
  mt:{home:'Dar',search:'Fittex',assistant:'Assistent LPTV',profile:'Profil',welcome:'Dak kollu li għandek bżonn biex titgħallem u ssuq f’Malta.',continue:'Kompli l-preparazzjoni tiegħek',lptv:'LPTV',lptvSub:'Eżami, studju u żbalji',licences:'Liċenzji tas-sewqan',licencesSub:'Kategoriji użati f’Malta',roadCode:'Kodiċi tat-Triq',roadCodeSub:'Regoli spjegati b’mod ċar',regulations:'Regolamenti',regulationsSub:'Sorsi uffiċjali u aġġornamenti',ai:'Assistent LPTV',aiSub:'Fittex regoli, mistoqsijiet u spjegazzjonijiet mingħajr konnessjoni',profileTitle:'Il-profil tiegħek',startExam:'Eżami realistiku',examDetail:'35 mistoqsija • 45 minuta • tgħaddi 30/35',study:'Studja skont is-suġġett',errors:'Erġa’ agħmel l-iżbalji',progress:'Avvanz',back:'Lura',translate:'Ittraduċi',listen:'Isma’',explain:'Spjegali',confirm:'Ikkonferma',next:'Li jmiss',exit:'Oħroġ',question:'Mistoqsija',selectOne:'Agħżel tweġiba waħda',selectMany:n=>`Agħżel ${n} tweġibiet`,correct:'Tweġiba korretta',wrong:'Tweġiba ħażina',yourAnswer:'It-tweġiba tiegħek',rightAnswer:'It-tweġiba korretta',passed:'GĦADDEJT',failed:'MA GĦADDEJTX',completed:'Sessjoni lesta',officialSource:'Sors uffiċjali',openSource:'Iftaħ is-sors uffiċjali',language:'Lingwa',theme:'Dehra',light:'Ċar',dark:'Skur',system:'Sistema',clear:'Ħassar l-avvanz',database:'Bażi tad-dejta',questions:'mistoqsijiet',searchPlaceholder:'Fittex mistoqsijiet, regoli jew regolamenti…',noResults:'Ma nstab l-ebda riżultat.',assistantIntro:'Staqsi dwar regola, mistoqsija jew suġġett tas-sewqan. L-ewwel infittex fil-kontenut verifikat tal-app.',assistantPlaceholder:'Eżempju: prijorità fir-rotonda, passiġġier anzjan, mina…',send:'Ibgħat',assistantLocal:'Tfittxija lokali trasparenti — ebda IA esterna',assistantDisclaimer:'Dan huwa assistent ta’ tfittxija LPTV mingħajr konnessjoni, mhux IA ġenerattiva. Għal deċiżjonijiet legali iċċekkja s-sorsi uffiċjali.',officialEnglish:'Ingliż uffiċjali',italian:'Taljan',maltese:'Malti',maltesePending:'Dan il-kontenut bil-Malti għadu qed jitħejja.',categories:'Kategoriji',lastVerified:'Sorsi ċċekkjati',resetConfirm:'Tħassar il-avvanz kollu?',noErrors:'Għad m’għandekx żbalji salvati.',resume:'Kompli s-sessjoni',newExam:'Eżami ġdid',allTopics:'Is-suġġetti kollha',chooseTopic:'Agħżel suġġett',start:'Ibda',seen:'Rajthom',accuracy:'Preċiżjoni',exams:'Eżamijiet',best:'L-aħjar',last:'L-aħħar riżultat',official:'Ġabra estiża ta’ preparazzjoni',studyMode:'Modalità ta’ studju',examMode:'Modalità ta’ eżami',noHelpExam:'L-ispjegazzjonijiet ikunu disponibbli wara l-eżami.',resultReview:'Ara l-iżbalji',close:'Agħlaq',guidedStudy:'Studju gwidat',guidedStudyDetail:'250 mistoqsija pertinenti • awdjo • korrezzjoni immedjata',assistedSimulation:'Simulazzjoni bl-għajnuna',assistedDetail:'35 mistoqsija • awdjo • tajmer fakultattiv',realExamPieta:'Eżami reali ta’ Pietà',realExamDetail:'35 mistoqsija • 45 minuta • korrezzjoni fl-aħħar',chooseTimer:'Agħżel it-tajmer',noTimer:'Mingħajr tajmer',timer45:'45 minuta',timer30:'30 minuta',startSimulation:'Ibda s-simulazzjoni',guidedMode:'Studju gwidat',assistedMode:'Simulazzjoni bl-għajnuna',realExamMode:'Eżami reali ta’ Pietà',hideTranslation:'Aħbi t-traduzzjoni',translationQuestion:'Mistoqsija bit-Taljan',translationAnswers:'Tweġibiet bit-Taljan',whyCorrect:'Għaliex din it-tweġiba hija korretta',wrongChoiceReason:'L-għażla magħżula ma taqbilx mar-regola mitluba mill-mistoqsija.',fourChapters:"Kors sħiħ",fourChaptersSub:"250 mistoqsija pertinenti fl-4 kapitoli ta’ preparazzjoni",weakAttack:"Taħriġ fuq id-dgħufijiet",weakAttackSub:"Taħriġ adattiv ibbażat fuq l-iżbalji u l-inqas preċiżjoni",topicSafety:"Saħħa, sigurtà u responsabbiltajiet legali",topicSafetyDesc:"Inċidenti, l-ewwel għajnuna, dokumenti, pieni, operaturi, vetturi u tagħbija sigura",topicCustomer:"Kura tal-klijenti u passiġġieri vulnerabbli",topicCustomerDesc:"Assistenza, diżabilità, kumdità, komunikazzjoni u mġiba professjonali",topicRoad:"Proċeduri u responsabbiltajiet fit-triq",topicRoadDesc:"Regoli tat-triq, sinjali, salib it-toroq, qsim, perikli u sewqan difensiv",topicEco:"Sewqan ekoloġiku u sigur",topicEcoDesc:"Fjuwil, emissjonijiet, ambjent u sewqan effiċjenti",chapterProgress:"Avvanz tal-kapitlu",startChapter:"Studja dan il-kapitlu",allChapterQuestions:"Il-mistoqsijiet kollha tal-kapitlu",adaptiveTraining:"Taħriġ adattiv",adaptiveTrainingDesc:"L-app tagħti prijorità lill-iżbalji, preċiżjoni baxxa u mistoqsijiet mhux magħmula.",availableWeak:"Mistoqsijiet magħżula għalik",startWeak:"Ibda t-taħriġ fuq id-dgħufijiet",readiness:"Tħejjija għall-eżami",coverage:"Kopertura",recentAverage:"Medja tal-aħħar eżamijiet",recommended:"Il-pass li jmiss",readinessStart:"Bidu",readinessGrowing:"Qed titjieb",readinessAlmost:"Kważi lest",readinessReady:"Lest għat-test reali",recommendStudy:"Agħmel aktar mistoqsijiet ta’ studju.",recommendWeak:"Aħdem fuq l-aktar suġġetti dgħajfa.",recommendExam:"Ipprova eżami realistiku ieħor.",examHistory:"Storja tal-eżamijiet",noExamHistory:"Għad ma lestejt l-ebda eżami realistiku.",passedSmall:"Għaddejt",failedSmall:"Ma għaddejtx",chapterQuestions:"Mistoqsijiet tal-kapitlu",chapterAccuracy:"Preċiżjoni tal-kapitlu",diagnostic:"Dijanjosi personali",dailyPlan:"Pjan tal-lum",dailyPlanSub:"15-il mistoqsija personalizzata biex tkompli l-preparazzjoni",dailyDone:"Avvanz tal-lum",dailyComplete:"L-għan tal-ġurnata tlesta",startDaily:"Ibda t-taħriġ tal-lum",repeatDaily:"Erġa’ agħmel it-taħriġ tal-lum",streak:"Jiem konsekuttivi",days:"jiem",englishCoach:"Kowċ tal-Ingliż",englishCoachSub:"Kliem importanti tal-LPTV bit-Taljan, eżempji u awdjo",vocabularySearch:"Fittex kelma bl-Ingliż jew bit-Taljan…",knownWords:"Kliem mitgħallem",markKnown:"Immarka bħala mitgħallma",known:"Mitgħallma",savedQuestions:"Mistoqsijiet salvati",savedQuestionsSub:"Żomm mistoqsijiet diffiċli jew importanti għar-reviżjoni",saveQuestion:"Issejvja l-mistoqsija",removeSaved:"Neħħi mis-salvati",noSavedQuestions:"Għad ma ssejvjajt l-ebda mistoqsija.",backup:"Kopja ta’ sigurtà tal-avvanz",backupSub:"Issejvja jew irrestawra r-riżultati u l-istorja",exportBackup:"Esporta kopja ta’ sigurtà",importBackup:"Importa kopja ta’ sigurtà",backupCreated:"Inħolqot kopja ta’ sigurtà.",backupRestored:"Il-kopja ta’ sigurtà ġiet irrestawrata.",backupInvalid:"Dan il-fajl tal-kopja ta’ sigurtà mhuwiex validu.",today:"Illum",words:"kliem",example:"Eżempju",dailyGoal:"Għan tal-ġurnata",examCentre:"Ċentru tal-Eżami",examCentreSub:"35 mistoqsija mill-ġabra estiża ta’ preparazzjoni LPTV",examInstructions:"Istruzzjonijiet tal-eżami",examRuleQuestions:"35 mistoqsija",examRuleTime:"45 minuta",examRulePass:"Tgħaddi b’30/35",examRuleEnglish:"Il-mistoqsijiet jintwerew bil-Malti",examRuleNavigation:"Tista’ timxi bejn il-mistoqsijiet u timmarkahom għar-reviżjoni.",startRealExam:"Ibda l-eżami reali",answered:"Imwieġba",unanswered:"Mhux imwieġba",flagged:"Immarkati",flagQuestion:"Immarka",unflagQuestion:"Neħħi l-marka",navigator:"Navigatur tal-mistoqsijiet",previous:"Lura",finishExam:"Temm l-eżami",pauseExam:"Waqqaf temporanjament",pauseExamConfirm:"Trid twaqqaf l-eżami u tmur lura fil-menù? It-tweġibiet u t-tajmer jinżammu.",confirmFinish:"Trid tissottometti l-eżami issa?",examSummary:"Sommarju tal-eżami",timeUsed:"Ħin użat",topicResults:"Riżultati skont il-kapitlu",resumeExam:"Kompli l-eżami",autoSubmitted:"Il-ħin skada. L-eżami ġie sottomess awtomatikament.",answerRecorded:"Tweġiba ssejvjata",examQuestionHelp:"Agħżel it-tweġiba. Tista’ tibdilha qabel tissottometti.",examPassTarget:"Għandek bżonn mill-inqas 30 tweġiba korretta.",newRealExam:"Eżami reali ġdid",allAnswered:"Il-mistoqsijiet kollha ġew imwieġba",unansweredWarning:n=>`Għad għandek ${n} mistoqsijiet mhux imwieġba. Tissottometti xorta?`,bankScope:"Ġabra tal-mistoqsijiet",bankAll:"Il-mistoqsijiet pertinenti kollha",bankCore:"Qalba LPTV",bankRoad:"Estensjoni tas-sigurtà fit-triq",bankAuditTitle:"Ġabra estiża u separata",bankAuditText:"250 mistoqsija għat-taħriġ: 68 qalba LPTV u 182 dwar is-sigurtà fit-triq.",bankExcludedText:"Esklużi: 31 mistoqsija ta’ operaturi/SOV/ġestjoni u 2 mistoqsijiet amministrattivi tal-liċenzja B.",bankDisclaimer:"Transport Malta ma tippubblikax id-daqs totali tal-ġabra tal-mistoqsijiet LPTV. Din hija ġabra ta’ preparazzjoni, mhux pretensjoni li fiha l-lista uffiċjali sħiħa.",questionLibrary:"Ġabra tal-mistoqsijiet",questionLibrarySub:"Fittex, iffiltra u irrevedi l-250 mistoqsija pertinenti",scheduledReview:"Reviżjoni skedata",scheduledReviewSub:"Il-mistoqsijiet jerġgħu lura meta jkun il-ħin biex tirrevedihom",dueNow:"Għar-reviżjoni issa",nextReview:"Reviżjoni li jmiss",startReview:"Ibda r-reviżjoni skedata",noReviewDue:"Illum m’hemmx mistoqsijiet dovuti",reviewReady:"Mistoqsijiet lesti għar-reviżjoni",filterStatus:"Qagħda tal-avvanz",filterChapter:"Kapitlu",filterBank:"Ġabra tal-mistoqsijiet",statusAll:"L-istatus kollha",statusUnseen:"Qatt ma ġew studjati",statusWrong:"Imwieġba ħażin",statusSaved:"Salvati",statusDue:"Dovuti għar-reviżjoni",statusMastered:"Mitgħallma",resultsCount:"riżultati",attempts:"Tentattivi",studyNow:"Studja issa",mastered:"Mitgħallma",dueToday:"Irrevedi llum",reviewIn:"Reviżjoni fi",resetFilters:"Neħħi l-filtri",loadMore:"Uri aktar",allChapters:"Il-kapitli kollha",librarySearch:"Fittex mistoqsija, kategorija jew ID…",reviewSystem:"Reviżjoni intelliġenti",reviewSystemSub:"Tweġibiet korretti jerġgħu lura wara 1, 3, 7, 14 u 30 jum. L-iżbalji jerġgħu lura minnufih.",nextReviewNone:"Għad ma ġiet skedata l-ebda reviżjoni.",masteredQuestions:"Mistoqsijiet mitgħallma",reviewedQuestions:"Mistoqsijiet skedati",sentenceCoach:"Ifhem il-frażi",hideSentenceCoach:"Aħbi l-għajnuna tal-frażi",sentenceCoachSub:"Frażijiet u kliem importanti spjegati bit-Taljan",keyPhrases:"Frażijiet tipiċi tal-eżami",keyWords:"Kliem importanti",slowListen:"Isma’ bil-mod",noKeyTerms:"Ma nstabet l-ebda frażi jew kelma mid-dizzjunarju f’din il-mistoqsija.",phrasebook:"Frażarju tal-eżami",phrasebookSub:"Espressjonijiet komuni fil-mistoqsijiet tat-test tas-sewqan",commonPhrases:"Frażijiet komuni tal-eżami",phraseSearch:"Fittex frażi bl-Ingliż jew bit-Taljan…",learnedPhrases:"Frażijiet mitgħallma",markPhraseKnown:"Immarka l-frażi bħala mitgħallma",phraseKnown:"Frażi mitgħallma",flashcards:"Karti tat-tagħlim tal-frażijiet",flashcardsSub:"Prattika mill-Ingliż għat-Taljan u mit-Taljan għall-Ingliż",englishToItalian:"Ingliż → Taljan",italianToEnglish:"Taljan → Ingliż",revealAnswer:"Uri t-tweġiba",hideAnswer:"Aħbi t-tweġiba",nextCard:"Karta li jmiss",shuffleCards:"Ħawwad il-karti",cardProgress:"Karta",phraseMeaning:"Tifsira bit-Taljan",questionLanguageHelp:"Għajnuna biex tifhem il-mistoqsija",audioNormal:"Veloċità normali",audioSlow:"Veloċità bil-mod",personalDetails:"Dettalji personali",personalDetailsSub:"Imla l-profil u pprepara l-kuntatt tar-reġistrazzjoni",firstName:"Isem",lastName:"Kunjom",emailAddress:"Indirizz elettroniku",addressOptional:"Indirizz (mhux obbligatorju)",ageOptional:"Età (mhux obbligatorja)",saveProfile:"Issejvja l-profil",prepareRegistration:"Ipprepara l-email tar-reġistrazzjoni",profileSaved:"Il-profil ġie ssejvjat fuq dan l-apparat.",profileRequired:"Daħħal isem, kunjom u indirizz elettroniku validu.",privacyRequired:"Aċċetta l-avviż tal-privatezza qabel ir-reġistrazzjoni.",privacyConsent:"Naċċetta li dawn id-dettalji jintbagħtu lil Malta Driving Master għar-reġistrazzjoni u l-assistenza.",updatesConsent:"Nixtieq nirċievi wkoll aġġornamenti importanti bl-email.",privacyNote:"Id-dettalji jibqgħu fuq dan l-apparat. L-app tiftaħ Mail jew Gmail u trid tagħfas Ibgħat.",registrationPrepared:"L-email tar-reġistrazzjoni ġiet ippreparata. Ibgħatha minn Mail jew Gmail.",registrationPending:"Profil mhux komplut",registrationComplete:"Profil komplut",completeProfile:"Imla l-profil tiegħek",completeProfileSub:"Isem, kunjom u email huma obbligatorji għar-reġistrazzjoni.",registrationId:"Kodiċi tar-reġistrazzjoni",adminContact:"Kuntatt amministrattiv",deletePersonalData:"Ħassar id-dettalji personali",deletePersonalDataConfirm:"Tħassar id-dettalji personali ssejvjati fuq dan l-apparat?",personalDataDeleted:"Id-dettalji personali tħassru.",emailInvalid:"Daħħal indirizz elettroniku validu.",ageInvalid:"L-età trid tkun bejn 16 u 100 jew titħalla vojta.",emailNotAutomatic:"Il-ftuħ tal-email ma jibgħathiex awtomatikament.",privacyAndContact:"Privatezza u kuntatt",savedOnDevice:"Issejvjat fuq l-apparat",registrationPreparedOn:"Reġistrazzjoni ppreparata",sendRegistration:"Ibgħat ir-reġistrazzjoni",shareRegistration:"Aqsam ir-reġistrazzjoni",openGmail:"Iftaħ Gmail",openMail:"Iftaħ Mail",copyRegistration:"Ikkopja d-dettalji",registrationCopied:"Id-dettalji tar-reġistrazzjoni ġew ikkupjati.",shareUnavailable:"Il-qsim mhux disponibbli hawn. Uża Gmail, Mail jew Ikkopja.",gmailOpening:"Qed jinfetaħ Gmail…",mailOpening:"Qed jinfetaħ Mail…",sendOptions:"Għażliet biex tibgħat ir-reġistrazzjoni",sendOptionsSub:"Agħżel il-metodu li jaħdem fuq l-apparat tiegħek.",copyFallback:"Id-dettalji huma lesti. Waħħalhom f’email lil:",closeOptions:"Agħlaq",directSendNote:"L-ebda messaġġ ma jintbagħat awtomatikament. Iċċekkja r-riċevitur u agħfas Ibgħat.",detailedHistory:"Storja dettaljata tal-eżamijiet",examDetails:"Dettalji tal-eżami",examDetailsSub:"Iċċekkja kull tweġiba tas-simulazzjoni",viewDetails:"Ara d-dettalji",oldExamSummary:"Dan l-eżami sar qabel l-istorja dettaljata. Huwa disponibbli biss is-sommarju.",correctQuestions:"Mistoqsijiet korretti",wrongQuestions:"Mistoqsijiet żbaljati",unansweredQuestions:"Mistoqsijiet mhux imwieġba",flaggedQuestions:"Mistoqsijiet immarkati",selectedAnswer:"Tweġiba magħżula",noAnswerSelected:"L-ebda tweġiba magħżula",retryExamErrors:"Erġa’ agħmel l-iżbalji ta’ dan l-eżami",shareProgressReport:"Aqsam ir-rapport tal-avvanz",copyProgressReport:"Ikkopja r-rapport tal-avvanz",progressReportCopied:"Ir-rapport tal-avvanz ġie kkupjat.",examReportCopied:"Ir-rapport tal-eżami ġie kkupjat.",shareExamReport:"Aqsam ir-rapport tal-eżami",reportTitle:"Rapport tal-avvanz Malta Driving Master",registeredUser:"Utent irreġistrat",notProvided:"Mhux indikat",examNumber:"Eżami",examResult:"Riżultat tal-eżami",questionsReviewed:"Mistoqsijiet iċċekkjati",statisticsCorrection:"Statistika tal-eżami kkoreġuta",statisticsCorrectionSub:"Kull mistoqsija tal-eżami issa tingħadd darba biss.",backToProgress:"Lura għall-avvanz",answerStatus:"Qagħda tat-tweġiba",questionCode:"Kodiċi tal-mistoqsija",examNotFound:"L-eżami ma nstabx.",noMistakesInExam:"M’hemmx żbalji x’terġa’ tagħmel f’dan l-eżami.",reportPrepared:"Ir-rapport ġie ppreparat.",examDate:"Data tal-eżami",passRate:"Rata ta’ suċċess",helpSupport:"Għajnuna u appoġġ",helpSupportSub:"Installa jew aġġorna l-app, kompli fil-pack tal-liċenzja tiegħek u rrapporta problemi tal-pilot b’dijanjostika utli",installApp:"Installa l-app",installAppSub:"Żid Malta Driving Master mat-telefon bħal app normali",appInstalled:"App installata",appNotInstalled:"L-app għadha mhix installata",installNow:"Installa issa",installIOS:"Fuq iPhone: agħfas Aqsam, agħżel Żid mal-Iskrin Prinċipali u mbagħad Żid.",installAndroid:"Fuq Android: iftaħ il-menù tal-brawżer u agħżel Installa l-app jew Żid mal-Iskrin Prinċipali.",installDesktop:"Uża l-ikona jew il-menù tal-browser biex tinstalla l-app.",installUnavailable:"L-installazzjoni awtomatika mhix disponibbli hawn. Segwi l-istruzzjonijiet murija.",installationComplete:"L-installazzjoni tlestiet.",refreshApp:"Aġġorna l-verżjoni tal-app",refreshingApp:"Qed tiġi ċċekkjata l-aħħar verżjoni…",quickGuide:"Gwida ta’ malajr",quickGuideSub:"Kompli mill-License Pack magħżul u mill-għodod tal-produzzjoni",guideStudy:"Studja bi traduzzjoni, awdjo u korrezzjoni immedjata",guideExam:"Ipprova s-simulazzjoni realistika ta’ 35 mistoqsija",guideProgress:"Iċċekkja r-riżultati, l-iżbalji u l-istorja tal-eżamijiet",guideProfile:"Irreġistra, issejvja l-avvanz u biddel is-issettjar",frequentQuestions:"Mistoqsijiet frekwenti",faqBankQ:"Liema License Packs awtonomi huma disponibbli?",faqBankA:"MDM għandu ħames packs awtonomi vverifikati: LPTV 250/250, Kategorija B 444/444, Mutur 391/391, C/CE 386/386 u Bus D 208/208. Kull pack iżomm it-triq tal-istudju u l-kuntest tal-progress tiegħu.",faqOfflineQ:"L-app taħdem mingħajr internet?",faqOfflineA:"Wara li tinfetaħ fuq l-internet u tiġi installata, il-kontenut ewlieni jista’ jaħdem mingħajr konnessjoni. Ħoloq esterni u email jeħtieġu internet.",faqDataQ:"Fejn jinżammu l-avvanz u d-dettalji personali?",faqDataA:"Il-progress tal-istudju, is-settings u l-abbozzi jibqgħu local-first fuq dan l-apparat. Funzjonijiet marbuta mas-server jibagħtu jew jissinkronizzaw data biss meta tuża dak il-fluss b’mod espliċitu u l-awtorizzazzjoni tas-server tippermettiha. Rapport tal-appoġġ jintbagħat biss meta tagħżel Share, Gmail jew Mail.",faqUpdateQ:"Kif nirċievi verżjoni ġdida?",faqUpdateA:"Wara verżjoni ġdida, iftaħ din il-paġna u agħfas Aġġorna l-verżjoni tal-app.",faqDeleteQ:"Nista’ nħassar id-dejta tiegħi?",faqDeleteA:"Iva. Id-dettalji personali u l-avvanz jistgħu jitħassru separatament mill-Profil.",reportProblem:"Irrapporta problema",reportProblemSub:"Iddeskrivi x’ġara. Il-messaġġ jitħejja għall-appoġġ ta’ Malta Driving Master.",supportCategory:"Tip ta’ rapport",supportTechnical:"Problema teknika",supportQuestion:"Mistoqsija jew tweġiba biex tiġi ċċekkjata",supportRegistration:"Problema tar-reġistrazzjoni",supportSuggestion:"Suġġeriment",questionIdOptional:"Kodiċi tal-mistoqsija (mhux obbligatorju)",problemDescription:"Deskrizzjoni",problemPlaceholder:"Spjega x’ġara u x’kont qed tagħmel…",descriptionRequired:"Ikteb deskrizzjoni ta’ mill-inqas 10 karattri.",shareReport:"Aqsam ir-rapport",openSupportGmail:"Iftaħ Gmail",openSupportMail:"Iftaħ Mail",copySupportReport:"Ikkopja r-rapport",supportCopied:"Ir-rapport ġie kkupjat.",supportPrepared:"Ir-rapport ġie ppreparat.",contactSupport:"Kuntatt tal-appoġġ",version:"Verżjoni",privacySummary:"Sommarju tal-privatezza",privacySummaryText:"Id-data tal-istudju tibqa’ local-first. Il-funzjonijiet tas-server jużaw flussi espliċiti u awtorizzati; it-telemetrija tat-triq tibqa’ teħtieġ kunsens. Rapporti tal-appoġġ jintbagħtu biss meta tagħżel li tibgħathom.",openProfile:"Iftaħ il-profil",openStudy:"Iftaħ l-istudju gwidat",openExam:"Iftaħ iċ-Ċentru tal-Eżami",openProgress:"Iftaħ il-avvanz",standaloneMode:"Modalità app installata",browserMode:"Modalità tal-brawżer",menuHelp:"Għajnuna",device:"Apparat",currentPage:"Paġna kurrenti",brandSlogan:"Ipprepara għall-eżami. Irrispetta t-triq. Ipproteġi kull passiġġier.",bridgeTest:"Test tal-Ingliż",bridgeTestSub:"Jifred l-għarfien tar-regoli mill-fehim tal-Ingliż",bridgeIntro:"L-istess kunċetti jiġu ttestjati l-ewwel bit-Taljan u mbagħad bl-Ingliż tal-eżami.",bridgeQuestions:"Kunċetti għat-test",bridgeStart:"Ibda Test tal-Ingliż",bridgePhaseItalian:"Fażi 1 minn 2 — Ir-regola bit-Taljan",bridgePhaseEnglish:"Fażi 2 minn 2 — L-Ingliż tal-eżami",bridgeNoHelp:"Wieġeb mingħajr għajnuna. Id-dijanjosi tidher fl-aħħar.",bridgeTransition:"Il-fażi Taljana tlestiet. Issa wieġeb bl-Ingliż.",bridgeResults:"Riżultat Test tal-Ingliż",knowledgeScore:"Għarfien tar-regoli",englishScore:"Fehim tal-Ingliż",masteredConcepts:"Kunċetti mifhuma fiż-żewġ lingwi",languageBarrier:"Ostaklu tal-lingwa",ruleGap:"Nuqqas fl-għarfien tar-regola",recoveredEnglish:"Korretta biss bl-Ingliż",bridgeMeaning:"Id-dijanjosi tiegħek",bridgeLanguageMeaning:"Kont taf ir-regola bit-Taljan iżda żbaljajt bl-Ingliż.",bridgeRuleMeaning:"Ir-regola ma kinitx ċara bit-Taljan.",bridgeMasteredMeaning:"Fhimt ir-regola u l-kliem bl-Ingliż.",trainLanguageBarrier:"Ħarreġ il-lingwa",trainRuleGaps:"Ħarreġ ir-regoli",repeatBridge:"Erġa’ agħmel Test tal-Ingliż",latestBridge:"L-aħħar dijanjosi Test tal-Ingliż",noBridgeYet:"Għad ma lestejt l-ebda Test tal-Ingliż.",bridgeNotOfficial:"Din hija dijanjosi tat-tagħlim, mhux riżultat uffiċjali.",italianPhase:"Fażi Taljana",englishPhase:"Fażi Ingliża",confirmBridge:"Ikkonferma u kompli",bridgeCompleted:"Test tal-Ingliż tlesta.",errorDna:"DNA tal-iżball",errorDnaSub:"Skopri għaliex tiżbalja, mhux biss liema mistoqsijiet",whyWrong:"X’kienet il-kawża ta’ dan l-iżball?",reasonRule:"Ma kontx naf ir-regola",reasonLanguage:"Ma fhimtx il-mistoqsija sew",reasonWord:"Ma fhimtx kelma importanti",reasonMultiple:"Għażilt numru ħażin ta’ tweġibiet",reasonRush:"Qrajt malajr wisq",reasonUnsure:"Ma kontx ċert u qtajt",reasonSaved:"Il-kawża ġiet issejvjata",noErrorDna:"Agħżel il-kawża wara tweġiba ħażina biex jinbena l-profil tiegħek.",trainThisCause:"Ħarreġ din il-kawża",assistantOffline:"MINGĦAJR KONNESSJONI",assistantResults:"Riżultati rilevanti",assistantStudyQuestion:"Studja din il-mistoqsija",assistantNoMatch:"Ma sibtx riżultat qawwi. Ipprova kelma qasira bħal rotonda, persuna miexja, passiġġier, mina jew brejkijiet.",assistantTry:"Ipprova staqsi",respectRoad:"Irrispetta t-triq",protectPassengers:"Ipproteġi kull passiġġier",assistantFound:n=>`${n} riżultati rilevanti`,findSchool:"Sib skola tas-sewqan",findSchoolSub:"Qabbel is-servizzi u sib l-iskola l-aktar adattata għalik",schoolPartner:"Sieħeb tal-Iskola",schoolPartnerSub:"Ippubblika s-servizzi u rċievi talbiet minn studenti adattati",schoolMarketplace:"Żona tal-iskejjel għall-istudent",schoolMarketplaceSub:"L-Abbinament Intelliġenti jqabbel il-preferenzi tiegħek mas-servizzi ddikjarati minn kull skola.",schoolDemoNotice:"Żona dimostrattiva: dawn huma profili fittizji biex tiġi ttestjata l-pjattaforma. Għad m’hemm l-ebda skola reali reklamata.",smartMatch:"Abbinament Intelliġenti",smartMatchSub:"Il-viżibilità mħallsa qatt ma tbiddel il-punteġġ ta’ kompatibbiltà.",matchScore:"kompatibbiltà",yourPreferences:"Il-preferenzi tiegħek",preferredArea:"Żona preferuta",preferredLanguage:"Lingwa tal-għalliem",courseNeeded:"Kors meħtieġ",transmission:"Trasmissjoni",preferredSchedule:"Ħin preferut",supportNeeded:"Appoġġ addizzjonali",areaAll:"Malta kollha",areaNorth:"Tramuntana",areaCentral:"Ċentru",areaSouth:"Nofsinhar",areaGozo:"Għawdex",languageAny:"Kwalunkwe lingwa",courseLptv:"LPTV / TAG",courseB:"Kategorija B",transmissionAny:"Awtomatika jew manwali",automatic:"Awtomatika",manual:"Manwali",scheduleAny:"Kwalunkwe ħin",daytime:"Matul il-jum",evening:"Filgħaxija",weekend:"Tmiem il-ġimgħa",englishSupport:"Appoġġ għall-Ingliż tal-eżami",documentSupport:"Gwida għad-dokumenti u TAG",updateMatches:"Aġġorna l-abbinamenti",schoolsFound:"profili misjuba",schoolDetails:"Dettalji tal-iskola",compareSchools:"Qabbel l-iskejjel",addToCompare:"Żid mal-paragun",removeFromCompare:"Neħħi mill-paragun",compareLimit:"Tista’ tqabbel sa tliet skejjel.",comparisonEmpty:"Agħżel skejjel mil-lista biex tqabbelhom.",servicesOffered:"Servizzi offruti",languagesSpoken:"Lingwi",coursesOffered:"Korsijiet",availability:"Disponibbiltà",pricingBySchool:"Prezzijiet imdaħħla mill-iskola",pricingPending:"Il-prezzijiet jinżammu aġġornati mill-iskola.",requestInformation:"Itlob informazzjoni",studentRequest:"Talba ta’ informazzjoni mill-istudent",requestPrepared:"It-talba ġiet ippreparata.",pilotRequestNotice:"Fil-fażi pilota t-talbiet jintbagħtu lil Malta Driving Master. Aktar tard imorru direttament lill-iskola verifikata.",profileNeededForRequest:"Imla l-profil personali qabel titlob informazzjoni.",demoProfile:"Profil dimostrattiv",verifiedSchool:"Skola verifikata",verificationPending:"Verifika pendenti",sponsored:"Sponsorizzat",sponsoredExplanation:"Is-servizzi sponsorizzati huma mmarkati b’mod ċar u ma jinfluwenzawx l-Abbinament Intelliġenti.",whyMatched:"Għaliex hija adattata",bridgeMatch:"Adattata għall-bżonnijiet tiegħek tal-Ingliż",areaMatch:"Taqbel maż-żona preferuta",languageMatch:"Taqbel mal-lingwa mitluba",scheduleMatch:"Taqbel mal-ħin mitlub",serviceEnglish:"Appoġġ bl-Ingliż",serviceDocuments:"Gwida tad-dokumenti",serviceBridge:"Appoġġ Test tal-Ingliż",serviceProgress:"Rapporti tal-avvanz",serviceVulnerable:"Xenarji tas-sigurtà tal-passiġġieri",servicePickup:"Servizz ta’ ġbir",schoolPlans:"Pjanijiet Sieħeb tal-Iskola",basicPlan:"Profil bażiku",basicPlanSub:"Preżenza b’xejn b’identità verifikata u servizzi essenzjali",proPlan:"Pjan Professjonali għall-Iskejjel",proPlanSub:"Għodod imħallsa għal servizzi, disponibbiltà, talbiet u gruppi ta’ studenti",featuredPlan:"Servizzi sponsorizzati",featuredPlanSub:"Viżibilità mħallsa, dejjem immarkata b’mod ċar u separata mill-Abbinament Intelliġenti",commercialTerms:"Kundizzjonijiet kummerċjali għandhom jiġu definiti qabel it-tnedija",partnerPrinciples:"Prinċipji tal-pjattaforma",partnerPrincipleVerify:"L-iskejjel jiġu ċċekkjati qabel il-pubblikazzjoni.",partnerPrincipleFair:"Il-ħlas ma jixtrix punteġġ ogħla ta’ kompatibbiltà.",partnerPrincipleControl:"L-istudent jagħżel liema avvanz jaqsam.",applySchoolPartner:"Applika bħala Sieħeb tal-Iskola",schoolName:"Isem tal-iskola",permitReference:"Permess jew referenza uffiċjali",schoolEmail:"Email tal-iskola",schoolPhone:"Telefon",schoolArea:"Żona operattiva",schoolLanguages:"Lingwi offruti",schoolServices:"Servizzi għall-pubblikazzjoni",schoolPrices:"Prezzijiet jew ħlas",schoolAvailability:"Disponibbiltà u ħin ta’ stennija",schoolDescription:"X’jagħmel lill-iskola differenti?",choosePlan:"Pjan ta’ interess",partnerConsent:"Nikkonferma li l-informazzjoni hija korretta u tista’ tiġi ċċekkjata qabel il-pubblikazzjoni.",saveSchoolDraft:"Issejvja l-abbozz",sendPartnerApplication:"Ibgħat l-applikazzjoni",partnerDraftSaved:"L-abbozz tal-iskola ġie ssejvjat.",partnerRequired:"Daħħal l-isem, il-permess, email valida u aċċetta d-dikjarazzjoni.",partnerSendOptions:"Ibgħat l-applikazzjoni",noRealSchoolYet:"Għad ma ġiet approvata l-ebda skola reali f’dan il-prototip.",studentArea:"Żona tal-istudent",schoolAreaTitle:"Żona tal-iskola",smartMatchDiagnosis:"It-Test tal-Ingliż u l-preferenzi tiegħek jistgħu jtejbu l-abbinament.",paidServiceLabel:"Servizz imħallas",clearComparison:"Neħħi l-paragun",lptvPassport:"Passaport LPTV",lptvPassportSub:"Il-mixja personali tiegħek mit-taħriġ sal-Tag tal-Permess tas-Sewwieq",passportOfficialUpdate:"Aġġornament uffiċjali importanti",passportOfficialUpdateText:"Mid-29 ta’ Lulju 2026, applikant ġdid LPTV irid ikun ilu jżomm liċenzja B valida tal-UE għal mill-inqas sentejn u ma jkollux aktar minn sitt punti ta’ penali.",passportChecked:"Informazzjoni uffiċjali ċċekkjata",passportMode:"Tip ta’ applikazzjoni",passportNew:"L-ewwel applikazzjoni",passportRenewal:"Tiġdid tat-TAG",passportApplicantType:"Kategorija tal-applikant",passportMaltese:"Ċittadin Malti",passportEU:"Ċittadin UE/ŻEE/Svizzera mhux Malti",passportTCN:"Ċittadin ta’ pajjiż terz",passportStatus:"Qagħda tal-applikazzjoni",passportPlanning:"Ippjanar",passportCollecting:"Ġbir tad-dokumenti",passportReady:"Lesta għas-sottomissjoni",passportSubmitted:"Applikazzjoni sottomessa",passportEligibilityLetter:"Ittra ta’ eliġibbiltà / pass ta’ Identità",passportWaiting:"Qed tistenna l-ħruġ",passportIssued:"TAG maħruġ",passportChecklist:"Lista personali",passportChecklistSub:"Immarka biss dokumenti li għandek jew passi li lestejt.",passportCompleted:"komplut",passportEligibility:"Kontroll tal-eliġibbiltà",passportLicenceSince:"Liċenzja B miżmuma minn",passportPenaltyPoints:"Punti ta’ penali attwali",passportEligibleDate:"Ir-rekwiżit tas-sentejn jintlaħaq",passportLicenceTooNew:"Il-liċenzja B għadha ma ilha sentejn.",passportPointsBlocked:"Aktar minn sitt punti ta’ penali jwaqqfu applikazzjoni ġdida.",passportEligibilityUnknown:"Daħħal id-dejta tal-liċenzja u l-punti biex tiċċekkja.",passportBasicEligible:"Il-kundizzjonijiet bażiċi jidhru sodisfatti.",passportDates:"Skadenzi u validità",passportDatesSub:"Il-validità tat-TAG tista’ tkun limitata mill-ewwel skadenza tad-dokumenti applikabbli.",passportDrivingExpiry:"Skadenza tal-liċenzja",passportResidenceExpiry:"Skadenza tad-dokument ta’ residenza",passportEmploymentExpiry:"Skadenza tal-awtorizzazzjoni tax-xogħol",passportOperatorExpiry:"Skadenza tal-liċenzja tal-operatur",passportTagExpiry:"Skadenza tat-TAG",passportMedicalDate:"Data taċ-ċertifikat mediku",passportApplicationDate:"Data tal-applikazzjoni",passportEarliestExpiry:"L-ewwel skadenza mdaħħla",passportNoExpiry:"L-ebda skadenza mdaħħla",passportDaysRemaining:"jiem fadal",passportExpired:"skadut",passportCalendar:"Oħloq tfakkiriet tal-Kalendarju",passportCalendarSub:"Joħloq fajl .ics bi tfakkiriet qabel l-iskadenzi.",passportCalendarCreated:"Il-fajl tal-kalendarju nħoloq.",passportCalendarMissing:"Daħħal mill-inqas dejta waħda.",passportNotes:"Noti personali",passportSave:"Issejvja Passaport",passportSaved:"Passaport LPTV ġie ssejvjat.",passportShare:"Aqsam ir-rapport Passaport",passportCopy:"Ikkopja r-rapport Passaport",passportCopied:"Ir-rapport Passaport ġie kkupjat.",passportReset:"Irrisettja Passaport",passportResetConfirm:"Tħassar il-lista, id-dati u n-noti?",passportResetDone:"Passaport LPTV ġie rrisettjat.",passportOfficialDocuments:"Formoli u gwida uffiċjali",passportOfficialWarning:"Niżżel dejjem l-aħħar formoli minn Transport Malta. Din il-lista ma tissostitwixxix deċiżjoni uffiċjali.",passportSubmissionOffices:"Uffiċċji tas-sottomissjoni",passportSubmissionText:"L-applikazzjonijiet jistgħu jitressqu f’Paola, Ħal Lija jew Victoria, Għawdex. Iċċekkja l-ħinijiet.",passportFeeNew:"L-ewwel applikazzjoni: €17.50 skont il-paġna uffiċjali. Jista’ japplika ħlas ieħor ta’ €10 għall-kodiċi 103.",passportFeeRenew:"Tiġdid: €12.",passportTagNotPermission:"Ittra ta’ eliġibbiltà mhijiex TAG u ma tawtorizzax sewqan sakemm jinħareġ it-TAG.",passportValidityRule:"Il-validità ma tistax taqbeż l-ewwel skadenza rilevanti tad-dokumenti.",passportDocId:"ID jew dokument ta’ residenza validu",passportDocLicence:"Liċenzja B tal-UE valida",passportDocTwoYears:"Liċenzja B għal mill-inqas sentejn",passportDocPoints:"Mhux aktar minn sitt punti",passportDocCourse:"Ċertifikat tal-kors Kura tal-Klijenti LPTV",passportDocDPA13:"Formola DPA13 kompluta",passportDocDPA14:"Formola DPA14 kompluta",passportDocMedical:"Ċertifikat mediku DRV032",passportDocCriminalLocal:"Rekord kriminali lokali",passportDocCriminalForeign:"Rekord kriminali barrani fejn japplika",passportDocPoliceConduct:"Ċertifikat tal-kondotta tal-Pulizija",passportDocPhoto:"Ritratt fejn japplika",passportDocFeeNew:"Ħlasijiet tal-ewwel applikazzjoni",passportDocFeeRenew:"Ħlas tat-tiġdid",passportDocJobsplus:"Dokumenti JobsPlus bħala Sewwieq ta’ kabina",passportDocDPA16:"DPA16 jew liċenzja LPTS valida għall-awtoimpjegat",passportDocOperator15:"Liċenzja tal-operatur valida għal aktar minn 15-il jum",passportDocSinglePermit:"Dokumenti tax-xogħol/residenza korretti",passportDocSignatory:"Kopja tal-ID tal-firmatarju fejn meħtieġ",passportDocBluePaper:"Dokument blu għal tiġdid biss f’każijiet limitati",passportDocCopyLicence:"Kopja tal-liċenzja",passportGeneral:"Rekwiżiti ġenerali",passportTCNExtra:"Rekwiżiti addizzjonali TCN",passportSubmission:"Sottomissjoni u ħlas",passportOpen:"Iftaħ dokument uffiċjali",passportDPA13:"DPA13 — l-ewwel applikazzjoni",passportDPA14:"DPA14 — tiġdid",passportDPA16:"DPA16 — dikjarazzjoni ta’ min iħaddem",passportDRV032:"DRV032 — ċertifikat mediku",passportSOPT01:"SOPT 01 — l-ewwel applikazzjonijiet",passportSOPT02:"SOPT 02 — tiġdid",passportOperatorGuide:"Gwida tal-operatur LPTV",passportMainPage:"Paġna uffiċjali LPTV",passportTraining:"Taħriġ u testijiet approvati",passportDownloads:"Formoli Transport Malta",passportContact:"Kuntatt u ħinijiet",passportCurrentProgress:"Avvanz Passaport",passportRequiredComplete:"rekwiżiti kompluti",passportAttention:"Jeħtieġ attenzjoni",passportGood:"Mixja tajba",passportNoBackend:"Id-dejta tibqa’ fuq dan l-apparat u tidħol fil-kopja ta’ sigurtà.",passportOpenDirect:"Iftaħ direttament",passportShareOfficial:"Aqsam / iftaħ f’Safari",passportOfficialCopied:"Il-ħolqa uffiċjali ġiet ikkupjata.",passportOfficialShareText:"Dokument uffiċjali ta’ Transport Malta",passportCalendarShared:"Il-fajl tal-kalendarju ntbagħat fil-menù tal-qsim tal-iPhone.",passportCalendarCopiedFallback:"Dan il-browser ma jistax jesporta l-fajl. Il-lista tat-tfakkiriet ġiet ikkupjata.",passportCalendarOpenSafariNote:"F’Koder uża Aqsam u agħżel Issejvja fil-Fajls. F’Safari tkun tista’ wkoll tniżżel il-fajl .ics.",passportKoderFix:"Kontrolli kompatibbli ma’ Koder",personalRoadmap:"Pjan Personali",personalRoadmapSub:"Mixja ċara mill-istudju tal-lum sal-eżami u d-Tag tal-Permess tas-Sewwieq",roadmapInternalEstimate:"Stima interna — mhijiex deċiżjoni uffiċjali ta’ eliġibbiltà",roadmapJourneyScore:"Punteġġ tal-mixja",roadmapNextAction:"L-aħjar azzjoni li jmiss",roadmapDoNow:"Agħmilha issa",roadmapWhy:"Għaliex tiġi l-ewwel",roadmapToday:"Illum",roadmapWeek:"Is-7 passi li jmiss",roadmapWeekSub:"Sekwenza ġġenerata mill-avvanz reali tiegħek",roadmapSettings:"Issettjar tal-pjan",roadmapTargetDate:"Data tal-mira",roadmapDailyMinutes:"Minuti għal kull jum ta’ studju",roadmapStudyDays:"Jiem ta’ studju fil-ġimgħa",roadmapMainGoal:"Għan ewlieni",roadmapGoalExam:"Għaddi mit-test teoriku",roadmapGoalTag:"Ikseb id-Tag tal-Permess tas-Sewwieq",roadmapSavePlan:"Issejvja l-pjan",roadmapPlanSaved:"Pjan Personali ġiet issejvjata.",roadmapNoTarget:"L-ebda dejta tal-mira",roadmapDaysToTarget:"jiem sal-mira",roadmapTargetToday:"Il-mira hija llum",roadmapTargetPassed:"Id-dejta tal-mira għaddiet",roadmapStudyScore:"Preparazzjoni għall-eżami",roadmapEnglishScore:"Ingliż / Test tal-Ingliż",roadmapPassportScore:"Dokumenti / Passaport",roadmapDailyScore:"Drawwa tal-lum",roadmapCoverage:"Kopertura tal-mistoqsijiet",roadmapAccuracy:"Preċiżjoni",roadmapExamAverage:"Medja tal-aħħar eżamijiet",roadmapPassportProgress:"Avvanz Passaport",roadmapBridgeProgress:"L-aħħar Test tal-Ingliż",roadmapWeakestTopic:"Suġġett li jeħtieġ l-aktar attenzjoni",roadmapAchievements:"Miri milħuqa",roadmapAchievementsSub:"Avvanz li diġà ksibt",roadmapLocked:"Għadu mhux milħuq",roadmapShare:"Aqsam ir-rapport Pjan Personali",roadmapCopy:"Ikkopja r-rapport Pjan Personali",roadmapCopied:"Ir-rapport ġie kkupjat.",roadmapActionProfile:"Imla l-profil personali",roadmapReasonProfile:"Id-dettalji huma meħtieġa għar-rapporti u t-talbiet lill-iskejjel.",roadmapActionDaily:"Imla l-pjan tal-istudju tal-lum",roadmapReasonDaily:"Sessjoni qasira kuljum tibni memorja stabbli.",roadmapActionReview:"Irrevedi l-mistoqsijiet dovuti",roadmapReasonReview:"Ir-ripetizzjoni skedata tipprevjeni li tinsa.",roadmapActionBridge:"Agħmel Test tal-Ingliż",roadmapReasonBridge:"L-app trid tifred l-għarfien mir-restrizzjoni tal-Ingliż.",roadmapActionEnglish:"Ħarreġ il-barriera tal-Ingliż",roadmapReasonEnglish:"L-aħħar Test tal-Ingliż juri li l-Ingliż qed inaqqas il-punteġġ.",roadmapActionCoverage:"Kompli l-istudju gwidat",roadmapReasonCoverage:"Għad hemm wisq mistoqsijiet mhux ipprattikati.",roadmapActionAccuracy:"Attakka l-aktar suġġett dgħajjef",roadmapReasonAccuracy:"Il-preċiżjoni trid tkun stabbli qabel simulazzjonijiet sħaħ.",roadmapActionExam:"Agħmel simulazzjoni sħiħa",roadmapReasonExam:"Jeħtieġ test ta’ 35 mistoqsija biex jitkejjel il-livell reali.",roadmapActionPassport:"Kompli l-Passaport LPTV",roadmapReasonPassport:"L-istudju u d-dokumenti għandhom jimxu flimkien.",roadmapActionSchool:"Qabbel skejjel adattati",roadmapReasonSchool:"Il-avvanz jista’ jgħinek tagħżel l-appoġġ it-tajjeb.",roadmapActionReady:"Żomm il-livell miksub",roadmapReasonReady:"Int fit-triq it-tajba: kompli b’reviżjoni u simulazzjonijiet.",roadmapStepDaily:"Studju adattiv ta’ kuljum",roadmapStepWeak:"Attakk tas-suġġett dgħajjef",roadmapStepBridge:"Sessjoni Test tal-Ingliż bl-Ingliż",roadmapStepReview:"Reviżjoni skedata",roadmapStepExam:"Simulazzjoni sħiħa",roadmapStepPassport:"Passaport u dokumenti",roadmapStepReflect:"Kontroll tal-avvanz",roadmapAchievementProfile:"Profil personali komplut",roadmapAchievement25:"L-ewwel 25 mistoqsija",roadmapAchievement100:"100 mistoqsija differenti",roadmapAchievementExam:"L-ewwel simulazzjoni",roadmapAchievementPass:"Simulazzjoni b’30/35 jew aktar",roadmapAchievementBridge:"Ħakma tat-Test tal-Ingliż ta’ 80%",roadmapAchievementStreak:"Sebat ijiem konsekuttivi",roadmapAchievementPassport:"Lista ta’ kontroll Passaport kompluta",roadmapPace:"Ritmu stmat",roadmapPaceText:"Bir-ritmu magħżul, il-mistoqsijiet li fadal jeħtieġu madwar",roadmapSessions:"sessjonijiet",roadmapQuestionsLeft:"mistoqsijiet mhux meqjusa",roadmapRecommended:"Rakkomandat",roadmapOverallGood:"Avvanz b’saħħtu",roadmapOverallGrowing:"Il-avvanz qed jikber",roadmapOverallStart:"Ibni l-pedamenti",roadmapReset:"Irrisettja l-pjan",roadmapResetConfirm:"Tirrisettja biss id-dejta u s-issettjar? Il-avvanz ma jitħassarx.",roadmapResetDone:"Is-issettjar ġew irrisettjati.",roadmapCurrentProgress:"Avvanz attwali",schoolDashboard:"Panew tas-Sieħeb tal-Iskola",schoolDashboardSub:"Immaniġġja prototip lokali ta’ studenti, gruppi, stediniet u rapporti",schoolDashboardLocal:"Prototip lokali",schoolDashboardNotice:"Din id-panew taħdem biss fuq dan l-apparat. Ma toħloqx kontijiet reali u ma tissinkronizzax dejta privata fuq l-internet.",openDashboard:"Iftaħ Panew tal-iskola",dashboardProfile:"Profil tal-iskola",dashboardProfileCompletion:"Tlestija tal-profil",dashboardReadyReview:"Lest biex tintalab reviżjoni",dashboardDraftStatus:"L-abbozz għadu mhux komplut",dashboardEditProfile:"Editja l-profil",dashboardPublicPreview:"Previżjoni tal-profil pubbliku",dashboardPublicPreviewSub:"Hekk tista’ tidher l-informazzjoni wara verifika.",dashboardNoSchoolName:"Abbozz ta’ skola bla isem",dashboardPermitHidden:"Permess/referenza mogħtija għar-reviżjoni",dashboardStudents:"Studenti",dashboardGroups:"Gruppi",dashboardInvites:"Kodiċijiet ta’ stedina",dashboardAverage:"Avvanz medju manwali",dashboardNoStudents:"Għadu ma żdied l-ebda student.",dashboardNoGroups:"Għadu ma nħoloq l-ebda grupp.",dashboardNoInvites:"Għadu ma nħoloq l-ebda kodiċi.",dashboardManualData:"Il-avvanz jiddaħħal manwalment u ma jiġix sinkronizzat mal-app tal-istudent.",dashboardAddStudent:"Żid student",dashboardStudentName:"Isem tal-istudent",dashboardStudentEmail:"Email tal-istudent",dashboardStudentCourse:"Kors",dashboardStudentGroup:"Grupp",dashboardStudentProgress:"Preparazzjoni %",dashboardStudentBridge:"Test tal-Ingliż %",dashboardStudentPassport:"Passaport %",dashboardStudentStatus:"Qagħda",dashboardStudentNotes:"Noti tal-istudent",dashboardStatusActive:"Attiv",dashboardStatusPaused:"Pawża",dashboardStatusReady:"Lest għall-eżami",dashboardStatusCompleted:"Lest",dashboardNoGroup:"L-ebda grupp",dashboardSaveStudent:"Issejvja l-istudent",dashboardUpdateStudent:"Aġġorna",dashboardRemoveStudent:"Neħħi",dashboardStudentRequired:"Daħħal isem u email valida.",dashboardStudentSaved:"L-istudent ġie ssejvjat lokalment.",dashboardStudentRemoved:"L-istudent tneħħa.",dashboardRemoveStudentConfirm:"Tneħħi dan l-istudent mid-panew lokali?",dashboardAddGroup:"Oħloq grupp",dashboardGroupName:"Isem tal-grupp",dashboardGroupLanguage:"Lingwa tat-tagħlim",dashboardGroupSchedule:"Ħin",dashboardGroupNotes:"Noti tal-grupp",dashboardSaveGroup:"Issejvja grupp",dashboardGroupRequired:"Daħħal isem tal-grupp.",dashboardGroupSaved:"Il-grupp ġie ssejvjat.",dashboardRemoveGroup:"Neħħi grupp",dashboardRemoveGroupConfirm:"Tneħħi l-grupp? L-istudenti jibqgħu mingħajru.",dashboardGroupRemoved:"Il-grupp tneħħa.",dashboardMembers:"membri",dashboardGenerateInvite:"Oħloq kodiċi ta’ stedina",dashboardInviteGroup:"Stedina għall-grupp",dashboardCreateInvite:"Oħloq kodiċi",dashboardInviteCreated:"Kodiċi dimostrattiv inħoloq.",dashboardInviteWarning:"Il-kodiċijiet huma dimostrattivi sakemm ikun hemm sistema tas-server u kontijiet siguri.",dashboardShareInvite:"Aqsam stedina",dashboardCopyInvite:"Ikkopja kodiċi",dashboardRemoveInvite:"Ħassar kodiċi",dashboardInviteText:"Stedina Malta Driving Master",dashboardInviteCopied:"L-istedina ġiet ikkupjata.",dashboardReports:"Rapporti tal-iskola",dashboardReportsSub:"Oħloq sommarju mid-dejta lokali.",dashboardShareReport:"Aqsam ir-rapport",dashboardCopyReport:"Ikkopja r-rapport",dashboardExportCsv:"Esporta studenti CSV",dashboardReportCopied:"Ir-rapport ġie kkupjat.",dashboardCsvShared:"Il-fajl CSV tal-istudent intbagħat fil-menù tal-qsim.",dashboardCsvCopied:"Il-kontenut CSV ġie kkupjat.",dashboardDemoData:"Daħħal dejta dimostrattiva",dashboardDemoDataSub:"Iżid studenti u gruppi fittizji biex tittestja d-panew.",dashboardLoadDemo:"Daħħal dimostrazzjoni",dashboardDemoConfirm:"Iżżid dejta dimostrattiva fittizja?",dashboardDemoLoaded:"Id-dejta dimostrattiva ddaħħlet.",dashboardDemoBadge:"Dimostrazzjoni",dashboardClear:"Ħassar id-dejta tad-panew",dashboardClearConfirm:"Tħassar studenti, gruppi u kodiċijiet lokali?",dashboardCleared:"Id-dejta lokali tħassret.",dashboardSchoolNotes:"Noti interni tal-iskola",dashboardSaveNotes:"Issejvja noti",dashboardNotesSaved:"In-noti ġew issejvjati.",dashboardVerification:"Qagħda tal-verifika",dashboardNotVerified:"Mhux verifikata",dashboardReviewNeeded:"Jeħtieġ reviżjoni qabel kwalunkwe pubblikazzjoni",dashboardPrivacy:"Privatezza tal-istudenti",dashboardPrivacyText:"Iddaħħalx dejta medika, dokumenti ta’ identità jew rekord kriminali f’dan il-prototip.",dashboardPlan:"Pjan magħżul",dashboardCreated:"Maħluq",dashboardLastUpdated:"L-aħħar aġġornament",dashboardStudentCount:"numru ta’ studenti",dashboardGroupCount:"numru ta’ gruppi",onboardingWelcome:"Merħba f’Malta Driving Master",onboardingWelcomeSub:"Ipprepara għall-eżami. Irrispetta t-triq. Ipproteġi kull passiġġier.",onboardingChooseRole:"Kif se tuża l-pjattaforma?",onboardingStudent:"Student",onboardingStudentSub:"Agħżel il-liċenzja, studja, agħmel eżamijiet, progress u Driving Intelligence",onboardingSchool:"Skola tas-sewqan",onboardingSchoolSub:"Profil, panew lokali, studenti, gruppi u rapporti",onboardingBoth:"It-tnejn",onboardingBothSub:"Uża ż-żona tal-istudent u Sieħeb tal-Iskola",onboardingDataTitle:"Id-dejta tiegħek tibqa’ taħt il-kontroll tiegħek",onboardingDataText:"Il-progress tal-istudju, is-settings u l-abbozzi jibqgħu local-first fuq dan l-apparat. Funzjonijiet marbuta mas-server jibagħtu jew jissinkronizzaw data biss meta dak il-fluss jintuża b’mod espliċitu u l-awtorizzazzjoni tas-server tippermettiha; it-telemetrija tat-triq tibqa’ teħtieġ kunsens.",onboardingRequiredStorage:"Nifhem li l-ħażna lokali essenzjali tintuża biex issalva l-avvanz u s-issettjar.",onboardingTerms:"Qrajt u naċċetta l-informazzjoni, il-limitazzjonijiet u l-użu responsabbli.",onboardingUpdates:"Nixtieq nirċievi aġġornamenti meta nibgħat volontarjament l-email tar-reġistrazzjoni.",onboardingContinue:"Idħol f’Malta Driving Master",onboardingRequired:"Agħżel rwol u aċċetta ż-żewġ dikjarazzjonijiet.",onboardingLocalOnly:"Core local-first + flussi awtorizzati tas-server",onboardingNoTracking:"Ebda traċċar tar-reklamar mhu attivat",onboardingOfficialWarning:"L-app tgħin fit-taħriġ u l-organizzazzjoni iżda ma tissostitwixxix deċiżjoni uffiċjali.",privacyCenter:"Ċentru tal-Privatezza u d-Dejta",privacyCenterSub:"Ara x’inhu ssejvjat, esportah u ħassar dak li tagħżel",privacyOverview:"Ħarsa ġenerali tad-dejta",privacyStoredLocally:"Issejvjat lokalment fuq dan l-apparat",privacySentOnlyByAction:"Jintbagħat biss meta tuża apposta l-qsim, Gmail jew Mail",privacyNoAutomaticUpload:"Ebda tlugħ awtomatiku barra minn flussi tas-server espliċiti u awtorizzati",privacyProfileData:"Profil personali",privacyStudyData:"Avvanz tal-istudju",privacyPassportData:"Passaport LPTV",privacyRoadmapData:"Pjan Personali",privacySchoolData:"Dejta tal-iskola u tal-panew",privacyPreferencesData:"Preferenzi tal-privatezza",privacyPresent:"Preżenti",privacyEmpty:"Vojt",privacyItems:"elementi",privacyExportTitle:"Esporta d-dejta",privacyExportText:"Oħloq kopja ta’ sigurtà JSON li tista’ tinqara minn sistema u li fiha d-dejta lokali magħżula mill-app.",privacyExportAll:"Esporta d-dejta lokali kollha",privacyDeleteTitle:"Tħassir selettiv",privacyDeleteText:"Ħassar żona waħda mingħajr ma taffettwa l-oħrajn.",privacyDeleteStudy:"Ħassar il-avvanz tal-istudju",privacyDeleteProfile:"Ħassar il-profil personali",privacyDeletePassport:"Ħassar Passaport",privacyDeleteRoadmap:"Ħassar issettjar Pjan Personali",privacyDeleteSchool:"Ħassar id-dejta tal-iskola",privacyDeleteAll:"Ħassar id-dejta kollha",privacyDeleteStudyConfirm:"Tħassar it-tweġibiet, l-eżamijiet, il-favoriti u t-Test tal-Ingliż?",privacyDeleteProfileConfirm:"Tħassar il-profil personali?",privacyDeletePassportConfirm:"Tħassar il-Passaport?",privacyDeleteRoadmapConfirm:"Tħassar is-issettjar Pjan Personali?",privacyDeleteSchoolConfirm:"Tħassar il-preferenzi tal-iskola, it-tqabbil, l-abbozz tal-applikazzjoni u d-dejta tal-panew?",privacyDeleteAllConfirm:"Tħassar b’mod permanenti d-dejta kollha ta’ Malta Driving Master minn dan l-apparat, inkluż l-avvanz, il-profil, il-Passaport u d-dejta tal-iskola?",privacyDeleted:"Id-dejta magħżula tħassret.",privacyAllDeleted:"Id-dejta lokali kollha tħassret.",privacyRequestTitle:"Talba għad-dejta diġà mibgħuta barra l-apparat",privacyRequestText:"Jekk bgħatt email qabel, tista’ tipprepara talba għal aċċess, korrezzjoni jew tħassir.",privacyRequestAccess:"Itlob aċċess",privacyRequestCorrection:"Itlob korrezzjoni",privacyRequestErasure:"Itlob tħassir",privacyRequestPrepared:"It-talba ġiet ippreparata.",privacyRightsNotice:"Id-drittijiet jistgħu jinkludu informazzjoni, aċċess, korrezzjoni, tħassir u portabbiltà.",privacyConsentSettings:"Preferenzi fakultattivi",privacyAnalytics:"Ippermetti statistika anonima futura",privacyMarketing:"Ippermetti komunikazzjonijiet promozzjonali futuri",privacyNotActive:"Dawn il-funzjonijiet mhumiex attivi f’din il-verżjoni.",privacySavePreferences:"Issejvja preferenzi",privacyPreferencesSaved:"Il-preferenzi ġew issejvjati.",privacyChecked:"Informazzjoni ċċekkjata",privacyOpenCenter:"Iftaħ iċ-Ċentru tal-Privatezza",privacyRole:"Rwol magħżul",privacyChangeRole:"Ibdel ir-rwol",privacyRestartOnboarding:"Erġa’ uri l-introduzzjoni",privacyStorageNecessary:"Ħażna lokali essenzjali",privacyStorageExplanation:"Tintuża biex tiftakar avvanz u issettjar. It-tħassir tal-ħażna jneħħi d-dejta.",privacyContactController:"Kuntatt tal-privatezza",privacyLegalDraft:"Dan huwa sommarju fl-app u mhux politika legali finali.",privacyDataCount:"Sommarju tad-dejta lokali",privacyProfileComplete:"oqsma tal-profil",privacyStudyRecords:"rekords tal-istudju",privacyPassportChecks:"kontrolli Passaport",privacySchoolRecords:"rekords tal-iskola",premiumTagline:"Saq b’għarfien. Irrispetta kull triq. Ipproteġi kull passiġġier.",premiumEnter:"Idħol f’Malta Driving Master",premiumLoading:"Qed titħejja l-mixja tiegħek",premiumSkip:"Aqbeż",premiumTrust:"Maħluqa għal toroq aktar siguri u sewwieqa aktar preparati",premiumWelcomeBack:"Merħba lura",premiumContinue:"Kompli l-mixja tiegħek",premiumTodayFocus:"L-għan tal-lum",premiumNoDelay:"L-introduzzjoni ddum ftit sekondi u dejjem tista’ tinqabeż.",premiumReplay:"Erġa’ ara l-introduzzjoni speċjali",mdmCoach:"Kowċ MDM",mdmCoachSub:"Il-gwida intelliġenti mingħajr konnessjoni tiegħek",coachFoundation:"Fondazzjoni IA",coachOffline:"Intelliġenza mingħajr konnessjoni",coachOfflineText:"Il-Kowċ MDM janalizza biss l-avvanz maħżun fuq dan l-apparat. Mhuwiex IA diretta fuq l-internet u ma jibgħatx dejta awtomatikament.",confidenceScore:"Punteġġ ta’ kunfidenza",confidenceMeaning:"Stima tal-preparazzjoni",confidenceLow:"Ibni l-pedamenti",confidenceMedium:"Il-avvanz qed isir stabbli",confidenceHigh:"Preparazzjoni b’saħħitha",confidenceExcellent:"Mudell lest għall-eżami",predictionToday:"Probabbiltà stmata llum",predictionWeek:"Probabbiltà stmata fi 7 ijiem",predictionDisclaimer:"Gwida statistika biss. Mhijiex garanzija jew valutazzjoni uffiċjali.",coachInsight:"Analiżi tal-Kowċ",coachNextMove:"L-aħjar azzjoni li jmiss",coachImprovement:"Titjib riċenti",coachNoData:"Agħmel aktar attività biex tikseb stima aħjar.",coachWeakness:"Dgħufija ewlenija",coachStrength:"Saħħa ewlenija",coachTrendUp:"Ir-riżultati qed jitjiebu.",coachTrendStable:"Ir-riżultati huma stabbli.",coachTrendDown:"Ir-riżultati jeħtieġu attenzjoni.",dailyMission:"Missjoni ta’ kuljum",dailyMissionSub:"Missjoni qasira mill-avvanz reali tiegħek",missionStudy:"Imla blokk ta’ studju",missionReview:"Irrevedi mistoqsijiet dovuti jew żbaljati",missionBridge:"Imla attività Test tal-Ingliż",missionComplete:"Missjoni kompluta",missionCompletedText:"Lestejt il-missjoni tal-lum.",missionMarkDone:"Immarka komplut",missionReset:"Irrisettja l-missjoni",missionProgress:"Avvanz tal-missjoni",coachAchievements:"Kisbiet tal-Kowċ",coachAchievementsSub:"Miri utli, mhux punti dekorattivi",achievementFirst25:"L-ewwel 25 mistoqsija",achievementFirst100:"100 mistoqsija",achievementExamPass:"Simulazzjoni mgħoddija",achievementBridge:"Rebbieħ tat-Test tal-Ingliż",achievementSafety:"Espert fis-Sigurtà",achievementPassenger:"Espert fil-Kura tal-Passiġġieri",achievementConsistency:"Sebat ijiem konsistenti",achievementPassport:"Passaport komplut",achievementLocked:"Imblukkat",investorPreview:"Previżjoni għall-Investituri",investorPreviewSub:"Sommarju gwidat tal-valur tal-pjattaforma",investorProblem:"Problema",investorProblemText:"Ħafna kandidati jonqsu minħabba l-Ingliż u għodod li ma jidentifikawx il-kawża vera tal-iżbalji.",investorSolution:"Soluzzjoni",investorSolutionText:"Malta Driving Master jgħaqqad taħriġ, dijanjosi lingwistika, dokumenti, skejjel u għodod professjonali.",investorStudentValue:"Valur għall-istudent",investorSchoolValue:"Valur għall-iskola",investorStudentPoints:"Test tal-Ingliż, Pjan Personali, Passaport, studju gwidat, simulazzjonijiet u rapporti",investorSchoolPoints:"Profili, gruppi, panew, talbiet u għodod futuri",investorDifferentiator:"Differenza ewlenija",investorDifferentiatorText:"Il-pjattaforma tifred nuqqas ta’ għarfien minn diffikultà lingwistika.",investorScale:"Skalabbiltà",investorScaleText:"L-istess sistema tista’ tikber għal aktar lingwi u kategoriji.",investorStatus:"Qagħda tal-prototip",investorStatusText:"PWA mingħajr konnessjoni b’250 mistoqsija attiva, żona tal-Istudent, żona tas-Sieħeb tal-Iskola, Ċentru tal-Privatezza, Pjan Personali, Passaport u l-bażi tal-Kowċ MDM.",investorArchitecture:"Arkitettura",investorArchitectureText:"Issa: HTML, CSS u JavaScript. Futur: sistema tas-server sigur, kontijiet, bażi tad-dejta, pagamenti u IA protetta.",investorOpen:"Iftaħ il-Previżjoni għall-Investituri",investorShare:"Aqsam sommarju",investorCopy:"Ikkopja sommarju",investorCopied:"Is-sommarju ġie kkupjat.",investorMetrics:"Metriċi tal-prototip",investorActiveQuestions:"Mistoqsijiet attivi",investorCoreModules:"Moduli",investorLanguages:"Lingwi",investorUserTypes:"Tipi ta’ utenti",coachOpen:"Iftaħ MDM Kowċ",coachUpdated:"Kowċ aġġornat",coachDataPoints:"punti ta’ dejta analizzati",coachScoreComponents:"Komponenti tal-punteġġ",coachAccuracy:"Preċiżjoni",coachCoverage:"Kopertura",coachExam:"Simulazzjonijiet",coachBridge:"Test tal-Ingliż",coachConsistency:"Konsistenza",coachReview:"Reviżjoni",coachExplain:"Kif tinħadem l-istima",coachExplainText:"Il-punteġġ jgħaqqad il-preċiżjoni tat-tweġibiet, il-kopertura tal-mistoqsijiet, il-prestazzjoni fl-eżami, il-konsistenza u r-reviżjoni.",coachReset:"Irrisettja missjoni",coachResetConfirm:"Tirrisettja biss il-missjoni tal-lum?",coachResetDone:"Il-missjoni ġiet irrisettjata.",coachRecovery:"Kowċ ta’ Spjegazzjoni u Rkupru",coachRecoverySub:"Ifhem għaliex tiżbalja u segwi pjan immirat",recoveryOffline:"Analiżi personalizzata mingħajr konnessjoni",recoveryOfflineText:"Id-dijanjosi tuża t-tweġibiet issejvjati tiegħek u l-kawżi tal-iżbalji li tindika int. Ma tivvintax dejta personali u ma tikkuntattjax IA esterna.",recoveryDiagnosis:"Dijanjosi tal-iżbalji",recoveryDominantCause:"L-aktar kawża komuni",recoveryRecordedErrors:"Kawżi rreġistrati",recoveryNoReasons:"Għad m’hemmx kawżi rreġistrati.",recoveryReasonRule:"Għarfien tar-regola",recoveryReasonLanguage:"Fehim tal-mistoqsija",recoveryReasonWord:"Kelma importanti mhux mifhuma",recoveryReasonMultiple:"Aktar minn tweġiba waħda",recoveryReasonRush:"Tweġiba mgħaġġla",recoveryReasonUnsure:"Nuqqas ta’ kunfidenza",recoveryPrescription:"Parir tal-Kowċ",recoveryRuleAdvice:"Studja r-regola u mbagħad wieġeb ħames mistoqsijiet mill-istess suġġett.",recoveryLanguageAdvice:"Aqra l-mistoqsija bil-mod, sib l-istruzzjoni ewlenija u mbagħad erġa’ pprova.",recoveryWordAdvice:"Irrevedi l-kliem importanti, isma’ bil-mod u erġa’ pprova l-mistoqsija.",recoveryMultipleAdvice:"Aqra l-istruzzjoni darbtejn u għodd it-tweġibiet meħtieġa.",recoveryRushAdvice:"Stenna tliet sekondi u identifika r-regola qabel twieġeb.",recoveryUnsureAdvice:"Spjega r-regola qabel twieġeb.",recoveryGeneralAdvice:"Kompli l-istudju u rreġistra l-kawża ta’ kull żball.",recoveryPriorityQuestions:"Mistoqsijiet ta’ rkupru",recoveryPrioritySub:"Magħżula mill-iżbalji u s-suġġetti dgħajfa",recoveryStartQuestion:"Studja din il-mistoqsija",recoveryMarkResolved:"Immarka solvuta",recoveryResolved:"Solvuta",recoveryNoQuestions:"Għad m’hemmx mistoqsijiet ta’ prijorità.",recoveryResetResolved:"Irrisettja mistoqsijiet solvuti",recoveryResetConfirm:"Tirrisettja l-istatus tal-mistoqsijiet?",recoveryResetDone:"L-istatus ġie rrisettjat.",coachDialogue:"Staqsi lil MDM Kowċ",coachDialogueSub:"Agħżel mistoqsija għal tweġiba bbażata fuq id-dejta",coachAskWhy:"Għaliex għadni niżbalja?",coachAskEnglish:"Il-fehim tal-mistoqsija huwa l-problema ewlenija?",coachAskReady:"Jien lest għall-eżami?",coachAskNext:"X’għandi nagħmel issa?",coachAnswerWhy:"Il-mudell tiegħek juri",coachAnswerEnglishHigh:"Il-fehim tal-mistoqsija jidher bħala ostaklu importanti. Aqra bil-mod u sib l-istruzzjoni ewlenija qabel twieġeb.",coachAnswerEnglishLow:"Il-fehim tal-mistoqsija mhuwiex l-akbar ostaklu bħalissa. Iffoka aktar fuq ir-regoli u s-suġġetti dgħajfa.",coachAnswerReadyHigh:"Id-dejta turi preparazzjoni b’saħħitha.",coachAnswerReadyMedium:"Qed titjieb iżda r-riżultati għadhom mhux stabbli.",coachAnswerReadyLow:"Jeħtieġ aktar studju u kopertura.",coachAnswerNext:"L-aħjar azzjoni li jmiss hija",recoveryPlan:"Pjan ta’ tliet passi",recoveryStepUnderstand:"Ifhem",recoveryStepPractise:"Ipprattika",recoveryStepVerify:"Ivverifika",recoveryUnderstandText:"Aqra l-ispjegazzjoni u identifika r-regola jew il-frażi.",recoveryPractiseText:"Agħmel sessjoni qasira bil-mistoqsijiet magħżula.",recoveryVerifyText:"Erġa’ pprova mingħajr traduzzjoni u agħmel simulazzjoni.",recoveryScore:"Avvanz tar-rkupru",recoveryOpen:"Iftaħ Kowċ Rkupru",recoveryReport:"Aqsam ir-rapport",recoveryCopy:"Ikkopja r-rapport",recoveryCopied:"Ir-rapport ġie kkupjat.",recoveryDataNeeded:"Jeħtieġ aktar dejta",recoveryResolvedCount:"mistoqsijiet solvuti",examDayMode:"Modalità Jum l-Eżami",examDayModeSub:"Preparazzjoni finali għall-jum tat-test teoriku",examDayInternal:"Għodda interna",examDayInternalText:"Ma tissostitwixxix istruzzjonijiet uffiċjali jew dokumenti meħtieġa.",examTargetDate:"Data tal-eżami",examDaysRemaining:"jiem fadal",examDateToday:"Id-dejta hija llum",examDatePassed:"Id-dejta għaddiet",examNoDate:"L-ebda dejta",finalReadiness:"Preparazzjoni finali",finalReady:"Preparazzjoni b’saħħitha",finalAlmost:"Kważi lest",finalNotReady:"Jeħtieġ aktar taħriġ",finalReadinessText:"Ibbażata fuq il-kunfidenza, simulazzjonijiet, Test tal-Ingliż, reviżjoni u lista ta’ kontroll.",examDayChecklist:"Lista ta’ kontroll tal-eżami",examDayChecklistSub:"Immarka biss dak li hu verament lest",examItemId:"Dokument validu lest",examItemBooking:"Prenotazzjoni u post ikkonfermati",examItemTime:"Ħin tal-wasla ppjanat",examItemRest:"Pjan ta’ rqad u mistrieħ",examItemTravel:"Rotta u trasport ikkonfermati",examItemLanguage:"Istruzzjonijiet tal-mistoqsijiet riveduti",examItemMultiple:"Regoli ta’ tweġibiet multipli riveduti",examItemEmergency:"Sigurtà u emerġenzi riveduti",examItemCalm:"Rutina ta’ kalma mifhuma",examChecklistProgress:"Avvanz lista ta’ kontroll",examBreathing:"Rutina ta’ kalma ta’ 60 sekonda",examBreathingSub:"Eżerċizzju qasir qabel l-istudju jew l-eżami",examBreathingStart:"Ibda rutina",examBreathingIn:"Ħu nifs",examBreathingHold:"Żomm",examBreathingOut:"Oħroġ in-nifs",examBreathingDone:"Rutina kompluta",examFinalSimulation:"Simulazzjoni finali",examFinalSimulationSub:"Agħmel simulazzjoni ta’ 35 mistoqsija",examStartFinal:"Ibda simulazzjoni finali",examLastFinalScore:"L-aħħar punteġġ",examNoFinalScore:"L-ebda simulazzjoni finali",examQuickReview:"Reviżjoni finali",examQuickReviewSub:"L-oqsma ta’ riskju l-aktar importanti",examReviewSafety:"Sigurtà u emerġenzi",examReviewPassengers:"Kura tal-passiġġieri",examReviewRoad:"Proċeduri tat-triq",examReviewEco:"Sewqan ekoloġiku",examReviewEnglish:"Nases bl-Ingliż",examOpenTopic:"Iftaħ reviżjoni",examCertificate:"Ċertifikat intern",examCertificateSub:"Rapport privat tal-preparazzjoni",examCertificateIssue:"Oħloq ċertifikat",examCertificateLocked:"Imla l-lista ta’ kontroll u ġib mill-inqas 30/35.",examCertificateReady:"Ċertifikat disponibbli",examCertificateShare:"Aqsam ċertifikat",examCertificateCopy:"Ikkopja ċertifikat",examCertificateCopied:"Ċertifikat ikkupjat.",examCertificateDisclaimer:"Mhuwiex ċertifikat uffiċjali.",examReset:"Irrisettja Jum l-Eżami",examResetConfirm:"Tirrisettja d-dejta, lista ta’ kontroll u ċertifikat?",examResetDone:"Il-modalità ta’ Jum l-Eżami ġiet irrisettjata.",examSave:"Issejvja",examSaved:"Issettjar issejvjati.",examConfidence:"Punteġġ ta’ Kunfidenza",examBridge:"Test tal-Ingliż",examRecent:"Simulazzjoni riċenti",examChecklist:"Lista ta’ kontroll",examCalm:"Rutina ta’ kalma",examFinalStatus:"Qagħda finali",examReadyMessage:"Id-dejta turi preparazzjoni b’saħħitha.",examAlmostMessage:"Kważi lest. Imla l-lista ta’ kontroll u agħmel simulazzjoni oħra.",examNotReadyMessage:"Jeħtieġ aktar studju u simulazzjonijiet.",examRiskAlert:"Riskju ewlieni",examNoRisk:"L-ebda riskju kbir",examRiskEnglish:"L-Ingliż jista’ jnaqqas il-punteġġ",examRiskAccuracy:"Il-preċiżjoni mhix stabbli",examRiskCoverage:"Wisq mistoqsijiet għadhom mhux meqjusa",examRiskSimulation:"Is-simulazzjoni hija taħt il-mira",examRiskChecklist:"Il-preparazzjoni prattika mhix kompluta",zeroErrorMode:"Modalità Żero Żbalji",zeroErrorSub:"Sib u għeleb il-mistoqsijiet li jistgħu jiswewlek l-eżami",zeroErrorInternal:"Analiżi personali tar-riskju",zeroErrorInternalText:"Ir-riskju juża biss tentattivi, żbalji, reviżjoni u dejta maħżuna lokalment.",zeroErrorIndex:"Indiċi Żero Żbalji",zeroErrorRed:"Aħmar — għad hemm riskji kritiċi",zeroErrorYellow:"Isfar — avvanz iżda għad hemm riskji",zeroErrorGreen:"Aħdar — l-iżbalji kritiċi huma taħt kontroll",zeroErrorTraffic:"Dawl tal-preparazzjoni",zeroErrorCritical:"Mistoqsijiet kritiċi",zeroErrorDefeated:"Żbalji megħluba",zeroErrorUnseen:"Mistoqsijiet ta’ riskju mhux meqjusa",zeroErrorRisk:"Punteġġ tar-riskju",zeroErrorWhy:"Għaliex hija kritika",zeroErrorRepeated:"Żbalji ripetuti",zeroErrorLowRate:"Preċiżjoni baxxa",zeroErrorDue:"Reviżjoni dovuta",zeroErrorWeakTopic:"Mis-suġġett l-aktar dgħajjef",zeroErrorCause:"Kawża ripetuta",zeroErrorNeverCorrect:"Qatt ma kienet korretta",zeroErrorToday:"10 prijoritajiet għal-lum",zeroErrorTomorrow:"5 prijoritajiet għal għada",zeroErrorTop20:"20 żball kritiku",zeroErrorTop20Sub:"Ikklassifikati mid-dejta maħżuna",zeroErrorStudy:"Elimina dan l-iżball",zeroErrorVerify:"Ivverifika l-ħakma",zeroErrorMarkDefeated:"Immarka megħlub",zeroErrorUndoDefeated:"Erġa’ poġġi fil-lista",zeroErrorDefeatedTitle:"Żbalji megħluba",zeroErrorDefeatedSub:"Mistoqsijiet imneħħija mil-lista kritika",zeroErrorNoCritical:"Għad m’hemmx mistoqsijiet kritiċi.",zeroErrorNoDefeated:"Għad ma għelebt l-ebda żball.",zeroErrorPlan:"Pjan awtomatiku",zeroErrorPlanSub:"Illum, għada u verifika",zeroErrorTodayText:"Aħdem fuq l-għaxar mistoqsijiet bl-ogħla riskju.",zeroErrorTomorrowText:"Erġa’ agħmel ħames mistoqsijiet wara pawża.",zeroErrorVerifyText:"Ivverifika bl-Ingliż mingħajr traduzzjoni u f’simulazzjoni.",zeroErrorProgress:"Kontroll tar-riskji",zeroErrorResolved:"Megħlub",zeroErrorVerified:"Verifikat",zeroErrorNeedsVerify:"Jeħtieġ verifika",zeroErrorReset:"Irrisettja żbalji megħluba",zeroErrorResetConfirm:"Tirritorna l-mistoqsijiet kollha fil-lista kritika?",zeroErrorResetDone:"L-istatus ġie rrisettjat.",zeroErrorReport:"Aqsam ir-rapport",zeroErrorCopy:"Ikkopja r-rapport",zeroErrorCopied:"Ir-rapport ġie kkupjat.",zeroErrorScoreMeaning:"Indiċi ogħla jfisser inqas riskji.",zeroErrorDataNeeded:"Jeħtieġ aktar dejta għal klassifikazzjoni affidabbli.",zeroErrorOpen:"Iftaħ Modalità Żero Żbalji",zeroErrorQuestionCount:"mistoqsijiet analizzati",zeroErrorStartToday:"Ibda l-10 prijoritajiet",zeroErrorStartTomorrow:"Ibda l-5 prijoritajiet",zeroErrorStartCritical:"Ibda sessjoni kritika",schoolPortal2:"Sieħeb tal-Iskola 2.0",schoolPortal2Sub:"Oħloq profil aktar komplut u għodod kummerċjali lokali",schoolPortalNotice:"Prototip kummerċjali lokali",schoolPortalNoticeText:"Il-profili u l-prenotazzjonijiet jibqgħu fuq dan l-apparat sakemm tiżdied sistema tas-server sigura u kontijiet verifikati.",schoolPublicProfile:"Profil pubbliku tal-iskola",schoolHeadline:"Titlu prinċipali",schoolWebsite:"Websajt",schoolWhatsapp:"WhatsApp",schoolLogoText:"Inizjali tal-emblema",schoolSavePublic:"Issejvja profil",schoolPublicSaved:"Il-profil ġie ssejvjat.",schoolVerifiedStatus:"Qagħda tal-verifika",schoolVerified:"Verifikata",schoolUnverified:"Mhux verifikata",schoolInstructors:"Istrutturi",schoolInstructorName:"Isem tal-istruttur",schoolInstructorLanguages:"Lingwi",schoolInstructorSpeciality:"Speċjalità",schoolInstructorBio:"Bijografija qasira",schoolAddInstructor:"Żid istruttur",schoolInstructorSaved:"L-istruttur ġie ssejvjat.",schoolRemoveInstructor:"Neħħi istruttur",schoolCourses:"Korsijiet",schoolCourseTitle:"Titlu tal-kors",schoolCourseCategory:"Kategorija",schoolCoursePrice:"Prezz",schoolCourseDuration:"Tul",schoolCourseFormat:"Format",schoolCourseDescription:"Deskrizzjoni",schoolAddCourse:"Żid kors",schoolCourseSaved:"Il-kors ġie ssejvjat.",schoolOffers:"Offerti",schoolOfferTitle:"Titlu tal-offerta",schoolOfferDiscount:"Skont jew benefiċċju",schoolOfferExpiry:"Skadenza",schoolOfferDescription:"Deskrizzjoni",schoolAddOffer:"Żid offerta",schoolOfferSaved:"L-offerta ġiet issejvjata.",schoolReviews:"Reviżjonijiet",schoolReviewName:"Isem",schoolReviewRating:"Klassifikazzjoni",schoolReviewText:"Test",schoolAddReview:"Żid reviżjoni ta’ prova",schoolReviewDemo:"Reviżjoni ta’ prova",schoolReviewSaved:"Ir-reviżjoni ta’ prova ġiet issejvjata.",schoolRequests:"Talbiet tal-istudenti",schoolRequestName:"Isem tal-istudent",schoolRequestEmail:"Email",schoolRequestService:"Servizz",schoolRequestMessage:"Messaġġ",schoolAddRequest:"Żid talba",schoolRequestStatus:"Qagħda",schoolRequestNew:"Ġdida",schoolRequestContacted:"Ikkuntattjat",schoolRequestClosed:"Magħluqa",schoolRequestSaved:"It-talba ġiet ssejvjata.",schoolBookings:"Prenotazzjonijiet tal-lezzjonijiet",schoolBookingStudent:"Student",schoolBookingCourse:"Kors",schoolBookingDate:"Data",schoolBookingTime:"Ħin",schoolBookingNotes:"Noti",schoolAddBooking:"Żid prenotazzjoni",schoolBookingSaved:"Il-prenotazzjoni ġie ssejvjat.",schoolPortalMetrics:"Metriċi",schoolPublishedContent:"Kontenut",schoolCommercialTools:"Għodod kummerċjali",schoolPortalPreview:"Previżjoni għall-istudent",schoolPortalPreviewSub:"Kif tista’ tidher l-iskola wara verifika",schoolPortalShare:"Aqsam profil",schoolPortalCopy:"Ikkopja profil",schoolPortalCopied:"Il-profil ġie kkupjat.",schoolPortalDemo:"Daħħal dimostrazzjoni tal-portal",schoolPortalDemoText:"Iżid dejta fittizja.",schoolPortalDemoLoaded:"Id-dimostrazzjoni tal-portal iddaħħlet.",schoolPortalClear:"Ħassar dejta",schoolPortalClearConfirm:"Tħassar id-dejta Sieħeb tal-Iskola 2.0?",schoolPortalCleared:"Id-dejta tħassret.",schoolPortalRequired:"Imla l-oqsma meħtieġa.",schoolRemove:"Neħħi",schoolStatusUpdate:"Aġġorna qagħda",schoolNoItems:"Għad m’hemm xejn",schoolPriceFrom:"Minn",schoolBookNow:"Ibbukkja",schoolRequestInfo:"Itlob informazzjoni",schoolContactSchool:"Ikkuntattja l-iskola",schoolPortalOpen:"Iftaħ Sieħeb tal-Iskola 2.0",instructorPortal:"Portal tal-Istruttur",instructorPortalSub:"Segwi studenti, assenja xogħol u oħloq rapporti",instructorLocal:"Prototip lokali",instructorLocalText:"L-inkarigi, in-noti u d-dejta tal-istudent jibqgħu fuq dan l-apparat. Ma jiġux sinkronizzati ma’ kontijiet reali tal-istudenti.",instructorProfile:"Profil tal-istruttur",instructorName:"Isem",instructorEmail:"Email",instructorPhone:"Telefon",instructorLanguages:"Lingwi",instructorSpeciality:"Speċjalità",instructorBio:"Bijografija",instructorSaveProfile:"Issejvja profil",instructorProfileSaved:"Profil issejvjat.",instructorStudents:"Monitoraġġ studenti",instructorStudentsSub:"Juża studenti lokali mid-Panew",instructorNoStudents:"Għad m’hemmx studenti.",instructorRisk:"Riskju",instructorPriority:"Prijorità",instructorProgress:"Avvanz",instructorBridge:"Test tal-Ingliż",instructorPassport:"Passaport",instructorAverage:"Medja",instructorAssign:"Assenja xogħol",instructorAssignmentTitle:"Titlu",instructorAssignmentType:"Tip",instructorAssignmentDue:"Data",instructorAssignmentPriority:"Prijorità",instructorAssignmentNotes:"Noti",instructorAssignmentStudent:"Student",instructorSaveAssignment:"Issejvja",instructorAssignmentSaved:"L-inkarigu ġie ssejvjat lokalment.",instructorAssignmentStudy:"Studju gwidat",instructorAssignmentReview:"Reviżjoni żbalji",instructorAssignmentBridge:"Test tal-Ingliż",instructorAssignmentExam:"Simulazzjoni",instructorAssignmentZero:"Żero Żbalji",instructorAssignmentPassport:"Passaport",instructorLow:"Baxxa",instructorMedium:"Medja",instructorHigh:"Għolja",instructorUrgent:"Urġenti",instructorAssignments:"Inkarigi",instructorNoAssignments:"Għad m’hemmx inkarigi.",instructorAssignmentDone:"Lesta",instructorAssignmentOpen:"Miftuħa",instructorToggleDone:"Ibdel qagħda",instructorRemoveAssignment:"Neħħi",instructorPrivateNotes:"Noti privati",instructorNoteStudent:"Student",instructorNoteText:"Nota privata",instructorSaveNote:"Issejvja nota",instructorNoteSaved:"Nota ssejvjata.",instructorNoNotes:"Għad m’hemmx noti.",instructorRemoveNote:"Neħħi nota",instructorReports:"Rapporti individwali",instructorReportsSub:"Oħloq sommarju għal student",instructorSelectStudent:"Agħżel student",instructorShareReport:"Aqsam rapport",instructorCopyReport:"Ikkopja rapport",instructorReportCopied:"Rapport ikkupjat.",instructorStudentNotFound:"Agħżel student validu.",instructorRecommendedAction:"Azzjoni rakkomandata",instructorAttention:"Attenzjoni",instructorAttentionHigh:"Jeħtieġ appoġġ immedjat",instructorAttentionMedium:"Huwa rakkomandat segwitu mmirat",instructorAttentionLow:"Żomm il-pjan",instructorMetrics:"Metriċi",instructorActiveAssignments:"Inkarigi attivi",instructorCompletedAssignments:"Inkarigi kompluti",instructorStudentsAtRisk:"Studenti ta’ riskju",instructorDemo:"Daħħal dimostrazzjoni tal-istruttur",instructorDemoText:"Iżid inkarigi u noti fittizji mmarkati b’mod ċar.",instructorDemoLoaded:"Id-dimostrazzjoni tal-istruttur iddaħħlet.",instructorClear:"Ħassar dejta",instructorClearConfirm:"Tħassar il-profil tal-istruttur, l-inkarigi u n-noti privati minn dan l-apparat?",instructorCleared:"Id-dejta tħassret.",instructorOpenPortal:"Iftaħ il-Portal tal-Istruttur",aiInstructor:"Kowċ tas-Sewqan IA",aiInstructorSub:"Spjegazzjonijiet, tagħlim gwidat u reviżjoni tal-iżbalji għal kull mistoqsija",aiInstructorFoundation:"Fondazzjoni lesta għall-IA",aiInstructorOffline:"Kowċ tas-Sewqan bl-IA mingħajr konnessjoni trasparenti",aiInstructorOfflineText:"Din il-Verżjoni tuża d-dejta tal-mistoqsijiet, it-tentattivi tiegħek u loġika didattika strutturata. Għadha mhix marbuta ma’ IA ġenerattiva diretta fuq l-internet.",aiInstructorSettings:"Issettjar tat-tagħlim",aiInstructorLanguage:"Lingwa",aiInstructorEnglish:"Ingliż",aiInstructorItalian:"Taljan",aiInstructorBilingual:"Ingliż + Taljan",aiInstructorLevel:"Livell",aiInstructorSimple:"Sempliċi",aiInstructorNormal:"Normali",aiInstructorTechnical:"Tekniku",aiInstructorSave:"Issejvja issettjar",aiInstructorSaved:"Issettjar issejvjati.",aiInstructorAsk:"Iftaħ Kowċ tas-Sewqan bl-IA",aiInstructorUnderstand:"Għinni nifhem",aiInstructorLesson:"Lezzjoni tal-mistoqsija",aiInstructorSimpleExplanation:"Spjegazzjoni sempliċi",aiInstructorTechnicalExplanation:"Spjegazzjoni teknika",aiInstructorMaltaExample:"Eżempju f’Malta",aiInstructorMemoryTip:"Mod kif tiftakar",aiInstructorCommonMistake:"Żball komuni",aiInstructorWrongOptions:"Għaliex l-oħrajn huma żbaljati",aiInstructorSimilar:"Mistoqsija simili",aiInstructorAttempts:"Drabi spjegata",aiInstructorAdaptive:"Metodu adattiv",aiInstructorAdaptiveText:"Il-metodu jinbidel meta l-istess mistoqsija tiġi spjegata aktar minn darba.",aiInstructorNoQuestion:"Agħżel mistoqsija jew iftaħ l-Istruttur wara kwizz.",aiInstructorQuestionSearch:"Fittex ID jew kliem",aiInstructorOpenLesson:"Iftaħ lezzjoni",aiInstructorMyTutor:"It-Tutur tiegħi",aiInstructorTutorSub:"Saħħiet, dgħufijiet u lezzjoni li jmiss",aiInstructorStrong:"Saħħiet",aiInstructorWeak:"Bżonn titjib",aiInstructorNext:"Lezzjoni li jmiss",aiInstructorExplainedCount:"Mistoqsijiet spjegati",aiInstructorSocratic:"Għinni nifhem",aiInstructorSocraticSub:"Wieġeb mistoqsijiet qosra biex tasal għar-regola",aiInstructorSocraticStart:"Ibda djalogu",aiInstructorSocraticRestart:"Ibda mill-ġdid",aiInstructorSocraticNext:"Kompli",aiInstructorSocraticComplete:"Wasalt għar-regola",aiInstructorSocraticQ1:"X’inhu l-periklu jew obbligu ewlieni?",aiInstructorSocraticQ2:"Liema għażla tipproteġi s-sigurtà?",aiInstructorSocraticQ3:"Għaliex l-għażliet l-oħra huma inqas korretti?",aiInstructorSocraticPrompt:"Ikteb ir-raġunament tiegħek",aiInstructorSocraticFeedback1:"Tajjeb. Sib il-periklu jew obbligu l-ewwel.",aiInstructorSocraticFeedback2:"Qabbel kull għażla mar-regola.",aiInstructorSocraticFeedback3:"Dan il-paragun jgħinek tiftakar.",aiInstructorSocraticEmpty:"Ikteb tweġiba qasira.",aiInstructorExplainAgain:"Spjega b’mod ieħor",aiInstructorPractise:"Ipprattika din il-mistoqsija",aiInstructorReport:"Aqsam lezzjoni",aiInstructorCopy:"Ikkopja lezzjoni",aiInstructorCopied:"Lezzjoni kkupjata.",aiInstructorOpen:"Iftaħ Istruttur IA",cloudReady:"Lest għas-sħaba",cloudReadySub:"Arkitettura lokali għal sinkronizzazzjoni futura",cloudNotice:"Il-sħaba għadu mhux attiv",cloudNoticeText:"Din il-Verżjoni tipprepara identitajiet, apparati u kju lokali tas-sinkronizzazzjoni. L-ebda dejta ma tittella’ imkien.",cloudUserIdentity:"Identità tal-utent",cloudUserId:"ID tal-utent",cloudDeviceId:"ID tal-apparat",cloudDeviceName:"Isem tal-apparat",cloudGenerateIdentity:"Oħloq identità",cloudIdentityReady:"Identità lesta",cloudQueue:"Kju tas-sinkronizzazzjoni",cloudQueueSub:"Avvenimenti lokali għal sistema tas-server futur",cloudPending:"Elementi pendenti",cloudLastSync:"L-aħħar sinkronizzazzjoni",cloudNever:"Qatt",cloudLocalBackup:"Kopja ta’ sigurtà lokali",cloudCloudBackup:"Kopja ta’ sigurtà fis-sħaba",cloudNotConnected:"Mhux konness",cloudWaiting:"Qed jistenna",cloudAddTestEvent:"Żid avveniment ta’ prova",cloudClearQueue:"Ħassar kju",cloudQueueCleared:"Il-kju tħassar.",cloudDeviceManager:"Ġestjoni tal-apparati",cloudDeviceManagerSub:"Ipprepara l-istess profil fuq diversi apparati",cloudAddDevice:"Żid apparat",cloudDeviceType:"Tip",cloudDeviceLabel:"Isem",cloudRemoveDevice:"Neħħi",cloudNoDevices:"Għad m’hemmx apparati.",cloudPreparedLogin:"Tħejjija għad-dħul",cloudPreparedLoginText:"L-app hija strutturalment lesta għal kontijiet futuri bl-email, għall-iskejjel u għall-istrutturi.",cloudArchitecture:"Qagħda tal-sħaba",cloudIdentityStatus:"Identità",cloudQueueStatus:"Kju",cloudDevicesStatus:"Apparati",cloudLoginStatus:"Dħul",cloudReadyStatus:"Lest",cloudFutureStatus:"Jeħtieġ sistema tas-server",cloudEventQuiz:"Kwizz avveniment",cloudEventProfile:"Profil avveniment",cloudEventMission:"Avveniment tal-missjoni",cloudEventCreated:"Avveniment miżjud.",cloudExportQueue:"Ikkopja kju",cloudQueueCopied:"Il-kju ġie kkupjat.",missions:"Missjonijiet",missionsSub:"Għanijiet konkreti għall-preparazzjoni",missionToday:"Missjoni tal-lum",missionSafety:"Missjoni Sigurtà",missionEnglish:"Missjoni Ingliż",missionZero:"Missjoni Żero Żbalji",missionExam:"Missjoni Eżami",missionPassport:"Missjoni Passaport",missionDailyText:"Imla 15-il mistoqsija b’80% preċiżjoni.",missionSafetyText:"Imla 10 mistoqsijiet ta’ sigurtà.",missionEnglishText:"Imla attività Test tal-Ingliż u 5 nases bl-Ingliż.",missionZeroText:"Għeleb 5 mistoqsijiet kritiċi.",missionExamText:"Imla simulazzjoni ta’ 35 mistoqsija.",missionPassportText:"Imla rekwiżit wieħed tal-Passaport.",missionStart:"Ibda missjoni",missionActive:"Missjoni attiva",missionComplete:"Imla missjoni",missionCompleted:"Missjoni kompluta",missionProgressLabel:"Avvanz",missionReward:"Premju utli",missionRewardText:"Missjonijiet jagħtu midalja u jaġġornaw il-Kowċ.",missionReset:"Irrisettja missjonijiet",missionResetConfirm:"Tirrisettja l-avvanz tal-missjonijiet?",missionResetDone:"Avvanz irrisettjat.",missionNoActive:"L-ebda missjoni attiva.",missionChoose:"Agħżel missjoni",missionBadgeFocus:"Studju ffukat",missionBadgeSafety:"Dixxiplina tas-sigurtà",missionBadgeEnglish:"Kunfidenza fl-Ingliż",missionBadgeZero:"Żbalji taħt kontroll",missionBadgeExam:"Dixxiplina tas-simulazzjoni",missionBadgePassport:"Vjaġġ tal-permess",missionCompletedCount:"Missjonijiet kompluti",missionOpen:"Iftaħ Missjonijiet",errorReplay:"Ripetizzjoni tal-Iżball",errorReplaySub:"Ara l-għażla perikoluża u mbagħad l-imġiba korretta",errorReplayVisual:"Simulazzjoni viżiva edukattiva",errorReplayVisualText:"Ix-xeni huma illustrazzjonijiet edukattivi simplifikati u mhux dijagrammi uffiċjali.",errorReplayOpen:"Erġa’ ara dan l-iżball",errorReplayRiskScene:"Xena ta’ riskju",errorReplayCorrectScene:"Xena korretta",errorReplayStep1:"Osserva s-sitwazzjoni",errorReplayStep2:"Sib il-periklu",errorReplayStep3:"Agħmel l-azzjoni l-aktar sigura",errorReplayPlay:"Ibda ripetizzjoni",errorReplayRestart:"Ibda mill-ġdid",errorReplayNext:"Xena li jmiss",errorReplayPractise:"Ipprattika l-mistoqsija",errorReplayUnderstand:"Iftaħ l-ispjegazzjoni IA",errorReplaySlow:"Bil-mod",errorReplayNormal:"Normali",errorReplayFast:"Mgħaġġla",errorReplayLibrary:"Librerija ripetizzjoni",errorReplayLibrarySub:"Żbalji u mistoqsijiet ta’ riskju",errorReplayViewed:"Ripetizzjonijiet meqjusa",errorReplayCompleted:"Ripetizzjonijiet kompluti",errorReplayNoQuestion:"Agħżel mistoqsija jew iftaħ ripetizzjoni wara kwizz.",errorReplaySearch:"Fittex ID jew kliem",errorReplayOpenScene:"Iftaħ ripetizzjoni",errorReplayWhyDangerous:"Għaliex l-ewwel xena hija perikoluża",errorReplayWhyCorrect:"Għaliex it-tieni xena hija korretta",errorReplayDangerText:"L-ewwel azzjoni tħalli riskju mhux ikkontrollat.",errorReplayCorrectText:"L-azzjoni korretta tnaqqas ir-riskju u ssegwi r-regola.",errorReplayBlindSpot:"Riskju ta’ angolu mejjet",errorReplayCrossing:"Riskju waqt il-qsim",errorReplayBreakdown:"Riskju ta’ ħsara jew emerġenza",errorReplayPassenger:"Riskju tal-passiġġier",errorReplayEco:"Riskju ekoloġiku",errorReplayGeneral:"Riskju ġenerali",errorReplayShare:"Aqsam il-lezzjoni",errorReplayCopy:"Ikkopja l-lezzjoni",errorReplayCopied:"Lezzjoni kkupjata.",installedVersion:"Verżjoni installata",allModulesUpdated:"Il-moduli kollha huma allinjati",releaseDate:"Data tal-verżjoni"}
 };
 let settings = load(SETTINGS,{lang:'en',theme:'system'});
-let progress = load(STORAGE,{seen:{},correct:{},wrong:{},exams:[],favourites:[],activity:{},knownWords:[],knownPhrases:[],review:{},errorReasons:{},bridgeResults:[],responseHistory:[]});
+let progress = window.MDM_ACCOUNT_ISOLATION_SAFE.own(load(STORAGE,{seen:{},correct:{},wrong:{},exams:[],favourites:[],activity:{},knownWords:[],knownPhrases:[],review:{},errorReasons:{},bridgeResults:[],responseHistory:[]}));
 progress.favourites=Array.isArray(progress.favourites)?progress.favourites:[];
 progress.activity=progress.activity&&typeof progress.activity==='object'?progress.activity:{};
 progress.knownWords=Array.isArray(progress.knownWords)?progress.knownWords:[];
@@ -206,14 +206,14 @@ const DEFAULT_SCHOOL_PREFS={
  englishSupport:false,
  documentSupport:false
 };
-let schoolPreferences=Object.assign({},DEFAULT_SCHOOL_PREFS,load(SCHOOL_PREFS_KEY,{}));
-let schoolCompare=Array.isArray(load(SCHOOL_COMPARE_KEY,[]))?load(SCHOOL_COMPARE_KEY,[]):[];
+let schoolPreferences=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_SCHOOL_PREFS),load(SCHOOL_PREFS_KEY,{})));
+let schoolCompare=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Array.isArray(load(SCHOOL_COMPARE_KEY,[]))?load(SCHOOL_COMPARE_KEY,[]):[]);
 schoolCompare=schoolCompare.filter(id=>SCHOOL_DEMOS.some(school=>school.id===id)).slice(0,3);
-let schoolPartnerDraft=Object.assign({
+let schoolPartnerDraft=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign({
  schoolName:'',permit:'',email:'',phone:'',area:'central',
  languages:['en'],services:[],prices:'',availability:'',
  description:'',plan:'basic',consent:false
-},load(SCHOOL_PARTNER_KEY,{}));
+},load(SCHOOL_PARTNER_KEY,{})));
 
 
 
@@ -238,7 +238,7 @@ const DEFAULT_ERROR_REPLAY={
  perception:{attempts:0,hits:0,totalMs:0,bestMs:0,lastResult:null},
  interactive:{}
 };
-let errorReplay=Object.assign({},DEFAULT_ERROR_REPLAY,load(ERROR_REPLAY_KEY,{}));
+let errorReplay=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_ERROR_REPLAY),load(ERROR_REPLAY_KEY,{})));
 errorReplay.viewed=errorReplay.viewed&&typeof errorReplay.viewed==='object'?errorReplay.viewed:{};
 errorReplay.completed=errorReplay.completed&&typeof errorReplay.completed==='object'?errorReplay.completed:{};
 errorReplay.perception=Object.assign({attempts:0,hits:0,totalMs:0,bestMs:0,lastResult:null},errorReplay.perception||{});
@@ -526,7 +526,7 @@ const DEFAULT_CLOUD_READY={
  devices:[],
  loginPrepared:true
 };
-let cloudReady=Object.assign({},DEFAULT_CLOUD_READY,load(CLOUD_READY_KEY,{}));
+let cloudReady=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_CLOUD_READY),load(CLOUD_READY_KEY,{})));
 cloudReady.queue=Array.isArray(cloudReady.queue)?cloudReady.queue:[];
 cloudReady.devices=Array.isArray(cloudReady.devices)?cloudReady.devices:[];
 
@@ -541,7 +541,7 @@ const DEFAULT_ACCOUNT_ENROLLMENT={
  createdAt:'',
  updatedAt:''
 };
-let accountEnrollment=Object.assign({},DEFAULT_ACCOUNT_ENROLLMENT,load(ACCOUNT_ENROLLMENT_KEY,{}));
+let accountEnrollment=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_ACCOUNT_ENROLLMENT),load(ACCOUNT_ENROLLMENT_KEY,{})));
 if(!['student','instructor','school'].includes(accountEnrollment.role))accountEnrollment.role='student';
 accountEnrollment.pendingRequest=accountEnrollment.pendingRequest&&typeof accountEnrollment.pendingRequest==='object'?accountEnrollment.pendingRequest:null;
 accountEnrollment.linkedSchool=accountEnrollment.linkedSchool&&typeof accountEnrollment.linkedSchool==='object'?accountEnrollment.linkedSchool:null;
@@ -552,7 +552,7 @@ const DEFAULT_MISSION_SYSTEM={
  missionProgress:{},
  lastGeneratedDate:''
 };
-let missionSystem=Object.assign({},DEFAULT_MISSION_SYSTEM,load(MISSION_SYSTEM_KEY,{}));
+let missionSystem=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_MISSION_SYSTEM),load(MISSION_SYSTEM_KEY,{})));
 missionSystem.completedMissionIds=Array.isArray(missionSystem.completedMissionIds)?missionSystem.completedMissionIds:[];
 missionSystem.missionProgress=missionSystem.missionProgress&&typeof missionSystem.missionProgress==='object'?missionSystem.missionProgress:{};
 
@@ -568,7 +568,7 @@ const DEFAULT_AI_INSTRUCTOR={
  recoveryPlan:{date:'',topicId:'',createdAt:'',completedAt:'',stages:[]},
  socratic:{questionId:'',step:0,answers:[]}
 };
-let aiInstructor=Object.assign({},DEFAULT_AI_INSTRUCTOR,load(AI_INSTRUCTOR_KEY,{}));
+let aiInstructor=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_AI_INSTRUCTOR),load(AI_INSTRUCTOR_KEY,{})));
 aiInstructor.explained=aiInstructor.explained&&typeof aiInstructor.explained==='object'?aiInstructor.explained:{};
 aiInstructor.reviewQueue=Array.isArray(aiInstructor.reviewQueue)?aiInstructor.reviewQueue:[];
 aiInstructor.reviewIndex=Math.max(0,Number(aiInstructor.reviewIndex||0));
@@ -590,7 +590,7 @@ const DEFAULT_INSTRUCTOR_PORTAL={
  notes:[],
  lastVisit:''
 };
-let instructorPortal=Object.assign({},DEFAULT_INSTRUCTOR_PORTAL,load(INSTRUCTOR_PORTAL_KEY,{}));
+let instructorPortal=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_INSTRUCTOR_PORTAL),load(INSTRUCTOR_PORTAL_KEY,{})));
 instructorPortal.profile=Object.assign({},DEFAULT_INSTRUCTOR_PORTAL.profile,instructorPortal.profile||{});
 instructorPortal.assignments=Array.isArray(instructorPortal.assignments)?instructorPortal.assignments:[];
 instructorPortal.notes=Array.isArray(instructorPortal.notes)?instructorPortal.notes:[];
@@ -610,7 +610,7 @@ const DEFAULT_SCHOOL_PORTAL={
   verified:false
  }
 };
-let schoolPortal=Object.assign({},DEFAULT_SCHOOL_PORTAL,load(SCHOOL_PORTAL_KEY,{}));
+let schoolPortal=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_SCHOOL_PORTAL),load(SCHOOL_PORTAL_KEY,{})));
 for(const key of ['instructors','courses','offers','reviews','requests','bookings']){
  schoolPortal[key]=Array.isArray(schoolPortal[key])?schoolPortal[key]:[];
 }
@@ -622,7 +622,7 @@ const DEFAULT_ZERO_ERROR_STATE={
  lastPlanDate:'',
  lastVisit:''
 };
-let zeroErrorState=Object.assign({},DEFAULT_ZERO_ERROR_STATE,load(ZERO_ERROR_KEY,{}));
+let zeroErrorState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_ZERO_ERROR_STATE),load(ZERO_ERROR_KEY,{})));
 zeroErrorState.defeatedIds=Array.isArray(zeroErrorState.defeatedIds)?zeroErrorState.defeatedIds:[];
 zeroErrorState.verifiedIds=Array.isArray(zeroErrorState.verifiedIds)?zeroErrorState.verifiedIds:[];
 
@@ -636,7 +636,7 @@ const DEFAULT_EXAM_DAY_STATE={
  certificateIssued:false,
  certificateDate:''
 };
-let examDayState=Object.assign({},DEFAULT_EXAM_DAY_STATE,load(EXAM_DAY_KEY,{}));
+let examDayState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_EXAM_DAY_STATE),load(EXAM_DAY_KEY,{})));
 examDayState.checklist=examDayState.checklist&&typeof examDayState.checklist==='object'?examDayState.checklist:{};
 
 const DEFAULT_RECOVERY_STATE={
@@ -644,7 +644,7 @@ const DEFAULT_RECOVERY_STATE={
  lastPrompt:'',
  lastVisit:''
 };
-let recoveryState=Object.assign({},DEFAULT_RECOVERY_STATE,load(RECOVERY_KEY,{}));
+let recoveryState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_RECOVERY_STATE),load(RECOVERY_KEY,{})));
 recoveryState.completedQuestionIds=Array.isArray(recoveryState.completedQuestionIds)?recoveryState.completedQuestionIds:[];
 
 const DEFAULT_COACH_STATE={
@@ -654,7 +654,7 @@ const DEFAULT_COACH_STATE={
  lastCoachVisit:'',
  investorPreviewViewed:false
 };
-let coachState=Object.assign({},DEFAULT_COACH_STATE,load(COACH_KEY,{}));
+let coachState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_COACH_STATE),load(COACH_KEY,{})));
 coachState.missionSteps=Object.assign({study:false,review:false,bridge:false},coachState.missionSteps||{});
 
 const DEFAULT_ONBOARDING={
@@ -666,13 +666,13 @@ const DEFAULT_ONBOARDING={
  optionalUpdates:false,
  completedAt:''
 };
-let onboarding=Object.assign({},DEFAULT_ONBOARDING,load(ONBOARDING_KEY,{}));
+let onboarding=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_ONBOARDING),load(ONBOARDING_KEY,{})));
 const DEFAULT_PRIVACY_PREFS={
  analytics:false,
  marketing:false,
  updatedAt:''
 };
-let privacyPreferences=Object.assign({},DEFAULT_PRIVACY_PREFS,load(PRIVACY_PREFS_KEY,{}));
+let privacyPreferences=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_PRIVACY_PREFS),load(PRIVACY_PREFS_KEY,{})));
 
 const DEFAULT_PILOT_ANALYTICS={
  schema:'mdm-pilot-analytics-v1',
@@ -683,7 +683,7 @@ const DEFAULT_PILOT_ANALYTICS={
  lastPackAt:'',
  lastServerSyncAt:''
 };
-let pilotAnalytics=Object.assign({},DEFAULT_PILOT_ANALYTICS,load(PILOT_ANALYTICS_KEY,{}));
+let pilotAnalytics=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_PILOT_ANALYTICS),load(PILOT_ANALYTICS_KEY,{})));
 pilotAnalytics.events=Array.isArray(pilotAnalytics.events)?pilotAnalytics.events.slice(-600):[];
 
 
@@ -694,7 +694,7 @@ const DEFAULT_SCHOOL_DASHBOARD={
  schoolNotes:'',
  savedAt:''
 };
-let schoolDashboard=Object.assign({},DEFAULT_SCHOOL_DASHBOARD,load(SCHOOL_DASHBOARD_KEY,{}));
+let schoolDashboard=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_SCHOOL_DASHBOARD),load(SCHOOL_DASHBOARD_KEY,{})));
 schoolDashboard.students=Array.isArray(schoolDashboard.students)?schoolDashboard.students:[];
 schoolDashboard.groups=Array.isArray(schoolDashboard.groups)?schoolDashboard.groups:[];
 schoolDashboard.invites=Array.isArray(schoolDashboard.invites)?schoolDashboard.invites:[];
@@ -706,7 +706,7 @@ const DEFAULT_PERSONAL_ROADMAP={
  mainGoal:'tag',
  savedAt:''
 };
-let personalRoadmap=Object.assign({},DEFAULT_PERSONAL_ROADMAP,load(ROADMAP_KEY,{}));
+let personalRoadmap=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_PERSONAL_ROADMAP),load(ROADMAP_KEY,{})));
 personalRoadmap.dailyMinutes=Math.max(10,Math.min(120,Number(personalRoadmap.dailyMinutes)||20));
 personalRoadmap.studyDays=Math.max(1,Math.min(7,Number(personalRoadmap.studyDays)||5));
 
@@ -729,7 +729,7 @@ const DEFAULT_LPTV_PASSPORT={
  notes:'',
  savedAt:''
 };
-let lptvPassport=Object.assign({},DEFAULT_LPTV_PASSPORT,load(PASSPORT_KEY,{}));
+let lptvPassport=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_LPTV_PASSPORT),load(PASSPORT_KEY,{})));
 lptvPassport.checklist=lptvPassport.checklist&&typeof lptvPassport.checklist==='object'?lptvPassport.checklist:{};
 lptvPassport.dates=Object.assign({},DEFAULT_LPTV_PASSPORT.dates,lptvPassport.dates||{});
 
@@ -738,8 +738,11 @@ let quiz = null;
 let bridgeState = null;
 let timerId = null;
 
-function clone(v){return v===null?null:JSON.parse(JSON.stringify(v))}
-function load(key,fallback){try{const raw=localStorage.getItem(key);if(!raw)return clone(fallback);const parsed=JSON.parse(raw);if(fallback&&typeof fallback==='object'&&!Array.isArray(fallback))return Object.assign(clone(fallback),parsed);return parsed}catch{return clone(fallback)}}
+function clone(v){return window.MDM_ACCOUNT_ISOLATION_SAFE.inherit(v===null?null:JSON.parse(JSON.stringify(v)),v)}
+function load(key,fallback){
+ let value;try{const raw=localStorage.getItem(key);const parsed=raw?JSON.parse(raw):null;value=raw?(fallback&&typeof fallback==='object'&&!Array.isArray(fallback)?Object.assign(clone(fallback),parsed):parsed):clone(fallback)}catch{value=clone(fallback)}
+ return window.MDM_ACCOUNT_ISOLATION_SAFE.classify(key)==='account'?window.MDM_ACCOUNT_ISOLATION_SAFE.own(value):value;
+}
 
 /* Build 45.8.31.35 — PWA CROSS-DEVICE PORTABLE STATE SYNC
    Only portable user/study state is mirrored. Auth tokens, backend setup,
@@ -772,18 +775,18 @@ function mdmPortableSyncMarkDirty(key){
  const meta=mdmPortableSyncMeta();meta.dirty=true;meta.dirtyAt=new Date().toISOString();meta.lastAction='local_change';meta.lastError='';mdmPortableSyncMetaSave(meta);
  clearTimeout(mdmPortableSyncTimer);mdmPortableSyncTimer=setTimeout(()=>{try{if(typeof mdmPortableSyncReconcile==='function')mdmPortableSyncReconcile({silent:true,reason:'local_change'})}catch{}},2200);
 }
-function save(key,value){localStorage.setItem(key,JSON.stringify(value));mdmPortableSyncMarkDirty(key)}
+function save(key,value){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.write(key,value))return false;mdmPortableSyncMarkDirty(key);return true}
 
 function createRegistrationId(){
  const timestamp=Date.now().toString(36).toUpperCase();
  const random=Math.random().toString(36).slice(2,7).toUpperCase();
  return `MDM-${timestamp}-${random}`;
 }
-let userProfile=load(USER_PROFILE,{
+let userProfile=window.MDM_ACCOUNT_ISOLATION_SAFE.own(load(USER_PROFILE,{
  firstName:'',lastName:'',email:'',address:'',age:'',
  privacyConsent:false,updatesConsent:false,
  registrationId:createRegistrationId(),savedAt:'',emailPreparedAt:''
-});
+}));
 if(!userProfile.registrationId)userProfile.registrationId=createRegistrationId();
 
 function cleanProfileValue(value,max=160){
@@ -1011,7 +1014,7 @@ function lang3(it,en,mt){return settings.lang==='it'?it:settings.lang==='mt'?mt:
    The engine centralises exam rules and validates future pack manifests without pretending that foreign content is installed. */
 const COUNTRY_PACK_SCHEMA='mdm-country-pack-v1';
 const COUNTRY_PACK_SCHEMA_VERSION=1;
-let countryPackEngineState=Object.assign({candidate:null,lastCheck:''},load(COUNTRY_PACK_ENGINE_KEY,{}));
+let countryPackEngineState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign({candidate:null,lastCheck:''},load(COUNTRY_PACK_ENGINE_KEY,{})));
 function countryPackReplayCount(){try{return Object.keys(INTERACTIVE_REPLAY_MVP||{}).length}catch(_){return 0}}
 function countryPackLanguageCoverage(questionField,answersField){
  const total=Math.max(1,Q.length),done=Q.filter(q=>String(q?.[questionField]||'').trim()&&Array.isArray(q?.[answersField])&&Array.isArray(q?.answers)&&q[answersField].length===q.answers.length).length;
@@ -1091,7 +1094,7 @@ function countryPackViewHtml(){
 /* Build 45.0.0 — Multi-License Architecture
    License Pack is deliberately separate from Country Pack.
    Only payloads really installed and verified may become active. */
-let licensePackEngineState=Object.assign({activeId:'MT-LPTV',inspectedId:'MT-LPTV',lastCheck:''},load(LICENSE_PACK_ENGINE_KEY,{}));
+let licensePackEngineState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign({activeId:'MT-LPTV',inspectedId:'MT-LPTV',lastCheck:''},load(LICENSE_PACK_ENGINE_KEY,{})));
 function licensePackSyncRuntime(p){
  if(!p||p.id!=='MT-C-CE')return p;
  try{
@@ -2678,7 +2681,7 @@ function bindCommon(){
    const file=logoInput.files&&logoInput.files[0];if(!file)return;
    if(file.size>2*1024*1024){toast(lang3('Logo troppo grande: massimo 2 MB.','Logo too large: maximum 2 MB.','Logo kbir wisq: massimu 2 MB.'));logoInput.value='';return}
    const reader=new FileReader();
-   reader.onload=()=>{nextLogo=String(reader.result||'');const preview=$('.sch35-preview');if(preview)preview.innerHTML=`<img src="${esc(nextLogo)}" alt="">`;};
+   reader.onload=window.MDM_ACCOUNT_ISOLATION_SAFE.bind(()=>{nextLogo=String(reader.result||'');const preview=$('.sch35-preview');if(preview)preview.innerHTML=`<img src="${esc(nextLogo)}" alt="">`;});
    reader.readAsDataURL(file);
   };
   if(saveBtn)saveBtn.onclick=()=>{
@@ -9891,7 +9894,7 @@ const LANGUAGE_TWIN_PACKS={
 };
 window.MDM_LANGUAGE_PACKS=Object.assign({},window.MDM_LANGUAGE_PACKS||{},LANGUAGE_TWIN_PACKS);
 const LANGUAGE_TWIN_DEFAULT={examLanguage:'en',supportLanguage:'it',displayMode:'bilingual',diagnostics:[],difficultTerms:{},termMemory:{},lastUpdated:''};
-let languageTwin=Object.assign({},LANGUAGE_TWIN_DEFAULT,load(LANGUAGE_TWIN_KEY,{}));
+let languageTwin=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(LANGUAGE_TWIN_DEFAULT),load(LANGUAGE_TWIN_KEY,{})));
 languageTwin.diagnostics=Array.isArray(languageTwin.diagnostics)?languageTwin.diagnostics:[];
 languageTwin.difficultTerms=languageTwin.difficultTerms&&typeof languageTwin.difficultTerms==='object'?languageTwin.difficultTerms:{};
 languageTwin.termMemory=languageTwin.termMemory&&typeof languageTwin.termMemory==='object'?languageTwin.termMemory:{};
@@ -10132,7 +10135,7 @@ function bindLanguageTwinResult(){
    ================================================================ */
 const REAL_ROAD_SELECTED_PATTERN_KEY='mdm-v1-real-road-selected-pattern';
 const REAL_ROAD_DEFAULT={active:null,history:[]};
-let realRoadTwin=Object.assign({},REAL_ROAD_DEFAULT,load(REAL_ROAD_TWIN_KEY,{}));
+let realRoadTwin=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(REAL_ROAD_DEFAULT),load(REAL_ROAD_TWIN_KEY,{})));
 realRoadTwin.history=Array.isArray(realRoadTwin.history)?realRoadTwin.history:[];
 realRoadTwin.active=realRoadTwin.active&&typeof realRoadTwin.active==='object'?realRoadTwin.active:null;
 function realRoadSave(){save(REAL_ROAD_TWIN_KEY,realRoadTwin)}
@@ -10361,7 +10364,7 @@ function bindRealRoad(){
 const REAL_ROAD_TELEMETRY_KEY='mdm-v1-real-road-telemetry';
 const REAL_ROAD_TELEMETRY_MISSION_LAUNCH_KEY='mdm-v1-real-road-telemetry-mission-launch';
 const REAL_ROAD_TELEMETRY_DEFAULT={sessions:[],draft:null,lastUpdated:''};
-let realRoadTelemetryStore=Object.assign({},REAL_ROAD_TELEMETRY_DEFAULT,load(REAL_ROAD_TELEMETRY_KEY,{}));
+let realRoadTelemetryStore=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(REAL_ROAD_TELEMETRY_DEFAULT),load(REAL_ROAD_TELEMETRY_KEY,{})));
 realRoadTelemetryStore.sessions=Array.isArray(realRoadTelemetryStore.sessions)?realRoadTelemetryStore.sessions:[];
 let realRoadTelemetryRuntime={recording:false,session:null,watchId:null,timerId:null,motionHandler:null,orientationHandler:null,lastPosition:null,lastMotionAt:0,lastOrientationAt:0,lastCheckpointAt:0,storageError:false};
 function realRoadTelemetryPersist(){
@@ -10533,6 +10536,7 @@ function realRoadTelemetryGpsDiagnostic(s){
  return '';
 }
 function realRoadTelemetryStartGps(){
+ const mdmCallbackOwner=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
  const s=realRoadTelemetryRuntime.session;if(!s||!realRoadTelemetryRuntime.recording)return;
  const caps=realRoadTelemetryCapabilities();
  if(!caps.gps){s.gpsStatus='unsupported';s.gpsErrorCode=0;s.gpsError='Geolocation API unavailable';realRoadTelemetryCheckpoint(true);realRoadTelemetryRefreshLiveUi();return}
@@ -10540,11 +10544,11 @@ function realRoadTelemetryStartGps(){
  let watchStarted=false;
  const startWatch=()=>{
   if(watchStarted||!realRoadTelemetryRuntime.recording||realRoadTelemetryRuntime.session!==s)return;watchStarted=true;
-  try{realRoadTelemetryRuntime.watchId=navigator.geolocation.watchPosition(realRoadTelemetryRecordPosition,realRoadTelemetryGpsError,{enableHighAccuracy:true,maximumAge:5000,timeout:30000})}
+  try{realRoadTelemetryRuntime.watchId=navigator.geolocation.watchPosition(window.MDM_ACCOUNT_ISOLATION_SAFE.bind(realRoadTelemetryRecordPosition,mdmCallbackOwner),window.MDM_ACCOUNT_ISOLATION_SAFE.bind(realRoadTelemetryGpsError,mdmCallbackOwner),{enableHighAccuracy:true,maximumAge:5000,timeout:30000})}
   catch(e){realRoadTelemetryGpsError({code:0,message:String(e?.message||e||'GPS unavailable')})}
  };
  try{
-  navigator.geolocation.getCurrentPosition(pos=>{realRoadTelemetryRecordPosition(pos);startWatch()},err=>{realRoadTelemetryGpsError(err);startWatch()},{enableHighAccuracy:true,maximumAge:15000,timeout:20000});
+  navigator.geolocation.getCurrentPosition(pos=>{if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmCallbackOwner))return;realRoadTelemetryRecordPosition(pos);startWatch()},err=>{if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmCallbackOwner))return;realRoadTelemetryGpsError(err);startWatch()},{enableHighAccuracy:true,maximumAge:15000,timeout:20000});
  }catch(e){realRoadTelemetryGpsError({code:0,message:String(e?.message||e||'GPS unavailable')});startWatch()}
 }
 function realRoadTelemetryStops(points){
@@ -10569,22 +10573,27 @@ function realRoadTelemetryFormatDate(iso){try{return new Date(iso).toLocaleStrin
 function realRoadTelemetryLast(){return realRoadTelemetryStore.sessions[0]||null}
 function realRoadTelemetryCapabilities(){return {secure:Boolean(window.isSecureContext||['localhost','127.0.0.1'].includes(location.hostname)),gps:Boolean(navigator.geolocation),motion:typeof DeviceMotionEvent!=='undefined',orientation:typeof DeviceOrientationEvent!=='undefined'} }
 async function realRoadTelemetryStart(){
+ const mdmDataOwner0=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(realRoadTelemetryRuntime.recording)return;
  const s=realRoadTelemetryNewSession();realRoadTelemetryRuntime.recording=true;realRoadTelemetryRuntime.session=s;realRoadTelemetryRuntime.lastPosition=null;realRoadTelemetryRuntime.lastMotionAt=0;realRoadTelemetryRuntime.lastOrientationAt=0;realRoadTelemetryRuntime.lastCheckpointAt=0;
  /* iOS: request motion/orientation from the direct tap first. Starting the GPS prompt at the same time can prevent a reliable location permission flow in embedded/local browsers. */
  const motionPromise=realRoadTelemetryMotionPermission(typeof DeviceMotionEvent!=='undefined'?DeviceMotionEvent:undefined);
  const orientationPromise=realRoadTelemetryMotionPermission(typeof DeviceOrientationEvent!=='undefined'?DeviceOrientationEvent:undefined);
- const perms=await Promise.all([motionPromise,orientationPromise]);
+ const perms=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0,await Promise.all([motionPromise,orientationPromise]));
  if(!realRoadTelemetryRuntime.recording)return;
  s.motionStatus=perms[0];s.orientationStatus=perms[1];
- if(perms[0]==='granted'){realRoadTelemetryRuntime.motionHandler=realRoadTelemetryRecordMotion;window.addEventListener('devicemotion',realRoadTelemetryRuntime.motionHandler,{passive:true})}
- if(perms[1]==='granted'){realRoadTelemetryRuntime.orientationHandler=realRoadTelemetryRecordOrientation;window.addEventListener('deviceorientation',realRoadTelemetryRuntime.orientationHandler,{passive:true})}
+ if(perms[0]==='granted'){realRoadTelemetryRuntime.motionHandler=window.MDM_ACCOUNT_ISOLATION_SAFE.bind(realRoadTelemetryRecordMotion);window.addEventListener('devicemotion',realRoadTelemetryRuntime.motionHandler,{passive:true})}
+ if(perms[1]==='granted'){realRoadTelemetryRuntime.orientationHandler=window.MDM_ACCOUNT_ISOLATION_SAFE.bind(realRoadTelemetryRecordOrientation);window.addEventListener('deviceorientation',realRoadTelemetryRuntime.orientationHandler,{passive:true})}
  realRoadTelemetryStore.draft=s;realRoadTelemetryCheckpoint(true);
  if(realRoadTelemetryRuntime.timerId)clearInterval(realRoadTelemetryRuntime.timerId);
  realRoadTelemetryRuntime.timerId=setInterval(realRoadTelemetryRefreshLiveUi,1000);
  render();
  /* Only after the iOS sensor permission flow is settled, request a first GPS fix and then start continuous watch. */
  realRoadTelemetryStartGps();
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner0)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function realRoadTelemetryDetach(){
  if(realRoadTelemetryRuntime.watchId!==null&&navigator.geolocation){try{navigator.geolocation.clearWatch(realRoadTelemetryRuntime.watchId)}catch(_){}}realRoadTelemetryRuntime.watchId=null;
@@ -11091,29 +11100,39 @@ function mdmLearningSnapshotPayload(){
  return Object.assign({},snapshot,{schema:'mdm-learning-sync-v1',snapshotVersion:1,build:BUILD_VERSION,updatedAt:new Date().toISOString(),pilotAnalytics:pilotAnalyticsSnapshot()});
 }
 async function mdmStudentSyncLearning({silent=false}={}){
+ const mdmDataOwner1=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(mdmLearningSyncInFlight)return false;
  const auth=mdmAuthSummary();
  if(!auth.authenticated)return false;
  mdmLearningSyncInFlight=true;
  try{
-  if(!(await mdmEnsureFreshAuthForData()))return false;
-  let result=await mdmDataRpc('mdm_student_sync_learning',{p_payload:mdmLearningSnapshotPayload(),p_build:BUILD_VERSION});
-  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_student_sync_learning',{p_payload:mdmLearningSnapshotPayload(),p_build:BUILD_VERSION});
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1,await mdmEnsureFreshAuthForData())))return false;
+  let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1,await mdmDataRpc('mdm_student_sync_learning',{p_payload:mdmLearningSnapshotPayload(),p_build:BUILD_VERSION}));
+  if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1,await mdmDataRpc('mdm_student_sync_learning',{p_payload:mdmLearningSnapshotPayload(),p_build:BUILD_VERSION}));
   const data=mdmAuthParse(result.body)||{};
   if(result.status<200||result.status>=300||data.ok===false){mdmLearningSyncState={userId:String(auth.userId||''),status:'error',updatedAt:'',lastMessage:mdmDataErrorMessage(result)||String(data.error||'sync_failed')};if(!silent)toast(lang3('Sincronizzazione didattica non riuscita: ','Learning sync failed: ','Is-sinkronizzazzjoni tat-tagħlim falliet: ')+mdmLearningSyncState.lastMessage);return false}
   mdmLearningSyncState={userId:String(auth.userId||''),status:'ok',updatedAt:String(data.updated_at||new Date().toISOString()),lastMessage:''};
   if(!silent)toast(lang3('Dati didattici sincronizzati sul server.','Learning data synced to the server.','Id-data tat-tagħlim ġiet sinkronizzata mas-server.'));
   return true;
- }finally{mdmLearningSyncInFlight=false}
+ }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner1)){mdmLearningSyncInFlight=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner1)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function mdmStudentRefreshMissions({silent=true}={}){
+ const mdmDataOwner2=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const auth=mdmAuthSummary();if(!auth.authenticated){mdmServerMissions={loadedForUserId:'',items:[],loadedAt:'',lastMessage:''};return false}
- if(!(await mdmEnsureFreshAuthForData()))return false;
- let result=await mdmDataRpc('mdm_student_list_missions',{});
- if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_student_list_missions',{});
+ if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2,await mdmEnsureFreshAuthForData())))return false;
+ let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2,await mdmDataRpc('mdm_student_list_missions',{}));
+ if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2,await mdmDataRpc('mdm_student_list_missions',{}));
  const data=mdmAuthParse(result.body)||{};
  if(result.status<200||result.status>=300||data.ok===false){mdmServerMissions={loadedForUserId:String(auth.userId||''),items:[],loadedAt:new Date().toISOString(),lastMessage:mdmDataErrorMessage(result)};return false}
  mdmServerMissions={loadedForUserId:String(auth.userId||''),items:Array.isArray(data.missions)?data.missions:[],loadedAt:new Date().toISOString(),lastMessage:''};if(!silent)toast(lang3('Missioni server aggiornate.','Server missions refreshed.','Il-missjonijiet tas-server ġew aġġornati.'));return true;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner2)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function mdmServerMissionAssignment(item){
  const p=item&&typeof item.payload==='object'&&item.payload?item.payload:{};
@@ -11122,47 +11141,67 @@ function mdmServerMissionAssignment(item){
  return {schema:INSTRUCTOR_ASSIGNMENTS_SCHEMA,id:String(item.id||p.id||''),studentId:String(item.student_user_id||''),studentName:String(p.studentName||premiumUserName()),studentSource:'server',title:String(p.title||lang3('Missione scuola','School mission','Missjoni tal-iskola')),priority:String(p.priority||''),instruction:String(p.instruction||''),criteria:Array.isArray(p.criteria)?p.criteria.slice(0,3):[],due:String(p.due||'next-lesson'),requiresInstructorCheck:Boolean(p.requiresInstructorCheck),createdAt:String(item.created_at||p.createdAt||''),deliveryState:'server-active',previewStatus:completed?'completed':'open',serverStatus,reviewNote:String(item?.review_note||''),reviewedAt:String(item?.reviewed_at||''),studentCompletedAt:String(item?.student_completed_at||''),serverMission:true};
 }
 async function mdmStudentUpdateMission(id,status){
- if(!(await mdmEnsureFreshAuthForData()))return false;let result=await mdmDataRpc('mdm_student_update_mission',{p_mission_id:String(id||''),p_status:String(status||'seen')});if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_student_update_mission',{p_mission_id:String(id||''),p_status:String(status||'seen')});const data=mdmAuthParse(result.body)||{};if(result.status<200||result.status>=300||data.ok===false){toast(lang3('Aggiornamento missione non riuscito.','Mission update failed.','L-aġġornament tal-missjoni falla.'));return false}await mdmStudentRefreshMissions({silent:true});if(String(data.status||'')==='awaiting_review')toast(lang3('Missione completata: ora attende la verifica dell’istruttore.','Mission completed: it now awaits instructor verification.','Il-missjoni tlestiet: issa qed tistenna l-verifika tal-istruttur.'));render();return true;
+ const mdmDataOwner3=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
+ if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3,await mdmEnsureFreshAuthForData())))return false;let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3,await mdmDataRpc('mdm_student_update_mission',{p_mission_id:String(id||''),p_status:String(status||'seen')}));if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3,await mdmDataRpc('mdm_student_update_mission',{p_mission_id:String(id||''),p_status:String(status||'seen')}));const data=mdmAuthParse(result.body)||{};if(result.status<200||result.status>=300||data.ok===false){toast(lang3('Aggiornamento missione non riuscito.','Mission update failed.','L-aġġornament tal-missjoni falla.'));return false}window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3,await mdmStudentRefreshMissions({silent:true}));if(String(data.status||'')==='awaiting_review')toast(lang3('Missione completata: ora attende la verifica dell’istruttore.','Mission completed: it now awaits instructor verification.','Il-missjoni tlestiet: issa qed tistenna l-verifika tal-istruttur.'));render();return true;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner3)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function mdmSchoolRefreshStudentMissions(studentUserId,{silent=true}={}){
+ const mdmDataOwner4=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const uid=String(studentUserId||'');if(!uid)return false;
- if(!(await mdmEnsureFreshAuthForData()))return false;
- let result=await mdmDataRpc('mdm_school_list_student_missions',{p_student_user_id:uid});
- if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_school_list_student_missions',{p_student_user_id:uid});
+ if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4,await mdmEnsureFreshAuthForData())))return false;
+ let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4,await mdmDataRpc('mdm_school_list_student_missions',{p_student_user_id:uid}));
+ if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4,await mdmDataRpc('mdm_school_list_student_missions',{p_student_user_id:uid}));
  const data=mdmAuthParse(result.body)||{};
  if(result.status<200||result.status>=300||data.ok===false){mdmSchoolStudentMissions={loadedForStudentUserId:uid,items:[],loadedAt:new Date().toISOString(),lastMessage:mdmDataErrorMessage(result)||String(data.error||'mission_list_failed')};if(!silent)toast(lang3('Missioni studente non disponibili dal server.','Learner missions unavailable from server.','Il-missjonijiet tal-istudent mhumiex disponibbli mis-server.'));return false}
  mdmSchoolStudentMissions={loadedForStudentUserId:uid,items:Array.isArray(data.missions)?data.missions:[],loadedAt:new Date().toISOString(),lastMessage:''};if(!silent)toast(lang3('Stato missioni aggiornato dal server.','Mission status refreshed from server.','L-istat tal-missjonijiet ġie aġġornat mis-server.'));return true;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner4)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function mdmSchoolReviewMission(id,decision){
+ const mdmDataOwner5=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const noteEl=screen.querySelector(`[data-school-review-note="${String(id)}"]`);const note=String(noteEl?.value||'').trim();
  if(decision==='revision'&&!note)return toast(lang3('Scrivi una nota per spiegare cosa deve rivedere lo studente.','Write a note explaining what the learner must revise.','Ikteb nota li tispjega x’għandu jirrevedi l-istudent.'));
- if(!(await mdmEnsureFreshAuthForData()))return false;
- let result=await mdmDataRpc('mdm_school_review_mission',{p_mission_id:String(id||''),p_decision:String(decision||''),p_note:note});
- if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_school_review_mission',{p_mission_id:String(id||''),p_decision:String(decision||''),p_note:note});
+ if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5,await mdmEnsureFreshAuthForData())))return false;
+ let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5,await mdmDataRpc('mdm_school_review_mission',{p_mission_id:String(id||''),p_decision:String(decision||''),p_note:note}));
+ if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5,await mdmDataRpc('mdm_school_review_mission',{p_mission_id:String(id||''),p_decision:String(decision||''),p_note:note}));
  const data=mdmAuthParse(result.body)||{};if(result.status<200||result.status>=300||data.ok===false){toast(lang3('Verifica missione non riuscita: ','Mission review failed: ','Il-verifika tal-missjoni falliet: ')+(mdmDataErrorMessage(result)||String(data.error||'')));return false}
- const selected=instructorAssignmentsFindStudent(instructorAssignmentsState().selectedStudentId);if(selected?.serverUserId)await mdmSchoolRefreshStudentMissions(selected.serverUserId,{silent:true});
+ const selected=instructorAssignmentsFindStudent(instructorAssignmentsState().selectedStudentId);if(selected?.serverUserId)window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5,await mdmSchoolRefreshStudentMissions(selected.serverUserId,{silent:true}));
  toast(decision==='approve'?lang3('Missione verificata dall’istruttore.','Mission verified by the instructor.','Il-missjoni ġiet ivverifikata mill-istruttur.'):lang3('Revisione richiesta allo studente.','Revision requested from the learner.','Intalbet reviżjoni mill-istudent.'));render();return true;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner5)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 const MDM_SERVER_ROSTER_EMPTY={loadedForUserId:'',authorized:false,schoolId:'',schoolCode:'',schoolName:'',students:[],loadedAt:'',lastMessage:''};
 let mdmServerRoster={...MDM_SERVER_ROSTER_EMPTY};
 let mdmServerRosterInFlight=false;
 function mdmServerRosterReset(){mdmServerRoster={...MDM_SERVER_ROSTER_EMPTY}}
 async function schoolRosterRefreshServer({silent=false}={}){
+ const mdmDataOwner6=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(mdmServerRosterInFlight)return false;
  const auth=mdmAuthSummary();
  if(!auth.authenticated){mdmServerRosterReset();if(!silent)toast(lang3('Accedi con l’account scuola.','Sign in with the school account.','Idħol bil-kont tal-iskola.'));return false}
  mdmServerRosterInFlight=true;
  try{
-  if(!(await mdmEnsureFreshAuthForData())){if(!silent)toast(lang3('Sessione scaduta. Accedi di nuovo.','Session expired. Sign in again.','Is-sessjoni skadiet. Erġa’ idħol.'));return false}
-  let result=await mdmDataRpc('mdm_school_list_active_students',{});
-  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_school_list_active_students',{});
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner6,await mdmEnsureFreshAuthForData()))){if(!silent)toast(lang3('Sessione scaduta. Accedi di nuovo.','Session expired. Sign in again.','Is-sessjoni skadiet. Erġa’ idħol.'));return false}
+  let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner6,await mdmDataRpc('mdm_school_list_active_students',{}));
+  if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner6,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner6,await mdmDataRpc('mdm_school_list_active_students',{}));
   if(result.status<200||result.status>=300){mdmServerRoster={...MDM_SERVER_ROSTER_EMPTY,loadedForUserId:String(auth.userId||''),lastMessage:mdmDataErrorMessage(result)};if(!silent)toast(lang3('Roster server non disponibile: ','Server roster unavailable: ','Roster tas-server mhux disponibbli: ')+mdmDataErrorMessage(result));return false}
   const data=mdmAuthParse(result.body)||{};
   if(data.ok===false||!data.authorized){mdmServerRoster={...MDM_SERVER_ROSTER_EMPTY,loadedForUserId:String(auth.userId||''),lastMessage:String(data.error||'school_admin_required')};if(!silent)toast(lang3('Permesso school_admin ACTIVE richiesto.','ACTIVE school_admin permission required.','Permess school_admin ACTIVE meħtieġ.'));return false}
   mdmServerRoster={loadedForUserId:String(auth.userId||''),authorized:true,schoolId:String(data.school_id||''),schoolCode:String(data.school_code||''),schoolName:String(data.school_name||''),students:Array.isArray(data.students)?data.students:[],loadedAt:new Date().toISOString(),lastMessage:''};
   if(!silent)toast(lang3('Roster server aggiornato.','Server roster refreshed.','Roster tas-server aġġornat.'));
   render(); return true;
- }finally{mdmServerRosterInFlight=false}
+ }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner6)){mdmServerRosterInFlight=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner6)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function schoolRosterServerStudentHtml(student){
  const name=String(student?.student_name||student?.student_email||lang3('Studente','Student','Student'));
@@ -11328,6 +11367,9 @@ function instructorAssignmentsDeliveryLabel(assignment){
  return lang3('LOCALE','LOCAL','LOKALI');
 }
 async function instructorAssignmentsCreate(){
+ const mdmDataOwner7=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const state=instructorAssignmentsState();
  const student=instructorAssignmentsFindStudent($('#assignmentStudent')?.value||state.selectedStudentId);
  if(!student)return toast(lang3('Nessuno studente disponibile.','No learner is available.','L-ebda student disponibbli.'));
@@ -11341,25 +11383,32 @@ async function instructorAssignmentsCreate(){
  state.assignments.unshift(assignment);state.assignments=state.assignments.slice(0,100);state.selectedStudentId=assignment.studentId;instructorAssignmentsSave(state);
  cloudAddQueueEvent('instructor_assignment_created',{assignmentId:assignment.id,studentId:assignment.studentId,title:assignment.title,due:assignment.due});
  if(student.source==='server'&&student.serverUserId){
-  if(!(await mdmEnsureFreshAuthForData())){toast(lang3('Missione salvata localmente, ma sessione server scaduta.','Mission saved locally, but the server session expired.','Il-missjoni ġiet salvata lokalment, iżda s-sessjoni tas-server skadiet.'));render();return}
-  const result=await mdmDataRpc('mdm_school_assign_mission',{p_student_user_id:String(student.serverUserId),p_payload:assignment});const data=mdmAuthParse(result.body)||{};
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner7,await mdmEnsureFreshAuthForData()))){toast(lang3('Missione salvata localmente, ma sessione server scaduta.','Mission saved locally, but the server session expired.','Il-missjoni ġiet salvata lokalment, iżda s-sessjoni tas-server skadiet.'));render();return}
+  const result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner7,await mdmDataRpc('mdm_school_assign_mission',{p_student_user_id:String(student.serverUserId),p_payload:assignment}));const data=mdmAuthParse(result.body)||{};
   if(result.status>=200&&result.status<300&&data.ok!==false){assignment.deliveryState='server-active';assignment.serverMissionId=String(data.mission_id||'');instructorAssignmentsSave(state);toast(lang3('Missione consegnata realmente al server.','Mission delivered to the server.','Il-missjoni twasslet tassew lis-server.'));render();return}
   assignment.deliveryState='server-error';instructorAssignmentsSave(state);toast(lang3('Missione salvata localmente, ma consegna server non riuscita: ','Mission saved locally, but server delivery failed: ','Il-missjoni ġiet salvata lokalment, iżda l-kunsinna lis-server falliet: ')+mdmDataErrorMessage(result));render();return;
  }
  toast(lang3('Missione preparata e aggiunta alla coda locale.','Mission prepared and added to the local queue.','Il-missjoni tħejjiet u żdiedet fil-kju lokali.'));render();
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner7)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function instructorAssignmentsSendExistingToServer(id){
+ const mdmDataOwner8=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const state=instructorAssignmentsState();const item=state.assignments.find(x=>String(x.id)===String(id));const target=instructorAssignmentsFindStudent(state.selectedStudentId);
  if(!item||!target||target.source!=='server'||!target.serverUserId)return toast(lang3('Seleziona lo studente SERVER ACTIVE prima della consegna.','Select the SERVER ACTIVE learner before delivery.','Agħżel l-istudent SERVER ACTIVE qabel il-kunsinna.'));
  if(!(mdmServerRoster.authorized||(mdmSchoolAdminConsole&&mdmSchoolAdminConsole.authorized&&String(mdmSchoolAdminConsole.role||'')==='school_admin')))return toast(lang3('Permesso School Admin ACTIVE richiesto dal server.','ACTIVE School Admin permission required by the server.','Permess School Admin ACTIVE meħtieġ mis-server.'));
- if(!(await mdmEnsureFreshAuthForData()))return toast(lang3('Sessione server scaduta. Accedi di nuovo.','Server session expired. Sign in again.','Is-sessjoni tas-server skadiet. Erġa’ idħol.'));
+ if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner8,await mdmEnsureFreshAuthForData())))return toast(lang3('Sessione server scaduta. Accedi di nuovo.','Server session expired. Sign in again.','Is-sessjoni tas-server skadiet. Erġa’ idħol.'));
  const payload=Object.assign({},item,{studentId:String(target.studentId||''),studentName:String(target.student||item.studentName||''),studentSource:'server'});
- let result=await mdmDataRpc('mdm_school_assign_mission',{p_student_user_id:String(target.serverUserId),p_payload:payload});
- if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_school_assign_mission',{p_student_user_id:String(target.serverUserId),p_payload:payload});
+ let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner8,await mdmDataRpc('mdm_school_assign_mission',{p_student_user_id:String(target.serverUserId),p_payload:payload}));
+ if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner8,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner8,await mdmDataRpc('mdm_school_assign_mission',{p_student_user_id:String(target.serverUserId),p_payload:payload}));
  const data=mdmAuthParse(result.body)||{};
  if(result.status<200||result.status>=300||data.ok===false){item.deliveryState='server-error';instructorAssignmentsSave(state);toast(lang3('Consegna server non riuscita: ','Server delivery failed: ','Il-kunsinna lis-server falliet: ')+mdmDataErrorMessage(result));render();return false}
  item.studentId=String(target.studentId||'');item.studentName=String(target.student||item.studentName||'');item.studentSource='server';item.deliveryState='server-active';item.serverMissionId=String(data.mission_id||'');item.serverDeliveredAt=new Date().toISOString();instructorAssignmentsSave(state);
  toast(lang3('Missione consegnata realmente allo studente sul server.','Mission really delivered to the learner on the server.','Il-missjoni twasslet tassew lill-istudent fuq is-server.'));render();return true;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner8)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 
 function instructorAssignmentsRemove(id){
@@ -11483,21 +11532,39 @@ function instructorStudioState(){
 }
 function instructorStudioSaveState(value){save(INSTRUCTOR_STUDIO_KEY,value)}
 function instructorStudioOpenDb(){
+ const account=window.MDM_ACCOUNT_ISOLATION_SAFE, owner=account.capture(), database=account.namespace(INSTRUCTOR_STUDIO_DB);
  return new Promise((resolve,reject)=>{
+  if(!database)return reject(new Error('authentication_required'));
   if(!window.indexedDB)return reject(new Error('indexeddb-unavailable'));
-  const req=indexedDB.open(INSTRUCTOR_STUDIO_DB,1);
+  const req=indexedDB.open(database,1);
   req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(INSTRUCTOR_STUDIO_STORE))db.createObjectStore(INSTRUCTOR_STUDIO_STORE,{keyPath:'id'})};
-  req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error||new Error('indexeddb-open'));
+  req.onsuccess=()=>{if(!account.isCurrent(owner)){req.result.close();const error=new Error('Account changed');error.code='MDM_ACCOUNT_CHANGED';reject(error);return;}resolve(req.result)};req.onerror=()=>reject(req.error||new Error('indexeddb-open'));
  });
 }
 async function instructorStudioMediaPut(record){
- const db=await instructorStudioOpenDb();return new Promise((resolve,reject)=>{const tx=db.transaction(INSTRUCTOR_STUDIO_STORE,'readwrite');tx.objectStore(INSTRUCTOR_STUDIO_STORE).put(record);tx.oncomplete=()=>{db.close();resolve(record)};tx.onerror=()=>{db.close();reject(tx.error)}})
+ const mdmDataOwner9=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+ if(!window.MDM_ACCOUNT_ISOLATION_SAFE.usable(record,mdmDataOwner9))return false;
+
+ const db=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner9,await instructorStudioOpenDb());return window.MDM_ACCOUNT_ISOLATION_SAFE.own(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner9,await new Promise((resolve,reject)=>{const tx=db.transaction(INSTRUCTOR_STUDIO_STORE,'readwrite');tx.objectStore(INSTRUCTOR_STUDIO_STORE).put(record);tx.oncomplete=()=>{db.close();resolve(record)};tx.onerror=()=>{db.close();reject(tx.error)}})),mdmDataOwner9)
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner9)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function instructorStudioMediaGet(id){
- if(!id)return null;const db=await instructorStudioOpenDb();return new Promise((resolve,reject)=>{const tx=db.transaction(INSTRUCTOR_STUDIO_STORE,'readonly');const req=tx.objectStore(INSTRUCTOR_STUDIO_STORE).get(id);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error);tx.oncomplete=()=>db.close()})
+ const mdmDataOwner10=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
+ if(!id)return null;const db=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner10,await instructorStudioOpenDb());return window.MDM_ACCOUNT_ISOLATION_SAFE.own(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner10,await new Promise((resolve,reject)=>{const tx=db.transaction(INSTRUCTOR_STUDIO_STORE,'readonly');const req=tx.objectStore(INSTRUCTOR_STUDIO_STORE).get(id);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error);tx.oncomplete=()=>db.close()})),mdmDataOwner10)
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner10)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function instructorStudioMediaDelete(id){
- if(!id)return;try{const db=await instructorStudioOpenDb();await new Promise((resolve,reject)=>{const tx=db.transaction(INSTRUCTOR_STUDIO_STORE,'readwrite');tx.objectStore(INSTRUCTOR_STUDIO_STORE).delete(id);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>{db.close();reject(tx.error)}})}catch{}
+ const mdmDataOwner11=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
+ if(!id)return;try{const db=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner11,await instructorStudioOpenDb());window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner11,await new Promise((resolve,reject)=>{const tx=db.transaction(INSTRUCTOR_STUDIO_STORE,'readwrite');tx.objectStore(INSTRUCTOR_STUDIO_STORE).delete(id);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>{db.close();reject(tx.error)}}))}catch{window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner11);}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner11)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function instructorStudioMediaReferenced(id,state){return Boolean(id&&(state?.scenes||[]).some(s=>String(s.mediaId)===String(id)))}
 function instructorStudioFormatBytes(bytes){const n=Number(bytes)||0;if(n<1024)return `${n} B`;if(n<1048576)return `${(n/1024).toFixed(1)} KB`;return `${(n/1048576).toFixed(1)} MB`}
@@ -11526,14 +11593,19 @@ function instructorStudioMarkerHtml(hotspot,hidden=false){
  if(!hotspot)return '';return `<span class="instructor-studio-hotspot ${hidden?'hidden':''}" style="left:${Number(hotspot.x).toFixed(2)}%;top:${Number(hotspot.y).toFixed(2)}%;--studio-radius:${Number(hotspot.radius||13)}%"><i></i></span>`;
 }
 async function instructorStudioAttachMedia(stageId,mediaId,mediaType,hotspot,showMarker=true){
+ const mdmDataOwner12=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const stage=$(stageId);if(!stage||!mediaId)return;
  try{
-  const record=await instructorStudioMediaGet(mediaId);if(!record?.blob){stage.innerHTML=`<div class="instructor-studio-media-empty"><span>⚠️</span><strong>${esc(lang3('Media non disponibile su questo dispositivo','Media is not available on this device','Il-media mhux disponibbli fuq dan l-apparat'))}</strong></div>`;return}
+  const record=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner12,await instructorStudioMediaGet(mediaId));if(!record?.blob){stage.innerHTML=`<div class="instructor-studio-media-empty"><span>⚠️</span><strong>${esc(lang3('Media non disponibile su questo dispositivo','Media is not available on this device','Il-media mhux disponibbli fuq dan l-apparat'))}</strong></div>`;return}
   const url=URL.createObjectURL(record.blob);instructorStudioObjectUrls.push(url);
   const type=String(mediaType||record.type||'');
   const media=type.startsWith('video/')?`<video src="${url}" controls playsinline preload="metadata"></video>`:`<img src="${url}" alt="MDM Instructor Studio">`;
   stage.innerHTML=media+(showMarker?instructorStudioMarkerHtml(hotspot):'');
- }catch{stage.innerHTML=`<div class="instructor-studio-media-empty"><span>⚠️</span><strong>${esc(lang3('Impossibile aprire il media locale','Unable to open local media','Ma setax jinfetaħ il-media lokali'))}</strong></div>`}
+ }catch{window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner12);stage.innerHTML=`<div class="instructor-studio-media-empty"><span>⚠️</span><strong>${esc(lang3('Impossibile aprire il media locale','Unable to open local media','Ma setax jinfetaħ il-media lokali'))}</strong></div>`}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner12)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function instructorStudioDraftReady(d){return Boolean(d?.title&&d?.target&&d?.question&&d?.explanation&&d?.action&&d?.mediaId&&d?.hotspot&&Array.isArray(d.objectives)&&d.objectives.every(Boolean))}
 function instructorStudioSceneShareText(scene){
@@ -11572,10 +11644,15 @@ function instructorStudioViewHtml(){
 }
 function instructorStudioHotspotFromEvent(event,stage,radius){const rect=stage.getBoundingClientRect();const x=Math.max(0,Math.min(100,(event.clientX-rect.left)/rect.width*100));const y=Math.max(0,Math.min(100,(event.clientY-rect.top)/rect.height*100));return {x,y,radius:Number(radius)||13}}
 async function instructorStudioHandleMediaFile(file){
+ const mdmDataOwner13=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(!file)return;if(!/^image\//.test(file.type)&&!/^video\//.test(file.type))return toast(lang3('Scegli una foto o un video.','Choose a photo or video.','Agħżel ritratt jew video.'));
  if(file.size>INSTRUCTOR_STUDIO_MAX_MEDIA)return toast(lang3('Il media supera 25 MB. Riduci il file e riprova.','Media exceeds 25 MB. Reduce the file and try again.','Il-media jaqbeż 25 MB. Naqqas il-file u erġa’ pprova.'));
  const state=instructorStudioPersistDraftFromForm(),oldId=state.draft.mediaId;const id=instructorStudioId('ISM');
- try{await instructorStudioMediaPut({id,blob:file,name:file.name||'media',type:file.type,size:file.size,updatedAt:new Date().toISOString()});state.draft.mediaId=id;state.draft.mediaType=file.type;state.draft.mediaName=file.name||lang3('Media locale','Local media','Media lokali');state.draft.mediaSize=file.size;state.draft.hotspot=null;instructorStudioSaveState(state);if(oldId&&!instructorStudioMediaReferenced(oldId,state))instructorStudioMediaDelete(oldId);toast(lang3('Media locale aggiunto. Ora imposta il punto di rischio.','Local media added. Now set the risk point.','Il-media lokali ġie miżjud. Issa issettja l-punt ta’ riskju.'));render()}catch{toast(lang3('Impossibile salvare il media sul dispositivo.','Unable to save media on this device.','Ma setax jinħażen il-media fuq dan l-apparat.'))}
+ try{window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner13,await instructorStudioMediaPut({id,blob:file,name:file.name||'media',type:file.type,size:file.size,updatedAt:new Date().toISOString()}));state.draft.mediaId=id;state.draft.mediaType=file.type;state.draft.mediaName=file.name||lang3('Media locale','Local media','Media lokali');state.draft.mediaSize=file.size;state.draft.hotspot=null;instructorStudioSaveState(state);if(oldId&&!instructorStudioMediaReferenced(oldId,state))instructorStudioMediaDelete(oldId);toast(lang3('Media locale aggiunto. Ora imposta il punto di rischio.','Local media added. Now set the risk point.','Il-media lokali ġie miżjud. Issa issettja l-punt ta’ riskju.'));render()}catch{window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner13);toast(lang3('Impossibile salvare il media sul dispositivo.','Unable to save media on this device.','Ma setax jinħażen il-media fuq dan l-apparat.'))}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner13)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function instructorStudioBindTest(scene){
  if(!scene)return;const stage=$('#instructorStudioPlayStage'),answer=$('#instructorStudioAnswerMode'),feedback=$('#instructorStudioFeedback'),close=$('#instructorStudioCloseTest');
@@ -11835,11 +11912,8 @@ const MDM_PRODUCTION_PERMISSION_DEFAULT={
  fleetContextOwnerOnly:false,parentReportOwnerOnly:false,
  schoolStudentEvidenceRead:false,crossUserFleet:false,crossUserParent:false
 };
-let mdmProductionPermissionState=Object.assign(
- {},
- MDM_PRODUCTION_PERMISSION_DEFAULT,
- load(MDM_PRODUCTION_PERMISSION_KEY,{})
-);
+let mdmProductionPermissionState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(MDM_PRODUCTION_PERMISSION_DEFAULT),load(MDM_PRODUCTION_PERMISSION_KEY,{})
+));
 function mdmProductionPermissionSave(){
  save(MDM_PRODUCTION_PERMISSION_KEY,mdmProductionPermissionState);
 }
@@ -11853,6 +11927,9 @@ function mdmProductionPermissionDate(value){
  }catch{return '—'}
 }
 async function mdmProductionPermissionProbe({silent=false}={}){
+ const mdmDataOwner14=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const auth=mdmAuthSummary();
  if(!auth.authenticated){
   if(!silent)toast(lang3(
@@ -11862,10 +11939,10 @@ async function mdmProductionPermissionProbe({silent=false}={}){
   ));
   return false;
  }
- if(!(await mdmEnsureFreshAuthForData()))return false;
- let result=await mdmDataRpc('mdm_production_permission_status',{});
- if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
-  result=await mdmDataRpc('mdm_production_permission_status',{});
+ if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner14,await mdmEnsureFreshAuthForData())))return false;
+ let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner14,await mdmDataRpc('mdm_production_permission_status',{}));
+ if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner14,await mdmAuthRefreshSession())){
+  result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner14,await mdmDataRpc('mdm_production_permission_status',{}));
  }
  const data=mdmAuthParse(result.body)||{};
  const ok=result.status>=200&&result.status<300&&data.ok!==false&&String(data.permission_revision||'')==='45.8.28.4';
@@ -11897,6 +11974,8 @@ async function mdmProductionPermissionProbe({silent=false}={}){
   'Il-permessi Production ma ġewx ivverifikati: '
  )+mdmProductionPermissionState.lastMessage);
  return ok;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner14)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function mdmProductionPermissionPanelHtml(){
  const p=mdmProductionPermissionState;
@@ -11975,7 +12054,7 @@ function bindMdmProductionPermission(){
    ================================================================ */
 const MDM_PRODUCTION_SYNC_KEY='mdm-production-sync-v45828';
 const MDM_PRODUCTION_SYNC_DEFAULT={schemaVersion:'45.8.28',schemaReady:false,serverRecordCount:0,serverLastUpdated:'',lastProbeAt:'',lastPushAt:'',lastPullAt:'',lastMessage:'',pending:[],conflicts:[],serverVersions:{},serverProtected:{},resolutionLog:[],previewCounts:{},previewItems:[]};
-let mdmProductionSyncState=Object.assign({},MDM_PRODUCTION_SYNC_DEFAULT,load(MDM_PRODUCTION_SYNC_KEY,{}));
+let mdmProductionSyncState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(MDM_PRODUCTION_SYNC_DEFAULT),load(MDM_PRODUCTION_SYNC_KEY,{})));
 mdmProductionSyncState.pending=Array.isArray(mdmProductionSyncState.pending)?mdmProductionSyncState.pending:[];
 mdmProductionSyncState.conflicts=Array.isArray(mdmProductionSyncState.conflicts)?mdmProductionSyncState.conflicts:[];
 mdmProductionSyncState.serverVersions=mdmProductionSyncState.serverVersions&&typeof mdmProductionSyncState.serverVersions==='object'?mdmProductionSyncState.serverVersions:{};
@@ -12026,10 +12105,18 @@ function mdmProductionSyncQueueRecords(records,{force=false}={}){
  mdmProductionSyncState.pending=mdmProductionSyncState.pending.slice(-250);mdmProductionSyncSave();
 }
 async function mdmProductionSyncProbe({silent=false}={}){
+ const mdmDataOwner15=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(mdmProductionSyncInFlight)return false;const auth=mdmAuthSummary();if(!auth.authenticated){if(!silent)toast(lang3('Accedi prima con Supabase Auth.','Sign in with Supabase Auth first.','L-ewwel idħol b’Supabase Auth.'));return false}
- mdmProductionSyncInFlight=true;try{if(!(await mdmEnsureFreshAuthForData()))return false;let result=await mdmDataRpc('mdm_production_sync_status',{});if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_production_sync_status',{});const data=mdmAuthParse(result.body)||{};const ok=result.status>=200&&result.status<300&&data.ok!==false&&String(data.schema_version||'')==='45.8.28';mdmProductionSyncState.schemaReady=ok;mdmProductionSyncState.lastProbeAt=new Date().toISOString();mdmProductionSyncState.serverRecordCount=Number(data.record_count)||0;mdmProductionSyncState.serverLastUpdated=String(data.last_updated_at||'');mdmProductionSyncState.lastMessage=ok?'Production Sync 45.8.28 verified':(mdmDataErrorMessage(result)||String(data.error||'production_schema_not_ready'));mdmProductionSyncSave();render();if(!silent)toast(ok?lang3('Schema Production Sync 45.8.28 verificato.','Production Sync 45.8.28 schema verified.','L-schema Production Sync 45.8.28 ġie vverifikat.'):lang3('Schema Production Sync non verificato: ','Production Sync schema not verified: ','L-schema Production Sync ma ġiex ivverifikat: ')+mdmProductionSyncState.lastMessage);return ok}finally{mdmProductionSyncInFlight=false}
+ mdmProductionSyncInFlight=true;try{if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner15,await mdmEnsureFreshAuthForData())))return false;let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner15,await mdmDataRpc('mdm_production_sync_status',{}));if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner15,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner15,await mdmDataRpc('mdm_production_sync_status',{}));const data=mdmAuthParse(result.body)||{};const ok=result.status>=200&&result.status<300&&data.ok!==false&&String(data.schema_version||'')==='45.8.28';mdmProductionSyncState.schemaReady=ok;mdmProductionSyncState.lastProbeAt=new Date().toISOString();mdmProductionSyncState.serverRecordCount=Number(data.record_count)||0;mdmProductionSyncState.serverLastUpdated=String(data.last_updated_at||'');mdmProductionSyncState.lastMessage=ok?'Production Sync 45.8.28 verified':(mdmDataErrorMessage(result)||String(data.error||'production_schema_not_ready'));mdmProductionSyncSave();render();if(!silent)toast(ok?lang3('Schema Production Sync 45.8.28 verificato.','Production Sync 45.8.28 schema verified.','L-schema Production Sync 45.8.28 ġie vverifikat.'):lang3('Schema Production Sync non verificato: ','Production Sync schema not verified: ','L-schema Production Sync ma ġiex ivverifikat: ')+mdmProductionSyncState.lastMessage);return ok}finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner15)){mdmProductionSyncInFlight=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner15)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function mdmProductionSyncFlush({silent=false}={}){
+ const mdmDataOwner16=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(mdmProductionSyncInFlight)return false;
  const auth=mdmAuthSummary();
  if(!auth.authenticated)return false;
@@ -12040,10 +12127,10 @@ async function mdmProductionSyncFlush({silent=false}={}){
  mdmProductionSyncInFlight=true;
  let sent=0;
  try{
-  if(!(await mdmEnsureFreshAuthForData()))return false;
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner16,await mdmEnsureFreshAuthForData())))return false;
   const pending=[...mdmProductionSyncState.pending];
   for(const item of pending){
-   let result=await mdmDataRpc('mdm_production_upsert_record',{
+   let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner16,await mdmDataRpc('mdm_production_upsert_record',{
     p_entity_type:item.entityType,
     p_local_id:item.localId,
     p_payload:item.payload,
@@ -12051,9 +12138,9 @@ async function mdmProductionSyncFlush({silent=false}={}){
     p_client_updated_at:item.clientUpdatedAt||null,
     p_device_id:mdmProductionSyncDeviceId(),
     p_operation_id:item.operationId
-   });
-   if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
-    result=await mdmDataRpc('mdm_production_upsert_record',{
+   }));
+   if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner16,await mdmAuthRefreshSession())){
+    result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner16,await mdmDataRpc('mdm_production_upsert_record',{
      p_entity_type:item.entityType,
      p_local_id:item.localId,
      p_payload:item.payload,
@@ -12061,7 +12148,7 @@ async function mdmProductionSyncFlush({silent=false}={}){
      p_client_updated_at:item.clientUpdatedAt||null,
      p_device_id:mdmProductionSyncDeviceId(),
      p_operation_id:item.operationId
-    });
+    }));
    }
    const data=mdmAuthParse(result.body);
    const key=mdmProductionSyncKey(item.entityType,item.localId);
@@ -12098,9 +12185,16 @@ async function mdmProductionSyncFlush({silent=false}={}){
    ?lang3(`${sent} record sincronizzati con conferma server.`,`${sent} records synced with server acknowledgement.`,`${sent} rekords ġew sinkronizzati b’konferma tas-server.`)
    :lang3('Nessun record sincronizzato. Controlla stato o conflitti.','No records were synced. Check status or conflicts.','L-ebda rekord ma ġie sinkronizzat. Iċċekkja l-istat jew il-kunflitti.'));
   return sent>0;
- }finally{mdmProductionSyncInFlight=false}
+ }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner16)){mdmProductionSyncInFlight=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner16)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
-async function mdmProductionSyncEvidence(){mdmProductionSyncQueueRecords(mdmProductionSyncEvidenceRecords());render();return mdmProductionSyncFlush({silent:false})}
+async function mdmProductionSyncEvidence(){
+ const mdmDataOwner17=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+mdmProductionSyncQueueRecords(mdmProductionSyncEvidenceRecords());render();return mdmProductionSyncFlush({silent:false})
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner17)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+}
 function mdmProductionSyncReconcileServerVersionsFor(records){
  const list=Array.isArray(records)?records:[];
  const serverMap=new Map((Array.isArray(mdmProductionSyncState.previewItems)?mdmProductionSyncState.previewItems:[]).map(item=>[mdmProductionSyncKey(item.entityType,item.localId),Math.max(0,Number(item.serverVersion)||0)]));
@@ -12142,10 +12236,13 @@ function mdmProductionSyncResolutionLog(action,entityType,localId,serverVersion)
  mdmProductionSyncState.resolutionLog=mdmProductionSyncState.resolutionLog.slice(0,50);
 }
 async function mdmProductionSyncResolveConflict(index,choice){
+ const mdmDataOwner18=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const conflict=mdmProductionSyncState.conflicts[Number(index)];
  if(!conflict)return false;
  const type=String(conflict.entityType||''),id=String(conflict.localId||''),key=mdmProductionSyncKey(type,id);
- if(!(await mdmProductionSyncPullPreview({silent:true}))){toast(lang3('Impossibile rileggere il server: conflitto non modificato.','Could not refresh the server: conflict left unchanged.','Ma setax jerġa’ jinqara s-server: il-kunflitt baqa’ kif kien.'));return false}
+ if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner18,await mdmProductionSyncPullPreview({silent:true})))){toast(lang3('Impossibile rileggere il server: conflitto non modificato.','Could not refresh the server: conflict left unchanged.','Ma setax jerġa’ jinqara s-server: il-kunflitt baqa’ kif kien.'));return false}
  const server=mdmProductionSyncServerItem(type,id);
  if(!server){toast(lang3('Record server non trovato. Nessuna decisione applicata.','Server record not found. No decision was applied.','Ir-rekord tas-server ma nstabx. Ma ġiet applikata l-ebda deċiżjoni.'));return false}
  if(choice==='server'){
@@ -12168,8 +12265,8 @@ async function mdmProductionSyncResolveConflict(index,choice){
   delete mdmProductionSyncState.serverProtected[key];
   mdmProductionSyncState.conflicts=mdmProductionSyncState.conflicts.filter(x=>mdmProductionSyncKey(x.entityType,x.localId)!==key);
   mdmProductionSyncQueueRecords([local],{force:true});mdmProductionSyncSave();render();
-  await mdmProductionSyncFlush({silent:true});
-  const pulled=await mdmProductionSyncPullPreview({silent:true});
+  window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner18,await mdmProductionSyncFlush({silent:true}));
+  const pulled=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner18,await mdmProductionSyncPullPreview({silent:true}));
   const after=pulled?mdmProductionSyncServerItem(type,id):null;
   const stillConflict=mdmProductionSyncState.conflicts.some(x=>mdmProductionSyncKey(x.entityType,x.localId)===key);
   if(after&&!stillConflict&&Number(after.serverVersion)>Number(server.serverVersion)){
@@ -12179,12 +12276,17 @@ async function mdmProductionSyncResolveConflict(index,choice){
   toast(lang3('Risoluzione locale non verificata. Il record non viene dichiarato risolto.','Local resolution was not verified. The record is not declared resolved.','Ir-riżoluzzjoni lokali ma ġietx ivverifikata. Ir-rekord ma jitqiesx solvut.'));return false;
  }
  return false;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner18)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function mdmProductionSyncUnprotect(index){
  const entries=Object.entries(mdmProductionSyncState.serverProtected||{}),entry=entries[Number(index)];if(!entry)return;
  const [key,row]=entry;delete mdmProductionSyncState.serverProtected[key];mdmProductionSyncResolutionLog('re_enable_local',row?.entityType||'',row?.localId||'',row?.serverVersion||0);mdmProductionSyncSave();render();toast(lang3('Sync locale riabilitato. Nessun dato è stato inviato: il prossimo push richiederà una nuova azione.','Local sync re-enabled. No data was sent: the next push still requires a new action.','Is-sync lokali reġa’ ġie attivat. Ma ntbagħtet l-ebda dejta: il-push li jmiss xorta jeħtieġ azzjoni ġdida.'));
 }
 async function mdmProductionSyncTelemetry(){
+ const mdmDataOwner19=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const sessions=Array.isArray(realRoadTelemetryStore?.sessions)?realRoadTelemetryStore.sessions:[];
  if(!sessions.length)return toast(lang3('Nessuna sessione telemetria locale da caricare.','No local telemetry session to upload.','M’hemm l-ebda sessjoni telemetrija lokali biex tittella’.'));
  if(!confirm(lang3('Caricare sul server le ultime sessioni di telemetria disponibili? Il payload è minimizzato, ma può contenere coordinate GPS. L’upload avviene solo con questa conferma esplicita.','Upload the latest available telemetry sessions to the server? The payload is minimized but may contain GPS coordinates. Upload happens only with this explicit confirmation.','Tella’ lis-server l-aħħar sessjonijiet ta’ telemetrija disponibbli? Il-payload huwa minimizzat iżda jista’ jkun fih koordinati GPS. L-upload isir biss b’din il-konferma espliċita.')))return;
@@ -12192,7 +12294,7 @@ async function mdmProductionSyncTelemetry(){
  const sessionRecords=records.filter(r=>r.entityType==='telemetry_session');
  const eventRecords=records.filter(r=>r.entityType==='driving_event');
  // Read first: never trust a stale local expected server version.
- const prePull=await mdmProductionSyncPullPreview({silent:true});
+ const prePull=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner19,await mdmProductionSyncPullPreview({silent:true}));
  if(!prePull){
   toast(lang3('Upload telemetria annullato: impossibile leggere lo stato server prima del push.','Telemetry upload cancelled: server state could not be read before push.','L-upload tat-telemetrija twaqqaf: ma setax jinqara l-istat tas-server qabel il-push.'));
   return false;
@@ -12200,9 +12302,9 @@ async function mdmProductionSyncTelemetry(){
  mdmProductionSyncReconcileServerVersionsFor(records);
  mdmProductionSyncQueueRecords(records);
  render();
- await mdmProductionSyncFlush({silent:true});
+ window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner19,await mdmProductionSyncFlush({silent:true}));
  // A push is accepted only after an independent server read sees every exact key.
- const postPull=await mdmProductionSyncPullPreview({silent:true});
+ const postPull=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner19,await mdmProductionSyncPullPreview({silent:true}));
  const missing=postPull?mdmProductionSyncMissingOnServer(records):records;
  if(missing.length){
   // Preserve missing records in the local retry queue with versions reconciled from the latest server snapshot.
@@ -12227,8 +12329,15 @@ async function mdmProductionSyncTelemetry(){
   `It-telemetrija ġiet ivverifikata fuq is-server: ${sessionRecords.length} sessjonijiet u ${eventRecords.length} avvenimenti tekniċi.`
  ));
  return true;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner19)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
-async function mdmProductionSyncPullPreview({silent=false}={}){if(mdmProductionSyncInFlight)return false;if(!mdmProductionSyncState.schemaReady)return false;mdmProductionSyncInFlight=true;try{if(!(await mdmEnsureFreshAuthForData()))return false;let result=await mdmDataRpc('mdm_production_list_own',{p_since:null,p_limit:200});if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_production_list_own',{p_since:null,p_limit:200});const data=mdmAuthParse(result.body)||{};if(result.status<200||result.status>=300||data.ok===false){mdmProductionSyncState.lastMessage=mdmDataErrorMessage(result)||String(data.error||'pull_failed');mdmProductionSyncSave();render();if(!silent)toast(lang3('Lettura server non riuscita: ','Server read failed: ','Il-qari mis-server falla: ')+mdmProductionSyncState.lastMessage);return false}const items=Array.isArray(data.items)?data.items:[],counts={};items.forEach(item=>{const type=String(item?.entity_type||'unknown');counts[type]=(counts[type]||0)+1;const key=mdmProductionSyncKey(type,item?.local_id||'');mdmProductionSyncState.serverVersions[key]=Math.max(0,Number(item?.server_version)||0)});mdmProductionSyncState.previewItems=items.slice(0,200).map(item=>({entityType:String(item?.entity_type||''),localId:String(item?.local_id||''),serverVersion:Number(item?.server_version)||0,updatedAt:String(item?.updated_at||''),deletedAt:String(item?.deleted_at||''),payload:item?.payload&&typeof item.payload==='object'?mdmProductionSyncClone(item.payload):{}}));mdmProductionSyncState.previewCounts=counts;mdmProductionSyncState.serverRecordCount=items.filter(x=>!x?.deleted_at).length;mdmProductionSyncState.lastPullAt=new Date().toISOString();mdmProductionSyncState.lastMessage='Server preview refreshed; no local merge applied';mdmProductionSyncSave();render();if(!silent)toast(lang3('Snapshot server letto. Nessun merge locale è stato applicato.','Server snapshot read. No local merge was applied.','L-snapshot tas-server inqara. Ma ġie applikat l-ebda merge lokali.'));return true}finally{mdmProductionSyncInFlight=false}}
+async function mdmProductionSyncPullPreview({silent=false}={}){
+ const mdmDataOwner20=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+if(mdmProductionSyncInFlight)return false;if(!mdmProductionSyncState.schemaReady)return false;mdmProductionSyncInFlight=true;try{if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner20,await mdmEnsureFreshAuthForData())))return false;let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner20,await mdmDataRpc('mdm_production_list_own',{p_since:null,p_limit:200}));if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner20,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner20,await mdmDataRpc('mdm_production_list_own',{p_since:null,p_limit:200}));const data=mdmAuthParse(result.body)||{};if(result.status<200||result.status>=300||data.ok===false){mdmProductionSyncState.lastMessage=mdmDataErrorMessage(result)||String(data.error||'pull_failed');mdmProductionSyncSave();render();if(!silent)toast(lang3('Lettura server non riuscita: ','Server read failed: ','Il-qari mis-server falla: ')+mdmProductionSyncState.lastMessage);return false}const items=Array.isArray(data.items)?data.items:[],counts={};items.forEach(item=>{const type=String(item?.entity_type||'unknown');counts[type]=(counts[type]||0)+1;const key=mdmProductionSyncKey(type,item?.local_id||'');mdmProductionSyncState.serverVersions[key]=Math.max(0,Number(item?.server_version)||0)});mdmProductionSyncState.previewItems=items.slice(0,200).map(item=>({entityType:String(item?.entity_type||''),localId:String(item?.local_id||''),serverVersion:Number(item?.server_version)||0,updatedAt:String(item?.updated_at||''),deletedAt:String(item?.deleted_at||''),payload:item?.payload&&typeof item.payload==='object'?mdmProductionSyncClone(item.payload):{}}));mdmProductionSyncState.previewCounts=counts;mdmProductionSyncState.serverRecordCount=items.filter(x=>!x?.deleted_at).length;mdmProductionSyncState.lastPullAt=new Date().toISOString();mdmProductionSyncState.lastMessage='Server preview refreshed; no local merge applied';mdmProductionSyncSave();render();if(!silent)toast(lang3('Snapshot server letto. Nessun merge locale è stato applicato.','Server snapshot read. No local merge was applied.','L-snapshot tas-server inqara. Ma ġie applikat l-ebda merge lokali.'));return true}finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner20)){mdmProductionSyncInFlight=false}}
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner20)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+}
 function mdmProductionSyncPanelHtml(){
  const auth=mdmAuthSummary(),state=mdmProductionSyncState,localTelemetry=Array.isArray(realRoadTelemetryStore?.sessions)?realRoadTelemetryStore.sessions.length:0,localRoad=typeof realRoadEvidenceRows==='function'?realRoadEvidenceRows().length:0,conflicts=state.conflicts.length,pending=state.pending.length;
  const gates=[{ok:auth.authenticated,label:lang3('Sessione Supabase Auth','Supabase Auth session','Sessjoni Supabase Auth'),detail:auth.authenticated?auth.email:lang3('Accesso richiesto','Sign-in required','Jeħtieġ dħul')},{ok:Boolean(state.schemaReady),label:lang3('Schema Production Sync 45.8.28','Production Sync 45.8.28 schema','Schema Production Sync 45.8.28'),detail:state.schemaReady?lang3('RPC e concorrenza verificati','RPCs and concurrency verified','RPCs u concurrency ivverifikati'):lang3('Da verificare dopo la migrazione SQL','Verify after SQL migration','Għandu jiġi vverifikat wara l-migrazzjoni SQL')},{ok:conflicts===0,label:lang3('Conflitti non sovrascritti','Conflicts not overwritten','Kunflitti mhux miktubin fuqhom'),detail:conflicts?`${conflicts} ${lang3('da risolvere','to resolve','biex jiġu solvuti')}`:lang3('Nessun conflitto locale aperto','No open local conflict','L-ebda kunflitt lokali miftuħ')}];
@@ -14137,6 +14246,8 @@ function mdmDataErrorMessage(result){
  return raw;
 }
 function mdmDataRpc(name,payload={}){
+ const account=window.MDM_ACCOUNT_ISOLATION_SAFE, owner=account.capture();
+ if(!owner.userId||String(mdmAuthSession.user?.id||'')!==owner.userId||Number(mdmAuthSession.generation||0)!==owner.generation||!account.usable(payload,owner))return Promise.resolve({status:0,body:'',error:'account_changed',kind:'account'});
  return new Promise(resolve=>{
   const cfg=mdmBackendPublicConfig();
   const token=String(mdmAuthSession.accessToken||'');
@@ -14144,7 +14255,12 @@ function mdmDataRpc(name,payload={}){
   if(!token){resolve({status:0,body:'',error:'Sessione Supabase non disponibile',kind:'auth'});return}
   const xhr=new XMLHttpRequest();
   let settled=false;
-  const done=(kind,error='')=>{if(settled)return;settled=true;resolve({status:Number(xhr.status)||0,body:String(xhr.responseText||''),error:String(error||''),kind})};
+  const done=(kind,error='')=>{if(settled)return;settled=true;resolve(Object.freeze({
+    get status(){return account.isCurrent(owner)?Number(xhr.status)||0:0;},
+    get body(){return account.isCurrent(owner)?String(xhr.responseText||''):'';},
+    get error(){return account.isCurrent(owner)?String(error||''):'account_changed';},
+    get kind(){return account.isCurrent(owner)?kind:'account';}
+   }))};
   try{
    xhr.open('POST',cfg.endpoint+'/rest/v1/rpc/'+encodeURIComponent(String(name||'')),true);
    xhr.timeout=12000;
@@ -14189,11 +14305,13 @@ function mdmPortableStudyScore(items=mdmPortableSnapshotItems()){
  score+=(Array.isArray(road.evaluations)?road.evaluations.length:0)*2;
  return Number(score||0);
 }
-function mdmPortablePayload(){return {schema:MDM_PORTABLE_SYNC_SCHEMA,snapshotVersion:1,build:BUILD_VERSION,exportedAt:new Date().toISOString(),items:mdmPortableSnapshotItems()}}
+function mdmPortablePayload(){return window.MDM_ACCOUNT_ISOLATION_SAFE.own({schema:MDM_PORTABLE_SYNC_SCHEMA,snapshotVersion:1,build:BUILD_VERSION,exportedAt:new Date().toISOString(),items:mdmPortableSnapshotItems()});
+}
 function mdmPortablePayloadValid(payload){
  return Boolean(payload&&typeof payload==='object'&&payload.schema===MDM_PORTABLE_SYNC_SCHEMA&&payload.items&&typeof payload.items==='object'&&!Array.isArray(payload.items));
 }
 function mdmPortableApplyPayload(payload,serverUpdatedAt=''){
+ if(!window.MDM_ACCOUNT_ISOLATION_SAFE.usable(payload))return false;
  if(!mdmPortablePayloadValid(payload))return false;
  mdmPortableSyncApplying=true;
  try{
@@ -14207,32 +14325,45 @@ function mdmPortableApplyPayload(payload,serverUpdatedAt=''){
  return true;
 }
 async function mdmPortableServerPull(){
- let result=await mdmDataRpc('mdm_user_portable_state_pull',{});
- if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_user_portable_state_pull',{});
+ const mdmDataOwner21=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
+ let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner21,await mdmDataRpc('mdm_user_portable_state_pull',{}));
+ if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner21,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner21,await mdmDataRpc('mdm_user_portable_state_pull',{}));
  const data=mdmAuthParse(result.body)||{};
  if(result.status<200||result.status>=300||data.ok===false)return {ok:false,error:mdmDataErrorMessage(result)||String(data.error||'portable_state_pull_failed')};
- return {ok:true,found:Boolean(data.found),payload:data.payload||null,updatedAt:String(data.updated_at||''),build:String(data.build||'')};
+ return window.MDM_ACCOUNT_ISOLATION_SAFE.own({ok:true,found:Boolean(data.found),payload:data.payload||null,updatedAt:String(data.updated_at||''),build:String(data.build||'')},mdmDataOwner21);
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner21)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function mdmPortableServerPush(expectedUpdatedAt=''){
+ const mdmDataOwner22=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const payload=mdmPortablePayload();
- let result=await mdmDataRpc('mdm_user_portable_state_push',{p_payload:payload,p_build:BUILD_VERSION,p_expected_updated_at:expectedUpdatedAt||null});
- if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_user_portable_state_push',{p_payload:payload,p_build:BUILD_VERSION,p_expected_updated_at:expectedUpdatedAt||null});
+ let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner22,await mdmDataRpc('mdm_user_portable_state_push',{p_payload:payload,p_build:BUILD_VERSION,p_expected_updated_at:expectedUpdatedAt||null}));
+ if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner22,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner22,await mdmDataRpc('mdm_user_portable_state_push',{p_payload:payload,p_build:BUILD_VERSION,p_expected_updated_at:expectedUpdatedAt||null}));
  const data=mdmAuthParse(result.body)||{};
  if(result.status<200||result.status>=300||data.ok===false)return {ok:false,conflict:Boolean(data.conflict),error:mdmDataErrorMessage(result)||String(data.error||'portable_state_push_failed'),updatedAt:String(data.updated_at||'')};
  return {ok:true,updatedAt:String(data.updated_at||new Date().toISOString())};
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner22)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function mdmPortableSyncReconcile({silent=true,reason='manual'}={}){
+ const mdmDataOwner23=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(mdmPortableSyncInFlight)return false;
  const auth=mdmAuthSummary();if(!auth.authenticated)return false;
  mdmPortableSyncInFlight=true;mdmPortableSyncState={status:'checking',lastMessage:'',serverUpdatedAt:'',lastAction:reason};
  try{
-  if(!(await mdmEnsureFreshAuthForData()))return false;
-  const pulled=await mdmPortableServerPull();
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmEnsureFreshAuthForData())))return false;
+  const pulled=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableServerPull());
   if(!pulled.ok){mdmPortableSyncState={status:'error',lastMessage:pulled.error,serverUpdatedAt:'',lastAction:reason};if(!silent)toast(lang3('Sincronizzazione account non disponibile: ','Account sync unavailable: ','Is-sinkronizzazzjoni tal-kont mhix disponibbli: ')+pulled.error);return false}
   const localItems=mdmPortableSnapshotItems(),localScore=mdmPortableStudyScore(localItems),meta=mdmPortableSyncMeta();
   if(!pulled.found){
    if(localScore<=0){mdmPortableSyncState={status:'empty',lastMessage:'',serverUpdatedAt:'',lastAction:reason};return true}
-   const pushed=await mdmPortableServerPush('');
+   const pushed=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableServerPush(''));
    if(!pushed.ok){mdmPortableSyncState={status:pushed.conflict?'conflict':'error',lastMessage:pushed.error,serverUpdatedAt:pushed.updatedAt||'',lastAction:reason};if(!silent)toast(lang3('Sincronizzazione non completata.','Sync was not completed.','Is-sinkronizzazzjoni ma tlestietx.'));return false}
    meta.dirty=false;meta.dirtyAt='';meta.lastServerUpdatedAt=pushed.updatedAt;meta.lastSyncAt=new Date().toISOString();meta.lastAction='upload';meta.lastError='';mdmPortableSyncMetaSave(meta);
    mdmPortableSyncState={status:'synced',lastMessage:'',serverUpdatedAt:pushed.updatedAt,lastAction:'upload'};
@@ -14252,40 +14383,52 @@ async function mdmPortableSyncReconcile({silent=true,reason='manual'}={}){
     if(!silent)toast(lang3('Esistono dati sia su questo dispositivo sia sul server. Scegli Ripristina oppure Usa questo dispositivo.','Data exists both on this device and on the server. Choose Restore or Use this device.','Hemm data kemm fuq dan l-apparat kif ukoll fuq is-server. Agħżel Irrestawra jew Uża dan l-apparat.'));
     return false;
    }
-   const pushed=await mdmPortableServerPush(meta.lastServerUpdatedAt);
+   const pushed=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableServerPush(meta.lastServerUpdatedAt));
    if(!pushed.ok){mdmPortableSyncState={status:pushed.conflict?'conflict':'error',lastMessage:pushed.error,serverUpdatedAt:pulled.updatedAt,lastAction:reason};if(!silent)toast(lang3('Conflitto di sincronizzazione: nessun dato è stato sovrascritto.','Sync conflict: no data was overwritten.','Kunflitt tas-sinkronizzazzjoni: l-ebda data ma ġiet miktuba fuq oħra.'));return false}
    meta.dirty=false;meta.dirtyAt='';meta.lastServerUpdatedAt=pushed.updatedAt;meta.lastSyncAt=new Date().toISOString();meta.lastAction='upload';meta.lastError='';mdmPortableSyncMetaSave(meta);
    mdmPortableSyncState={status:'synced',lastMessage:'',serverUpdatedAt:pushed.updatedAt,lastAction:'upload'};return true;
   }
   meta.lastServerUpdatedAt=pulled.updatedAt;meta.lastSyncAt=new Date().toISOString();meta.lastAction='checked';meta.lastError='';mdmPortableSyncMetaSave(meta);
   mdmPortableSyncState={status:'synced',lastMessage:'',serverUpdatedAt:pulled.updatedAt,lastAction:'checked'};return true;
- }finally{mdmPortableSyncInFlight=false}
+ }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner23)){mdmPortableSyncInFlight=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner23)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function mdmPortableSyncForceRestore(){
+ const mdmDataOwner24=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(mdmPortableSyncInFlight)return false;
  const localScore=mdmPortableStudyScore();
  if(localScore>0&&!confirm(lang3('Sostituire i dati locali con quelli salvati sul tuo account?','Replace local data with the data saved on your account?','Tissostitwixxi d-data lokali bid-data salvata fil-kont tiegħek?')))return false;
  mdmPortableSyncInFlight=true;
  try{
-  if(!(await mdmEnsureFreshAuthForData()))return false;
-  const pulled=await mdmPortableServerPull();if(!pulled.ok||!pulled.found||!mdmPortablePayloadValid(pulled.payload)){toast(lang3('Nessun backup account disponibile.','No account backup is available.','L-ebda backup tal-kont mhu disponibbli.'));return false}
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner24,await mdmEnsureFreshAuthForData())))return false;
+  const pulled=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner24,await mdmPortableServerPull());if(!pulled.ok||!pulled.found||!mdmPortablePayloadValid(pulled.payload)){toast(lang3('Nessun backup account disponibile.','No account backup is available.','L-ebda backup tal-kont mhu disponibbli.'));return false}
   if(!mdmPortableApplyPayload(pulled.payload,pulled.updatedAt))return false;
   toast(lang3('Dati recuperati. Ricarico l’app.','Data restored. Reloading the app.','Id-data ġiet irrestawrata. Qed terġa’ titgħabba l-app.'));setTimeout(()=>location.reload(),450);return true;
- }finally{mdmPortableSyncInFlight=false}
+ }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner24)){mdmPortableSyncInFlight=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner24)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function mdmPortableSyncForceUpload(){
+ const mdmDataOwner25=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(mdmPortableSyncInFlight)return false;
  if(mdmPortableStudyScore()<=0)return toast(lang3('Non ci sono ancora progressi da salvare su questo dispositivo.','There is no study progress to save on this device yet.','Għad m’hemmx progress ta’ studju x’jiġi salvat fuq dan l-apparat.'));
  if(!confirm(lang3('Usare i dati di questo dispositivo come copia principale del tuo account?','Use this device data as the main copy for your account?','Tuża d-data ta’ dan l-apparat bħala l-kopja ewlenija tal-kont tiegħek?')))return false;
  mdmPortableSyncInFlight=true;
  try{
-  if(!(await mdmEnsureFreshAuthForData()))return false;
-  const pulled=await mdmPortableServerPull();if(!pulled.ok){toast(lang3('Impossibile verificare il backup server.','Could not verify the server backup.','Ma setax jiġi vverifikat il-backup tas-server.'));return false}
-  const pushed=await mdmPortableServerPush(pulled.found?pulled.updatedAt:'');
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner25,await mdmEnsureFreshAuthForData())))return false;
+  const pulled=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner25,await mdmPortableServerPull());if(!pulled.ok){toast(lang3('Impossibile verificare il backup server.','Could not verify the server backup.','Ma setax jiġi vverifikat il-backup tas-server.'));return false}
+  const pushed=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner25,await mdmPortableServerPush(pulled.found?pulled.updatedAt:''));
   if(!pushed.ok){toast(lang3('Salvataggio account non riuscito: ','Account save failed: ','Il-ħażna tal-kont falliet: ')+pushed.error);return false}
   const meta=mdmPortableSyncMeta();meta.dirty=false;meta.dirtyAt='';meta.lastServerUpdatedAt=pushed.updatedAt;meta.lastSyncAt=new Date().toISOString();meta.lastAction='force_upload';meta.lastError='';mdmPortableSyncMetaSave(meta);
   mdmPortableSyncState={status:'synced',lastMessage:'',serverUpdatedAt:pushed.updatedAt,lastAction:'force_upload'};toast(lang3('Dati di questo dispositivo salvati sul tuo account.','This device data was saved to your account.','Id-data ta’ dan l-apparat ġiet salvata fil-kont tiegħek.'));render({preserveScroll:true});return true;
- }finally{mdmPortableSyncInFlight=false}
+ }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner25)){mdmPortableSyncInFlight=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner25)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function mdmPortableSyncCardHtml(){
  const auth=mdmAuthSummary(),meta=mdmPortableSyncMeta(),score=mdmPortableStudyScore();
@@ -14340,13 +14483,16 @@ function mdmEnrollmentLocalFromServer(data,existing={}){
  };
 }
 async function accountRefreshEnrollmentStatus({silent=false}={}){
+ const mdmDataOwner26=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(mdmEnrollmentInFlight)return false;
  if(!mdmAuthSummary().authenticated){if(!silent)toast(lang3('Accedi prima con Supabase Auth.','Sign in with Supabase Auth first.','L-ewwel idħol b’Supabase Auth.'));return false}
  mdmEnrollmentInFlight=true;
  try{
-  if(!(await mdmEnsureFreshAuthForData())){if(!silent)toast(lang3('Sessione scaduta. Accedi di nuovo.','Session expired. Sign in again.','Is-sessjoni skadiet. Erġa’ idħol.'));return false}
-  let result=await mdmDataRpc('mdm_get_my_school_enrollment',{});
-  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_get_my_school_enrollment',{});
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner26,await mdmEnsureFreshAuthForData()))){if(!silent)toast(lang3('Sessione scaduta. Accedi di nuovo.','Session expired. Sign in again.','Is-sessjoni skadiet. Erġa’ idħol.'));return false}
+  let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner26,await mdmDataRpc('mdm_get_my_school_enrollment',{}));
+  if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner26,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner26,await mdmDataRpc('mdm_get_my_school_enrollment',{}));
   if(result.status<200||result.status>=300){if(!silent)toast(lang3('Verifica enrollment non riuscita: ','Enrollment check failed: ','Il-verifika tal-enrollment falliet: ')+mdmDataErrorMessage(result));return false}
   const data=mdmAuthParse(result.body)||{};
   if(data.ok===false){if(!silent)toast(mdmEnrollmentErrorLabel(data.error));return false}
@@ -14382,7 +14528,9 @@ async function accountRefreshEnrollmentStatus({silent=false}={}){
    else toast(lang3('Stato server aggiornato: ','Server status updated: ','L-istatus tas-server ġie aġġornat: ')+String(data.status||'pending').toUpperCase());
   }
   return true;
- }finally{mdmEnrollmentInFlight=false}
+ }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner26)){mdmEnrollmentInFlight=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner26)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 
 /* 44.3.0 REAL SCHOOL APPROVAL
@@ -14408,14 +14556,17 @@ function mdmSchoolDecisionErrorLabel(code){
  return labels[value]||value||lang3('Errore decisione scuola.','School decision error.','Żball fid-deċiżjoni tal-iskola.');
 }
 async function accountRefreshSchoolAdminConsole({silent=false}={}){
+ const mdmDataOwner27=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(mdmSchoolAdminInFlight)return false;
  const auth=mdmAuthSummary();
  if(!auth.authenticated){mdmSchoolAdminReset();if(!silent)toast(lang3('Accedi prima con l’account Supabase della scuola.','Sign in first with the school Supabase account.','L-ewwel idħol bil-kont Supabase tal-iskola.'));return false}
  mdmSchoolAdminInFlight=true;
  try{
-  if(!(await mdmEnsureFreshAuthForData())){mdmSchoolAdminReset();if(!silent)toast(lang3('Sessione scaduta. Accedi di nuovo.','Session expired. Sign in again.','Is-sessjoni skadiet. Erġa’ idħol.'));return false}
-  let contextResult=await mdmDataRpc('mdm_get_my_school_admin_context',{});
-  if(contextResult.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())contextResult=await mdmDataRpc('mdm_get_my_school_admin_context',{});
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner27,await mdmEnsureFreshAuthForData()))){mdmSchoolAdminReset();if(!silent)toast(lang3('Sessione scaduta. Accedi di nuovo.','Session expired. Sign in again.','Is-sessjoni skadiet. Erġa’ idħol.'));return false}
+  let contextResult=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner27,await mdmDataRpc('mdm_get_my_school_admin_context',{}));
+  if(contextResult.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner27,await mdmAuthRefreshSession()))contextResult=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner27,await mdmDataRpc('mdm_get_my_school_admin_context',{}));
   if(contextResult.status<200||contextResult.status>=300){mdmSchoolAdminConsole={...MDM_SCHOOL_ADMIN_EMPTY,loadedForUserId:auth.userId,lastMessage:mdmDataErrorMessage(contextResult)};render();if(!silent)toast(lang3('Verifica permesso scuola non riuscita: ','School permission check failed: ','Il-verifika tal-permess tal-iskola falliet: ')+mdmDataErrorMessage(contextResult));return false}
   const context=mdmAuthParse(contextResult.body)||{};
   if(context.ok===false){mdmSchoolAdminConsole={...MDM_SCHOOL_ADMIN_EMPTY,loadedForUserId:auth.userId,lastMessage:mdmSchoolDecisionErrorLabel(context.error)};render();if(!silent)toast(mdmSchoolDecisionErrorLabel(context.error));return false}
@@ -14423,8 +14574,8 @@ async function accountRefreshSchoolAdminConsole({silent=false}={}){
    mdmSchoolAdminConsole={...MDM_SCHOOL_ADMIN_EMPTY,loadedForUserId:auth.userId,authorized:false,loadedAt:new Date().toISOString(),lastMessage:lang3('Account autenticato ma non autorizzato come school_admin.','Authenticated account is not authorized as school_admin.','Kont awtentikat iżda mhux awtorizzat bħala school_admin.')};
    render();if(!silent)toast(mdmSchoolAdminConsole.lastMessage);return true;
   }
-  let listResult=await mdmDataRpc('mdm_school_list_pending_enrollments',{});
-  if(listResult.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())listResult=await mdmDataRpc('mdm_school_list_pending_enrollments',{});
+  let listResult=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner27,await mdmDataRpc('mdm_school_list_pending_enrollments',{}));
+  if(listResult.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner27,await mdmAuthRefreshSession()))listResult=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner27,await mdmDataRpc('mdm_school_list_pending_enrollments',{}));
   if(listResult.status<200||listResult.status>=300){mdmSchoolAdminConsole={...MDM_SCHOOL_ADMIN_EMPTY,loadedForUserId:auth.userId,lastMessage:mdmDataErrorMessage(listResult)};render();if(!silent)toast(lang3('Lettura richieste scuola non riuscita: ','Reading school requests failed: ','Il-qari tat-talbiet tal-iskola falla: ')+mdmDataErrorMessage(listResult));return false}
   const data=mdmAuthParse(listResult.body)||{};
   if(data.ok===false){mdmSchoolAdminConsole={...MDM_SCHOOL_ADMIN_EMPTY,loadedForUserId:auth.userId,lastMessage:mdmSchoolDecisionErrorLabel(data.error)};render();if(!silent)toast(mdmSchoolDecisionErrorLabel(data.error));return false}
@@ -14454,9 +14605,14 @@ async function accountRefreshSchoolAdminConsole({silent=false}={}){
   render();
   if(!silent)toast(lang3(`Console scuola aggiornata: ${items.length} richieste PENDING.`,`School console updated: ${items.length} PENDING requests.`,`Il-console tal-iskola ġiet aġġornata: ${items.length} talbiet PENDING.`));
   return true;
- }finally{mdmSchoolAdminInFlight=false}
+ }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner27)){mdmSchoolAdminInFlight=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner27)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function accountDecideSchoolEnrollment(requestId,decision){
+ const mdmDataOwner28=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(mdmSchoolAdminInFlight)return;
  const id=String(requestId||'');
  const action=String(decision||'').toLowerCase();
@@ -14465,17 +14621,19 @@ async function accountDecideSchoolEnrollment(requestId,decision){
  if(!confirm(lang3(`Confermi di ${label} questa richiesta? La decisione sarà registrata sul server.`,`Confirm you want to ${label} this request? The decision will be stored on the server.`,`Tikkonferma li trid ${label} din it-talba? Id-deċiżjoni tinżamm fuq is-server.`)))return;
  mdmSchoolAdminInFlight=true;
  try{
-  if(!(await mdmEnsureFreshAuthForData()))return toast(lang3('Sessione scaduta. Accedi di nuovo.','Session expired. Sign in again.','Is-sessjoni skadiet. Erġa’ idħol.'));
-  let result=await mdmDataRpc('mdm_school_decide_enrollment',{p_request_id:id,p_decision:action,p_note:null});
-  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_school_decide_enrollment',{p_request_id:id,p_decision:action,p_note:null});
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner28,await mdmEnsureFreshAuthForData())))return toast(lang3('Sessione scaduta. Accedi di nuovo.','Session expired. Sign in again.','Is-sessjoni skadiet. Erġa’ idħol.'));
+  let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner28,await mdmDataRpc('mdm_school_decide_enrollment',{p_request_id:id,p_decision:action,p_note:null}));
+  if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner28,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner28,await mdmDataRpc('mdm_school_decide_enrollment',{p_request_id:id,p_decision:action,p_note:null}));
   if(result.status<200||result.status>=300)return toast(lang3('Decisione server non riuscita: ','Server decision failed: ','Id-deċiżjoni tas-server falliet: ')+mdmDataErrorMessage(result));
   const data=mdmAuthParse(result.body)||{};
   if(data.ok===false)return toast(mdmSchoolDecisionErrorLabel(data.error));
   toast(action==='approved'?lang3('APPROVATA: membership studente ACTIVE creata dal server.','APPROVED: ACTIVE student membership created by the server.','APPROVATA: membership ACTIVE tal-istudent inħolqot mis-server.'):lang3('RIFIUTATA: nessuna membership è stata creata.','REJECTED: no membership was created.','RIFJUTATA: ma nħolqot l-ebda membership.'));
- }finally{
+ }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner28)){
   mdmSchoolAdminInFlight=false;
- }
- await accountRefreshSchoolAdminConsole({silent:true});
+ }}
+ window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner28,await accountRefreshSchoolAdminConsole({silent:true}));
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner28)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 
 function mdmAuthRefreshSession(){
@@ -14635,6 +14793,9 @@ function accountSetRole(role){
  render();
 }
 async function accountPrepareEnrollment(){
+ const mdmDataOwner29=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(mdmEnrollmentInFlight)return;
  if(accountEnrollment.role!=='student')return toast(lang3('Il collegamento a una scuola è disponibile dal ruolo Studente.','School enrollment is available from the Student role.','Il-konnessjoni ma’ skola hija disponibbli mir-rwol Student.'));
  if(!profileComplete())return toast(lang3('Completa prima il profilo personale e il consenso privacy.','Complete your personal profile and privacy consent first.','L-ewwel imla l-profil personali u l-kunsens tal-privatezza.'));
@@ -14646,15 +14807,15 @@ async function accountPrepareEnrollment(){
  if(!consent)return toast(lang3('Serve il consenso esplicito per inviare la richiesta alla scuola.','Explicit consent is required to send the request to the school.','Huwa meħtieġ kunsens espliċitu biex tintbagħat it-talba lill-iskola.'));
  mdmEnrollmentInFlight=true;
  try{
-  if(!(await mdmEnsureFreshAuthForData()))return toast(lang3('Sessione scaduta. Accedi di nuovo.','Session expired. Sign in again.','Is-sessjoni skadiet. Erġa’ idħol.'));
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner29,await mdmEnsureFreshAuthForData())))return toast(lang3('Sessione scaduta. Accedi di nuovo.','Session expired. Sign in again.','Is-sessjoni skadiet. Erġa’ idħol.'));
   const payload={
    p_school_code:code,
    p_country_pack:'MT-LPTV-TAG',
    p_display_name:accountProfileName(),
    p_registration_id:String(userProfile.registrationId||'')
   };
-  let result=await mdmDataRpc('mdm_request_school_enrollment',payload);
-  if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_request_school_enrollment',payload);
+  let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner29,await mdmDataRpc('mdm_request_school_enrollment',payload));
+  if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner29,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner29,await mdmDataRpc('mdm_request_school_enrollment',payload));
   if(result.status<200||result.status>=300)return toast(lang3('Richiesta server non riuscita: ','Server request failed: ','It-talba tas-server falliet: ')+mdmDataErrorMessage(result));
   const data=mdmAuthParse(result.body)||{};
   if(data.ok===false)return toast(mdmEnrollmentErrorLabel(data.error));
@@ -14676,22 +14837,27 @@ async function accountPrepareEnrollment(){
   accountEnrollmentSave();
   toast(lang3('Richiesta ricevuta dal server. Stato PENDING: la scuola non è ancora collegata.','Request received by the server. Status PENDING: the school is not connected yet.','It-talba waslet lis-server. Status PENDING: l-iskola għadha mhix konnessa.'));
   render();
- }finally{mdmEnrollmentInFlight=false}
+ }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner29)){mdmEnrollmentInFlight=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner29)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function accountCancelEnrollment(){
+ const mdmDataOwner30=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(mdmEnrollmentInFlight)return;
  const pending=accountEnrollment.pendingRequest;
  if(pending?.serverRequestId&&pending?.serverConfirmed){
   if(!mdmAuthSummary().authenticated)return toast(lang3('Accedi prima per annullare la richiesta server.','Sign in first to cancel the server request.','L-ewwel idħol biex tikkanċella t-talba tas-server.'));
   mdmEnrollmentInFlight=true;
   try{
-   if(!(await mdmEnsureFreshAuthForData()))return toast(lang3('Sessione scaduta. Accedi di nuovo.','Session expired. Sign in again.','Is-sessjoni skadiet. Erġa’ idħol.'));
-   let result=await mdmDataRpc('mdm_cancel_school_enrollment',{p_request_id:String(pending.serverRequestId)});
-   if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession())result=await mdmDataRpc('mdm_cancel_school_enrollment',{p_request_id:String(pending.serverRequestId)});
+   if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner30,await mdmEnsureFreshAuthForData())))return toast(lang3('Sessione scaduta. Accedi di nuovo.','Session expired. Sign in again.','Is-sessjoni skadiet. Erġa’ idħol.'));
+   let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner30,await mdmDataRpc('mdm_cancel_school_enrollment',{p_request_id:String(pending.serverRequestId)}));
+   if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner30,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner30,await mdmDataRpc('mdm_cancel_school_enrollment',{p_request_id:String(pending.serverRequestId)}));
    if(result.status<200||result.status>=300)return toast(lang3('Annullamento server non riuscito: ','Server cancellation failed: ','Il-kanċellament tas-server falla: ')+mdmDataErrorMessage(result));
    const data=mdmAuthParse(result.body)||{};
    if(data.ok===false)return toast(mdmEnrollmentErrorLabel(data.error));
-  }finally{mdmEnrollmentInFlight=false}
+  }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner30)){mdmEnrollmentInFlight=false}}
  }
  accountEnrollment.pendingRequest=null;
  accountEnrollment.schoolCode='';
@@ -14700,6 +14866,8 @@ async function accountCancelEnrollment(){
  accountEnrollmentSave();
  toast(lang3(pending?.serverRequestId?'Richiesta server annullata.':'Richiesta locale rimossa.',pending?.serverRequestId?'Server request cancelled.':'Local request removed.',pending?.serverRequestId?'It-talba tas-server ġiet ikkanċellata.':'It-talba lokali tneħħiet.'));
  render();
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner30)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function accountSchoolAdminFlowHtml(auth){
  const c=mdmSchoolAdminConsole;
@@ -15059,12 +15227,12 @@ async function bindParentSponsorPortal(){
 const SCHOOL_OPERATIONS_BUILD='45.8.24.1';
 const SCHOOL_OPERATIONS_KEY='mdm_school_operations_45824';
 function schoolOperationsDefault(){return {bookings:[],payments:[],crm:[],audit:[]}}
-function schoolOperationsLoad(){const raw=load(SCHOOL_OPERATIONS_KEY,schoolOperationsDefault());return {
+function schoolOperationsLoad(){const raw=load(SCHOOL_OPERATIONS_KEY,schoolOperationsDefault());return window.MDM_ACCOUNT_ISOLATION_SAFE.own({
  bookings:Array.isArray(raw.bookings)?raw.bookings:[],
  payments:Array.isArray(raw.payments)?raw.payments:[],
  crm:Array.isArray(raw.crm)?raw.crm:[],
  audit:Array.isArray(raw.audit)?raw.audit:[]
-}}
+})}
 function schoolOperationsSave(data){save(SCHOOL_OPERATIONS_KEY,data)}
 function schoolOperationsId(prefix='OP'){return `${prefix}-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2,6).toUpperCase()}`}
 function schoolOperationsAudit(data,type,detail='',ref='',meta=null){data.audit.unshift({id:schoolOperationsId('AUD'),type,detail,ref,meta:meta&&typeof meta==='object'?meta:null,at:Date.now()});data.audit=data.audit.slice(0,100)}
@@ -15174,11 +15342,8 @@ const SCHOOL_OPERATIONS_PRODUCTION_DEFAULT={
  lastCheckAt:'',lastSyncAt:'',lastPullAt:'',lastMessage:'',
  serverVersion:0,serverUpdatedAt:'',serverCounts:null
 };
-let schoolOperationsProductionState=Object.assign(
- {},
- SCHOOL_OPERATIONS_PRODUCTION_DEFAULT,
- load(SCHOOL_OPERATIONS_PRODUCTION_KEY,{})
-);
+let schoolOperationsProductionState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(SCHOOL_OPERATIONS_PRODUCTION_DEFAULT),load(SCHOOL_OPERATIONS_PRODUCTION_KEY,{})
+));
 function schoolOperationsProductionSave(){save(SCHOOL_OPERATIONS_PRODUCTION_KEY,schoolOperationsProductionState)}
 function schoolOperationsProductionAuthScope(){
  const a=mdmAuthSummary();
@@ -15254,16 +15419,19 @@ function schoolOperationsProductionCountsText(counts){
  );
 }
 async function schoolOperationsProductionProbe({silent=false}={}){
+ const mdmDataOwner31=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const auth=mdmAuthSummary();
  schoolOperationsProductionResetForAccount();
  if(!auth.authenticated){
   if(!silent)toast(lang3('Accedi prima con Supabase Auth.','Sign in with Supabase Auth first.','L-ewwel idħol b’Supabase Auth.'));
   return false;
  }
- if(!(await mdmEnsureFreshAuthForData()))return false;
- let result=await mdmDataRpc('mdm_school_operations_sync_status',{});
- if(result.status===401&&mdmAuthSession.refreshToken&&await mdmAuthRefreshSession()){
-  result=await mdmDataRpc('mdm_school_operations_sync_status',{});
+ if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner31,await mdmEnsureFreshAuthForData())))return false;
+ let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner31,await mdmDataRpc('mdm_school_operations_sync_status',{}));
+ if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner31,await mdmAuthRefreshSession())){
+  result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner31,await mdmDataRpc('mdm_school_operations_sync_status',{}));
  }
  const data=mdmAuthParse(result.body)||{};
  const ok=result.status>=200&&result.status<300&&data.ok===true&&String(data.schema_version||'')==='45.8.28.5';
@@ -15292,20 +15460,25 @@ async function schoolOperationsProductionProbe({silent=false}={}){
     :lang3('Accesso Operations correttamente bloccato: serve School Admin ACTIVE.','Operations access correctly blocked: ACTIVE School Admin required.','L-aċċess għall-Operations huwa mblukkat kif suppost: jeħtieġ School Admin ACTIVE.'))
   :lang3('Schema School Operations non verificato: ','School Operations schema not verified: ','L-schema ta’ School Operations ma ġiex ivverifikat: ')+schoolOperationsProductionState.lastMessage);
  return ok;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner31)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function schoolOperationsProductionPull({silent=false}={}){
+ const mdmDataOwner32=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  schoolOperationsProductionResetForAccount();
  if(!schoolOperationsProductionState.schemaReady||!schoolOperationsProductionState.canRead){
-  const ok=await schoolOperationsProductionProbe({silent:true});
+  const ok=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner32,await schoolOperationsProductionProbe({silent:true}));
   if(!ok||!schoolOperationsProductionState.canRead){
    if(!silent)toast(lang3('Lettura Operations non autorizzata per questo account.','Operations read is not authorized for this account.','Il-qari tal-Operations mhuwiex awtorizzat għal dan il-kont.'));
    return false;
   }
  }
  if(!mdmProductionSyncState.schemaReady){
-  if(!(await mdmProductionSyncProbe({silent:true})))return false;
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner32,await mdmProductionSyncProbe({silent:true}))))return false;
  }
- const pulled=await mdmProductionSyncPullPreview({silent:true});
+ const pulled=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner32,await mdmProductionSyncPullPreview({silent:true}));
  if(!pulled){
   if(!silent)toast(lang3('Impossibile leggere lo snapshot Operations dal server.','Could not read the Operations server snapshot.','Ma setax jinqara l-snapshot tal-Operations mis-server.'));
   return false;
@@ -15322,16 +15495,21 @@ async function schoolOperationsProductionPull({silent=false}={}){
   ?lang3('Snapshot School Operations letto. Nessun merge locale applicato.','School Operations snapshot read. No local merge applied.','L-snapshot ta’ School Operations inqara. Ma ġie applikat l-ebda merge lokali.')
   :lang3('Nessun record School Operations ancora presente sul server.','No School Operations record is on the server yet.','Għad m’hemm l-ebda rekord ta’ School Operations fuq is-server.'));
  return true;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner32)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function schoolOperationsProductionSync(){
+ const mdmDataOwner33=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  schoolOperationsProductionResetForAccount();
- const ok=await schoolOperationsProductionProbe({silent:true});
+ const ok=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner33,await schoolOperationsProductionProbe({silent:true}));
  if(!ok||!schoolOperationsProductionState.canWrite){
   toast(lang3('Sync Operations bloccato: è richiesto School Admin ACTIVE.','Operations sync blocked: ACTIVE School Admin required.','Is-sync tal-Operations huwa mblukkat: jeħtieġ School Admin ACTIVE.'));
   return false;
  }
  if(!mdmProductionSyncState.schemaReady){
-  if(!(await mdmProductionSyncProbe({silent:true}))){
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner33,await mdmProductionSyncProbe({silent:true})))){
    toast(lang3('Verifica prima lo schema Production Sync 45.8.28.','Verify the Production Sync 45.8.28 schema first.','L-ewwel ivverifika l-schema Production Sync 45.8.28.'));
    return false;
   }
@@ -15350,7 +15528,7 @@ async function schoolOperationsProductionSync(){
  );
  if(!confirm(confirmText))return false;
 
- const prePull=await mdmProductionSyncPullPreview({silent:true});
+ const prePull=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner33,await mdmProductionSyncPullPreview({silent:true}));
  if(!prePull){
   toast(lang3('Sync Operations annullato: impossibile leggere il server prima del push.','Operations sync cancelled: the server could not be read before the push.','Is-sync tal-Operations twaqqaf: ma setax jinqara s-server qabel il-push.'));
   return false;
@@ -15358,9 +15536,9 @@ async function schoolOperationsProductionSync(){
  mdmProductionSyncReconcileServerVersionsFor([record]);
  mdmProductionSyncQueueRecords([record]);
  render();
- await mdmProductionSyncFlush({silent:true});
+ window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner33,await mdmProductionSyncFlush({silent:true}));
 
- const postPull=await mdmProductionSyncPullPreview({silent:true});
+ const postPull=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner33,await mdmProductionSyncPullPreview({silent:true}));
  const after=postPull?schoolOperationsProductionServerItem():null;
  const conflicted=mdmProductionSyncState.conflicts.some(x=>mdmProductionSyncKey(x.entityType,x.localId)==='school_operations::current');
  const exact=Boolean(after&&!conflicted&&String(after?.payload?.fingerprint||'')===String(record.payload.fingerprint||''));
@@ -15385,6 +15563,8 @@ async function schoolOperationsProductionSync(){
   `School Operations ġie vverifikat fuq is-server · v${schoolOperationsProductionState.serverVersion}.`
  ));
  return true;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner33)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function schoolOperationsProductionPanelHtml(){
  const auth=mdmAuthSummary();
@@ -15458,7 +15638,7 @@ function bindSchoolOperations(){
 const FLEET_CORPORATE_BUILD='45.8.25';
 const FLEET_CORPORATE_KEY='mdm_fleet_corporate_45825';
 function fleetCorporateDefault(){return {context:{role:'',organisation:'',vehicleRef:'',note:''},updatedAt:0}}
-function fleetCorporateLoad(){const raw=load(FLEET_CORPORATE_KEY,fleetCorporateDefault())||{};return {context:Object.assign({},fleetCorporateDefault().context,raw.context||{}),updatedAt:Number(raw.updatedAt||0)}}
+function fleetCorporateLoad(){const raw=load(FLEET_CORPORATE_KEY,fleetCorporateDefault())||{};return window.MDM_ACCOUNT_ISOLATION_SAFE.own({context:Object.assign({},fleetCorporateDefault().context,raw.context||{}),updatedAt:Number(raw.updatedAt||0)})}
 function fleetCorporateSave(data){save(FLEET_CORPORATE_KEY,data)}
 function fleetCorporateRoleLabel(role){const map={taxi:lang3('Taxi / trasporto passeggeri','Taxi / passenger transport','Taxi / trasport tal-passiġġieri'),bus:lang3('Bus / coach','Bus / coach','Xarabank / coach'),delivery:lang3('Delivery / ultimo miglio','Delivery / last mile','Delivery / last mile'),fleet:lang3('Flotta aziendale','Company fleet','Flotta tal-kumpanija'),commercial:lang3('Veicolo commerciale','Commercial vehicle','Vettura kummerċjali'),other:lang3('Altro contesto professionale','Other professional context','Kuntest professjonali ieħor')};return map[role]||lang3('Non specificato','Not specified','Mhux speċifikat')}
 function fleetCorporateLicenseContext(pack){const id=String(pack?.id||licensePackEngineState?.activeId||'MT-LPTV');return {id,label:licensePackProgrammeLabel(pack||licensePackActive()),suggestion:id==='MT-D'?lang3('Contesto naturale: trasporto professionale con bus.','Natural context: professional bus transport.','Kuntest naturali: trasport professjonali bix-xarabank.'):id==='MT-C-CE'?lang3('Contesto naturale: veicoli pesanti e flotte commerciali.','Natural context: heavy vehicles and commercial fleets.','Kuntest naturali: vetturi tqal u flotot kummerċjali.'):id==='MT-LPTV'?lang3('Contesto naturale: taxi e trasporto passeggeri LPTV.','Natural context: taxi and LPTV passenger transport.','Kuntest naturali: taxi u trasport tal-passiġġieri LPTV.'):id==='MT-A'?lang3('Può supportare contesti professionali su motociclo senza dedurre l’uso reale.','Can support professional motorcycle contexts without inferring actual use.','Jista’ jappoġġa kuntesti professjonali fuq mutur mingħajr ma jiddeduċi l-użu reali.'):lang3('Può supportare contesti di guida aziendale senza dedurre l’uso reale.','Can support company-driving contexts without inferring actual use.','Jista’ jappoġġa kuntesti ta’ sewqan tal-kumpanija mingħajr ma jiddeduċi l-użu reali.')}}
@@ -15551,7 +15731,7 @@ const SECURITY_TRUST_DEFAULT={
   storagePass:false,storageIterations:0,storageMs:0,cryptoPass:false,
   lastReport:''
 };
-let securityTrustState=Object.assign({},SECURITY_TRUST_DEFAULT,load(SECURITY_TRUST_KEY,{}));
+let securityTrustState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(SECURITY_TRUST_DEFAULT),load(SECURITY_TRUST_KEY,{})));
 function securityTrustAuthScope(){
  const a=mdmAuthSummary();
  return {userId:String(a.userId||''),email:String(a.email||'').trim().toLowerCase()};
@@ -16955,21 +17135,24 @@ function renderVocabulary(term){
  box.querySelectorAll('[data-known-word]').forEach(b=>b.onclick=()=>{toggleKnownWord(b.dataset.knownWord);renderVocabulary($('#vocabularySearch')?.value||'')});
 }
 async function exportBackup(){
- const data={app:'Malta Driving Master',version:'26.1',exportedAt:new Date().toISOString(),progress,settings,userProfile,schoolPreferences,schoolCompare,schoolPartnerDraft,schoolDashboard,schoolPortal,instructorPortal,aiInstructor,cloudReady,accountEnrollment,missionSystem,errorReplay,lptvPassport,personalRoadmap,onboarding,privacyPreferences,pilotAnalytics,coachState,recoveryState,examDayState,zeroErrorState};
+ const mdmDataOwner34=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
+ const data={app:'Malta Driving Master',ownerUserId:window.MDM_ACCOUNT_ISOLATION_SAFE.current().userId,version:'26.1',exportedAt:new Date().toISOString(),progress,settings,userProfile,schoolPreferences,schoolCompare,schoolPartnerDraft,schoolDashboard,schoolPortal,instructorPortal,aiInstructor,cloudReady,accountEnrollment,missionSystem,errorReplay,lptvPassport,personalRoadmap,onboarding,privacyPreferences,pilotAnalytics,coachState,recoveryState,examDayState,zeroErrorState};
  const json=JSON.stringify(data,null,2);
  const filename=`malta-driving-master-backup-${dateKey()}.json`;
  try{
    const file=new File([json],filename,{type:'application/json'});
    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-     await navigator.share({
+     window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner34,await navigator.share({
        files:[file],
        title:'Malta Driving Master',
        text:'Copia dei progressi di Malta Driving Master'
-     });
+     }));
      toast(t('backupCreated'));
      return;
    }
- }catch(error){
+ }catch(error){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner34);
    if(error&&error.name==='AbortError')return;
  }
  const blob=new Blob([json],{type:'application/json'});
@@ -16981,12 +17164,19 @@ async function exportBackup(){
  a.click();
  setTimeout(()=>{a.remove();URL.revokeObjectURL(url)},1500);
  toast(t('backupCreated'));
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner34)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function importBackup(file){
+ const mdmCallbackOwner=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
  const reader=new FileReader();
  reader.onload=()=>{
+  if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmCallbackOwner))return;
    try{
      const data=JSON.parse(reader.result);
+     const owner=window.MDM_ACCOUNT_ISOLATION_SAFE.current();
+     const importedEmail=String(data?.userProfile?.email||'').trim().toLowerCase();
+     if((data.ownerUserId&&String(data.ownerUserId)!==owner.userId)||(importedEmail&&importedEmail!==owner.email))throw new Error('account_owner_mismatch');
      const p=data?.progress;
      if(!p||typeof p.seen!=='object'||typeof p.correct!=='object'||typeof p.wrong!=='object'||!Array.isArray(p.exams))throw new Error('invalid');
      progress={
@@ -17208,6 +17398,139 @@ Object.assign(INTERACTIVE_REPLAY_MVP,{"CARS1.3":{"prompt":{"it":"Come conducente
 if(Object.keys(INTERACTIVE_REPLAY_MVP).length!==248){console.error('MDM INTERACTIVE COUNT MISMATCH',Object.keys(INTERACTIVE_REPLAY_MVP).length);}
 window.addEventListener('error',event=>pilotAnalyticsTrack('runtime_error',{packId:pilotAnalyticsPackFromRoute(route?.name||''),build:BUILD_VERSION,kind:pilotRuntimeErrorKind(event),script:pilotRuntimeScriptKey(event),line:Number(event?.lineno||0),column:Number(event?.colno||0)}),{passive:true});
 window.addEventListener('unhandledrejection',()=>pilotAnalyticsTrack('unhandled_rejection',{packId:pilotAnalyticsPackFromRoute(route?.name||''),build:BUILD_VERSION,kind:'promise'}),{passive:true});
+
+/* P0-02: synchronous data ownership transition; no Auth or renderer mutation. */
+function mdmAccountOwnData(){
+ // Normalizers can replace loaded containers; include their final nested values.
+ for(const value of [progress,schoolPreferences,schoolCompare,schoolPartnerDraft,errorReplay,cloudReady,accountEnrollment,missionSystem,aiInstructor,instructorPortal,schoolPortal,zeroErrorState,examDayState,recoveryState,coachState,onboarding,privacyPreferences,pilotAnalytics,schoolDashboard,personalRoadmap,lptvPassport,userProfile,countryPackEngineState,licensePackEngineState,languageTwin,realRoadTwin,realRoadTelemetryStore,mdmProductionPermissionState,mdmProductionSyncState,schoolOperationsProductionState,securityTrustState])window.MDM_ACCOUNT_ISOLATION_SAFE.own(value);
+}
+function mdmAccountRehydrateData(){
+ realRoadTelemetryDetach();
+ realRoadTelemetryRuntime={recording:false,session:null,watchId:null,timerId:null,motionHandler:null,orientationHandler:null,lastPosition:null,lastMotionAt:0,lastOrientationAt:0,lastCheckpointAt:0,storageError:false};
+ instructorStudioClearObjectUrls();
+ progress=window.MDM_ACCOUNT_ISOLATION_SAFE.own(load(STORAGE,{seen:{},correct:{},wrong:{},exams:[],favourites:[],activity:{},knownWords:[],knownPhrases:[],review:{},errorReasons:{},bridgeResults:[],responseHistory:[]}));
+ schoolPreferences=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_SCHOOL_PREFS),load(SCHOOL_PREFS_KEY,{})));
+ schoolCompare=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Array.isArray(load(SCHOOL_COMPARE_KEY,[]))?load(SCHOOL_COMPARE_KEY,[]):[]);
+ schoolPartnerDraft=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign({
+ schoolName:'',permit:'',email:'',phone:'',area:'central',
+ languages:['en'],services:[],prices:'',availability:'',
+ description:'',plan:'basic',consent:false
+},load(SCHOOL_PARTNER_KEY,{})));
+ errorReplay=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_ERROR_REPLAY),load(ERROR_REPLAY_KEY,{})));
+ cloudReady=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_CLOUD_READY),load(CLOUD_READY_KEY,{})));
+ accountEnrollment=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_ACCOUNT_ENROLLMENT),load(ACCOUNT_ENROLLMENT_KEY,{})));
+ missionSystem=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_MISSION_SYSTEM),load(MISSION_SYSTEM_KEY,{})));
+ aiInstructor=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_AI_INSTRUCTOR),load(AI_INSTRUCTOR_KEY,{})));
+ instructorPortal=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_INSTRUCTOR_PORTAL),load(INSTRUCTOR_PORTAL_KEY,{})));
+ schoolPortal=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_SCHOOL_PORTAL),load(SCHOOL_PORTAL_KEY,{})));
+ zeroErrorState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_ZERO_ERROR_STATE),load(ZERO_ERROR_KEY,{})));
+ examDayState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_EXAM_DAY_STATE),load(EXAM_DAY_KEY,{})));
+ recoveryState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_RECOVERY_STATE),load(RECOVERY_KEY,{})));
+ coachState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_COACH_STATE),load(COACH_KEY,{})));
+ onboarding=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_ONBOARDING),load(ONBOARDING_KEY,{})));
+ privacyPreferences=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_PRIVACY_PREFS),load(PRIVACY_PREFS_KEY,{})));
+ pilotAnalytics=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_PILOT_ANALYTICS),load(PILOT_ANALYTICS_KEY,{})));
+ schoolDashboard=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_SCHOOL_DASHBOARD),load(SCHOOL_DASHBOARD_KEY,{})));
+ personalRoadmap=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_PERSONAL_ROADMAP),load(ROADMAP_KEY,{})));
+ lptvPassport=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(DEFAULT_LPTV_PASSPORT),load(PASSPORT_KEY,{})));
+ userProfile=window.MDM_ACCOUNT_ISOLATION_SAFE.own(load(USER_PROFILE,{
+ firstName:'',lastName:'',email:'',address:'',age:'',
+ privacyConsent:false,updatesConsent:false,
+ registrationId:createRegistrationId(),savedAt:'',emailPreparedAt:''
+}));
+ countryPackEngineState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign({candidate:null,lastCheck:''},load(COUNTRY_PACK_ENGINE_KEY,{})));
+ licensePackEngineState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign({activeId:'MT-LPTV',inspectedId:'MT-LPTV',lastCheck:''},load(LICENSE_PACK_ENGINE_KEY,{})));
+ languageTwin=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(LANGUAGE_TWIN_DEFAULT),load(LANGUAGE_TWIN_KEY,{})));
+ realRoadTwin=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(REAL_ROAD_DEFAULT),load(REAL_ROAD_TWIN_KEY,{})));
+ realRoadTelemetryStore=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(REAL_ROAD_TELEMETRY_DEFAULT),load(REAL_ROAD_TELEMETRY_KEY,{})));
+ mdmProductionPermissionState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(MDM_PRODUCTION_PERMISSION_DEFAULT),load(MDM_PRODUCTION_PERMISSION_KEY,{})
+));
+ mdmProductionSyncState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(MDM_PRODUCTION_SYNC_DEFAULT),load(MDM_PRODUCTION_SYNC_KEY,{})));
+ schoolOperationsProductionState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(SCHOOL_OPERATIONS_PRODUCTION_DEFAULT),load(SCHOOL_OPERATIONS_PRODUCTION_KEY,{})
+));
+ securityTrustState=window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(clone(SECURITY_TRUST_DEFAULT),load(SECURITY_TRUST_KEY,{})));
+ // Apply the same existing startup normalizers after a data ownership transition.
+ progress.favourites=Array.isArray(progress.favourites)?progress.favourites:[];
+ progress.activity=progress.activity&&typeof progress.activity==='object'?progress.activity:{};
+ progress.knownWords=Array.isArray(progress.knownWords)?progress.knownWords:[];
+ progress.knownPhrases=Array.isArray(progress.knownPhrases)?progress.knownPhrases:[];
+ progress.review=progress.review&&typeof progress.review==='object'?progress.review:{};
+ progress.errorReasons=progress.errorReasons&&typeof progress.errorReasons==='object'?progress.errorReasons:{};
+ progress.bridgeResults=Array.isArray(progress.bridgeResults)?progress.bridgeResults:[];
+ progress.responseHistory=Array.isArray(progress.responseHistory)?progress.responseHistory:[];
+ schoolCompare=schoolCompare.filter(id=>SCHOOL_DEMOS.some(school=>school.id===id)).slice(0,3);
+ errorReplay.viewed=errorReplay.viewed&&typeof errorReplay.viewed==='object'?errorReplay.viewed:{};
+ errorReplay.completed=errorReplay.completed&&typeof errorReplay.completed==='object'?errorReplay.completed:{};
+ errorReplay.perception=Object.assign({attempts:0,hits:0,totalMs:0,bestMs:0,lastResult:null},errorReplay.perception||{});
+ errorReplay.interactive=errorReplay.interactive&&typeof errorReplay.interactive==='object'?errorReplay.interactive:{};
+ cloudReady.queue=Array.isArray(cloudReady.queue)?cloudReady.queue:[];
+ cloudReady.devices=Array.isArray(cloudReady.devices)?cloudReady.devices:[];
+ if(!['student','instructor','school'].includes(accountEnrollment.role))accountEnrollment.role='student';
+ accountEnrollment.pendingRequest=accountEnrollment.pendingRequest&&typeof accountEnrollment.pendingRequest==='object'?accountEnrollment.pendingRequest:null;
+ accountEnrollment.linkedSchool=accountEnrollment.linkedSchool&&typeof accountEnrollment.linkedSchool==='object'?accountEnrollment.linkedSchool:null;
+ missionSystem.completedMissionIds=Array.isArray(missionSystem.completedMissionIds)?missionSystem.completedMissionIds:[];
+ missionSystem.missionProgress=missionSystem.missionProgress&&typeof missionSystem.missionProgress==='object'?missionSystem.missionProgress:{};
+ aiInstructor.explained=aiInstructor.explained&&typeof aiInstructor.explained==='object'?aiInstructor.explained:{};
+ aiInstructor.reviewQueue=Array.isArray(aiInstructor.reviewQueue)?aiInstructor.reviewQueue:[];
+ aiInstructor.reviewIndex=Math.max(0,Number(aiInstructor.reviewIndex||0));
+ aiInstructor.reviewSource=String(aiInstructor.reviewSource||'');
+ aiInstructor.recoveryPlan=normaliseAiRecoveryPlan(aiInstructor.recoveryPlan);
+ aiInstructor.socratic=Object.assign({questionId:'',step:0,answers:[]},aiInstructor.socratic||{});
+ aiInstructor.socratic.answers=Array.isArray(aiInstructor.socratic.answers)?aiInstructor.socratic.answers:[];
+ instructorPortal.profile=Object.assign({},DEFAULT_INSTRUCTOR_PORTAL.profile,instructorPortal.profile||{});
+ instructorPortal.assignments=Array.isArray(instructorPortal.assignments)?instructorPortal.assignments:[];
+ instructorPortal.notes=Array.isArray(instructorPortal.notes)?instructorPortal.notes:[];
+ for(const key of ['instructors','courses','offers','reviews','requests','bookings']){schoolPortal[key]=Array.isArray(schoolPortal[key])?schoolPortal[key]:[];}
+ zeroErrorState.defeatedIds=Array.isArray(zeroErrorState.defeatedIds)?zeroErrorState.defeatedIds:[];
+ zeroErrorState.verifiedIds=Array.isArray(zeroErrorState.verifiedIds)?zeroErrorState.verifiedIds:[];
+ examDayState.checklist=examDayState.checklist&&typeof examDayState.checklist==='object'?examDayState.checklist:{};
+ recoveryState.completedQuestionIds=Array.isArray(recoveryState.completedQuestionIds)?recoveryState.completedQuestionIds:[];
+ coachState.missionSteps=Object.assign({study:false,review:false,bridge:false},coachState.missionSteps||{});
+ pilotAnalytics.events=Array.isArray(pilotAnalytics.events)?pilotAnalytics.events.slice(-600):[];
+ schoolDashboard.students=Array.isArray(schoolDashboard.students)?schoolDashboard.students:[];
+ schoolDashboard.groups=Array.isArray(schoolDashboard.groups)?schoolDashboard.groups:[];
+ schoolDashboard.invites=Array.isArray(schoolDashboard.invites)?schoolDashboard.invites:[];
+ personalRoadmap.dailyMinutes=Math.max(10,Math.min(120,Number(personalRoadmap.dailyMinutes)||20));
+ personalRoadmap.studyDays=Math.max(1,Math.min(7,Number(personalRoadmap.studyDays)||5));
+ lptvPassport.checklist=lptvPassport.checklist&&typeof lptvPassport.checklist==='object'?lptvPassport.checklist:{};
+ lptvPassport.dates=Object.assign({},DEFAULT_LPTV_PASSPORT.dates,lptvPassport.dates||{});
+ if(!userProfile.registrationId)userProfile.registrationId=createRegistrationId();
+ languageTwin.diagnostics=Array.isArray(languageTwin.diagnostics)?languageTwin.diagnostics:[];
+ languageTwin.difficultTerms=languageTwin.difficultTerms&&typeof languageTwin.difficultTerms==='object'?languageTwin.difficultTerms:{};
+ languageTwin.termMemory=languageTwin.termMemory&&typeof languageTwin.termMemory==='object'?languageTwin.termMemory:{};
+ Object.entries(languageTwin.difficultTerms).forEach(([term,count])=>{if(!languageTwin.termMemory[term])languageTwin.termMemory[term]={term,gapCount:Number(count)||0,successCount:0,recoveryStreak:0,status:'critical',lastSeen:'',lastGap:''}});
+ realRoadTwin.history=Array.isArray(realRoadTwin.history)?realRoadTwin.history:[];
+ realRoadTwin.active=realRoadTwin.active&&typeof realRoadTwin.active==='object'?realRoadTwin.active:null;
+ realRoadTelemetryStore.sessions=Array.isArray(realRoadTelemetryStore.sessions)?realRoadTelemetryStore.sessions:[];
+ mdmProductionSyncState.pending=Array.isArray(mdmProductionSyncState.pending)?mdmProductionSyncState.pending:[];
+ mdmProductionSyncState.conflicts=Array.isArray(mdmProductionSyncState.conflicts)?mdmProductionSyncState.conflicts:[];
+ mdmProductionSyncState.serverVersions=mdmProductionSyncState.serverVersions&&typeof mdmProductionSyncState.serverVersions==='object'?mdmProductionSyncState.serverVersions:{};
+ mdmProductionSyncState.serverProtected=mdmProductionSyncState.serverProtected&&typeof mdmProductionSyncState.serverProtected==='object'?mdmProductionSyncState.serverProtected:{};
+ mdmProductionSyncState.resolutionLog=Array.isArray(mdmProductionSyncState.resolutionLog)?mdmProductionSyncState.resolutionLog:[];
+ mdmProductionSyncState.previewCounts=mdmProductionSyncState.previewCounts&&typeof mdmProductionSyncState.previewCounts==='object'?mdmProductionSyncState.previewCounts:{};
+ mdmProductionSyncState.previewItems=Array.isArray(mdmProductionSyncState.previewItems)?mdmProductionSyncState.previewItems:[];
+
+ mdmAccountOwnData();
+ quiz=clone(null);
+ bridgeState=clone(null);
+ flashState=clone({deck:[],index:0,revealed:false,direction:'en-it'});
+ mdmLearningSyncState=clone({userId:'',status:'idle',updatedAt:'',lastMessage:''});
+ mdmServerMissions=clone({loadedForUserId:'',items:[],loadedAt:'',lastMessage:''});
+ mdmSchoolStudentMissions=clone({loadedForStudentUserId:'',items:[],loadedAt:'',lastMessage:''});
+ mdmServerRoster=clone({...MDM_SERVER_ROSTER_EMPTY});
+ mdmPlatformOwnerGate=clone({...MDM_PLATFORM_OWNER_GATE_EMPTY});
+ mdmProtectedContentStatus=clone({...MDM_PROTECTED_CONTENT_EMPTY});
+ mdmPortableSyncState=clone({status:'idle',lastMessage:'',serverUpdatedAt:'',lastAction:''});
+ mdmSchoolAdminConsole=clone({...MDM_SCHOOL_ADMIN_EMPTY});
+ mdmLearningSyncInFlight=false;mdmServerRosterInFlight=false;mdmProductionSyncInFlight=false;
+ mdmSchoolAdminInFlight=false;mdmEnrollmentInFlight=false;mdmPortableSyncInFlight=false;
+ mdmPlatformOwnerGateInFlight=false;mdmProtectedContentInFlight=false;
+ if(mdmPortableSyncTimer){clearTimeout(mdmPortableSyncTimer);mdmPortableSyncTimer=null;}
+ if(timerId){clearInterval(timerId);timerId=null;}
+}
+mdmAccountOwnData();
+window.MDM_ACCOUNT_ISOLATION_SAFE.subscribe(mdmAccountRehydrateData);
+
 pilotAnalyticsBoot();
 initAccessibilityResilience();
 render();

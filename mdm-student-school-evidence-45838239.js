@@ -11,6 +11,7 @@ const AUTH='mdm_auth_session_v4410';
 const HOST_ID='mdmStudentSchoolEvidence';
 const CACHE='mdm-school-evidence-cache-v1';
 let busy=false;
+window.MDM_ACCOUNT_ISOLATION_SAFE.subscribe(()=>{busy=false;});
 
 function parse(v){try{return v?JSON.parse(v):null}catch(_){return null}}
 function settings(){return parse(localStorage.getItem('mdm-v1-settings'))||{}}
@@ -21,16 +22,25 @@ function session(){const s=parse(localStorage.getItem(AUTH));return s&&s.accessT
 function home(){const h=String(location.hash||'').replace(/^#/,'');return !h||h==='home'}
 function cfg(){const c=window.MDM_BACKEND_CONFIG||{};if(!c.enabled||!c.endpoint||!c.publishableKey)throw new Error('backend_unavailable');return{endpoint:String(c.endpoint).replace(/\/$/,''),key:String(c.publishableKey)}}
 async function rpc(name,payload){
+ const mdmDataOwner0=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const c=cfg(),s=session();if(!s)throw new Error('authentication_required');
- const r=await fetch(c.endpoint+'/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json','apikey':c.key,'Authorization':'Bearer '+s.accessToken},body:JSON.stringify(payload||{}),cache:'no-store'});
- const tx=await r.text();let d={};try{d=tx?JSON.parse(tx):{}}catch(_){}
+ const r=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0,await fetch(c.endpoint+'/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json','apikey':c.key,'Authorization':'Bearer '+s.accessToken},body:JSON.stringify(payload||{}),cache:'no-store'}));
+ const tx=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0,await r.text());let d={};try{d=tx?JSON.parse(tx):{}}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0);}
  if(Array.isArray(d))d=d[0]||{};
  if(!r.ok)throw new Error(String(d?.message||d?.error||('http_'+r.status)));
  return d||{};
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner0)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function anchor(){return document.getElementById('mdmCompactRealPreparation')||document.querySelector('.mdm-compact-real-preparation')||null}
 function cacheKey(){const id=String(session()?.user?.id||'').trim();return CACHE+(id?'::user:'+id:'::signed-out')}
-function saveMissionCache(items){try{localStorage.setItem(cacheKey(),JSON.stringify({schema:'mdm-school-evidence-cache-v1',version:VERSION,updatedAt:new Date().toISOString(),missions:Array.isArray(items)?items:[]}))}catch(_){}}
+function saveMissionCache(items,owner){
+ const account=window.MDM_ACCOUNT_ISOLATION_SAFE;
+ if(!owner?.userId||!account.isCurrent(owner)||!account.usable(items,owner))return false;
+ return account.write(CACHE+'::user:'+owner.userId,{schema:'mdm-school-evidence-cache-v1',ownershipSchema:'mdm-account-owned-v2',ownerUserId:owner.userId,version:VERSION,updatedAt:new Date().toISOString(),missions:Array.isArray(items)?items:[]},owner);
+}
 function packLabel(id){return ({'MT-LPTV':'LPTV TAG','MT-B':'B','MT-A':'A','MT-C-CE':'C/CE','MT-D':'D'})[String(id||'')]||String(id||'')}
 function missionMeta(m){const p=m?.payload||{},parts=[];if(p.pack_id)parts.push(packLabel(p.pack_id));if(p.competence_label)parts.push(String(p.competence_label));return parts.join(' · ')}
 function missionId(m){return String(m?.mission_id||m?.id||'')}
@@ -103,6 +113,7 @@ function closeEditor(){
  if(m)m.remove();
 }
 function openEditor(mid,title){
+ const editorOwner=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
  closeEditor();
  const modal=document.createElement('div');
  modal.id='mdmEvidenceEditorModal';
@@ -117,26 +128,31 @@ function openEditor(mid,title){
  document.body.appendChild(modal);
  const ta=modal.querySelector('#mdmEvidenceEditorText');
  ta.value=draft;
- ta.addEventListener('input',()=>{try{localStorage.setItem(draftKey(mid),ta.value)}catch(_){}});
+ ta.addEventListener('input',()=>{if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(editorOwner))return;try{localStorage.setItem(draftKey(mid),ta.value)}catch(_){}});
  modal.querySelector('#mdmEvidenceEditorClose').onclick=closeEditor;
  modal.addEventListener('click',ev=>{if(ev.target===modal)closeEditor()});
  modal.querySelector('#mdmEvidenceEditorSend').onclick=async()=>{
-   if(busy)return;
+ const mdmDataOwner1=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
+   if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(editorOwner)||busy)return;
    const summary=String(ta.value||'').trim(),err=modal.querySelector('#mdmEvidenceEditorError'),send=modal.querySelector('#mdmEvidenceEditorSend');
    if(!summary){err.style.display='block';err.textContent=t('Scrivi prima una breve evidenza.','Write a short evidence note first.','Ikteb nota qasira tal-evidenza l-ewwel.');return}
    busy=true;send.disabled=true;
    try{
      const automaticEvidence=window.MDM_PROOFLOOP_VERIFICATION?.evidenceForServerMission?.(mid)||null;
-     const d=await rpc('mdm_student_submit_mission_evidence',{p_mission_id:mid,p_evidence:{summary,source:'unified-mission-lifecycle',version:VERSION,submittedAt:new Date().toISOString(),automaticEvidence}});
+     const d=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1,await rpc('mdm_student_submit_mission_evidence',{p_mission_id:mid,p_evidence:{summary,source:'unified-mission-lifecycle',version:VERSION,submittedAt:new Date().toISOString(),automaticEvidence}}));
      if(d?.ok===false)throw new Error(String(d.error||'submit_failed'));
-     try{localStorage.removeItem(draftKey(mid))}catch(_){}
+     try{localStorage.removeItem(draftKey(mid))}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1);}
      closeEditor();
-     await load(true);
-   }catch(_){
+     window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1,await load(true));
+   }catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1);
      err.style.display='block';
      err.textContent=t('Invio non riuscito. Riprova.','Could not send. Try again.','Ma setax jintbagħat. Erġa’ pprova.');
-   }finally{busy=false;send.disabled=false}
- };
+   }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner1)){busy=false;send.disabled=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner1)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+};
  setTimeout(()=>{try{ta.focus({preventScroll:true});const n=ta.value.length;ta.setSelectionRange(n,n)}catch(_){}},180);
 }
 function bind(host){
@@ -147,14 +163,17 @@ function bind(host){
  }));
 }
 async function load(force=false){
+ const mdmDataOwner2=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(!home()||!session())return false;
  try{
-  const d=await rpc('mdm_student_evidence_list_missions',{}),items=Array.isArray(d?.missions)?d.missions:[];
-  saveMissionCache(items);
+  const d=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2,await rpc('mdm_student_evidence_list_missions',{})),items=Array.isArray(d?.missions)?d.missions:[];
+  saveMissionCache(items,mdmDataOwner2);
   const current=currentMission(items);
-  try{window.MDM_PROOFLOOP_VERIFICATION?.unifiedCurrent?.(window.MDM_PROOFLOOP_ENGINE?.evaluate?.()||null)}catch(_){}
-  try{window.MDM_DRIVER_COMPETENCE_PASSPORT?.sync?.();window.MDM_DRIVER_COMPETENCE_PASSPORT?.render?.()}catch(_){}
-  try{window.MDM_PROOFLOOP_UI?.render?.();window.MDM_COMPACT_HOME_45836?.refresh?.()}catch(_){}
+  try{window.MDM_PROOFLOOP_VERIFICATION?.unifiedCurrent?.(window.MDM_PROOFLOOP_ENGINE?.evaluate?.()||null)}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2);}
+  try{window.MDM_DRIVER_COMPETENCE_PASSPORT?.sync?.();window.MDM_DRIVER_COMPETENCE_PASSPORT?.render?.()}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2);}
+  try{window.MDM_PROOFLOOP_UI?.render?.();window.MDM_COMPACT_HOME_45836?.refresh?.()}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2);}
   const rows=historyMissionRows(items,current);
   if(!rows.length){document.getElementById(HOST_ID)?.remove();return true}
   const a=anchor();if(!a)return false;
@@ -170,7 +189,9 @@ async function load(force=false){
   host.innerHTML='<div class="sse-head"><div><small>MDM · '+VERSION+'</small><strong>🏫 '+esc(t('Storico e altre missioni','History and other missions','Storja u missjonijiet oħra'))+'</strong></div><button class="sse-refresh" type="button">↻</button></div><div class="sse-list">'+rows.map(cardHtml).join('')+'</div>';
   host.dataset.sig=sig;
   bind(host);return true;
- }catch(_){return false}
+ }catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2);return false}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner2)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function schedule(){[0,180,500,1000,1800,3000,5000,8000].forEach(ms=>setTimeout(load,ms))}
 schedule();

@@ -15,6 +15,10 @@ let mountBusy=false;
 let syncBusy=false;
 let retryTimer=null;
 let retryUntil=0;
+window.MDM_ACCOUNT_ISOLATION_SAFE.subscribe(()=>{
+ if(watchId!==null&&navigator.geolocation)navigator.geolocation.clearWatch(watchId);
+ schoolStudents=[];selectedStudent='';watchId=null;active=null;mountBusy=false;syncBusy=false;
+});
 
 function parse(v){try{return v?JSON.parse(v):null}catch(_){return null}}
 function session(){return parse(localStorage.getItem(AUTH))}
@@ -33,18 +37,23 @@ function cfg(){
  return {endpoint:String(c.endpoint).replace(/\/$/,''),key:String(c.publishableKey)};
 }
 async function rpc(name,payload){
+ const mdmDataOwner0=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  const c=cfg(),s=session();
  if(!authenticated())throw new Error('authentication_required');
- const r=await fetch(c.endpoint+'/rest/v1/rpc/'+name,{
+ const r=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0,await fetch(c.endpoint+'/rest/v1/rpc/'+name,{
   method:'POST',
   headers:{'Content-Type':'application/json','apikey':c.key,'Authorization':'Bearer '+s.accessToken},
   body:JSON.stringify(payload||{}),
   cache:'no-store'
- });
- const tx=await r.text();let d={};try{d=tx?JSON.parse(tx):{}}catch(_){}
+ }));
+ const tx=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0,await r.text());let d={};try{d=tx?JSON.parse(tx):{}}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0);}
  if(Array.isArray(d))d=d[0]||{};
  if(!r.ok)throw new Error(String(d?.message||d?.error||('http_'+r.status)));
  return d||{};
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner0)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function textOf(el){return String(el?.innerText||el?.textContent||'')}
 function findSchoolHost(){
@@ -118,11 +127,16 @@ function onPosition(pos){
 }
 function onGeoError(err){setPanelStatus(t('GPS non disponibile: ','GPS unavailable: ','GPS mhux disponibbli: ')+String(err?.message||err||''),false)}
 async function loadStudents(){
- const d=await rpc('mdm_school_list_active_students',{});
+ const mdmDataOwner1=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
+ const d=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1,await rpc('mdm_school_list_active_students',{}));
  if(d.authorized!==true){schoolStudents=[];selectedStudent='';return {authorized:false,rows:[]}}
  schoolStudents=Array.isArray(d.students)?d.students:[];
  if(!selectedStudent&&schoolStudents[0])selectedStudent=String(schoolStudents[0].student_user_id||'');
  return {authorized:true,rows:schoolStudents};
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner1)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function panelHtml(){
  const hasStudents=schoolStudents.length>0;
@@ -155,6 +169,9 @@ function bindPanel(){
  if(stop)stop.onclick=stopTelemetry;
 }
 async function mountSchool(){
+ const mdmDataOwner2=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(mountBusy)return false;
  const host=findSchoolHost();
  if(!host){document.getElementById('mdmSchoolTelemetryPanel')?.remove();return false}
@@ -162,7 +179,7 @@ async function mountSchool(){
  mountBusy=true;
  try{
   let loaded={authorized:false,rows:[]},loadError='';
-  try{loaded=await loadStudents()}catch(e){schoolStudents=[];selectedStudent='';loadError=String(e?.message||e||'')}
+  try{loaded=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2,await loadStudents())}catch(e){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2);schoolStudents=[];selectedStudent='';loadError=String(e?.message||e||'')}
   const wrap=document.createElement('div');
   wrap.innerHTML=panelHtml();
   const panel=wrap.firstElementChild;
@@ -173,15 +190,17 @@ async function mountSchool(){
   else if(loaded.authorized!==true){setPanelStatus(t('Telemetria visibile, ma questo account non è autorizzato come Scuola.','Telemetry is visible, but this account is not authorized as a School.','It-telemetrija tidher, iżda dan il-kont mhux awtorizzat bħala Skola.'),false)}
   else if(!loaded.rows.length){setPanelStatus(t('Telemetria pronta. Nessuno studente attivo disponibile.','Telemetry ready. No active learner is available.','Telemetrija lesta. M’hemm l-ebda student attiv disponibbli.'),null)}
   return true;
- }catch(_){return false}
- finally{mountBusy=false}
+ }catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2);return false}
+ finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner2)){mountBusy=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner2)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function startTelemetry(){
  if(active||watchId!==null)return;
  if(!selectedStudent){setPanelStatus(t('Seleziona uno studente.','Select a learner.','Agħżel student.'),false);return}
  if(!navigator.geolocation){setPanelStatus(t('GPS non supportato su questo dispositivo.','GPS is not supported on this device.','GPS mhux appoġġjat fuq dan l-apparat.'),false);return}
  active={sessionId:'TEL-'+Date.now().toString(36).toUpperCase(),studentUserId:selectedStudent,startedAt:new Date().toISOString(),startedMs:Date.now(),samples:0,distanceM:0,maxSpeedKph:0,lastSpeedKph:0,stops:0,accuracySum:0,bestAccuracy:9999,start:null,end:null,last:null,wasMoving:false};
- watchId=navigator.geolocation.watchPosition(onPosition,onGeoError,{enableHighAccuracy:true,maximumAge:1000,timeout:12000});
+ watchId=navigator.geolocation.watchPosition(window.MDM_ACCOUNT_ISOLATION_SAFE.bind(onPosition),window.MDM_ACCOUNT_ISOLATION_SAFE.bind(onGeoError),{enableHighAccuracy:true,maximumAge:1000,timeout:12000});
  const start=document.getElementById('mdmTelemetryStart'),stop=document.getElementById('mdmTelemetryStop');
  if(start){start.disabled=true;start.style.opacity='.5'}
  if(stop){stop.disabled=false;stop.style.opacity='1'}
@@ -189,9 +208,12 @@ function startTelemetry(){
  live();
 }
 async function stopTelemetry(){
+ const mdmDataOwner3=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(!active)return;
  const snapshot=active;
- if(watchId!==null){try{navigator.geolocation.clearWatch(watchId)}catch(_){}watchId=null}
+ if(watchId!==null){try{navigator.geolocation.clearWatch(watchId)}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3);}watchId=null}
  active=null;
  const start=document.getElementById('mdmTelemetryStart'),stop=document.getElementById('mdmTelemetryStop');
  if(start){start.disabled=false;start.style.opacity='1'}
@@ -203,18 +225,23 @@ async function stopTelemetry(){
  const telemetry={sessionId:snapshot.sessionId,source:'school_instructor',valid:true,startedAt:snapshot.startedAt,endedAt,durationSeconds:duration,distanceKm:Number((snapshot.distanceM/1000).toFixed(3)),avgSpeedKph:duration>0?Number(((snapshot.distanceM/1000)/(duration/3600)).toFixed(1)):0,maxSpeedKph:Number(snapshot.maxSpeedKph.toFixed(1)),stops:Number(snapshot.stops||0),sampleCount:Number(snapshot.samples||0),avgAccuracyM:snapshot.samples?Number((snapshot.accuracySum/snapshot.samples).toFixed(1)):null,bestAccuracyM:Number.isFinite(snapshot.bestAccuracy)?Number(snapshot.bestAccuracy.toFixed(1)):null,coarseStart:snapshot.start?{lat:coarse(snapshot.start.lat),lon:coarse(snapshot.start.lon)}:null,coarseEnd:snapshot.end?{lat:coarse(snapshot.end.lat),lon:coarse(snapshot.end.lon)}:null};
  const payload={schema:SCHEMA,evidenceType:'telemetry_session',title:t('Telemetria lezione pratica','Practical lesson telemetry','Telemetrija tal-lezzjoni prattika'),priority:'telemetry',requiresInstructorCheck:false,telemetry};
  setPanelStatus(t('Salvataggio server in corso…','Saving to server…','Qed tissejvja fuq is-server…'),null);
- try{await rpc('mdm_school_assign_mission',{p_student_user_id:snapshot.studentUserId,p_payload:payload});setPanelStatus('✅ '+t('Sessione salvata e attribuita allo studente.','Session saved and assigned to the learner.','Is-sessjoni ġiet salvata u marbuta mal-istudent.'),true)}
- catch(e){setPanelStatus('❌ '+t('Salvataggio non riuscito: ','Save failed: ','Is-salvataġġ falla: ')+String(e?.message||e||''),false)}
+ try{window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3,await rpc('mdm_school_assign_mission',{p_student_user_id:snapshot.studentUserId,p_payload:payload}));setPanelStatus('✅ '+t('Sessione salvata e attribuita allo studente.','Session saved and assigned to the learner.','Is-sessjoni ġiet salvata u marbuta mal-istudent.'),true)}
+ catch(e){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3);setPanelStatus('❌ '+t('Salvataggio non riuscito: ','Save failed: ','Is-salvataġġ falla: ')+String(e?.message||e||''),false)}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner3)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function readLocalTelemetry(){return parse(localStorage.getItem(TELEMETRY_KEY))||{sessions:[]}}
 function writeLocalTelemetry(v){try{localStorage.setItem(TELEMETRY_KEY,JSON.stringify(v))}catch(_){}}
 async function syncStudentTelemetry(){
+ const mdmDataOwner4=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
  if(syncBusy||!authenticated())return false;
  const host=findSchoolHost();
  if(host)return false;
  syncBusy=true;
  try{
-  const d=await rpc('mdm_student_list_missions',{});
+  const d=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4,await rpc('mdm_student_list_missions',{}));
   const rows=Array.isArray(d?.missions)?d.missions:(Array.isArray(d)?d:[]);
   const incoming=rows.map(x=>x?.payload).filter(p=>p&&p.schema===SCHEMA&&p.evidenceType==='telemetry_session'&&p.telemetry?.valid===true).map(p=>p.telemetry);
   if(!incoming.length)return false;
@@ -225,20 +252,27 @@ async function syncStudentTelemetry(){
   const sessions=Array.from(byId.values()).sort((a,b)=>String(a.startedAt||'').localeCompare(String(b.startedAt||'')));
   if(sessions.length===existing.length&&incoming.every(x=>existing.some(e=>String(e?.sessionId||'')===String(x.sessionId||''))))return false;
   store.sessions=sessions;store.updatedAt=new Date().toISOString();store.source='server_school_telemetry_sync';writeLocalTelemetry(store);
-  try{window.MDM_PROOFLOOP_UI?.render?.()}catch(_){}
-  try{window.MDM_COMPACT_HOME_45836?.refresh?.()}catch(_){}
+  try{window.MDM_PROOFLOOP_UI?.render?.()}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4);}
+  try{window.MDM_COMPACT_HOME_45836?.refresh?.()}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4);}
   return true;
- }catch(_){return false}
- finally{syncBusy=false}
+ }catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4);return false}
+ finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner4)){syncBusy=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner4)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function startRetryWindow(){
  retryUntil=Date.now()+30000;
  if(retryTimer)return;
  retryTimer=setInterval(async function(){
+ const mdmDataOwner5=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
   if(Date.now()>retryUntil){clearInterval(retryTimer);retryTimer=null;return}
-  const ok=await mountSchool();
+  const ok=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5,await mountSchool());
   if(ok){clearInterval(retryTimer);retryTimer=null}
- },500);
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner5)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+},500);
 }
 function schedule(){
  setTimeout(mountSchool,60);

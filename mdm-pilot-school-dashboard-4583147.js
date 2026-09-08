@@ -16,13 +16,23 @@
   const state={version:VERSION,mode:'enforced',enforcement:true,status:'ready',licenseId:'',lastInvitation:null,error:'',emailDelivery:'',activationQueue:[]};
   let activationRefreshInFlight=null;
   let activationQueueLoaded=false;
+  // P0-02: only account cache lifetime; license and seat rules are unchanged.
+  window.MDM_ACCOUNT_ISOLATION_SAFE.subscribe(()=>{
+    state.licenseId='';state.lastInvitation=null;state.activationQueue=[];
+    state.status='ready';state.error='';state.emailDelivery='';activationQueueLoaded=false;activationRefreshInFlight=null;
+  });
 
   function lang3(it,en,mt){try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en;}}
   function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
   function normalizeEmail(value){return String(value||'').trim().replace(/^mailto:\s*/i,'').trim().toLowerCase();}
   function cfg(){const c=window.MDM_BACKEND_CONFIG;if(!c||!c.enabled||!c.endpoint||!c.publishableKey)throw new Error('backend_config_unavailable');return {endpoint:String(c.endpoint).replace(/\/$/,''),key:String(c.publishableKey)};}
   function readSession(){try{const raw=localStorage.getItem(AUTH_KEY);if(!raw)return null;const s=JSON.parse(raw);if(!s||s.status!=='authenticated'||!s.accessToken||!s.user?.id)return null;if(Number(s.expiresAt||0)>0&&Number(s.expiresAt)<=Date.now())return null;return s;}catch(_){return null;}}
-  async function rpc(name,payload){const c=cfg(),session=readSession();if(!session)throw new Error('authentication_required');const response=await fetch(c.endpoint+'/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json','apikey':c.key,'Authorization':'Bearer '+session.accessToken},body:JSON.stringify(payload||{}),cache:'no-store'});const text=await response.text();let data={};try{data=text?JSON.parse(text):{}}catch(_){}if(Array.isArray(data))data=data[0]||{};if(!response.ok)throw new Error(String(data?.message||data?.error||('http_'+response.status)));return data||{};}
+  async function rpc(name,payload){
+ const mdmDataOwner0=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+const c=cfg(),session=readSession();if(!session)throw new Error('authentication_required');const response=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0,await fetch(c.endpoint+'/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json','apikey':c.key,'Authorization':'Bearer '+session.accessToken},body:JSON.stringify(payload||{}),cache:'no-store'}));const text=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0,await response.text());let data={};try{data=text?JSON.parse(text):{}}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0);}if(Array.isArray(data))data=data[0]||{};if(!response.ok)throw new Error(String(data?.message||data?.error||('http_'+response.status)));return data||{};
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner0)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+}
 
   function savePending(token,email){try{localStorage.setItem(PENDING_KEY,JSON.stringify({token:String(token||''),email:normalizeEmail(email),at:Date.now()}));}catch(_){}}
   function readPending(){try{const raw=localStorage.getItem(PENDING_KEY);if(!raw)return null;const p=JSON.parse(raw);if(!p||String(p.token||'').length<32||Date.now()-Number(p.at||0)>7*24*60*60*1000){localStorage.removeItem(PENDING_KEY);return null;}return p;}catch(_){return null;}}
@@ -107,27 +117,32 @@
   }
 
   async function autoRedeemPending(){
+ const mdmDataOwner1=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
     const pending=readPending(),session=readSession();if(!pending||!session)return false;
     const sessionEmail=normalizeEmail(session.user?.email||'');
     if(pending.email&&sessionEmail&&pending.email!==sessionEmail){
       showStudentNotice(lang3('Questo invito appartiene a un’altra email.','This invitation belongs to another email.','Din l-istedina tappartjeni għal email oħra.'),false);return false;
     }
     try{
-      const data=await rpc('mdm_redeem_pilot_invitation',{p_invite_token:pending.token});
+      const data=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1,await rpc('mdm_redeem_pilot_invitation',{p_invite_token:pending.token}));
       if(data?.ok===true&&data?.redeemed===true){
         clearPending();
         showStudentNotice(lang3('Invito scuola accettato. Ora la scuola deve attivare il tuo posto.','School invitation accepted. The school now needs to activate your seat.','L-istedina tal-iskola ġiet aċċettata. Issa l-iskola trid tattiva s-seat tiegħek.'));
-        try{window.MDM_PILOT_ACCESS_BRIDGE?.check?.();}catch(_){}
+        try{window.MDM_PILOT_ACCESS_BRIDGE?.check?.();}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1);}
         return true;
       }
       if(String(data?.error||'')==='invitation_not_pending'&&String(data?.status||'')==='redeemed'){
         clearPending();return true;
       }
       throw new Error(String(data?.error||'redeem_failed'));
-    }catch(e){
+    }catch(e){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1);
       state.error=String(e?.message||e||'redeem_failed');return false;
     }
-  }
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner1)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+}
 
   async function processInboundInvite(){
     captureInviteFromUrl();
@@ -178,32 +193,45 @@
   function removeLegacySeatQueue(){try{document.getElementById('mdmPilotSeatAssignPanel')?.remove();}catch(_){}}
   function removePanel(){document.getElementById('mdmPilotRealInvitePanel')?.remove();removeActivationPanel();removeLegacySeatQueue();}
   async function resolveSchoolLicense(host){
+ const mdmDataOwner2=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
     if(!readSession())throw new Error('authentication_required');
-    const data=await rpc('mdm_school_get_pilot_license',{});
+    const data=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2,await rpc('mdm_school_get_pilot_license',{}));
     if(data?.authorized===true&&data?.license_found===true&&data?.license_id){
       state.licenseId=String(data.license_id);
       return state.licenseId;
     }
     throw new Error(String(data?.reason||(data?.license_found===false?'no_active_school_pilot_license':'pilot_license_lookup_failed')));
-  }
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner2)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+}
 
   function activationPanel(){return document.getElementById('mdmPilotActivationQueuePanel');}
   function removeActivationPanel(){try{activationPanel()?.remove();}catch(_){}}
 
   async function refreshActivationQueue(){
+ const mdmDataOwner3=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
     if(activationRefreshInFlight)return activationRefreshInFlight;
     activationRefreshInFlight=refreshActivationQueueOnce();
-    try{return await activationRefreshInFlight;}finally{activationRefreshInFlight=null;}
-  }
+    try{return window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3,await activationRefreshInFlight);}finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner3)){activationRefreshInFlight=null;}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner3)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+}
 
   async function refreshActivationQueueOnce(){
+ const mdmDataOwner4=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
     const panel=activationPanel();
     if(!panel)return false;
     const body=panel.querySelector('#mdmPilotActivationQueueBody');
     if(!body)return false;
     body.innerHTML='<div style="opacity:.7;font-size:12px">Aggiornamento…</div>';
     try{
-      const data=await rpc('mdm_school_list_pilot_activation_queue',{});
+      const data=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4,await rpc('mdm_school_list_pilot_activation_queue',{}));
       if(data?.authorized!==true)throw new Error('school_admin_required');
       const items=Array.isArray(data?.items)?data.items:[];
       state.activationQueue=items;
@@ -228,11 +256,13 @@
         btn.onclick=()=>revokeSeat(String(btn.dataset.invitationId||''),btn);
       });
       return true;
-    }catch(e){
+    }catch(e){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4);
       body.innerHTML='<div style="font-size:12px;color:#a33">❌ '+esc(String(e?.message||e||'activation_queue_failed'))+'</div>';
       return false;
     }
-  }
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner4)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+}
 
   async function assignSeat(invitationId,button){
     if(!invitationId)return;
@@ -295,27 +325,38 @@
   function mount(){removeLegacySeatQueue();const host=findSchoolConsole();if(!host||!renderedSchoolAdmin(host)||!readSession()){removePanel();return false;}buildInvitePanel(host);buildActivationPanel(host);return true;}
 
   async function createInvitation(){
+ const mdmDataOwner5=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
     const emailEl=document.getElementById('mdmPilotInviteEmail'),hoursEl=document.getElementById('mdmPilotInviteHours'),result=document.getElementById('mdmPilotInviteResult'),button=document.getElementById('mdmPilotCreateRealInvite');if(!emailEl||!result||!button)return;
     const email=normalizeEmail(emailEl.value);emailEl.value=email;result.style.display='block';
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){result.textContent='❌ '+lang3('Inserisci un’email valida.','Enter a valid email.','Daħħal email valida.');return;}
     button.disabled=true;state.status='creating';state.error='';state.lastInvitation=null;state.emailDelivery='';result.textContent=lang3('Creazione invito e invio email…','Creating invitation and sending email…','Qed tinħoloq l-istedina u tintbagħat l-email…');
     try{
-      const host=findSchoolConsole(),licenseId=await resolveSchoolLicense(host),hours=Math.max(1,Math.min(168,Number(hoursEl?.value||72)||72));
-      const data=await rpc('mdm_school_create_pilot_invitation',{p_license_id:licenseId,p_invite_email:email,p_valid_hours:hours});
+      const host=findSchoolConsole(),licenseId=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5,await resolveSchoolLicense(host)),hours=Math.max(1,Math.min(168,Number(hoursEl?.value||72)||72));
+      const data=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5,await rpc('mdm_school_create_pilot_invitation',{p_license_id:licenseId,p_invite_email:email,p_valid_hours:hours}));
       if(data?.ok!==true||!data?.invite_token)throw new Error(String(data?.error||'invite_creation_failed'));
       state.lastInvitation={invitationId:String(data.invitation_id||''),email:String(data.invite_email||email),expiresAt:String(data.expires_at||''),token:String(data.invite_token)};
       try{
-        await sendInvitationEmail(state.lastInvitation.email,state.lastInvitation.token,state.lastInvitation.invitationId);
+        window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5,await sendInvitationEmail(state.lastInvitation.email,state.lastInvitation.token,state.lastInvitation.invitationId));
         state.status='sent';state.emailDelivery='sent';
         result.innerHTML=`<strong>✅ ${esc(lang3('Invito creato e email inviata','Invitation created and email sent','Stedina maħluqa u email mibgħuta'))}</strong><br><br><b>Email:</b> ${esc(state.lastInvitation.email)}<br><b>${esc(lang3('Scadenza','Expires','Jiskadi'))}:</b> ${esc(state.lastInvitation.expiresAt||'—')}<br><br>${esc(lang3('Lo studente deve aprire il link ricevuto: MDM conserverà l’invito e lo riscatterà automaticamente dopo l’accesso.','The student should open the received link: MDM will keep the invitation and redeem it automatically after sign-in.','L-istudent għandu jiftaħ il-link: MDM iżomm l-istedina u jużaha awtomatikament wara l-login.'))}`;
-      }catch(mailError){
+      }catch(mailError){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5);
         state.status='created_email_failed';state.emailDelivery='failed';state.error=String(mailError?.message||mailError||'email_send_failed');
         result.innerHTML=`<strong>⚠️ ${esc(lang3('Invito creato, ma email non inviata','Invitation created, but email was not sent','Stedina maħluqa, iżda l-email ma ntbagħtitx'))}</strong><br><br><b>Email:</b> ${esc(state.lastInvitation.email)}<br><b>${esc(lang3('Errore email','Email error','Żball tal-email'))}:</b> ${esc(state.error)}<br><br><details><summary style="font-weight:800">${esc(lang3('Token di emergenza','Emergency token','Token ta’ emerġenza'))}</summary><code id="mdmPilotInviteRawToken" style="display:block;margin-top:8px;word-break:break-all">${esc(state.lastInvitation.token)}</code><button id="mdmPilotCopyInviteToken" class="btn secondary" type="button" style="margin-top:8px">⧉ ${esc(lang3('Copia token','Copy token','Ikkopja token'))}</button></details>`;
-        const copy=result.querySelector('#mdmPilotCopyInviteToken');if(copy)copy.onclick=async()=>{try{await navigator.clipboard.writeText(state.lastInvitation.token);copy.textContent='✓ '+lang3('Copiato','Copied','Ikkupjat');}catch(_){}};
+        const copy=result.querySelector('#mdmPilotCopyInviteToken');if(copy)copy.onclick=async()=>{
+ const mdmDataOwner6=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5);
+try{window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner6,await navigator.clipboard.writeText(state.lastInvitation.token));copy.textContent='✓ '+lang3('Copiato','Copied','Ikkupjat');}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner6);}
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner6)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+};
       }
-    }catch(e){state.status='error';state.error=String(e?.message||e||'invite_creation_failed');result.textContent='❌ '+state.error;}
-    finally{button.disabled=false;}
-  }
+    }catch(e){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5);state.status='error';state.error=String(e?.message||e||'invite_creation_failed');result.textContent='❌ '+state.error;}
+    finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner5)){button.disabled=false;}}
+
+ }catch(mdmDataError){if(window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+}
 
   function schedule(){syncInviteLoginEmail();try{queueMicrotask(mount);}catch(_){mount();}try{requestAnimationFrame(()=>requestAnimationFrame(mount));}catch(_){}setTimeout(mount,80);}
   function installHistoryLifecycleHook(){if(window.__MDM_PILOT_SCHOOL_HISTORY_HOOK__)return;window.__MDM_PILOT_SCHOOL_HISTORY_HOOK__=true;const push=history.pushState.bind(history),replace=history.replaceState.bind(history);history.pushState=function(){const out=push(...arguments);setTimeout(schedule,0);return out;};history.replaceState=function(){const out=replace(...arguments);setTimeout(schedule,0);return out;};window.addEventListener('popstate',()=>setTimeout(schedule,0));}

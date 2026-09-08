@@ -97,7 +97,7 @@ function start(){
    fastRestore();
    return;
   }
-  load('mdm-school-telemetry-engine-45838193.js?v=458381944-engine-no-flash',function(){
+  load('mdm-school-telemetry-engine-45838193.js?v=p002-ownership-20260908',function(){
    try{window.MDM_SCHOOL_TELEMETRY_PLACEMENT_458381944?.place?.();}catch(_){}
    load('mdm-school-evidence-entry-4583823.js?v=458382524-immediate-school-only',function(){restoreLoadedUi();signalSchoolHomeReady();fastRestore();});
    fastRestore();

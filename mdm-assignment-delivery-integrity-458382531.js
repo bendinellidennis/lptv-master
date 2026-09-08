@@ -12,6 +12,7 @@ const AUTH_KEY='mdm_auth_session_v4410';
 const STATE_KEY='mdm_instructor_assignments_4320';
 const SCHEMA='mdm-instructor-assignment-v1';
 let busy=false;
+window.MDM_ACCOUNT_ISOLATION_SAFE.subscribe(()=>{busy=false;});
 
 function parse(v){try{return v?JSON.parse(v):null}catch(_){return null}}
 function routeName(){return String(location.hash||'').replace(/^#/,'').split('?')[0].trim()}
@@ -71,34 +72,49 @@ function formPayload(target,existing){
   };
 }
 async function rpc(name,payload){
+ const mdmDataOwner0=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
   const c=cfg(),s=session();
   if(!c||!s)throw new Error('authentication_required');
-  const r=await fetch(c.endpoint+'/rest/v1/rpc/'+name,{
+  const r=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0,await fetch(c.endpoint+'/rest/v1/rpc/'+name,{
     method:'POST',
     headers:{'Content-Type':'application/json','apikey':c.key,'Authorization':'Bearer '+String(s.accessToken)},
     body:JSON.stringify(payload||{}),cache:'no-store',credentials:'omit'
-  });
-  const tx=await r.text();let d={};try{d=tx?JSON.parse(tx):{}}catch(_){}
+  }));
+  const tx=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0,await r.text());let d={};try{d=tx?JSON.parse(tx):{}}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0);}
   if(Array.isArray(d))d=d[0]||{};
   return {ok:r.ok,status:r.status,data:d};
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner0)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function withRefresh(name,payload){
-  let r=await rpc(name,payload);
+ const mdmDataOwner1=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
+  let r=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1,await rpc(name,payload));
   if(r.status===401){
-    try{if(typeof mdmAuthRefreshSession==='function')await mdmAuthRefreshSession()}catch(_){}
-    r=await rpc(name,payload);
+    try{if(typeof mdmAuthRefreshSession==='function')window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1,await mdmAuthRefreshSession())}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1);}
+    r=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1,await rpc(name,payload));
   }
   return r;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner1)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function confirmed(targetUserId,missionId){
+ const mdmDataOwner2=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
   for(const wait of [0,120,350]){
-    if(wait)await new Promise(r=>setTimeout(r,wait));
-    const q=await withRefresh('mdm_school_list_student_missions',{p_student_user_id:targetUserId});
+    if(wait)window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2,await new Promise(r=>setTimeout(r,wait)));
+    const q=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2,await withRefresh('mdm_school_list_student_missions',{p_student_user_id:targetUserId}));
     if(!q.ok||q.data?.ok===false)continue;
     const rows=Array.isArray(q.data?.missions)?q.data.missions:[];
     if(rows.some(x=>String(x?.id||x?.mission_id||'')===String(missionId)))return true;
   }
   return false;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner2)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 function persistDelivered(payload,missionId){
   const s=state();
@@ -118,16 +134,24 @@ function persistError(payload,error){
   saveState(s);
 }
 async function deliver(payload,target){
-  const r=await withRefresh('mdm_school_assign_mission',{p_student_user_id:target.userId,p_payload:payload});
+ const mdmDataOwner3=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
+  const r=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3,await withRefresh('mdm_school_assign_mission',{p_student_user_id:target.userId,p_payload:payload}));
   const mid=String(r.data?.mission_id||'');
   if(!r.ok||r.data?.ok===false||!uuid(mid))throw new Error(String(r.data?.error||r.data?.message||('http_'+r.status)));
-  if(!(await confirmed(target.userId,mid)))throw new Error('mission_not_confirmed_on_server');
+  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3,await confirmed(target.userId,mid))))throw new Error('mission_not_confirmed_on_server');
   persistDelivered(payload,mid);
-  try{if(typeof render==='function')render()}catch(_){}
+  try{if(typeof render==='function')render()}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3);}
   notify('Missione consegnata e confermata dal server.','Mission delivered and confirmed by the server.','Il-missjoni ntbagħtet u ġiet ikkonfermata mis-server.');
   return true;
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner3)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function handleCreate(button){
+ const mdmDataOwner4=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
   if(busy)return;
   const target=selectedServerTarget();if(!target)return;
   const payload=formPayload(target,null);
@@ -136,14 +160,19 @@ async function handleCreate(button){
     return;
   }
   busy=true;button.disabled=true;
-  try{await deliver(payload,target)}
-  catch(e){
+  try{window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4,await deliver(payload,target))}
+  catch(e){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4);
     persistError(payload,e?.message||e);
-    try{if(typeof render==='function')render()}catch(_){}
+    try{if(typeof render==='function')render()}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4);}
     notify('Consegna server non confermata. La missione non viene marcata come consegnata.','Server delivery was not confirmed. The mission is not marked as delivered.','Il-kunsinna mis-server ma ġietx ikkonfermata. Il-missjoni mhix immarkata bħala mibgħuta.');
-  }finally{busy=false;button.disabled=false}
+  }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner4)){busy=false;button.disabled=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner4)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function handleExisting(button){
+ const mdmDataOwner5=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
   if(busy)return;
   const target=selectedServerTarget();if(!target)return;
   const id=String(button.getAttribute('data-assignment-send-server')||'');
@@ -151,12 +180,14 @@ async function handleExisting(button){
   if(!existing)return;
   const payload=formPayload(target,existing);if(!payload)return;
   busy=true;button.disabled=true;
-  try{await deliver(payload,target)}
-  catch(e){
+  try{window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5,await deliver(payload,target))}
+  catch(e){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5);
     persistError(payload,e?.message||e);
-    try{if(typeof render==='function')render()}catch(_){}
+    try{if(typeof render==='function')render()}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner5);}
     notify('Consegna server non confermata.','Server delivery was not confirmed.','Il-kunsinna mis-server ma ġietx ikkonfermata.');
-  }finally{busy=false;button.disabled=false}
+  }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner5)){busy=false;button.disabled=false}}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner5)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 document.addEventListener('click',function(ev){
   if(routeName()!=='instructorassignments')return;

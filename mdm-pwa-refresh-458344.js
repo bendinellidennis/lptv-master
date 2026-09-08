@@ -11,31 +11,37 @@
   let alertRequestSeq=0;
   let latestPendingRows=[];
   let latestPendingAt=0;
+  window.MDM_ACCOUNT_ISOLATION_SAFE.subscribe(()=>{alertRequestSeq++;latestPendingRows=[];latestPendingAt=0;});
 
   function lang3(it,en,mt){try{const raw=localStorage.getItem('mdm-v1-settings');const code=raw?String(JSON.parse(raw).lang||'en'):'en';return code==='it'?it:code==='mt'?mt:en;}catch(_){return en;}}
   function esc(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
   function session(){try{const raw=localStorage.getItem(AUTH_KEY);if(!raw)return null;const s=JSON.parse(raw);if(!s||s.status!=='authenticated'||!s.accessToken||!s.user?.id)return null;if(Number(s.expiresAt||0)>0&&Number(s.expiresAt)<=Date.now())return null;return s;}catch(_){return null;}}
   async function rpc(name,payload){
+ const mdmDataOwner0=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
     const cfg=window.MDM_BACKEND_CONFIG,s=session();
     if(!cfg||!cfg.enabled||!cfg.endpoint||!cfg.publishableKey)throw new Error('backend_config_unavailable');
     if(!s)throw new Error('authentication_required');
     const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
     try{
-      const r=await fetch(String(cfg.endpoint).replace(/\/$/,'')+'/rest/v1/rpc/'+name,{
+      const r=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0,await fetch(String(cfg.endpoint).replace(/\/$/,'')+'/rest/v1/rpc/'+name,{
         method:'POST',
         headers:{'Content-Type':'application/json','apikey':cfg.publishableKey,'Authorization':'Bearer '+s.accessToken},
         body:JSON.stringify(payload||{}),
         cache:'no-store',
         signal:controller.signal
-      });
-      const text=await r.text();let data={};try{data=text?JSON.parse(text):{}}catch(_){}
+      }));
+      const text=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0,await r.text());let data={};try{data=text?JSON.parse(text):{}}catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0);}
       if(!r.ok)throw new Error(String(data?.message||data?.error||('http_'+r.status)));
       return data;
-    }catch(e){
+    }catch(e){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner0);
       if(e?.name==='AbortError')throw new Error('request_timeout');
       throw e;
     }finally{clearTimeout(timer);}
-  }
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner0)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+}
 
   async function hardRefresh(){
     const stamp=Date.now().toString(36);
@@ -117,6 +123,9 @@
   }
 
   async function loadDirectQueue(forceRefresh=false){
+ const mdmDataOwner1=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
     const overlay=ensureDirectQueue(),body=overlay.querySelector('#mdmDirectSeatQueueBody');
     body.textContent=lang3('Caricamento richieste…','Loading requests…','Qed jitgħabbew it-talbiet…');
     try{
@@ -124,7 +133,7 @@
       if(!forceRefresh && latestPendingRows.length && (Date.now()-latestPendingAt)<30000){
         rows=latestPendingRows.slice();
       }else{
-        rows=await rpc('mdm_school_list_redeemed_pilot_invitations',{});
+        rows=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1,await rpc('mdm_school_list_redeemed_pilot_invitations',{}));
         if(!Array.isArray(rows))rows=rows?[rows]:[];
         showAlert(rows);
       }
@@ -140,21 +149,35 @@
         item.innerHTML=`<div style="font-weight:900;font-size:16px;word-break:break-word">${esc(email)}</div><div style="font-size:12px;opacity:.72;margin-top:4px">${esc(lang3('Invito riscattato · attivazione richiesta','Invitation redeemed · activation required','Stedina mifdija · attivazzjoni meħtieġa'))}</div><button class="btn mdmDirectAssignSeat" type="button" style="margin-top:11px;width:100%">${esc(lang3('Attiva studente','Activate student','Attiva student'))}</button><div class="mdmDirectAssignResult" style="display:none;margin-top:9px;font-size:13px;font-weight:700"></div>`;
         const btn=item.querySelector('.mdmDirectAssignSeat'),result=item.querySelector('.mdmDirectAssignResult');
         btn.onclick=async()=>{
+ const mdmDataOwner2=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1);
+
           btn.disabled=true;result.style.display='block';result.textContent=lang3('Attivazione in corso…','Activating…','Qed jiġi attivat…');
           try{
-            let data=await rpc('mdm_school_assign_pilot_seat',{p_invitation_id:id});if(Array.isArray(data))data=data[0]||{};
+            let data=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2,await rpc('mdm_school_assign_pilot_seat',{p_invitation_id:id}));if(Array.isArray(data))data=data[0]||{};
             if(data?.ok!==true)throw new Error(String(data?.error||'seat_assignment_failed'));
             result.textContent='✅ '+lang3('Studente attivato','Student activated','Student attivat');
-            setTimeout(async()=>{latestPendingRows=[];latestPendingAt=0;await refreshAlert();await loadDirectQueue(true);},300);
-          }catch(e){result.textContent='❌ '+String(e?.message||e||'seat_assignment_failed');btn.disabled=false;}
-        };
+            setTimeout(async()=>{
+ const mdmDataOwner3=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2);
+latestPendingRows=[];latestPendingAt=0;window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3,await refreshAlert());window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner3,await loadDirectQueue(true));
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner3)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+},300);
+          }catch(e){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner2);result.textContent='❌ '+String(e?.message||e||'seat_assignment_failed');btn.disabled=false;}
+
+ }catch(mdmDataError){if(window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+};
         body.appendChild(item);
       });
-    }catch(e){
+    }catch(e){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner1);
       body.innerHTML=`<div style="padding:14px;border-radius:14px;background:rgba(220,38,38,.08)">❌ ${esc(String(e?.message||e||'seat_queue_failed'))}<br><button id="mdmDirectQueueRetry" class="btn secondary" type="button" style="margin-top:10px;width:100%">${esc(lang3('Riprova','Retry','Erġa pprova'))}</button></div>`;
       body.querySelector('#mdmDirectQueueRetry')?.addEventListener('click',loadDirectQueue);
     }
-  }
+
+ }catch(mdmDataError){if(window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+}
 
   function openDirectQueue(){
     ensureDirectQueue();
@@ -162,15 +185,20 @@
   }
 
   async function refreshAlert(){
+ const mdmDataOwner4=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ try{
+
     const s=session();if(!s){removeAlert();return;}
     const seq=++alertRequestSeq;
     try{
-      let rows=await rpc('mdm_school_list_redeemed_pilot_invitations',{});
+      let rows=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4,await rpc('mdm_school_list_redeemed_pilot_invitations',{}));
       if(seq!==alertRequestSeq)return;
       if(!Array.isArray(rows))rows=rows?[rows]:[];
       showAlert(rows);
-    }catch(_){if(seq===alertRequestSeq)removeAlert();}
-  }
+    }catch(_){window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner4);if(seq===alertRequestSeq)removeAlert();}
+
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner4)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+}
 
   function boot(){bindRefresh();refreshAlert();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();

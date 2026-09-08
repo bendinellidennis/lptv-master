@@ -1,5 +1,5 @@
 /* Malta Driving Master — Account Isolation Safe Adapter
-   Branch-only candidate. Pure storage isolation:
+   P0-02: account namespaces, provenance and lifecycle boundaries:
    - no navigation
    - no reload
    - no timers
@@ -11,7 +11,7 @@
   'use strict';
   if(window.MDM_ACCOUNT_ISOLATION_SAFE)return;
 
-  const VERSION='45.8.31.50.63';
+  const VERSION='P0-02-2026-09-08';
   const TECH_OWNER_EMAIL='maltadrivingmaster@gmail.com';
   const AUTH_KEY='mdm_auth_session_v4410';
   const MIGRATION_PREFIX='mdm_account_safe_migrated_v1::';
@@ -41,8 +41,101 @@
   const rawGet=Storage.prototype.getItem;
   const rawSet=Storage.prototype.setItem;
   const rawRemove=Storage.prototype.removeItem;
-  let lastAuthenticatedUserId='';
-  let accountSwitchWriteLock=false;
+  const DEVICE_KEYS=new Set([
+    'mdm-v1-settings','mdm-v1-investor-preview','mdm-v1-premium-splash',
+    'mdm_backend_setup_v4400','mdm_auth_attempt_guard_v458319',
+    'mdm_pilot_device_token_v4583146','mdm-home-performance-focus-v1',
+    'mdm_post_login_reload_v1'
+  ]);
+  const CONTEXT_KEYS=new Set(['mdm_pilot_pending_invite_v1']);
+  const listeners=new Set(), provenance=new WeakMap();
+  let epoch=0, observed='';
+
+  function classify(key){
+    const k=String(key);
+    if(k===AUTH_KEY)return 'auth';
+    if(DEVICE_KEYS.has(k))return 'device';
+    if(CONTEXT_KEYS.has(k)||k.startsWith('mdm_invite_email_blank_once_v1::'))return 'context';
+    if(/^(mdm_owner_legacy_quarantine_v1::|mdm_account_contamination_backup_v1::|mdm_dennis_pre_(restore|rehydrate)_v1::)/.test(k))return 'recovery';
+    return /^mdm[-_]/.test(k)?'account':'device';
+  }
+  function isManaged(store){
+    try{return store===window.localStorage||store===window.sessionStorage;}catch(_){return false;}
+  }
+  function observe(){
+    const a=auth(), signature=JSON.stringify([a.userId,a.generation,accountType(a)]);
+    if(signature!==observed){
+      observed=signature;epoch++;
+      if(a.ok){quarantineOwnerContamination(a);recoverAccountFromMatchingBackup(a);}
+      for(const listener of listeners)listener();
+    }
+    return a;
+  }
+  function capture(){
+    const a=observe();
+    return Object.freeze({userId:a.userId,generation:a.generation,epoch});
+  }
+  function isCurrent(context){
+    const a=observe();
+    return !!context&&context.userId===a.userId&&context.generation===a.generation&&context.epoch===epoch;
+  }
+  function changed(error){return !!error&&error.code==='MDM_ACCOUNT_CHANGED';}
+  function check(context,value){
+    if(!isCurrent(context)){const error=new Error('Account changed');error.code='MDM_ACCOUNT_CHANGED';throw error;}
+    return value;
+  }
+  function own(value,context=capture(),seen=new WeakSet()){
+    if(!value||typeof value!=='object'||seen.has(value))return value;
+    seen.add(value);
+    // Never relabel a value which already has provenance, including nested data.
+    if(!provenance.has(value))provenance.set(value,context);
+    for(const item of Object.values(value))own(item,context,seen);
+    return value;
+  }
+  function usable(value,context=capture(),seen=new WeakSet()){
+    if(!isCurrent(context))return false;
+    if(!value||typeof value!=='object'||seen.has(value))return true;
+    seen.add(value);
+    const owner=provenance.get(value);
+    if(owner&&!isCurrent(owner))return false;
+    return Object.values(value).every(item=>usable(item,context,seen));
+  }
+  function inherit(copy,source){const owner=source&&typeof source==='object'&&provenance.get(source);return owner?own(copy,owner):copy;}
+  function write(key,value,context=capture()){
+    if(classify(key)==='account'&&(!context.userId||!usable(value,context)))return false;
+    check(context);
+    if(classify(key)==='account')own(value,context);
+    localStorage.setItem(key,JSON.stringify(value));return true;
+  }
+  function explicitOwner(key){
+    const k=String(key), suffix=k.match(/^(.*?)::(user|owner):([^:]+)(.*)$/);
+    if(suffix)return {base:suffix[1],type:suffix[2],userId:suffix[3],tail:suffix[4]};
+    const enrollment=k.match(/^mdm-v1-account-enrollment-user:([^:]+)$/);
+    if(enrollment)return {direct:true,userId:enrollment[1]};
+    const metrics=k.match(/^mdm_pilot_quality_metrics_v1::([^:]+)$/);
+    return metrics?{direct:true,userId:metrics[1]}:null;
+  }
+  function targetKey(key,a){
+    if(!a.ok||/::(?:guest|signed-out)(?:::|$)/.test(key))return null;
+    const owner=explicitOwner(key);
+    if(owner){
+      if(owner.userId!==a.userId)return null;
+      if(owner.direct)return key;
+      if(USER_KEYS.has(owner.base)&&accountType(a)==='owner'&&owner.type==='user')return null;
+      return scoped(owner.base,a)+owner.tail;
+    }
+    return scoped(key,a);
+  }
+  function migrateIdentifiedValue(key,target,a){
+    if(rawGet.call(localStorage,target)!==null)return;
+    const raw=rawGet.call(localStorage,key);if(raw===null)return;
+    let data;try{data=JSON.parse(raw);}catch(_){return;}
+    if(!data||typeof data!=='object'||Array.isArray(data))return;
+    const uid=String(data.ownerUserId||data.accountUserId||data.authUserId||'');
+    const email=String(data.ownerEmail||data.accountEmail||'').trim().toLowerCase();
+    if(uid?uid!==a.userId:(!email||email!==a.email))return;
+    rawSet.call(localStorage,target,raw);
+  }
 
   function isLocal(store){
     try{return store===window.localStorage;}catch(_){return false;}
@@ -56,19 +149,21 @@
       const userId=String(s&&s.user&&s.user.id||'');
       const email=String(s&&s.user&&s.user.email||'').trim().toLowerCase();
       const expiresAt=Number(s&&s.expiresAt||0);
-      const ok=status==='authenticated'&&!!userId&&(expiresAt<=0||expiresAt>Date.now());
-      return ok?{ok:true,userId,email}:{ok:false,userId:'',email:''};
-    }catch(_){return {ok:false,userId:'',email:''};}
+      const generation=Number(s&&s.generation||0);
+      // Token expiry is a credential concern; it does not change the data owner.
+      const ok=status==='authenticated'&&!!userId;
+      return ok?{ok:true,userId,email,generation}:{ok:false,userId:'',email:'',generation};
+    }catch(_){return {ok:false,userId:'',email:'',generation:0};}
   }
 
   function accountType(a){
     return a&&a.ok&&a.email===TECH_OWNER_EMAIL?'owner':'user';
   }
 
-  try{lastAuthenticatedUserId=auth().userId||'';}catch(_){}
+  observed=JSON.stringify([auth().userId,auth().generation,accountType(auth())]);
 
   function scoped(key,a){
-    const type=accountType(a);
+    const type=USER_KEYS.has(String(key))?accountType(a):'user';
     return String(key)+'::'+type+':'+String(a&&a.userId||'');
   }
 
@@ -242,57 +337,47 @@
     return {recovered:true,restored,source:source.profileKey};
   }
 
-  function readUserKey(key){
-    const a=auth();
-    if(!a.ok)return null;
-    quarantineOwnerContamination(a);
-    migrateOwnedLegacy(a);
-    return rawGet.call(localStorage,scoped(key,a));
-  }
-
-  function writeUserKey(key,value){
-    if(accountSwitchWriteLock)return undefined;
-    const a=auth();
-    if(!a.ok)return rawSet.call(localStorage,String(key)+'::guest',String(value));
-    quarantineOwnerContamination(a);
-    return rawSet.call(localStorage,scoped(key,a),String(value));
-  }
-
-  function removeUserKey(key){
-    const a=auth();
-    if(!a.ok)return rawRemove.call(localStorage,String(key)+'::guest');
-    return rawRemove.call(localStorage,scoped(key,a));
-  }
-
   Storage.prototype.getItem=function(key){
     const k=String(key);
-    if(isLocal(this)){
-      const a=auth();
-      if(crossAccountKey(k,a))return null;
-      if(USER_KEYS.has(k))return readUserKey(k);
+    if(isManaged(this)){
+      const kind=classify(k);
+      if(kind==='recovery')return null;
+      if(kind==='account'){
+        const a=observe(), target=targetKey(k,a);if(!target)return null;
+        if(isLocal(this)){
+          quarantineOwnerContamination(a);migrateOwnedLegacy(a);
+          if(!explicitOwner(k))migrateIdentifiedValue(k,target,a);
+        }
+        const value=rawGet.call(this,target);
+        // ISO-03 could already have cached A under B's UID in an old build.
+        // Keep ambiguous cache bytes, but require provenance before using them.
+        if(k.split('::')[0]==='mdm-school-evidence-cache-v1'&&value!==null){
+          let cache;try{cache=JSON.parse(value);}catch(_){return null;}
+          const rows=Array.isArray(cache.missions)?cache.missions:[];
+          if(rows.some(row=>row.student_user_id&&String(row.student_user_id)!==a.userId))return null;
+          const stamped=cache.ownershipSchema==='mdm-account-owned-v2'&&cache.ownerUserId===a.userId;
+          const identified=rows.length>0&&rows.every(row=>String(row.student_user_id||'')===a.userId);
+          if(!stamped&&!identified)return null;
+        }
+        return value;
+      }
     }
     return rawGet.apply(this,arguments);
   };
 
   Storage.prototype.setItem=function(key,value){
     const k=String(key);
-    if(isLocal(this)){
-      const a=auth();
-      if(crossAccountKey(k,a))return undefined;
-      if(USER_KEYS.has(k))return writeUserKey(k,value);
-      if(k===AUTH_KEY){
-        const before=auth();
+    if(isManaged(this)){
+      const kind=classify(k);
+      if(kind==='recovery')return undefined;
+      if(kind==='account'){
+        const a=observe(),target=targetKey(k,a);if(!target)return undefined;
+        if(isLocal(this))quarantineOwnerContamination(a);
+        return rawSet.call(this,target,String(value));
+      }
+      if(isLocal(this)&&k===AUTH_KEY){
         const out=rawSet.apply(this,arguments);
-        const next=auth();
-        if(before.ok)lastAuthenticatedUserId=before.userId;
-        if(next.ok){
-          if(lastAuthenticatedUserId&&lastAuthenticatedUserId!==next.userId){
-            accountSwitchWriteLock=true;
-          }
-          lastAuthenticatedUserId=next.userId;
-        }
-        if(next.ok)quarantineOwnerContamination(next);
-        return out;
+        observe();return out;
       }
     }
     return rawSet.apply(this,arguments);
@@ -300,13 +385,20 @@
 
   Storage.prototype.removeItem=function(key){
     const k=String(key);
-    if(isLocal(this)){
-      const a=auth();
-      if(crossAccountKey(k,a))return undefined;
-      if(USER_KEYS.has(k))return removeUserKey(k);
+    if(isManaged(this)){
+      const kind=classify(k);
+      if(kind==='recovery')return undefined;
+      if(kind==='account'){
+        const target=targetKey(k,observe());
+        return target?rawRemove.call(this,target):undefined;
+      }
+      if(isLocal(this)&&k===AUTH_KEY){
+        const out=rawRemove.apply(this,arguments);observe();return out;
+      }
     }
     return rawRemove.apply(this,arguments);
   };
+  window.addEventListener('storage',event=>{if(event.key===AUTH_KEY||event.key===null)observe();});
 
   /* Preflight before the historical app runtime starts. */
   try{
@@ -322,7 +414,11 @@
     keys:Array.from(USER_KEYS),
     current:auth,
     accountType:()=>accountType(auth()),
-    accountSwitchWriteLocked:()=>accountSwitchWriteLock,
+    accountSwitchWriteLocked:()=>false,
+    classify,capture,isCurrent,check,changed,own,usable,inherit,write,
+    bind:(callback,context=capture())=>function(...args){if(!isCurrent(context))return;return callback.apply(this,args);},
+    subscribe:listener=>{listeners.add(listener);return ()=>listeners.delete(listener);},
+    namespace:key=>targetKey(String(key),observe()),
     recoverAccount:()=>recoverAccountFromMatchingBackup(auth()),
     quarantineOwner:()=>quarantineOwnerContamination(auth()),
     legacyOwnerEmail

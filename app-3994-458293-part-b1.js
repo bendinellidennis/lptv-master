@@ -12927,6 +12927,26 @@ const MDM_AUTH_EMPTY={status:'signed_out',email:'',user:null,accessToken:'',refr
 let mdmAuthSession=Object.assign({},MDM_AUTH_EMPTY,load(MDM_AUTH_SESSION_KEY,{}));
 accountEnrollmentBindToAuthUser(String(mdmAuthSession.user?.id||''),String(mdmAuthSession.user?.email||mdmAuthSession.email||''));
 let mdmAuthInFlight=false;
+let mdmAuthGeneration=Number(mdmAuthSession.generation||0);
+let mdmAuthRefreshInFlight=null;
+function mdmAuthIsCurrent(generation){
+ const stored=load(MDM_AUTH_SESSION_KEY,null);
+ return generation===mdmAuthGeneration&&stored!==null&&Number(stored.generation||0)===generation;
+}
+function mdmAuthAdvanceGeneration(){
+ mdmAuthGeneration=Math.max(mdmAuthGeneration,Number(load(MDM_AUTH_SESSION_KEY,{})?.generation||0))+1;
+ mdmAuthInFlight=false;
+ mdmAuthRefreshInFlight=null;
+ return mdmAuthGeneration;
+}
+function mdmAuthBeginSession(){
+ mdmAuthAdvanceGeneration();
+ mdmAuthSession={...MDM_AUTH_EMPTY,email:String(mdmAuthSession.email||'')};
+ mdmAuthSave();
+ return mdmAuthGeneration;
+}
+// All Auth entry points share this fence, including fetch-based sign-in/link adoption.
+window.MDM_AUTH_LIFECYCLE=Object.freeze({begin:mdmAuthBeginSession,isCurrent:mdmAuthIsCurrent,store:(generation,payload,email)=>Boolean(mdmAuthStoreResponse(payload,email,generation))});
 const MDM_AUTH_ATTEMPT_KEY='mdm_auth_attempt_guard_v458319';
 function mdmAuthAttemptState(){
  const raw=load(MDM_AUTH_ATTEMPT_KEY,{fails:[],blockedUntil:0});
@@ -12948,14 +12968,25 @@ function mdmAuthAttemptFail(){
 }
 function mdmAuthAttemptSuccess(){mdmAuthAttemptSave({fails:[],blockedUntil:0})}
 
-function mdmAuthSave(){save(MDM_AUTH_SESSION_KEY,mdmAuthSession)}
+function mdmAuthSave(){mdmAuthSession.generation=mdmAuthGeneration;save(MDM_AUTH_SESSION_KEY,mdmAuthSession)}
 function mdmAuthParse(body){try{return JSON.parse(String(body||''))}catch{return null}}
 function mdmAuthErrorMessage(result){
  const payload=mdmAuthParse(result?.body);
  return String(payload?.msg||payload?.message||payload?.error_description||payload?.error||result?.error||(`HTTP ${Number(result?.status)||0}`)).slice(0,240);
 }
+function mdmAuthCredentialsInvalid(result){
+ const status=Number(result?.status)||0;
+ if(!status||status===408||status===409||status===429||status>=500)return false;
+ const payload=mdmAuthParse(result?.body)||{};
+ const code=String(payload.code||payload.error_code||payload.error||'');
+ return status===401||['bad_jwt','invalid_credentials','invalid_grant','refresh_token_not_found','refresh_token_already_used','session_not_found','session_expired','user_not_found','user_banned'].includes(code);
+}
+function mdmAuthRecordFailure(result,action){
+ mdmAuthSession={...mdmAuthSession,lastHttpStatus:Number(result?.status)||0,lastMessage:mdmAuthErrorMessage(result),lastAction:action};
+ mdmAuthSave();
+}
 function mdmAuthFresh(){
- return Boolean(mdmAuthSession.status==='authenticated'&&mdmAuthSession.accessToken&&mdmAuthSession.user?.id&&Number(mdmAuthSession.expiresAt||0)>Date.now()+5000);
+ return Boolean(mdmAuthIsCurrent(mdmAuthGeneration)&&mdmAuthSession.status==='authenticated'&&mdmAuthSession.accessToken&&mdmAuthSession.user?.id&&Number(mdmAuthSession.expiresAt||0)>Date.now()+5000);
 }
 function mdmAuthSummary(){
  return {
@@ -14041,7 +14072,8 @@ async function mdmRefreshPlatformOwnerGate({silent=true}={}){
   return mdmPlatformOwnerAllowed();
  }finally{mdmPlatformOwnerGateInFlight=false}
 }
-function mdmAuthStoreResponse(payload,emailHint=''){
+function mdmAuthStoreResponse(payload,emailHint='',generation){
+ if(!mdmAuthIsCurrent(generation)||!payload?.access_token||!payload?.user?.id)return null;
  const user=payload?.user&&typeof payload.user==='object'?payload.user:(payload?.id?payload:null);
  const accessToken=String(payload?.access_token||'');
  const refreshToken=String(payload?.refresh_token||'');
@@ -14053,6 +14085,8 @@ function mdmAuthStoreResponse(payload,emailHint=''){
   user:user||mdmAuthSession.user||null,
   accessToken:accessToken||mdmAuthSession.accessToken||'',
   refreshToken:refreshToken||mdmAuthSession.refreshToken||'',
+  tokenType:String(payload?.token_type||mdmAuthSession.tokenType||'bearer'),
+  source:String(payload?.source||mdmAuthSession.source||''),
   expiresAt:expiresAt||mdmAuthSession.expiresAt||0,
   verifiedAt:accessToken&&user?.id?new Date().toISOString():mdmAuthSession.verifiedAt||'',
   lastHttpStatus:200,
@@ -14064,6 +14098,7 @@ function mdmAuthStoreResponse(payload,emailHint=''){
  return mdmAuthSession;
 }
 function mdmAuthClear(message='Signed out'){
+ mdmAuthAdvanceGeneration();
  const email=String(mdmAuthSession.email||mdmAuthSession.user?.email||'');
  mdmAuthSession={...MDM_AUTH_EMPTY,email,lastMessage:String(message||''),lastAction:'signout'};
  mdmAuthSave();
@@ -14443,48 +14478,66 @@ async function accountDecideSchoolEnrollment(requestId,decision){
  await accountRefreshSchoolAdminConsole({silent:true});
 }
 
-async function mdmAuthRefreshSession(){
- if(!mdmAuthSession.refreshToken)return false;
- const result=await mdmAuthRequest('/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:mdmAuthSession.refreshToken}});
- if(result.status>=200&&result.status<300){
-  const payload=mdmAuthParse(result.body)||{};
-  mdmAuthStoreResponse(payload,mdmAuthSession.email);
-  return mdmAuthFresh();
- }
- mdmAuthClear('Refresh sessione rifiutato: '+mdmAuthErrorMessage(result));
- return false;
+function mdmAuthRefreshSession(){
+ const generation=mdmAuthGeneration;
+ if(!mdmAuthIsCurrent(generation)||!mdmAuthSession.refreshToken)return Promise.resolve(false);
+ if(mdmAuthRefreshInFlight?.generation===generation)return mdmAuthRefreshInFlight.promise;
+ const refreshToken=mdmAuthSession.refreshToken,email=mdmAuthSession.email;
+ const operation={generation,promise:null};
+ operation.promise=(async()=>{
+  try{
+   const result=await mdmAuthRequest('/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:refreshToken}});
+   if(!mdmAuthIsCurrent(generation))return false;
+   if(result.status>=200&&result.status<300){
+    const stored=mdmAuthStoreResponse(mdmAuthParse(result.body)||{},email,generation);
+    return Boolean(stored&&mdmAuthFresh());
+   }
+   if(mdmAuthCredentialsInvalid(result)){mdmAuthClear('Refresh sessione rifiutato: '+mdmAuthErrorMessage(result));render();}
+   else mdmAuthRecordFailure(result,'refresh');
+   return false;
+  }finally{if(mdmAuthRefreshInFlight===operation)mdmAuthRefreshInFlight=null;}
+ })();
+ mdmAuthRefreshInFlight=operation;
+ return operation.promise;
 }
 async function mdmAuthVerifySession({silent=false}={}){
  if(mdmAuthInFlight)return false;
+ const generation=mdmAuthGeneration;
+ if(!mdmAuthIsCurrent(generation))return false;
  const cfg=mdmBackendPublicConfig();
  if(!cfg.enabled){if(!silent)toast(lang3('Prima verifica il backend reale 5/5.','Verify the real backend 5/5 first.','L-ewwel ivverifika l-backend reali 5/5.'));return false}
  if(!mdmAuthSession.accessToken&&mdmAuthSession.refreshToken){
   mdmAuthInFlight=true;
-  try{const ok=await mdmAuthRefreshSession();if(ok){render();return true}}finally{mdmAuthInFlight=false}
-  render();return false;
+  try{const ok=await mdmAuthRefreshSession();if(mdmAuthIsCurrent(generation))render();return ok&&mdmAuthIsCurrent(generation);}finally{if(mdmAuthIsCurrent(generation))mdmAuthInFlight=false;}
  }
  if(!mdmAuthSession.accessToken)return false;
  mdmAuthInFlight=true;
- mdmAuthSession={...mdmAuthSession,status:'checking',lastAction:'verify',lastMessage:'Verifica sessione Supabase Auth in corso'};mdmAuthSave();render();
+ mdmAuthSession={...mdmAuthSession,lastAction:'verify',lastMessage:'Verifica sessione Supabase Auth in corso'};mdmAuthSave();render();
  try{
   let result=await mdmAuthRequest('/user',{method:'GET',accessToken:mdmAuthSession.accessToken});
+  if(!mdmAuthIsCurrent(generation))return false;
   if(result.status===401&&mdmAuthSession.refreshToken){
    const refreshed=await mdmAuthRefreshSession();
-   if(refreshed)result=await mdmAuthRequest('/user',{method:'GET',accessToken:mdmAuthSession.accessToken});
+   if(!mdmAuthIsCurrent(generation)||!refreshed)return false;
+   result=await mdmAuthRequest('/user',{method:'GET',accessToken:mdmAuthSession.accessToken});
+   if(!mdmAuthIsCurrent(generation))return false;
   }
   if(result.status>=200&&result.status<300){
    const user=mdmAuthParse(result.body);
+   if(!user?.id){mdmAuthRecordFailure({status:result.status,error:'Invalid Auth user response'},'verify');return false;}
    mdmAuthSession={...mdmAuthSession,status:'authenticated',user:user&&user.id?user:mdmAuthSession.user,email:String(user?.email||mdmAuthSession.email||''),verifiedAt:new Date().toISOString(),lastHttpStatus:result.status,lastMessage:'Utente Supabase verificato dal server',lastAction:'verify'};
    if(!Number(mdmAuthSession.expiresAt||0))mdmAuthSession.expiresAt=Date.now()+5*60*1000;
-   mdmAuthSave();render();setTimeout(()=>{accountRefreshSchoolAdminConsole({silent:true});mdmPortableSyncReconcile({silent:true,reason:'verify_session'});},25);
+   mdmAuthSave();render();setTimeout(()=>{if(!mdmAuthIsCurrent(generation))return;accountRefreshSchoolAdminConsole({silent:true});mdmPortableSyncReconcile({silent:true,reason:'verify_session'});},25);
    if(!silent)toast(lang3('Sessione Supabase verificata.','Supabase session verified.','Is-sessjoni Supabase ġiet ivverifikata.'));
    return true;
   }
   const msg=mdmAuthErrorMessage(result);
-  mdmAuthClear('Verifica sessione fallita: '+msg);render();
-  if(!silent)toast(lang3('Sessione non valida: '+msg,'Invalid session: '+msg,'Sessjoni mhux valida: '+msg));
+  if(mdmAuthCredentialsInvalid(result))mdmAuthClear('Verifica sessione fallita: '+msg);
+  else mdmAuthRecordFailure(result,'verify');
+  render();
+  if(!silent)toast(lang3('Verifica sessione non riuscita: '+msg,'Session verification failed: '+msg,'Il-verifika tas-sessjoni falliet: '+msg));
   return false;
- }finally{mdmAuthInFlight=false}
+ }finally{if(mdmAuthIsCurrent(generation))mdmAuthInFlight=false;}
 }
 function mdmAuthReadCredentials(){
  const email=String($('#mdmAuthEmail')?.value||userProfile.email||'').trim().toLowerCase();
@@ -14497,13 +14550,15 @@ async function mdmAuthSignUp(){
  const {email,password}=mdmAuthReadCredentials();
  if(!/^\S+@\S+\.\S+$/.test(email))return toast(lang3('Inserisci una e-mail valida.','Enter a valid email.','Daħħal email valida.'));
  if(password.length<6)return toast(lang3('La password deve avere almeno 6 caratteri.','Password must contain at least 6 characters.','Il-password għandu jkollha mill-inqas 6 karattri.'));
+ const generation=mdmAuthBeginSession();
  mdmAuthInFlight=true;mdmAuthSession={...mdmAuthSession,status:'checking',email,lastAction:'signup',lastMessage:'Creazione account Supabase in corso'};mdmAuthSave();render();
  try{
   const result=await mdmAuthRequest('/signup',{method:'POST',body:{email,password,data:{mdm_role:accountEnrollment.role,mdm_registration_id:String(userProfile.registrationId||''),mdm_build:BUILD_VERSION}}});
+  if(!mdmAuthIsCurrent(generation))return;
   const payload=mdmAuthParse(result.body)||{};
   if(result.status>=200&&result.status<300){
    if(payload.access_token&&payload.user?.id){
-    mdmAuthStoreResponse(payload,email);render();
+    mdmAuthStoreResponse(payload,email,generation);render();
     toast(lang3('Account creato e autenticato realmente su Supabase.','Account created and authenticated on Supabase.','Il-kont inħoloq u ġie awtentikat fuq Supabase.'));
    }else{
     const user=payload.user&&typeof payload.user==='object'?payload.user:(payload.id?payload:null);
@@ -14513,7 +14568,7 @@ async function mdmAuthSignUp(){
    return;
   }
   const msg=mdmAuthErrorMessage(result);mdmAuthSession={...mdmAuthSession,status:'error',lastHttpStatus:result.status,lastMessage:msg,lastAction:'signup'};mdmAuthSave();render();toast(lang3('Creazione account non riuscita: '+msg,'Account creation failed: '+msg,'Il-ħolqien tal-kont falla: '+msg));
- }finally{mdmAuthInFlight=false}
+ }finally{if(mdmAuthIsCurrent(generation))mdmAuthInFlight=false;}
 }
 async function mdmAuthSignIn(){
  if(mdmAuthInFlight)return;
@@ -14522,31 +14577,34 @@ async function mdmAuthSignIn(){
  const cfg=mdmBackendPublicConfig();if(!cfg.enabled)return toast(lang3('Prima verifica il backend reale 5/5.','Verify the real backend 5/5 first.','L-ewwel ivverifika l-backend reali 5/5.'));
  const {email,password}=mdmAuthReadCredentials();
  if(!/^\S+@\S+\.\S+$/.test(email)||!password)return toast(lang3('Inserisci e-mail e password.','Enter email and password.','Daħħal email u password.'));
+ const generation=mdmAuthBeginSession();
  mdmAuthInFlight=true;mdmAuthSession={...mdmAuthSession,status:'checking',email,lastAction:'signin',lastMessage:'Accesso Supabase Auth in corso'};mdmAuthSave();render();
  try{
   const result=await mdmAuthRequest('/token?grant_type=password',{method:'POST',body:{email,password}});
+  if(!mdmAuthIsCurrent(generation))return;
   const payload=mdmAuthParse(result.body)||{};
   if(result.status>=200&&result.status<300&&payload.access_token&&payload.user?.id){
-   mdmAuthAttemptSuccess();mdmAuthStoreResponse(payload,email);mdmSchoolAdminReset();render();setTimeout(()=>{accountRefreshSchoolAdminConsole({silent:true});mdmRefreshPlatformOwnerGate({silent:true});mdmPortableSyncReconcile({silent:true,reason:'signin'});},25);
+   mdmAuthAttemptSuccess();mdmAuthStoreResponse(payload,email,generation);mdmSchoolAdminReset();render();setTimeout(()=>{if(!mdmAuthIsCurrent(generation))return;accountRefreshSchoolAdminConsole({silent:true});mdmRefreshPlatformOwnerGate({silent:true});mdmPortableSyncReconcile({silent:true,reason:'signin'});},25);
    toast(lang3('Accesso reale riuscito. Utente Supabase autenticato.','Real sign-in successful. Supabase user authenticated.','Id-dħul reali rnexxa. L-utent Supabase ġie awtentikat.'));
    return;
   }
   mdmAuthAttemptFail();const msg=mdmAuthErrorMessage(result);mdmAuthSession={...mdmAuthSession,status:'error',email,lastHttpStatus:result.status,lastMessage:msg,lastAction:'signin'};mdmAuthSave();render();toast(lang3('Accesso non riuscito: '+msg,'Sign-in failed: '+msg,'Id-dħul falla: '+msg));
- }finally{mdmAuthInFlight=false}
+ }finally{if(mdmAuthIsCurrent(generation))mdmAuthInFlight=false;}
 }
 async function mdmAuthSignOut(){
- if(mdmAuthInFlight)return;
- mdmAuthInFlight=true;
  const token=String(mdmAuthSession.accessToken||'');
- try{
-  const result=token?await mdmAuthRequest('/logout',{method:'POST',accessToken:token}):{status:204,body:'',error:''};
+ mdmAuthClear('Sessione locale rimossa; logout server in corso');
+ const generation=mdmAuthGeneration;
+ mdmSchoolAdminReset();
+ mdmPlatformOwnerReset('signed_out');
+ render();
+  const result=token?await mdmAuthRequest('/logout?scope=local',{method:'POST',accessToken:token}):{status:204,body:'',error:''};
+  if(!mdmAuthIsCurrent(generation))return;
   const serverOk=result.status===204||(result.status>=200&&result.status<300);
-  mdmAuthClear(serverOk?'Logout Supabase completato':'Sessione locale rimossa; logout server non confermato');
-  mdmSchoolAdminReset();
-  mdmPlatformOwnerReset('signed_out');
+  mdmAuthSession.lastMessage=serverOk?'Logout Supabase completato':'Sessione locale rimossa; logout server non confermato';
+  mdmAuthSave();
   render();
   toast(serverOk?lang3('Logout Supabase completato.','Supabase sign-out completed.','Il-logout minn Supabase tlesta.'):lang3('Sessione locale rimossa. Il server non ha confermato il logout.','Local session removed. Server logout was not confirmed.','Is-sessjoni lokali tneħħiet. Il-logout mis-server ma ġiex ikkonfermat.'));
- }finally{mdmAuthInFlight=false}
 }
 function mdmAuthRestoreIfNeeded(){
  if(mdmAuthInFlight)return;

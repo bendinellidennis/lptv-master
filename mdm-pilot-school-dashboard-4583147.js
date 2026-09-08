@@ -79,7 +79,10 @@
         return false;
       }
       const c=cfg();
+      const lifecycle=window.MDM_AUTH_LIFECYCLE;
+      const generation=lifecycle.begin();
       const userRes=await fetch(c.endpoint+'/auth/v1/user',{headers:{'apikey':c.key,'Authorization':'Bearer '+accessToken},cache:'no-store'});
+      if(!lifecycle.isCurrent(generation))return false;
       if(!userRes.ok){
         const url=new URL(location.href);url.hash='';history.replaceState(history.state,'',url.pathname+url.search);
         showStudentNotice(lang3('Il link di accesso non è più valido. Accedi normalmente: l’invito è stato conservato.','The sign-in link is no longer valid. Sign in normally: the invitation has been preserved.','Il-link tad-dħul m’għadux validu. Idħol normalment: l-istedina nżammet.'),false);
@@ -87,17 +90,9 @@
         return false;
       }
       const user=await userRes.json();
+      if(!lifecycle.isCurrent(generation))return false;
       const expiresIn=Math.max(60,Number(p.get('expires_in')||3600)||3600);
-      const session={
-        status:'authenticated',
-        accessToken,
-        refreshToken,
-        tokenType:String(p.get('token_type')||'bearer'),
-        expiresAt:Date.now()+expiresIn*1000,
-        user,
-        source:'pilot_magic_link'
-      };
-      localStorage.setItem(AUTH_KEY,JSON.stringify(session));
+      if(!lifecycle.store(generation,{access_token:accessToken,refresh_token:refreshToken,expires_in:expiresIn,user,token_type:String(p.get('token_type')||'bearer'),source:'pilot_magic_link'},user?.email||''))return false;
       const url=new URL(location.href);url.hash='';history.replaceState(history.state,'',url.pathname+url.search);
       return true;
     }catch(_){return false;}

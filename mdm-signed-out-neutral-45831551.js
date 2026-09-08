@@ -2,7 +2,7 @@
    Privacy-only visual isolation after logout / before login.
    Signed-out users never see the previous student's profile, progress or school data.
    Existing authenticated data remains untouched in storage.
-   No reload. No auth mutation. No progress mutation. No server writes. */
+   Auth writes use the core session lifecycle; no progress mutation. */
 (function(){
   'use strict';
   if(window.MDM_SIGNED_OUT_NEUTRAL_GATE)return;
@@ -92,31 +92,8 @@
     ).slice(0,240);
   }
 
-  function storeAuthenticatedSession(payload,email){
-    const user=payload&&payload.user&&typeof payload.user==='object'?payload.user:null;
-    const accessToken=String(payload?.access_token||'');
-    const refreshToken=String(payload?.refresh_token||'');
-    if(!user?.id||!accessToken)return false;
-
-    const expiresAt=Number(payload?.expires_at||0)>0
-      ? Number(payload.expires_at)*1000
-      : (Number(payload?.expires_in||0)>0?Date.now()+Number(payload.expires_in)*1000:0);
-
-    const next={
-      status:'authenticated',
-      email:String(user.email||email||''),
-      user,
-      accessToken,
-      refreshToken,
-      expiresAt,
-      verifiedAt:new Date().toISOString(),
-      lastHttpStatus:200,
-      lastMessage:'Supabase Auth session verified',
-      lastAction:'session'
-    };
-
-    localStorage.setItem(AUTH_KEY,JSON.stringify(next));
-    return true;
+  function storeAuthenticatedSession(payload,email,generation){
+    return Boolean(window.MDM_AUTH_LIFECYCLE?.store(generation,payload,email));
   }
 
   function readRecoveryHash(){
@@ -178,17 +155,21 @@
     if(password.length<8){if(note)note.textContent=t('Servono almeno 8 caratteri.','At least 8 characters are required.','Huma meħtieġa mill-inqas 8 karattri.');return;}
     if(password!==repeat){if(note)note.textContent=t('Le password non coincidono.','Passwords do not match.','Il-passwords ma jaqblux.');return;}
     if(button)button.disabled=true;if(note)note.textContent='';
+    const lifecycle=window.MDM_AUTH_LIFECYCLE;
+    let generation;
     try{
+      generation=lifecycle.begin();
       const response=await fetch(String(cfg.endpoint).replace(/\/$/,'')+'/auth/v1/user',{
         method:'PUT',headers:{'Content-Type':'application/json','apikey':cfg.publishableKey,'Authorization':'Bearer '+recoverySession.accessToken},body:JSON.stringify({password}),cache:'no-store'
       });
       const textBody=await response.text();let user={};try{user=textBody?JSON.parse(textBody):{};}catch(_){}
+      if(!lifecycle.isCurrent(generation))return;
       if(!response.ok||!user?.id)throw new Error(authErrorMessage(user,response.status));
       const payload={access_token:recoverySession.accessToken,refresh_token:recoverySession.refreshToken,expires_in:recoverySession.expiresIn,user};
-      if(!storeAuthenticatedSession(payload,user.email||''))throw new Error('session_store_failed');
+      if(!storeAuthenticatedSession(payload,user.email||'',generation))throw new Error('session_store_failed');
       const url=new URL(location.href);url.hash='';url.searchParams.delete('mdm_password_setup');history.replaceState(history.state,'',url.pathname+url.search);
       recoverySession=null;window.__MDM_RECOVERY_HASH__='';window.__MDM_PASSWORD_RECOVERY_IN_PROGRESS__=false;location.reload();
-    }catch(e){if(note)note.textContent=t('Password non salvata: ','Password not saved: ','Il-password ma ġietx issejvjata: ')+String(e?.message||e||'');if(button)button.disabled=false;}
+    }catch(e){if(generation!==undefined&&!lifecycle.isCurrent(generation))return;if(note)note.textContent=t('Password non salvata: ','Password not saved: ','Il-password ma ġietx issejvjata: ')+String(e?.message||e||'');if(button)button.disabled=false;}
   }
 
   async function directAuth(action){
@@ -228,7 +209,10 @@
       ? t('Creazione account in corso…','Creating account…','Qed jinħoloq il-kont…')
       : t('Accesso in corso…','Signing in…','Qed isir id-dħul…'),false);
 
+    const lifecycle=window.MDM_AUTH_LIFECYCLE;
+    let generation;
     try{
+      generation=lifecycle.begin();
       const base=String(cfg.endpoint).replace(/\/$/,'')+'/auth/v1';
       const url=action==='signup'
         ? base+'/signup'
@@ -251,9 +235,10 @@
       const textBody=await response.text();
       let payload={};
       try{payload=textBody?JSON.parse(textBody):{};}catch(_){}
+      if(!lifecycle.isCurrent(generation))return;
 
       if(response.ok&&payload?.access_token&&payload?.user?.id){
-        if(!storeAuthenticatedSession(payload,email))throw new Error('session_store_failed');
+        if(!storeAuthenticatedSession(payload,email,generation))throw new Error('session_store_failed');
         authNote(t('Accesso riuscito. Caricamento del tuo profilo…','Signed in successfully. Loading your profile…','Id-dħul irnexxa. Qed jitgħabba l-profil tiegħek…'),false);
         try{sessionStorage.setItem('mdm_post_login_reload_v1',String(payload.user.id));}catch(_){}
         location.reload();
@@ -273,6 +258,7 @@
         true
       );
     }catch(e){
+      if(generation!==undefined&&!lifecycle.isCurrent(generation))return;
       authNote(
         t(
           'Problema di connessione. I dati inseriti sono rimasti qui: riprova.',
@@ -282,7 +268,7 @@
         true
       );
     }finally{
-      if(!authenticated())setAuthBusy(false);
+      if((generation===undefined||lifecycle.isCurrent(generation))&&!authenticated())setAuthBusy(false);
     }
   }
 

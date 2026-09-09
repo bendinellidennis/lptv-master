@@ -750,8 +750,8 @@ function load(key,fallback){
    deliberately excluded. The server row is private to auth.uid(). */
 const MDM_PORTABLE_SYNC_META_KEY='mdm_portable_sync_v4583135';
 const MDM_PORTABLE_SYNC_SCHEMA='mdm-portable-state-v1';
-const MDM_PORTABLE_SYNC_KEYS=new Set([
- 'mdm-v1-progress','mdm-v1-settings','mdm-v1-user-profile','mdm-v1-error-replay',
+const MDM_PORTABLE_SYNC_LEGACY_KEYS=new Set([
+ 'mdm-v1-progress','mdm-v1-user-profile','mdm-v1-error-replay',
  'mdm-v1-mission-system','mdm-v1-real-road-twin','mdm-v1-ai-instructor',
  'mdm-v1-instructor-portal','mdm-v1-country-pack-engine','mdm-v1-license-pack-engine',
  'mdm-v1-school-portal-2','mdm-v1-zero-error','mdm-v1-exam-day','mdm-v1-coach-recovery',
@@ -759,21 +759,35 @@ const MDM_PORTABLE_SYNC_KEYS=new Set([
  'mdm-v1-school-dashboard','mdm-v1-personal-roadmap','mdm-v1-lptv-passport',
  'mdm-v1-school-preferences','mdm-v1-school-compare','mdm-v1-school-partner-draft',
  'mdm-language-twin-v1','mdm-v1-real-road-selected-pattern','mdm-v1-real-road-telemetry',
- 'mdm-v1-real-road-telemetry-mission-launch','mdm_school_command_center_4110',
+ 'mdm_school_command_center_4110',
  'mdm_instructor_assignments_4320','mdm_instructor_studio_4120','mdm_school_operations_45824',
  'mdm_fleet_corporate_45825','mdm_school_home_brand_v1'
 ]);
+const MDM_PORTABLE_SYNC_KEYS=new Set([...MDM_PORTABLE_SYNC_LEGACY_KEYS,
+ 'mdm-proofloop-verification-v1','mdm-proofloop-exam-outcome-v1','mdm-driver-competence-passport-v1',
+ 'mdm-proofloop-cosign-v2','mdm-school-evidence-cache-v1'
+]);
+const MDM_PORTABLE_SYNC_PREFIXES=['mdm-unified-mission-baseline-v1::','mdm-school-evidence-draft::'];
 let mdmPortableSyncApplying=false;
 let mdmPortableSyncTimer=null;
 function mdmPortableSyncMeta(){
- try{return Object.assign({dirty:false,dirtyAt:'',lastServerUpdatedAt:'',lastSyncAt:'',lastAction:'',lastError:''},JSON.parse(localStorage.getItem(MDM_PORTABLE_SYNC_META_KEY)||'{}'))}
- catch{return {dirty:false,dirtyAt:'',lastServerUpdatedAt:'',lastSyncAt:'',lastAction:'',lastError:''}}
+ const fallback={protocol:0,baseVersion:'',baseFingerprint:'',observedVersion:'',observedFound:null,applyPending:false,dirty:false,dirtyAt:'',lastServerUpdatedAt:'',lastSyncAt:'',lastAction:'',lastError:''};
+ const raw=localStorage.getItem(MDM_PORTABLE_SYNC_META_KEY);
+ let stored={};try{stored=raw?JSON.parse(raw):{}}catch{}
+ return window.MDM_ACCOUNT_ISOLATION_SAFE.own(Object.assign(fallback,stored&&typeof stored==='object'&&!Array.isArray(stored)?stored:{}));
 }
-function mdmPortableSyncMetaSave(meta){try{localStorage.setItem(MDM_PORTABLE_SYNC_META_KEY,JSON.stringify(meta||{}))}catch{}}
+function mdmPortableSyncMetaSave(meta){
+ if(!window.MDM_ACCOUNT_ISOLATION_SAFE.write(MDM_PORTABLE_SYNC_META_KEY,meta))throw new Error('portable_metadata_owner_changed');
+ if(localStorage.getItem(MDM_PORTABLE_SYNC_META_KEY)!==JSON.stringify(meta))throw new Error('portable_metadata_write_failed');
+}
 function mdmPortableSyncMarkDirty(key){
- if(mdmPortableSyncApplying||!MDM_PORTABLE_SYNC_KEYS.has(String(key||'')))return;
- const meta=mdmPortableSyncMeta();meta.dirty=true;meta.dirtyAt=new Date().toISOString();meta.lastAction='local_change';meta.lastError='';mdmPortableSyncMetaSave(meta);
- clearTimeout(mdmPortableSyncTimer);mdmPortableSyncTimer=setTimeout(()=>{try{if(typeof mdmPortableSyncReconcile==='function')mdmPortableSyncReconcile({silent:true,reason:'local_change'})}catch{}},2200);
+ if(mdmPortableSyncApplying||!mdmPortableKeyAllowed(String(key||'')))return;
+ try{
+  const meta=mdmPortableSyncMeta();meta.dirty=true;meta.dirtyAt=new Date().toISOString();meta.lastAction='local_change';meta.lastError='';mdmPortableSyncMetaSave(meta);
+  mdmPortableSyncState={status:'dirty',lastMessage:'',serverUpdatedAt:meta.baseVersion||'',lastAction:'local_change'};
+ }catch(error){try{mdmPortableSyncState={status:'error',lastMessage:String(error?.message||error),serverUpdatedAt:'',lastAction:'local_change'}}catch{}}
+ clearTimeout(mdmPortableSyncTimer);
+ mdmPortableSyncTimer=setTimeout(window.MDM_ACCOUNT_ISOLATION_SAFE.bind(()=>{mdmPortableSyncReconcile({silent:true,reason:'local_change'}).catch(()=>{});}),2200);
 }
 function save(key,value){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.write(key,value))return false;mdmPortableSyncMarkDirty(key);return true}
 
@@ -14279,10 +14293,100 @@ function mdmDataRpc(name,payload={}){
 
 let mdmPortableSyncInFlight=false;
 let mdmPortableSyncState={status:'idle',lastMessage:'',serverUpdatedAt:'',lastAction:''};
+function mdmPortableKeyAllowed(key){
+ return MDM_PORTABLE_SYNC_KEYS.has(key)||MDM_PORTABLE_SYNC_PREFIXES.some(prefix=>key.startsWith(prefix)&&key.length>prefix.length&&!/::(?:user|owner|guest|signed-out)(?::|$)/.test(key));
+}
+function mdmPortableStorageKey(key){
+ const prefix=MDM_PORTABLE_SYNC_PREFIXES[0];
+ return key.startsWith(prefix)?prefix.slice(0,-2)+'::user:'+window.MDM_ACCOUNT_ISOLATION_SAFE.capture().userId+'::'+key.slice(prefix.length):key;
+}
+function mdmPortableCanonical(items){return JSON.stringify(Object.keys(items).sort().map(key=>[key,items[key]]));}
+async function mdmPortableFingerprint(items){
+ const account=window.MDM_ACCOUNT_ISOLATION_SAFE,owner=account.capture();
+ if(!account.usable(items,owner))throw new Error('portable_snapshot_owner_changed');
+ const digest=account.check(owner,await crypto.subtle.digest('SHA-256',new TextEncoder().encode(mdmPortableCanonical(items))));
+ return Array.from(new Uint8Array(digest),byte=>byte.toString(16).padStart(2,'0')).join('');
+}
+function mdmPortableBaseKnown(meta){return meta.protocol===2&&!meta.applyPending&&/^[a-f0-9]{64}$/.test(String(meta.baseFingerprint||''));}
+function mdmPortableServerItems(payload){
+ const items={};Object.keys(payload.items).forEach(key=>{if(mdmPortableKeyAllowed(key))items[key]=payload.items[key];});
+ return window.MDM_ACCOUNT_ISOLATION_SAFE.own(items);
+}
+function mdmPortableCovered(key,payload){return payload.snapshotVersion===2?mdmPortableKeyAllowed(key):MDM_PORTABLE_SYNC_LEGACY_KEYS.has(key);}
+function mdmPortableSyncFailure(error,status='error'){
+ const message=String(error?.message||error||'portable_sync_failed');let version='';
+ try{const meta=mdmPortableSyncMeta();version=meta.observedVersion||'';meta.lastError=message;if(status==='conflict'||status==='dirty')meta.dirty=true;mdmPortableSyncMetaSave(meta);}catch{}
+ mdmPortableSyncState={status,lastMessage:message,serverUpdatedAt:version,lastAction:'reconcile'};return false;
+}
+function mdmPortableSyncNotice(){
+ try{
+  const state=mdmPortableSyncState;
+  if(state.status==='conflict')toast(lang3('Esistono dati sia su questo dispositivo sia sul server. Scegli Ripristina oppure Usa questo dispositivo.','Data exists both on this device and on the server. Choose Restore or Use this device.','Hemm data kemm fuq dan l-apparat kif ukoll fuq is-server. Agħżel Irrestawra jew Uża dan l-apparat.'));
+  else if(state.status==='error')toast(lang3('Sincronizzazione account non disponibile: ','Account sync unavailable: ','Is-sinkronizzazzjoni tal-kont mhix disponibbli: ')+state.lastMessage);
+  else if(state.status==='synced'&&state.lastAction==='restore')toast(lang3('Progressi recuperati dal tuo account.','Progress restored from your account.','Il-progress ġie rkuprat mill-kont tiegħek.'));
+  else if(state.status==='synced'&&['upload','force_upload'].includes(state.lastAction))toast(lang3('Dati di questo dispositivo salvati sul tuo account.','This device data was saved to your account.','Id-data ta’ dan l-apparat ġiet salvata fil-kont tiegħek.'));
+ }catch{}
+}
+function mdmPortableCommitBase(items,version,fingerprint,action){
+ const meta=mdmPortableSyncMeta(),dirty=mdmPortableCanonical(mdmPortableSnapshotItems())!==mdmPortableCanonical(items);
+ Object.assign(meta,{protocol:2,baseVersion:String(version||''),baseFingerprint:fingerprint,observedVersion:String(version||''),observedFound:!!version,lastServerUpdatedAt:String(version||''),applyPending:false,dirty,dirtyAt:dirty?(meta.dirtyAt||new Date().toISOString()):'',lastAction:action,lastError:''});
+ if(!dirty)meta.lastSyncAt=new Date().toISOString();
+ mdmPortableSyncMetaSave(meta);
+ mdmPortableSyncState={status:dirty?'dirty':(!version&&!Object.keys(items).length?'empty':'synced'),lastMessage:'',serverUpdatedAt:String(version||''),lastAction:action};return true;
+}
+async function mdmPortableAcceptBase(items,version,action){
+ const account=window.MDM_ACCOUNT_ISOLATION_SAFE,owner=account.capture();
+ const fingerprint=account.check(owner,await mdmPortableFingerprint(items));
+ return mdmPortableCommitBase(items,version,fingerprint,action);
+}
+async function mdmPortableApplySnapshot(payload,version){
+ const account=window.MDM_ACCOUNT_ISOLATION_SAFE,owner=account.capture();
+ const before=mdmPortableSnapshotItems(),beforeText=mdmPortableCanonical(before),metaBefore=mdmPortableSyncMeta(),sessionBefore=localStorage.getItem(SESSION);
+ const incoming=mdmPortableServerItems(payload),target=Object.assign({},before);
+ Object.keys(target).forEach(key=>{if(mdmPortableCovered(key,payload))delete target[key];});Object.assign(target,incoming);
+ const fingerprint=account.check(owner,await mdmPortableFingerprint(incoming));
+ if(mdmPortableCanonical(mdmPortableSnapshotItems())!==beforeText)return mdmPortableSyncFailure('local_changed_during_restore','dirty');
+ const pending=Object.assign({},metaBefore,{applyPending:true,lastError:'',observedVersion:version,observedFound:true});
+ mdmPortableSyncMetaSave(pending);
+ const keys=new Set([...Object.keys(before),...Object.keys(target)]),inFlight=mdmPortableSyncInFlight;
+ mdmPortableSyncApplying=true;
+ try{
+  for(const key of keys){const storageKey=mdmPortableStorageKey(key);if(Object.prototype.hasOwnProperty.call(target,key))localStorage.setItem(storageKey,target[key]);else localStorage.removeItem(storageKey);}
+  localStorage.removeItem(SESSION);
+  if(mdmPortableCanonical(mdmPortableSnapshotItems())!==mdmPortableCanonical(target))throw new Error('portable_apply_readback_mismatch');
+  mdmAccountRehydrateData();
+  return mdmPortableCommitBase(incoming,version,fingerprint,'restore');
+ }catch(error){
+  let rolledBack=false;
+  try{
+   for(const key of keys){const storageKey=mdmPortableStorageKey(key);if(Object.prototype.hasOwnProperty.call(before,key))localStorage.setItem(storageKey,before[key]);else localStorage.removeItem(storageKey);}
+   if(sessionBefore===null)localStorage.removeItem(SESSION);else localStorage.setItem(SESSION,sessionBefore);
+   if(mdmPortableCanonical(mdmPortableSnapshotItems())!==beforeText)throw new Error('portable_rollback_mismatch');
+   mdmAccountRehydrateData();mdmPortableSyncMetaSave(metaBefore);rolledBack=true;
+  }catch{}
+  return mdmPortableSyncFailure(rolledBack?error:'portable_apply_incomplete');
+ }finally{if(account.isCurrent(owner)){mdmPortableSyncApplying=false;mdmPortableSyncInFlight=inFlight;}}
+}
+async function mdmPortableUploadCurrent(expected,intent=null){
+ const account=window.MDM_ACCOUNT_ISOLATION_SAFE,owner=account.capture();
+ const pushed=account.check(owner,await mdmPortableServerPush(expected,intent));
+ if(!pushed||!pushed.ok)return mdmPortableSyncFailure(pushed?.error,pushed?.conflict?'conflict':'error');
+ return account.check(owner,await mdmPortableAcceptBase(pushed.items,pushed.updatedAt,intent?'force_upload':'upload'));
+}
 function mdmPortableSnapshotItems(){
- const items={};
- MDM_PORTABLE_SYNC_KEYS.forEach(key=>{try{const raw=localStorage.getItem(key);if(raw!==null)items[key]=raw}catch{}});
- return items;
+ const account=window.MDM_ACCOUNT_ISOLATION_SAFE,owner=account.capture(),items={};
+ if(!owner.userId)return account.own(items,owner);
+ MDM_PORTABLE_SYNC_KEYS.forEach(key=>{const raw=localStorage.getItem(key);if(raw!==null)items[key]=raw;});
+ const baseline=MDM_PORTABLE_SYNC_PREFIXES[0],draft=MDM_PORTABLE_SYNC_PREFIXES[1];
+ const baselineScope=account.namespace(baseline.slice(0,-2))+'::',draftSuffix='::user:'+owner.userId;
+ for(let i=0;i<localStorage.length;i++){
+  const rawKey=localStorage.key(i)||'';let key='';
+  if(rawKey.startsWith(baselineScope))key=baseline+rawKey.slice(baselineScope.length);
+  else if(rawKey.startsWith(draft)&&rawKey.endsWith(draftSuffix))key=rawKey.slice(0,-draftSuffix.length);
+  if(!key||!mdmPortableKeyAllowed(key)||account.namespace(mdmPortableStorageKey(key))!==rawKey)continue;
+  const raw=localStorage.getItem(rawKey);if(raw!==null)items[key]=raw;
+ }
+ return account.own(items,owner);
 }
 function mdmPortableParseRaw(items,key,fallback={}){try{const raw=items?.[key];return raw?JSON.parse(raw):fallback}catch{return fallback}}
 function mdmPortableStudyScore(items=mdmPortableSnapshotItems()){
@@ -14305,24 +14409,22 @@ function mdmPortableStudyScore(items=mdmPortableSnapshotItems()){
  score+=(Array.isArray(road.evaluations)?road.evaluations.length:0)*2;
  return Number(score||0);
 }
-function mdmPortablePayload(){return window.MDM_ACCOUNT_ISOLATION_SAFE.own({schema:MDM_PORTABLE_SYNC_SCHEMA,snapshotVersion:1,build:BUILD_VERSION,exportedAt:new Date().toISOString(),items:mdmPortableSnapshotItems()});
+function mdmPortablePayload(){
+ return window.MDM_ACCOUNT_ISOLATION_SAFE.own({schema:MDM_PORTABLE_SYNC_SCHEMA,snapshotVersion:2,managedKeys:Array.from(MDM_PORTABLE_SYNC_KEYS),managedPrefixes:MDM_PORTABLE_SYNC_PREFIXES.slice(),build:BUILD_VERSION,exportedAt:new Date().toISOString(),items:mdmPortableSnapshotItems()});
 }
 function mdmPortablePayloadValid(payload){
- return Boolean(payload&&typeof payload==='object'&&payload.schema===MDM_PORTABLE_SYNC_SCHEMA&&payload.items&&typeof payload.items==='object'&&!Array.isArray(payload.items));
+ if(!payload||typeof payload!=='object'||payload.schema!==MDM_PORTABLE_SYNC_SCHEMA||!payload.items||typeof payload.items!=='object'||Array.isArray(payload.items))return false;
+ const version=payload.snapshotVersion===undefined?1:payload.snapshotVersion;
+ if(version!==1&&version!==2)return false;
+ if(version===2){
+  const same=(actual,expected)=>Array.isArray(actual)&&actual.length===expected.length&&actual.every(k=>typeof k==='string')&&JSON.stringify(actual.slice().sort())===JSON.stringify(expected.slice().sort());
+  if(!same(payload.managedKeys,Array.from(MDM_PORTABLE_SYNC_KEYS))||!same(payload.managedPrefixes,MDM_PORTABLE_SYNC_PREFIXES))return false;
+ }
+ return Object.keys(payload.items).every(key=>typeof payload.items[key]==='string'&&(version===1?MDM_PORTABLE_SYNC_LEGACY_KEYS.has(key)||key==='mdm-v1-settings'||key==='mdm-v1-real-road-telemetry-mission-launch':mdmPortableKeyAllowed(key)));
 }
 function mdmPortableApplyPayload(payload,serverUpdatedAt=''){
- if(!window.MDM_ACCOUNT_ISOLATION_SAFE.usable(payload))return false;
- if(!mdmPortablePayloadValid(payload))return false;
- mdmPortableSyncApplying=true;
- try{
-  MDM_PORTABLE_SYNC_KEYS.forEach(key=>{
-   const raw=payload.items[key];
-   if(typeof raw==='string')localStorage.setItem(key,raw);
-  });
-  localStorage.removeItem(SESSION);
-  const meta=mdmPortableSyncMeta();meta.dirty=false;meta.dirtyAt='';meta.lastServerUpdatedAt=String(serverUpdatedAt||'');meta.lastSyncAt=new Date().toISOString();meta.lastAction='restore';meta.lastError='';mdmPortableSyncMetaSave(meta);
- }finally{mdmPortableSyncApplying=false}
- return true;
+ if(!window.MDM_ACCOUNT_ISOLATION_SAFE.usable(payload)||!mdmPortablePayloadValid(payload)||!String(serverUpdatedAt||''))return false;
+ return mdmPortableApplySnapshot(payload,String(serverUpdatedAt));
 }
 async function mdmPortableServerPull(){
  const mdmDataOwner21=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
@@ -14336,99 +14438,97 @@ async function mdmPortableServerPull(){
 
  }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner21)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
-async function mdmPortableServerPush(expectedUpdatedAt=''){
+async function mdmPortableServerPush(expectedUpdatedAt='',intent=null){
  const mdmDataOwner22=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
  try{
-
- const payload=mdmPortablePayload();
- let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner22,await mdmDataRpc('mdm_user_portable_state_push',{p_payload:payload,p_build:BUILD_VERSION,p_expected_updated_at:expectedUpdatedAt||null}));
- if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner22,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner22,await mdmDataRpc('mdm_user_portable_state_push',{p_payload:payload,p_build:BUILD_VERSION,p_expected_updated_at:expectedUpdatedAt||null}));
- const data=mdmAuthParse(result.body)||{};
- if(result.status<200||result.status>=300||data.ok===false)return {ok:false,conflict:Boolean(data.conflict),error:mdmDataErrorMessage(result)||String(data.error||'portable_state_push_failed'),updatedAt:String(data.updated_at||'')};
- return {ok:true,updatedAt:String(data.updated_at||new Date().toISOString())};
-
+  const meta=mdmPortableSyncMeta(),expected=String(expectedUpdatedAt||'');
+  const explicit=!!intent&&intent.overwrite===true&&window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(intent.owner)&&intent.observedVersion===expected;
+  if(!explicit&&((expected&&(!mdmPortableBaseKnown(meta)||meta.baseVersion!==expected))||(!expected&&mdmPortableBaseKnown(meta)&&meta.baseVersion)))return {ok:false,conflict:true,error:'unproven_upload_base',updatedAt:meta.observedVersion||''};
+  if(meta.applyPending&&!explicit)return {ok:false,conflict:true,error:'portable_apply_incomplete',updatedAt:meta.observedVersion||''};
+  const payload=mdmPortablePayload();
+  let result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner22,await mdmDataRpc('mdm_user_portable_state_push',{p_payload:payload,p_build:BUILD_VERSION,p_expected_updated_at:expected||null}));
+  if(result.status===401&&mdmAuthSession.refreshToken&&window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner22,await mdmAuthRefreshSession()))result=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner22,await mdmDataRpc('mdm_user_portable_state_push',{p_payload:payload,p_build:BUILD_VERSION,p_expected_updated_at:expected||null}));
+  const data=mdmAuthParse(result.body)||{};
+  if(result.status<200||result.status>=300||data.ok!==true)return {ok:false,conflict:Boolean(data.conflict),error:mdmDataErrorMessage(result)||String(data.error||'portable_state_push_failed'),updatedAt:String(data.updated_at||'')};
+  if(typeof data.updated_at!=='string'||!data.updated_at)return {ok:false,error:'missing_server_version'};
+  return window.MDM_ACCOUNT_ISOLATION_SAFE.own({ok:true,updatedAt:data.updated_at,items:payload.items},mdmDataOwner22);
  }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner22)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
 }
 async function mdmPortableSyncReconcile({silent=true,reason='manual'}={}){
  const mdmDataOwner23=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ let started=false;
  try{
-
- if(mdmPortableSyncInFlight)return false;
- const auth=mdmAuthSummary();if(!auth.authenticated)return false;
- mdmPortableSyncInFlight=true;mdmPortableSyncState={status:'checking',lastMessage:'',serverUpdatedAt:'',lastAction:reason};
- try{
-  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmEnsureFreshAuthForData())))return false;
-  const pulled=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableServerPull());
-  if(!pulled.ok){mdmPortableSyncState={status:'error',lastMessage:pulled.error,serverUpdatedAt:'',lastAction:reason};if(!silent)toast(lang3('Sincronizzazione account non disponibile: ','Account sync unavailable: ','Is-sinkronizzazzjoni tal-kont mhix disponibbli: ')+pulled.error);return false}
-  const localItems=mdmPortableSnapshotItems(),localScore=mdmPortableStudyScore(localItems),meta=mdmPortableSyncMeta();
-  if(!pulled.found){
-   if(localScore<=0){mdmPortableSyncState={status:'empty',lastMessage:'',serverUpdatedAt:'',lastAction:reason};return true}
-   const pushed=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableServerPush(''));
-   if(!pushed.ok){mdmPortableSyncState={status:pushed.conflict?'conflict':'error',lastMessage:pushed.error,serverUpdatedAt:pushed.updatedAt||'',lastAction:reason};if(!silent)toast(lang3('Sincronizzazione non completata.','Sync was not completed.','Is-sinkronizzazzjoni ma tlestietx.'));return false}
-   meta.dirty=false;meta.dirtyAt='';meta.lastServerUpdatedAt=pushed.updatedAt;meta.lastSyncAt=new Date().toISOString();meta.lastAction='upload';meta.lastError='';mdmPortableSyncMetaSave(meta);
-   mdmPortableSyncState={status:'synced',lastMessage:'',serverUpdatedAt:pushed.updatedAt,lastAction:'upload'};
-   if(!silent)toast(lang3('Dati di studio salvati sul tuo account.','Study data saved to your account.','Id-data tal-istudju ġiet salvata fil-kont tiegħek.'));
-   return true;
-  }
-  const serverPayload=pulled.payload,serverScore=mdmPortablePayloadValid(serverPayload)?mdmPortableStudyScore(serverPayload.items):0;
-  if(localScore<=0&&serverScore>0){
-   if(!mdmPortableApplyPayload(serverPayload,pulled.updatedAt)){mdmPortableSyncState={status:'error',lastMessage:'invalid_server_payload',serverUpdatedAt:pulled.updatedAt,lastAction:reason};return false}
-   mdmPortableSyncState={status:'restored',lastMessage:'',serverUpdatedAt:pulled.updatedAt,lastAction:'restore'};
-   if(!silent)toast(lang3('Progressi recuperati dal tuo account. Ricarico l’app.','Progress restored from your account. Reloading the app.','Il-progress ġie rkuprat mill-kont tiegħek. Qed terġa’ titgħabba l-app.'));
-   setTimeout(()=>location.reload(),450);return true;
-  }
-  if(meta.dirty&&localScore>0){
-   if(!meta.lastServerUpdatedAt){
-    mdmPortableSyncState={status:'conflict',lastMessage:'server_state_already_exists',serverUpdatedAt:pulled.updatedAt,lastAction:reason};
-    if(!silent)toast(lang3('Esistono dati sia su questo dispositivo sia sul server. Scegli Ripristina oppure Usa questo dispositivo.','Data exists both on this device and on the server. Choose Restore or Use this device.','Hemm data kemm fuq dan l-apparat kif ukoll fuq is-server. Agħżel Irrestawra jew Uża dan l-apparat.'));
-    return false;
+  if(mdmPortableSyncInFlight||!mdmAuthSummary().authenticated)return false;
+  started=true;mdmPortableSyncInFlight=true;mdmPortableSyncState={status:'checking',lastMessage:'',serverUpdatedAt:'',lastAction:reason};
+  try{
+   if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmEnsureFreshAuthForData())))return false;
+   const pulled=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableServerPull());
+   if(!pulled||!pulled.ok)return mdmPortableSyncFailure(pulled?.error);
+   if(pulled.found&&(!mdmPortablePayloadValid(pulled.payload)||!pulled.updatedAt))return mdmPortableSyncFailure('invalid_server_snapshot');
+   const local=mdmPortableSnapshotItems(),localText=mdmPortableCanonical(local),meta=mdmPortableSyncMeta();
+   meta.observedVersion=pulled.updatedAt||'';meta.observedFound=pulled.found;mdmPortableSyncMetaSave(meta);
+   if(!pulled.found){
+    if(meta.applyPending||mdmPortableBaseKnown(meta)&&meta.baseVersion)return mdmPortableSyncFailure('portable_state_missing_after_read','conflict');
+    if(!Object.keys(local).length)return window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableAcceptBase(local,'','empty'));
+    return window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableUploadCurrent(''));
    }
-   const pushed=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableServerPush(meta.lastServerUpdatedAt));
-   if(!pushed.ok){mdmPortableSyncState={status:pushed.conflict?'conflict':'error',lastMessage:pushed.error,serverUpdatedAt:pulled.updatedAt,lastAction:reason};if(!silent)toast(lang3('Conflitto di sincronizzazione: nessun dato è stato sovrascritto.','Sync conflict: no data was overwritten.','Kunflitt tas-sinkronizzazzjoni: l-ebda data ma ġiet miktuba fuq oħra.'));return false}
-   meta.dirty=false;meta.dirtyAt='';meta.lastServerUpdatedAt=pushed.updatedAt;meta.lastSyncAt=new Date().toISOString();meta.lastAction='upload';meta.lastError='';mdmPortableSyncMetaSave(meta);
-   mdmPortableSyncState={status:'synced',lastMessage:'',serverUpdatedAt:pushed.updatedAt,lastAction:'upload'};return true;
-  }
-  meta.lastServerUpdatedAt=pulled.updatedAt;meta.lastSyncAt=new Date().toISOString();meta.lastAction='checked';meta.lastError='';mdmPortableSyncMetaSave(meta);
-  mdmPortableSyncState={status:'synced',lastMessage:'',serverUpdatedAt:pulled.updatedAt,lastAction:'checked'};return true;
- }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner23)){mdmPortableSyncInFlight=false}}
-
- }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner23)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+   const server=mdmPortableServerItems(pulled.payload),serverText=mdmPortableCanonical(server);
+   // Equality is proof, including an upload which committed before its response was lost.
+   if(localText===serverText)return window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableAcceptBase(server,pulled.updatedAt,'checked'));
+   const known=mdmPortableBaseKnown(meta);
+   if(!known){
+    if(meta.applyPending||Object.keys(local).length)return mdmPortableSyncFailure('unproven_local_base','conflict');
+    const applied=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableApplyPayload(pulled.payload,pulled.updatedAt));
+    if(!applied)return mdmPortableSyncState.status==='checking'?mdmPortableSyncFailure('restore_not_applied'):false;
+    render({preserveScroll:true});return true;
+   }
+   const fingerprint=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableFingerprint(local));
+   if(mdmPortableCanonical(mdmPortableSnapshotItems())!==localText)return mdmPortableSyncFailure('local_changed_during_check','dirty');
+   const dirty=fingerprint!==meta.baseFingerprint;
+   if(pulled.updatedAt===meta.baseVersion){
+    const serverFingerprint=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableFingerprint(server));
+    if(serverFingerprint!==meta.baseFingerprint)return mdmPortableSyncFailure('server_version_content_mismatch','conflict');
+    if(dirty)return window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableUploadCurrent(meta.baseVersion));
+    return window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableAcceptBase(server,pulled.updatedAt,'checked'));
+   }
+   if(dirty)return mdmPortableSyncFailure('portable_state_conflict','conflict');
+   const applied=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner23,await mdmPortableApplyPayload(pulled.payload,pulled.updatedAt));
+   if(!applied)return mdmPortableSyncState.status==='checking'?mdmPortableSyncFailure('restore_not_applied'):false;
+   render({preserveScroll:true});return true;
+  }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner23))mdmPortableSyncInFlight=false;}
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner23)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;return mdmPortableSyncFailure(mdmDataError);}finally{if(started&&!silent&&window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner23))mdmPortableSyncNotice();}
 }
 async function mdmPortableSyncForceRestore(){
  const mdmDataOwner24=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ let started=false;
  try{
-
- if(mdmPortableSyncInFlight)return false;
- const localScore=mdmPortableStudyScore();
- if(localScore>0&&!confirm(lang3('Sostituire i dati locali con quelli salvati sul tuo account?','Replace local data with the data saved on your account?','Tissostitwixxi d-data lokali bid-data salvata fil-kont tiegħek?')))return false;
- mdmPortableSyncInFlight=true;
- try{
-  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner24,await mdmEnsureFreshAuthForData())))return false;
-  const pulled=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner24,await mdmPortableServerPull());if(!pulled.ok||!pulled.found||!mdmPortablePayloadValid(pulled.payload)){toast(lang3('Nessun backup account disponibile.','No account backup is available.','L-ebda backup tal-kont mhu disponibbli.'));return false}
-  if(!mdmPortableApplyPayload(pulled.payload,pulled.updatedAt))return false;
-  toast(lang3('Dati recuperati. Ricarico l’app.','Data restored. Reloading the app.','Id-data ġiet irrestawrata. Qed terġa’ titgħabba l-app.'));setTimeout(()=>location.reload(),450);return true;
- }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner24)){mdmPortableSyncInFlight=false}}
-
- }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner24)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+  if(mdmPortableSyncInFlight)return false;
+  if(Object.keys(mdmPortableSnapshotItems()).length&&!confirm(lang3('Sostituire i dati locali con quelli salvati sul tuo account?','Replace local data with the data saved on your account?','Tissostitwixxi d-data lokali bid-data salvata fil-kont tiegħek?')))return false;
+  started=true;mdmPortableSyncInFlight=true;
+  try{
+   if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner24,await mdmEnsureFreshAuthForData())))return false;
+   const pulled=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner24,await mdmPortableServerPull());
+   if(!pulled?.ok||!pulled.found)return mdmPortableSyncFailure(pulled?.error||'server_state_absent');
+   const applied=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner24,await mdmPortableApplyPayload(pulled.payload,pulled.updatedAt));
+   if(!applied)return mdmPortableSyncState.status==='error'?false:mdmPortableSyncFailure('restore_not_applied');
+   render({preserveScroll:true});return true;
+  }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner24))mdmPortableSyncInFlight=false;}
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner24)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;return mdmPortableSyncFailure(mdmDataError);}finally{if(started&&window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner24))mdmPortableSyncNotice();}
 }
 async function mdmPortableSyncForceUpload(){
  const mdmDataOwner25=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();
+ let started=false;
  try{
-
- if(mdmPortableSyncInFlight)return false;
- if(mdmPortableStudyScore()<=0)return toast(lang3('Non ci sono ancora progressi da salvare su questo dispositivo.','There is no study progress to save on this device yet.','Għad m’hemmx progress ta’ studju x’jiġi salvat fuq dan l-apparat.'));
- if(!confirm(lang3('Usare i dati di questo dispositivo come copia principale del tuo account?','Use this device data as the main copy for your account?','Tuża d-data ta’ dan l-apparat bħala l-kopja ewlenija tal-kont tiegħek?')))return false;
- mdmPortableSyncInFlight=true;
- try{
-  if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner25,await mdmEnsureFreshAuthForData())))return false;
-  const pulled=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner25,await mdmPortableServerPull());if(!pulled.ok){toast(lang3('Impossibile verificare il backup server.','Could not verify the server backup.','Ma setax jiġi vverifikat il-backup tas-server.'));return false}
-  const pushed=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner25,await mdmPortableServerPush(pulled.found?pulled.updatedAt:''));
-  if(!pushed.ok){toast(lang3('Salvataggio account non riuscito: ','Account save failed: ','Il-ħażna tal-kont falliet: ')+pushed.error);return false}
-  const meta=mdmPortableSyncMeta();meta.dirty=false;meta.dirtyAt='';meta.lastServerUpdatedAt=pushed.updatedAt;meta.lastSyncAt=new Date().toISOString();meta.lastAction='force_upload';meta.lastError='';mdmPortableSyncMetaSave(meta);
-  mdmPortableSyncState={status:'synced',lastMessage:'',serverUpdatedAt:pushed.updatedAt,lastAction:'force_upload'};toast(lang3('Dati di questo dispositivo salvati sul tuo account.','This device data was saved to your account.','Id-data ta’ dan l-apparat ġiet salvata fil-kont tiegħek.'));render({preserveScroll:true});return true;
- }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner25)){mdmPortableSyncInFlight=false}}
-
- }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner25)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;throw mdmDataError;}
+  if(mdmPortableSyncInFlight)return false;
+  if(!confirm(lang3('Usare i dati di questo dispositivo come copia principale del tuo account?','Use this device data as the main copy for your account?','Tuża d-data ta’ dan l-apparat bħala l-kopja ewlenija tal-kont tiegħek?')))return false;
+  started=true;mdmPortableSyncInFlight=true;
+  try{
+   if(!(window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner25,await mdmEnsureFreshAuthForData())))return false;
+   const pulled=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner25,await mdmPortableServerPull());if(!pulled?.ok)return mdmPortableSyncFailure(pulled?.error);
+   const done=window.MDM_ACCOUNT_ISOLATION_SAFE.check(mdmDataOwner25,await mdmPortableUploadCurrent(pulled.found?pulled.updatedAt:'',{overwrite:true,owner:mdmDataOwner25,observedVersion:pulled.found?pulled.updatedAt:''}));
+   if(done)render({preserveScroll:true});return done;
+  }finally{if(window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner25))mdmPortableSyncInFlight=false;}
+ }catch(mdmDataError){if(!window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner25)||window.MDM_ACCOUNT_ISOLATION_SAFE.changed(mdmDataError))return false;return mdmPortableSyncFailure(mdmDataError);}finally{if(started&&window.MDM_ACCOUNT_ISOLATION_SAFE.isCurrent(mdmDataOwner25))mdmPortableSyncNotice();}
 }
 function mdmPortableSyncCardHtml(){
  const auth=mdmAuthSummary(),meta=mdmPortableSyncMeta(),score=mdmPortableStudyScore();
@@ -14436,10 +14536,14 @@ function mdmPortableSyncCardHtml(){
  return `<div class="card backup-card mdm-portable-sync-card" style="margin-top:14px"><h3>${esc(lang3('Sincronizzazione account','Account sync','Sinkronizzazzjoni tal-kont'))}</h3><p class="muted">${esc(lang3('Progressi, storico, errori, Recovery, Replay e stato di studio possono seguire il tuo account Supabase tra Safari, PWA e altri dispositivi. Token, password, configurazione backend e gate tecnici non vengono copiati.','Progress, history, errors, Recovery, Replay and study state can follow your Supabase account across Safari, the PWA and other devices. Tokens, passwords, backend setup and technical gates are never copied.','Il-progress, l-istorja, l-iżbalji, Recovery, Replay u l-istat tal-istudju jistgħu jsegwu l-kont Supabase tiegħek bejn Safari, il-PWA u apparati oħra. Tokens, passwords, setup tal-backend u gates tekniċi qatt ma jiġu kkupjati.'))}</p><p class="muted"><strong>${esc(status)}</strong> · ${esc(lang3('Evidenze locali','Local evidence','Evidenza lokali'))}: ${score}</p><div class="actions"><button class="btn" id="mdmPortableSyncNow" ${auth.authenticated?'':'disabled'}>☁️ ${esc(lang3('Sincronizza adesso','Sync now','Issinkronizza issa'))}</button><button class="btn secondary" id="mdmPortableSyncRestore" ${auth.authenticated?'':'disabled'}>⬇️ ${esc(lang3('Ripristina dall’account','Restore from account','Irrestawra mill-kont'))}</button><button class="btn secondary" id="mdmPortableSyncUpload" ${auth.authenticated?'':'disabled'}>⬆️ ${esc(lang3('Usa questo dispositivo','Use this device','Uża dan l-apparat'))}</button></div></div>`;
 }
 function mdmPortableSyncBoot(){
+ const resume=()=>{const owner=window.MDM_ACCOUNT_ISOLATION_SAFE.capture();if(!owner.userId)return;Promise.resolve().then(window.MDM_ACCOUNT_ISOLATION_SAFE.bind(()=>mdmPortableSyncReconcile({silent:true,reason:'resume'}),owner)).catch(()=>{});};
+ window.MDM_ACCOUNT_ISOLATION_SAFE.subscribe(resume);
+ window.addEventListener('pageshow',resume);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)resume();});
  setTimeout(async()=>{
   try{
    if(mdmAuthFresh())await mdmPortableSyncReconcile({silent:true,reason:'boot'});
-   else if(mdmAuthSession.accessToken||mdmAuthSession.refreshToken){const ok=await mdmAuthVerifySession({silent:true});if(ok)await mdmPortableSyncReconcile({silent:true,reason:'boot_verified'})}
+   else if(mdmAuthSession.accessToken||mdmAuthSession.refreshToken){const ok=await mdmAuthVerifySession({silent:true});if(ok)await mdmPortableSyncReconcile({silent:true,reason:'boot_verified'});}
   }catch{}
  },850);
 }

@@ -4432,7 +4432,9 @@ function replayAdvanceTo(target,questionId){
  errorReplayStep=Math.min(3,target);
  if(errorReplayStep>=3){errorReplayMarkCompleted(questionId);drivingTwinLoopMarkReplayComplete(questionId);}
  replayCoachFeedback=null;
- renderReplayStable();
+ // Advancing changes the scene height: focus the new phase, not the old scroll offset.
+ errorReplayAutoFocusScene=true;
+ render({preserveScroll:true});
 }
 function replayMountMobileContinueDock(target,questionId){
  replayRemoveMobileContinueDock();
